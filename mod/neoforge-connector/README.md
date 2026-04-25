@@ -5,7 +5,7 @@ files exported by the BlockForge web app and places them in-game with commands.
 
 This MVP includes command placement, a basic Builder Wand, in-memory undo
 snapshots, a Ghost Preview candidate, and a Blueprint Selector GUI. It does not
-include material costs, blueprint editing, or live Web integration yet.
+include blueprint editing, material refunds, or live Web integration yet.
 
 ## Target
 
@@ -106,6 +106,8 @@ registry:
 /blockforge rotate <0|90|180|270>
 /blockforge wand
 /blockforge gui
+/blockforge materials <id>
+/blockforge materials selected
 /blockforge undo
 /blockforge undo list
 /blockforge undo clear
@@ -125,6 +127,7 @@ Permissions:
 - `undo` and `undo clear` require permission level `2`.
 - `folder`, `list`, `info`, and `dryrun` are available to regular players.
 - `gui` is available to regular players.
+- `materials` is available to regular players.
 
 ## Builder Wand MVP
 
@@ -251,6 +254,39 @@ Current GUI limits:
 - No paging beyond the first visible rows.
 - Manual Minecraft testing is pending for v0.8.
 
+## Material Requirements MVP
+
+Check the material requirements for a blueprint:
+
+```mcfunction
+/blockforge materials tiny_platform
+/blockforge materials selected
+```
+
+Rules:
+
+- Creative mode bypasses material checks and consumes nothing.
+- Survival mode requires enough matching items before building.
+- Adventure mode builds are blocked by default.
+- Spectator mode builds are blocked by default.
+- Command builds and Builder Wand builds use the same material gate.
+- Material cost mode is currently `simple`: one placed block costs one item from `block.asItem()`.
+
+Build flow:
+
+1. Generate a material report from the selected blueprint.
+2. Check the player's inventory.
+3. Refuse the build if materials are missing.
+4. Consume materials if enough are available.
+5. Place the blueprint through `BlueprintPlacer`.
+
+Known v0.9 limits:
+
+- Undo restores blocks only and does not refund consumed materials.
+- No nearby chest or warehouse support.
+- No special cost table for doors, fluids, torches, or multi-block placements.
+- No material icons in the GUI yet.
+
 ## Usage Example
 
 1. Export `Blueprint JSON` from the BlockForge web app.
@@ -304,6 +340,7 @@ Recommended first in-game test:
 - BlockEntity positions are protected by default.
 - Ghost Preview is a client-side candidate and still needs in-game validation.
 - Blueprint Selector GUI is an MVP and still needs in-game validation.
+- Undo does not refund materials yet.
 - No air clearing.
 - Invalid palette entries are skipped.
 - Invalid Minecraft block ids are skipped.

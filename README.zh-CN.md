@@ -22,6 +22,9 @@ AI 蓝图生成器。
 - 新增 Builder Wand Ghost Preview MVP 候选版。
 - 新增游戏内 Blueprint Selector GUI MVP，可选择蓝图和旋转角度。
 - 新增 `/blockforge gui` 和默认 `B` 键打开选择器。
+- 新增材料需求统计。
+- 新增生存模式材料检查与物品消耗。
+- 创造模式会跳过材料消耗。
 - 新增 Connector 示例蓝图和手动测试文档。
 - 支持导出 Minecraft `.mcfunction` 命令文件。
 - 支持导出 Minecraft Java 1.21.1 Data Pack ZIP。
@@ -170,6 +173,18 @@ Blueprint Selector GUI MVP：
 校验蓝图和旋转角度，校验通过后再同步给 Ghost Preview 和 Builder Wand。
 v0.8 已通过 Gradle 构建，Minecraft 实机测试待进行。
 
+材料需求 MVP：
+
+```mcfunction
+/blockforge materials selected
+/blockforge materials tiny_platform
+```
+
+生存模式玩家在使用命令 build 或 Builder Wand 建造前，必须拥有足够材料。
+材料充足时会从背包扣除对应物品；创造模式会跳过材料检查和消耗。
+Undo 当前只恢复世界方块，不返还已消耗材料。v0.9 已通过 Gradle 构建，
+Minecraft 实机测试待进行。
+
 ## Minecraft Function 导出
 
 BlockForge 可以把每个 voxel 方块导出为一行 Minecraft Java Edition 的 `setblock` 命令。
@@ -231,6 +246,8 @@ pnpm lint
 - Builder Wand 实机验证与 Ghost Preview。
 - Ghost Preview 的完整碰撞和覆盖检查。
 - Blueprint Selector 增加搜索、分页和缩略图。
+- Undo 材料返还。
+- 为门、流体、火把和多方块结构添加特殊材料成本规则。
 - NeoForge common config 文件，替代当前代码级安全配置常量。
 - Blueprint v1/v2 schema 校验工具。
 - `.schem` 导出。

@@ -3,6 +3,8 @@ package com.blockforge.connector.item;
 import com.blockforge.connector.BlockForgeConnector;
 import com.blockforge.connector.blueprint.Blueprint;
 import com.blockforge.connector.builder.BlueprintPlacer;
+import com.blockforge.connector.material.MaterialBuildGate;
+import com.blockforge.connector.material.MaterialRequirement;
 import com.blockforge.connector.player.PlayerBlueprintSelection;
 import com.blockforge.connector.player.PlayerSelectionManager;
 import net.minecraft.core.BlockPos;
@@ -15,6 +17,7 @@ import net.minecraft.world.item.context.UseOnContext;
 
 public class BuilderWandItem extends Item {
     private static final BlueprintPlacer PLACER = new BlueprintPlacer();
+    private static final MaterialBuildGate MATERIALS = new MaterialBuildGate();
 
     public BuilderWandItem(Properties properties) {
         super(properties);
@@ -63,6 +66,21 @@ public class BuilderWandItem extends Item {
         }
 
         BlockPos basePos = context.getClickedPos().relative(context.getClickedFace());
+        BlueprintPlacer.PlacementResult dryRun = PLACER.dryRun(blueprint);
+        if (dryRun.tooLarge() || dryRun.empty()) {
+            sendPlacementResult(player, dryRun, null);
+            return InteractionResult.FAIL;
+        }
+
+        MaterialBuildGate.BuildMaterialResult materialResult = MATERIALS.prepare(player, blueprint);
+        if (!materialResult.allowed()) {
+            player.sendSystemMessage(Component.literal("BlockForge Builder Wand rejected build: " + materialResult.message()));
+            if (materialResult.report() != null) {
+                sendMissingMaterials(player, materialResult.report().requirements());
+            }
+            return InteractionResult.FAIL;
+        }
+
         BlueprintPlacer.PlacementResult result = PLACER.place(
                 serverLevel,
                 basePos,
@@ -75,11 +93,15 @@ public class BuilderWandItem extends Item {
             BlockForgeConnector.UNDO.record(result.snapshot());
         }
 
-        sendPlacementResult(player, result);
+        sendPlacementResult(player, result, materialResult);
         return InteractionResult.SUCCESS;
     }
 
-    private void sendPlacementResult(ServerPlayer player, BlueprintPlacer.PlacementResult result) {
+    private void sendPlacementResult(
+            ServerPlayer player,
+            BlueprintPlacer.PlacementResult result,
+            MaterialBuildGate.BuildMaterialResult materialResult
+    ) {
         if (result.tooLarge()) {
             player.sendSystemMessage(Component.literal(
                     "Blueprint has " + result.totalBlocks() + " blocks, which exceeds the "
@@ -103,6 +125,33 @@ public class BuilderWandItem extends Item {
                 + ", nonReplaceable=" + result.skippedNonReplaceable()
                 + ". appliedProperties=" + result.appliedProperties()
                 + ". totalBlocks=" + result.totalBlocks()
-                + ". Use /blockforge undo to revert."));
+                + materialSummary(materialResult)
+                + ". Use /blockforge undo to revert blocks."));
+    }
+
+    private String materialSummary(MaterialBuildGate.BuildMaterialResult materialResult) {
+        if (materialResult == null || materialResult.report() == null) {
+            return "";
+        }
+
+        if (materialResult.creativeBypass()) {
+            return ". Creative mode: no materials consumed";
+        }
+
+        return ". consumedItems=" + materialResult.consumedItems();
+    }
+
+    private void sendMissingMaterials(ServerPlayer player, java.util.List<MaterialRequirement> requirements) {
+        requirements.stream()
+                .filter(requirement -> requirement.missing() > 0)
+                .limit(5)
+                .forEach(requirement -> player.sendSystemMessage(Component.literal("- "
+                        + requirement.itemId()
+                        + " missing="
+                        + requirement.missing()
+                        + " required="
+                        + requirement.required()
+                        + " available="
+                        + requirement.available())));
     }
 }

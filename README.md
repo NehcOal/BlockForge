@@ -5,7 +5,7 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v0.8.0 Features
+## v0.9.0 Features
 
 - 5 built-in voxel presets
 - Interactive 3D browser preview
@@ -19,6 +19,9 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 - Ghost Preview MVP candidate for Builder Wand placement
 - Blueprint Selector GUI MVP for choosing blueprints and rotation in-game
 - `/blockforge gui` and a default `B` keybind for opening the selector
+- Material requirement reports for loaded blueprints
+- Survival-mode material checks and item consumption
+- Creative-mode material bypass
 - Connector example blueprints and manual testing guide
 - Minecraft `.mcfunction` export
 - Minecraft Java 1.21.1 Data Pack ZIP export
@@ -38,6 +41,7 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 - Revert recent command or Builder Wand placements with `/blockforge undo`.
 - Preview selected Builder Wand placement with a client-side Ghost Preview.
 - Choose a loaded blueprint and rotation from the in-game Blueprint Selector GUI.
+- Check required materials and consume survival inventory items before building.
 - Export Minecraft `.mcfunction` commands.
 - Export Minecraft Java 1.21.1 Data Pack ZIP.
 - Typed voxel data model with validation helpers.
@@ -185,6 +189,18 @@ selection request to the server, the server validates it, and Ghost Preview /
 Builder Wand use the updated state. v0.8 Gradle build passed; Minecraft manual
 testing is pending.
 
+Material Requirements MVP:
+
+```mcfunction
+/blockforge materials selected
+/blockforge materials tiny_platform
+```
+
+Survival players must have enough matching items before command builds or
+Builder Wand builds. Creative players bypass material checks and consume
+nothing. Undo currently restores world blocks only and does not refund consumed
+materials. v0.9 Gradle build passed; Minecraft manual testing is pending.
+
 ## Minecraft Function Export
 
 BlockForge can export each voxel block as a `setblock` command. The generated file is
@@ -230,6 +246,8 @@ examples/
 - Ghost Preview for the Builder Wand.
 - Full Ghost Preview collision and replacement checks.
 - Improve Blueprint Selector with search, paging, and thumbnails.
+- Add material refund support for undo.
+- Add special material cost rules for doors, fluids, torches, and multi-block placements.
 - NeoForge common config file for Connector safety limits.
 - Blueprint v1/v2 schema validation tooling.
 - `.schem` export.
