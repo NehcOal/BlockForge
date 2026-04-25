@@ -2,6 +2,29 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [0.9.0] - Unreleased
+
+### Added
+
+- Material requirement counting for loaded blueprints.
+- `/blockforge materials <id>` and `/blockforge materials selected` commands.
+- Material summaries in `/blockforge dryrun <id>`.
+- Survival-mode material checks before command builds and Builder Wand builds.
+- Survival-mode inventory consumption after material checks pass.
+- Creative-mode material bypass.
+- GUI material report request and material summary display.
+- Server-side material report payloads for Blueprint Selector GUI.
+
+### Notes
+
+- Material cost mode is currently `simple`: one placed block costs one item from `block.asItem()`.
+- Creative mode does not consume materials.
+- Adventure and spectator builds are blocked by default.
+- Undo restores world blocks only; it does not refund consumed materials yet.
+- v0.9.0 build validation passed.
+- Minecraft manual testing verified creative material bypass, survival missing-material rejection, survival material consumption, `/blockforge materials selected`, and block-only undo behavior.
+- Manual material results for `tiny_platform`: `requiredItems=9`, missing case `availableItems=0`, enough case `availableItems=9`, and survival build consumed 9 stone bricks from a stack of 16.
+
 ## [0.8.0] - Unreleased
 
 ### Added

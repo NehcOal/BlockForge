@@ -2,9 +2,14 @@ package com.blockforge.connector.network;
 
 import com.blockforge.connector.blueprint.Blueprint;
 import com.blockforge.connector.builder.BlueprintRotation;
+import com.blockforge.connector.material.MaterialBuildGate;
+import com.blockforge.connector.material.MaterialReport;
 import com.blockforge.connector.network.payload.BlueprintListPayload;
 import com.blockforge.connector.network.payload.BlueprintSummary;
 import com.blockforge.connector.network.payload.ClearPreviewPayload;
+import com.blockforge.connector.network.payload.MaterialReportPayload;
+import com.blockforge.connector.network.payload.MaterialReportRequestPayload;
+import com.blockforge.connector.network.payload.MaterialRequirementSummary;
 import com.blockforge.connector.network.payload.RequestBlueprintListPayload;
 import com.blockforge.connector.network.payload.SelectBlueprintRequestPayload;
 import com.blockforge.connector.network.payload.SelectedBlueprintPayload;
@@ -22,6 +27,7 @@ import java.util.List;
 
 public final class BlockForgeNetwork {
     private static final String PROTOCOL_VERSION = "1";
+    private static final MaterialBuildGate MATERIALS = new MaterialBuildGate();
 
     private BlockForgeNetwork() {
     }
@@ -43,6 +49,11 @@ public final class BlockForgeNetwork {
                 BlueprintListPayload.STREAM_CODEC,
                 (payload, context) -> context.enqueueWork(() -> handleClientBlueprintList(payload))
         );
+        registrar.playToClient(
+                MaterialReportPayload.TYPE,
+                MaterialReportPayload.STREAM_CODEC,
+                (payload, context) -> context.enqueueWork(() -> handleClientMaterialReport(payload))
+        );
         registrar.playToServer(
                 RequestBlueprintListPayload.TYPE,
                 RequestBlueprintListPayload.STREAM_CODEC,
@@ -52,6 +63,11 @@ public final class BlockForgeNetwork {
                 SelectBlueprintRequestPayload.TYPE,
                 SelectBlueprintRequestPayload.STREAM_CODEC,
                 (payload, context) -> context.enqueueWork(() -> handleSelectRequest(context.player(), payload))
+        );
+        registrar.playToServer(
+                MaterialReportRequestPayload.TYPE,
+                MaterialReportRequestPayload.STREAM_CODEC,
+                (payload, context) -> context.enqueueWork(() -> handleMaterialReportRequest(context.player(), payload))
         );
     }
 
@@ -136,6 +152,39 @@ public final class BlockForgeNetwork {
                 + "."));
     }
 
+    private static void handleMaterialReportRequest(Player player, MaterialReportRequestPayload payload) {
+        if (!(player instanceof ServerPlayer serverPlayer)) {
+            return;
+        }
+
+        Blueprint blueprint = com.blockforge.connector.BlockForgeConnector.BLUEPRINTS
+                .get(payload.blueprintId())
+                .orElse(null);
+        if (blueprint == null) {
+            serverPlayer.sendSystemMessage(Component.literal("Unknown BlockForge blueprint id: " + payload.blueprintId()));
+            return;
+        }
+
+        sendMaterialReport(serverPlayer, blueprint);
+    }
+
+    public static void sendMaterialReport(ServerPlayer player, Blueprint blueprint) {
+        MaterialReport report = MATERIALS.report(blueprint, player);
+        PacketDistributor.sendToPlayer(
+                player,
+                new MaterialReportPayload(
+                        blueprint.getId(),
+                        report.enoughMaterials(),
+                        report.totalRequiredItems(),
+                        report.totalAvailableItems(),
+                        report.requirements()
+                                .stream()
+                                .map(MaterialRequirementSummary::fromRequirement)
+                                .toList()
+                )
+        );
+    }
+
     private static void handleClientSelected(SelectedBlueprintPayload payload) {
         invokeClient("handleSelectedBlueprint", new Class<?>[]{SelectedBlueprintPayload.class}, payload);
     }
@@ -146,6 +195,10 @@ public final class BlockForgeNetwork {
 
     private static void handleClientBlueprintList(BlueprintListPayload payload) {
         invokeClient("handleBlueprintList", new Class<?>[]{BlueprintListPayload.class}, payload);
+    }
+
+    private static void handleClientMaterialReport(MaterialReportPayload payload) {
+        invokeClient("handleMaterialReport", new Class<?>[]{MaterialReportPayload.class}, payload);
     }
 
     private static void invokeClient(String methodName, Class<?>[] parameterTypes, Object... arguments) {

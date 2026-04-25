@@ -5,6 +5,7 @@ import com.blockforge.connector.client.gui.BlueprintSelectorScreen;
 import com.blockforge.connector.client.preview.ClientPreviewState;
 import com.blockforge.connector.network.payload.BlueprintListPayload;
 import com.blockforge.connector.network.payload.ClearPreviewPayload;
+import com.blockforge.connector.network.payload.MaterialReportPayload;
 import com.blockforge.connector.network.payload.SelectedBlueprintPayload;
 import net.minecraft.client.Minecraft;
 
@@ -31,5 +32,10 @@ public final class ClientPayloadHandler {
         if (payload.openScreen()) {
             Minecraft.getInstance().setScreen(new BlueprintSelectorScreen());
         }
+    }
+
+    public static void handleMaterialReport(MaterialReportPayload payload) {
+        BlueprintClientCache.setMaterialReport(payload);
+        BlueprintSelectorScreen.refreshOpenScreen();
     }
 }

@@ -672,3 +672,170 @@ B
 
 测试结论：Blueprint Selector GUI MVP 已完成游戏内闭环验证。GUI 选择结果会经由
 服务端校验后同步到 Builder Wand 和 Ghost Preview，真实放置仍由服务端执行。
+
+## 24. Material Requirements / Survival Cost MVP Test Plan
+
+Build status: Gradle build passed for v0.9. Minecraft manual testing is pending.
+
+Creative mode test:
+
+```mcfunction
+/gamemode creative
+/blockforge examples install
+/blockforge reload
+/blockforge select tiny_platform
+/blockforge materials selected
+/blockforge wand
+```
+
+Right-click with the Builder Wand.
+
+Expected result:
+
+- Material report is shown.
+- Build succeeds.
+- Creative mode consumes no materials.
+
+Survival missing-materials test:
+
+```mcfunction
+/gamemode survival
+/clear
+/blockforge materials selected
+```
+
+Try to place with the Builder Wand.
+
+Expected result:
+
+- Build is rejected.
+- Missing materials are listed.
+- No blocks are placed.
+
+Survival enough-materials test:
+
+```mcfunction
+/give @s minecraft:stone_bricks 16
+/blockforge materials selected
+```
+
+Place `tiny_platform` with the Builder Wand.
+
+Expected result:
+
+- Build succeeds.
+- Required items are consumed from inventory.
+- Placement output includes consumed item count.
+
+Undo check:
+
+```mcfunction
+/blockforge undo
+```
+
+Expected result:
+
+- World blocks are restored.
+- Consumed materials are not refunded in v0.9.
+
+## 25. 中文材料需求 / 生存成本 MVP 测试计划
+
+构建状态：v0.9 已通过 Gradle build，并已完成 Minecraft 实机验证。
+
+创造模式测试：
+
+```mcfunction
+/gamemode creative
+/blockforge examples install
+/blockforge reload
+/blockforge select tiny_platform
+/blockforge materials selected
+/blockforge wand
+```
+
+手持 Builder Wand 右键生成。
+
+预期结果：
+
+- 能显示材料需求。
+- 建造成功。
+- 创造模式不消耗材料。
+
+生存模式材料不足测试：
+
+```mcfunction
+/gamemode survival
+/clear
+/blockforge materials selected
+```
+
+然后尝试使用 Builder Wand 放置。
+
+预期结果：
+
+- 建造被拒绝。
+- 输出缺少的材料。
+- 不应放置方块。
+
+生存模式材料充足测试：
+
+```mcfunction
+/give @s minecraft:stone_bricks 16
+/blockforge materials selected
+```
+
+用 Builder Wand 放置 `tiny_platform`。
+
+预期结果：
+
+- 建造成功。
+- 背包中对应材料被扣除。
+- 放置输出包含 consumed item count。
+
+Undo 测试：
+
+```mcfunction
+/blockforge undo
+```
+
+预期结果：
+
+- 世界方块恢复。
+- v0.9 暂不返还已消耗材料。
+
+### v0.9 中文实机测试结果
+
+状态：已在 Minecraft Java Edition `1.21.1` + NeoForge `21.1.227` 环境下通过。
+
+已验证命令与行为：
+
+- 创造模式下使用 Builder Wand 可以正常生成建筑。
+- 创造模式提示 `Creative mode: no materials consumed`，不会消耗材料。
+- 切换到生存模式后，材料不足时 Builder Wand 会拒绝 build。
+- 材料不足提示正确显示缺少项：
+  - `minecraft:stone_bricks missing=9 required=9 available=0`
+- `/blockforge materials selected` 能显示材料报告。
+- 给玩家 `16` 个 `minecraft:stone_bricks` 后，材料报告变为充足。
+- 生存模式材料充足时 Builder Wand 可以正常生成建筑。
+- 生存模式生成后会扣除材料，`16` 个石砖生成 `tiny_platform` 后剩余 `7` 个。
+- `/blockforge undo` 可以恢复 `9` 个方块。
+- v0.9 中 Undo 不返还已消耗材料，符合当前已知限制。
+
+实测材料报告：
+
+- 材料不足：
+  - `blueprint=tiny_platform`
+  - `requiredItems=9`
+  - `availableItems=0`
+  - `missingItemTypes=1`
+  - `enoughMaterials=false`
+- 材料充足：
+  - `blueprint=tiny_platform`
+  - `requiredItems=9`
+  - `availableItems=9`
+  - `missingItemTypes=0`
+  - `enoughMaterials=true`
+
+测试结论：Material Requirements / Survival Cost MVP 已完成游戏内闭环验证。
+创造模式绕过、生存模式材料不足拒绝、生存模式材料足够扣除并建造、Undo 仅恢复方块
+这四条核心规则均按预期工作。

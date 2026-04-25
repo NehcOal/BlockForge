@@ -1,6 +1,9 @@
 package com.blockforge.connector.client.gui;
 
 import com.blockforge.connector.network.payload.BlueprintSummary;
+import com.blockforge.connector.network.payload.MaterialReportPayload;
+import com.blockforge.connector.network.payload.MaterialReportRequestPayload;
+import com.blockforge.connector.network.payload.MaterialRequirementSummary;
 import com.blockforge.connector.network.payload.RequestBlueprintListPayload;
 import com.blockforge.connector.network.payload.SelectBlueprintRequestPayload;
 import net.minecraft.client.Minecraft;
@@ -94,8 +97,14 @@ public class BlueprintSelectorScreen extends Screen {
         selectButton.active = BlueprintClientCache.selectedBlueprint().isPresent();
         addRenderableWidget(selectButton);
 
-        addRenderableWidget(Button.builder(Component.translatable("screen.blockforge_connector.close"), ignored -> onClose())
+        Button materialsButton = Button.builder(Component.translatable("screen.blockforge_connector.materials"), ignored -> requestMaterials())
                 .bounds(detailsLeft + 90, top + 118, 82, 20)
+                .build();
+        materialsButton.active = BlueprintClientCache.selectedBlueprint().isPresent();
+        addRenderableWidget(materialsButton);
+
+        addRenderableWidget(Button.builder(Component.translatable("screen.blockforge_connector.close"), ignored -> onClose())
+                .bounds(detailsLeft, top + 194, 172, 20)
                 .build());
     }
 
@@ -106,13 +115,19 @@ public class BlueprintSelectorScreen extends Screen {
         });
     }
 
+    private void requestMaterials() {
+        BlueprintClientCache.selectedBlueprint().ifPresent(summary ->
+                PacketDistributor.sendToServer(new MaterialReportRequestPayload(summary.id()))
+        );
+    }
+
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         int left = Math.max(20, width / 2 - 190);
         int top = Math.max(32, height / 2 - 100);
         int detailsLeft = left + 200;
         int panelRight = detailsLeft + 180;
-        int panelBottom = top + 172;
+        int panelBottom = top + 230;
 
         graphics.fill(0, 0, width, height, 0x99000000);
         graphics.fill(left - 12, top - 18, panelRight + 12, panelBottom + 12, 0xF0101820);
@@ -174,6 +189,49 @@ public class BlueprintSelectorScreen extends Screen {
                 false
         );
         graphics.drawString(font, Component.translatable("screen.blockforge_connector.rotation"), x, y + 72 + 32, 0xFFE7F7FF, false);
+        renderMaterialReport(graphics, x, y + 132);
+    }
+
+    private void renderMaterialReport(GuiGraphics graphics, int x, int y) {
+        MaterialReportPayload report = BlueprintClientCache.materialReport();
+        if (report == null || !BlueprintClientCache.selectedBlueprint().map(BlueprintSummary::id).orElse("").equals(report.blueprintId())) {
+            graphics.drawString(font, Component.translatable("screen.blockforge_connector.materials_hint"), x, y, 0xFFB6C7D4, false);
+            return;
+        }
+
+        int color = report.enoughMaterials() ? 0xFF8EF0B4 : 0xFFFF7070;
+        graphics.drawString(
+                font,
+                Component.translatable("screen.blockforge_connector.enough_materials", report.enoughMaterials()),
+                x,
+                y,
+                color,
+                false
+        );
+        graphics.drawString(
+                font,
+                Component.translatable("screen.blockforge_connector.material_totals", report.totalRequiredItems(), report.totalAvailableItems()),
+                x,
+                y + 12,
+                0xFFC9D7E2,
+                false
+        );
+
+        int line = 0;
+        for (MaterialRequirementSummary requirement : report.requirements()) {
+            if (line >= 3) {
+                break;
+            }
+            graphics.drawString(
+                    font,
+                    requirement.itemId() + " " + requirement.required() + "/" + requirement.available() + " missing " + requirement.missing(),
+                    x,
+                    y + 28 + line * 12,
+                    requirement.missing() > 0 ? 0xFFFFA0A0 : 0xFFB6C7D4,
+                    false
+            );
+            line++;
+        }
     }
 
     @Override

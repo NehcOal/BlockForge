@@ -1,6 +1,7 @@
 package com.blockforge.connector.client.gui;
 
 import com.blockforge.connector.network.payload.BlueprintSummary;
+import com.blockforge.connector.network.payload.MaterialReportPayload;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,7 @@ public final class BlueprintClientCache {
     private static int rotation;
     private static boolean loading;
     private static String error = "";
+    private static MaterialReportPayload materialReport;
 
     private BlueprintClientCache() {
     }
@@ -57,6 +59,7 @@ public final class BlueprintClientCache {
 
     public static void selectLocally(String blueprintId) {
         selectedBlueprintId = blueprintId;
+        materialReport = null;
     }
 
     public static void setRotation(int degrees) {
@@ -66,6 +69,16 @@ public final class BlueprintClientCache {
     public static void setSelected(String blueprintId, int degrees) {
         selectedBlueprintId = blueprintId;
         rotation = degrees;
+        loading = false;
+        error = "";
+    }
+
+    public static MaterialReportPayload materialReport() {
+        return materialReport;
+    }
+
+    public static void setMaterialReport(MaterialReportPayload report) {
+        materialReport = report;
         loading = false;
         error = "";
     }

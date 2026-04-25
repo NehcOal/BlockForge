@@ -6,6 +6,9 @@ import com.blockforge.connector.blueprint.ExampleBlueprintInstaller;
 import com.blockforge.connector.blueprint.BlueprintRegistry;
 import com.blockforge.connector.builder.BlueprintPlacer;
 import com.blockforge.connector.builder.BlueprintRotation;
+import com.blockforge.connector.material.MaterialBuildGate;
+import com.blockforge.connector.material.MaterialReport;
+import com.blockforge.connector.material.MaterialRequirement;
 import com.blockforge.connector.network.BlockForgeNetwork;
 import com.blockforge.connector.player.PlayerBlueprintSelection;
 import com.blockforge.connector.registry.ModItems;
@@ -28,6 +31,7 @@ import java.util.List;
 public final class BlockForgeCommands {
     private static final BlueprintPlacer PLACER = new BlueprintPlacer();
     private static final ExampleBlueprintInstaller EXAMPLES = new ExampleBlueprintInstaller();
+    private static final MaterialBuildGate MATERIALS = new MaterialBuildGate();
 
     private BlockForgeCommands() {
     }
@@ -74,6 +78,11 @@ public final class BlockForgeCommands {
                 .then(Commands.literal("dryrun")
                         .then(blueprintIdArgument(registry)
                                 .executes(context -> dryRun(context, registry))))
+                .then(Commands.literal("materials")
+                        .then(Commands.literal("selected")
+                                .executes(context -> materialsSelected(context, registry)))
+                        .then(blueprintIdArgument(registry)
+                                .executes(context -> materials(context, registry))))
                 .then(Commands.literal("build")
                         .requires(source -> source.hasPermission(2))
                         .then(blueprintIdArgument(registry)
@@ -453,7 +462,48 @@ public final class BlockForgeCommands {
 
         BlueprintPlacer.PlacementResult result = PLACER.dryRun(blueprint);
         sendDryRunResult(context.getSource(), blueprint, result);
+        sendMaterialReport(context.getSource(), MATERIALS.report(blueprint, getPlayerOrNull(context)));
         return result.placedBlocks();
+    }
+
+    private static int materials(
+            CommandContext<CommandSourceStack> context,
+            BlueprintRegistry registry
+    ) {
+        Blueprint blueprint = findBlueprint(context, registry);
+        if (blueprint == null) {
+            return 0;
+        }
+
+        MaterialReport report = MATERIALS.report(blueprint, getPlayerOrNull(context));
+        sendMaterialReport(context.getSource(), report);
+        return report.totalRequiredItems();
+    }
+
+    private static int materialsSelected(
+            CommandContext<CommandSourceStack> context,
+            BlueprintRegistry registry
+    ) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        PlayerBlueprintSelection selection = BlockForgeConnector.SELECTIONS.getOrCreate(player.getUUID());
+        if (!selection.hasSelection()) {
+            context.getSource().sendFailure(Component.literal("No BlockForge blueprint selected. Run /blockforge select <id> first."));
+            return 0;
+        }
+
+        Blueprint blueprint = registry.get(selection.getSelectedBlueprintId()).orElse(null);
+        if (blueprint == null) {
+            context.getSource().sendFailure(Component.literal("Selected BlockForge blueprint is not loaded: " + selection.getSelectedBlueprintId()));
+            return 0;
+        }
+
+        MaterialReport report = MATERIALS.report(blueprint, player);
+        sendMaterialReport(context.getSource(), report);
+        return report.totalRequiredItems();
     }
 
     private static int buildAtPlayer(
@@ -516,19 +566,35 @@ public final class BlockForgeCommands {
             return 0;
         }
 
+        BlueprintPlacer.PlacementResult dryRun = PLACER.dryRun(blueprint);
+        if (dryRun.tooLarge() || dryRun.empty()) {
+            sendPlacementResult(context.getSource(), "Build rejected", dryRun, null);
+            return 0;
+        }
+
+        ServerPlayer player = getPlayerOrNull(context);
+        MaterialBuildGate.BuildMaterialResult materialResult = MATERIALS.prepare(player, blueprint);
+        if (!materialResult.allowed()) {
+            context.getSource().sendFailure(Component.literal("BlockForge build rejected: " + materialResult.message()));
+            if (materialResult.report() != null) {
+                sendMaterialReport(context.getSource(), materialResult.report());
+            }
+            return 0;
+        }
+
         BlueprintPlacer.PlacementResult result = PLACER.place(
                 context.getSource().getLevel(),
                 basePos,
                 blueprint,
                 rotation,
-                getPlayerOrNull(context)
+                player
         );
 
         if (result.snapshot() != null) {
             BlockForgeConnector.UNDO.record(result.snapshot());
         }
 
-        sendPlacementResult(context.getSource(), "Build complete", result);
+        sendPlacementResult(context.getSource(), "Build complete", result, materialResult);
         return result.placedBlocks();
     }
 
@@ -572,7 +638,8 @@ public final class BlockForgeCommands {
     private static void sendPlacementResult(
             CommandSourceStack source,
             String label,
-            BlueprintPlacer.PlacementResult result
+            BlueprintPlacer.PlacementResult result,
+            MaterialBuildGate.BuildMaterialResult materialResult
     ) {
         if (result.tooLarge()) {
             source.sendFailure(Component.literal(
@@ -598,9 +665,22 @@ public final class BlockForgeCommands {
                         + ", nonReplaceable=" + result.skippedNonReplaceable()
                         + ". appliedProperties=" + result.appliedProperties()
                         + ". totalBlocks=" + result.totalBlocks()
+                        + materialSummary(materialResult)
                         + ". Use /blockforge undo to revert."),
                 true
         );
+    }
+
+    private static String materialSummary(MaterialBuildGate.BuildMaterialResult materialResult) {
+        if (materialResult == null || materialResult.report() == null) {
+            return "";
+        }
+
+        if (materialResult.creativeBypass()) {
+            return ". Creative mode: no materials consumed";
+        }
+
+        return ". consumedItems=" + materialResult.consumedItems();
     }
 
     private static void sendDryRunResult(
@@ -642,6 +722,43 @@ public final class BlockForgeCommands {
 
         if (result.empty()) {
             source.sendFailure(Component.literal("Blueprint has no blocks and cannot be built."));
+        }
+    }
+
+    private static void sendMaterialReport(CommandSourceStack source, MaterialReport report) {
+        source.sendSuccess(
+                () -> Component.literal("BlockForge materials: "
+                        + report.blueprintId()
+                        + " | requiredItems="
+                        + report.totalRequiredItems()
+                        + " | availableItems="
+                        + report.totalAvailableItems()
+                        + " | missingItemTypes="
+                        + report.missingItemTypes()
+                        + " | enoughMaterials="
+                        + report.enoughMaterials()),
+                false
+        );
+
+        int shown = 0;
+        for (MaterialRequirement requirement : report.requirements()) {
+            if (shown >= 8) {
+                source.sendSuccess(() -> Component.literal("... more material entries omitted."), false);
+                break;
+            }
+
+            source.sendSuccess(
+                    () -> Component.literal("- "
+                            + requirement.itemId()
+                            + " required="
+                            + requirement.required()
+                            + ", available="
+                            + requirement.available()
+                            + ", missing="
+                            + requirement.missing()),
+                    false
+            );
+            shown++;
         }
     }
 
