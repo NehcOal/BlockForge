@@ -3,8 +3,7 @@
 BlockForge is a local-first Minecraft-style voxel blueprint generator.  
 Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.mcfunction` commands.
 
-[中文文档](./README.zh-CN.md)
-| [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
+[中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
 ## v0.1.0 Features
 
@@ -27,7 +26,9 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 ## Demo Screenshots
 
-Screenshots will be added after the MVP visual pass.
+![BlockForge hero screenshot](./public/screenshots/blockforge-hero.png)
+
+> Place the latest project hero screenshot at `public/screenshots/blockforge-hero.png`.
 
 ## Tech Stack
 
@@ -60,7 +61,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Minecraft Function Export
 
-BlockForge can export each voxel block as a `setblock` command. The generated file is intended as a starting point for Minecraft Java Edition command/data-pack workflows.
+BlockForge can export each voxel block as a `setblock` command. The generated file is
+intended as a starting point for Minecraft Java Edition command/data-pack workflows.
 
 Advanced datapack ZIP export is planned for a future release.
 
@@ -87,7 +89,8 @@ src/
 
 ## Contributing
 
-Issues and pull requests are welcome. Please keep changes focused, typed, and covered by tests when they affect voxel generation or export behavior.
+Issues and pull requests are welcome. Please keep changes focused, typed, and covered by
+tests when they affect voxel generation or export behavior.
 
 ## License
 
