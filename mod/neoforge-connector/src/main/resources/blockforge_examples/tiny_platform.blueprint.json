@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "id": "tiny_platform",
+  "name": "Tiny Platform",
+  "description": "A 3 x 1 x 3 platform for minimum BlockForge Connector placement tests.",
+  "minecraftVersion": "1.21.1",
+  "generator": "BlockForge",
+  "size": {
+    "width": 3,
+    "height": 1,
+    "depth": 3
+  },
+  "origin": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "palette": {
+    "stone_bricks": "minecraft:stone_bricks"
+  },
+  "blocks": [
+    {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 0,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 0,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 1,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 1,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 1,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 2,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 2,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 2,
+      "block": "stone_bricks"
+    }
+  ]
+}

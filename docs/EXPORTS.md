@@ -1,6 +1,6 @@
 # BlockForge Export Formats
 
-BlockForge v0.2 supports three export formats for the currently selected `VoxelModel`.
+BlockForge supports several export formats for the currently selected `VoxelModel`.
 
 ## JSON
 
@@ -11,6 +11,57 @@ Use it for:
 - Debugging generated voxel data.
 - Building custom exporters.
 - Passing models to future AI or mod integrations.
+
+## BlockForge Blueprint v1 JSON
+
+The Blueprint v1 export writes a stable JSON protocol for future BlockForge Mod
+Connector workflows. Unlike the internal `VoxelModel`, this format is intended to
+remain compatible across Web and Mod releases.
+
+Generated file name:
+
+```text
+blockforge-<blueprint_id>.blueprint.json
+```
+
+Key rules:
+
+- `schemaVersion` is always `1`.
+- `minecraftVersion` is always `1.21.1`.
+- `generator` is always `BlockForge`.
+- `origin` is `{ "x": 0, "y": 0, "z": 0 }`.
+- `blocks` keep raw voxel coordinates.
+- `palette` maps BlockForge block names to Minecraft Java block ids.
+
+See [Blueprint Protocol](./BLUEPRINT_PROTOCOL.md) for the full contract.
+
+## BlockForge Blueprint v2 JSON
+
+Blueprint v2 extends the shared protocol with Minecraft BlockState properties.
+
+Key differences from v1:
+
+- `schemaVersion` is `2`.
+- `palette` values are objects with `name` and optional `properties`.
+- `blocks` use `state` instead of `block`.
+- The NeoForge Connector can apply supported string properties to the
+  `defaultBlockState()`.
+
+Example palette entry:
+
+```json
+{
+  "door_lower": {
+    "name": "minecraft:oak_door",
+    "properties": {
+      "facing": "south",
+      "half": "lower",
+      "hinge": "left",
+      "open": "false"
+    }
+  }
+}
+```
 
 ## Minecraft `.mcfunction`
 

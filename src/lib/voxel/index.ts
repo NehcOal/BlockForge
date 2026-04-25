@@ -11,6 +11,14 @@ export {
 } from "@/lib/voxel/utils";
 export { blockStyles } from "@/lib/voxel/blockStyles";
 export {
+  createBlueprintJsonFileName,
+  createBlueprintV2JsonFileName,
+  voxelModelToBlueprintV2Json,
+  voxelModelToBlueprintJson
+} from "@/lib/voxel/blueprintExport";
+export { voxelModelToBlueprintV1 } from "@/lib/voxel/blueprintProtocol";
+export { voxelModelToBlueprintV2 } from "@/lib/voxel/blueprintProtocolV2";
+export {
   createSafeFileName,
   createSafeResourcePath
 } from "@/lib/voxel/exportUtils";
@@ -43,3 +51,9 @@ export type {
 } from "@/lib/voxel/types";
 export type { McFunctionExportOptions } from "@/lib/voxel/mcfunction";
 export type { DataPackExportOptions } from "@/lib/voxel/datapack";
+export type { BlockForgeBlueprintV1 } from "@/lib/voxel/blueprintProtocol";
+export type {
+  BlockForgeBlockStateV2,
+  BlockForgeBlueprintBlockV2,
+  BlockForgeBlueprintV2
+} from "@/lib/voxel/blueprintProtocolV2";

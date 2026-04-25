@@ -1,6 +1,10 @@
 import {
+  createBlueprintJsonFileName,
+  createBlueprintV2JsonFileName,
   createSafeFileName,
   getFunctionName,
+  voxelModelToBlueprintV2Json,
+  voxelModelToBlueprintJson,
   voxelModelToMcFunction,
   voxelModelToDataPackZip
 } from "@/lib/voxel";
@@ -42,6 +46,22 @@ export function ExportPanel({ copy, model }: ExportPanelProps) {
     );
   }
 
+  function handleBlueprintJsonExport() {
+    downloadFile(
+      voxelModelToBlueprintJson(model),
+      "application/json",
+      createBlueprintJsonFileName(model)
+    );
+  }
+
+  function handleBlueprintV2JsonExport() {
+    downloadFile(
+      voxelModelToBlueprintV2Json(model),
+      "application/json",
+      createBlueprintV2JsonFileName(model)
+    );
+  }
+
   function handleMcFunctionExport() {
     downloadFile(
       voxelModelToMcFunction(model, { includeHeader: true }),
@@ -71,30 +91,60 @@ export function ExportPanel({ copy, model }: ExportPanelProps) {
           </p>
         </div>
         <div className="grid gap-3">
-          <button
-            className="forge-secondary-button px-4 py-3 text-sm"
-            onClick={handleJsonExport}
-            type="button"
-          >
-            {copy.json}
-          </button>
-          <button
-            className="forge-primary-button px-4 py-3 text-sm"
-            onClick={handleMcFunctionExport}
-            type="button"
-          >
-            {copy.mcfunction}
-          </button>
-          <button
-            className="forge-primary-button px-4 py-3 text-sm"
-            onClick={handleDataPackExport}
-            type="button"
-          >
-            {copy.datapack}
-          </button>
+          <div className="grid gap-2">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-stone-500">
+              Data
+            </p>
+            <button
+              className="forge-secondary-button px-4 py-3 text-sm"
+              onClick={handleJsonExport}
+              type="button"
+            >
+              {copy.json}
+            </button>
+            <button
+              className="forge-primary-button px-4 py-3 text-sm"
+              onClick={handleBlueprintJsonExport}
+              type="button"
+            >
+              {copy.blueprintJson}
+            </button>
+            <button
+              className="forge-primary-button px-4 py-3 text-sm"
+              onClick={handleBlueprintV2JsonExport}
+              type="button"
+            >
+              {copy.blueprintV2Json}
+            </button>
+          </div>
+          <div className="grid gap-2">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-stone-500">
+              Commands
+            </p>
+            <button
+              className="forge-primary-button px-4 py-3 text-sm"
+              onClick={handleMcFunctionExport}
+              type="button"
+            >
+              {copy.mcfunction}
+            </button>
+            <button
+              className="forge-primary-button px-4 py-3 text-sm"
+              onClick={handleDataPackExport}
+              type="button"
+            >
+              {copy.datapack}
+            </button>
+          </div>
         </div>
         <p className="text-xs leading-5 text-stone-500">
           {copy.hint}
+        </p>
+        <p className="text-xs leading-5 text-stone-500">
+          {copy.blueprintHint}
+        </p>
+        <p className="text-xs leading-5 text-stone-500">
+          {copy.blueprintV2Hint}
         </p>
         <p className="text-xs leading-5 text-stone-500">
           {copy.datapackHint}
