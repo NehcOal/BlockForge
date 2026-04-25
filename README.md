@@ -5,7 +5,7 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v0.9.0 Features
+## v0.9.1 Features
 
 - 5 built-in voxel presets
 - Interactive 3D browser preview
@@ -21,6 +21,7 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 - `/blockforge gui` and a default `B` keybind for opening the selector
 - Material requirement reports for loaded blueprints
 - Survival-mode material checks and item consumption
+- Material transactions with undo refunds for survival builds
 - Creative-mode material bypass
 - Connector example blueprints and manual testing guide
 - Minecraft `.mcfunction` export
@@ -198,8 +199,9 @@ Material Requirements MVP:
 
 Survival players must have enough matching items before command builds or
 Builder Wand builds. Creative players bypass material checks and consume
-nothing. Undo currently restores world blocks only and does not refund consumed
-materials. v0.9 Gradle build passed; Minecraft manual testing is pending.
+nothing. Undo now restores world blocks and refunds recorded survival materials.
+If the player inventory is full, refunded items are dropped near the player.
+v0.9.1 Gradle build and Minecraft manual testing passed.
 
 ## Minecraft Function Export
 
@@ -246,7 +248,7 @@ examples/
 - Ghost Preview for the Builder Wand.
 - Full Ghost Preview collision and replacement checks.
 - Improve Blueprint Selector with search, paging, and thumbnails.
-- Add material refund support for undo.
+- Add material refund edge-case tests and special cost rules for non-cube blocks.
 - Add special material cost rules for doors, fluids, torches, and multi-block placements.
 - NeoForge common config file for Connector safety limits.
 - Blueprint v1/v2 schema validation tooling.

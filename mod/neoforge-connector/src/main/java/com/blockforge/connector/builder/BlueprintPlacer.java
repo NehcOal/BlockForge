@@ -248,6 +248,24 @@ public class BlueprintPlacer {
         public static PlacementResult empty(int maxBlocks) {
             return new PlacementResult(false, true, 0, 0, 0, 0, 0, 0, 0, 0, 0, maxBlocks, null);
         }
+
+        public PlacementResult withSnapshot(PlacementSnapshot updatedSnapshot) {
+            return new PlacementResult(
+                    tooLarge,
+                    empty,
+                    totalBlocks,
+                    placedBlocks,
+                    skippedMissingPalette,
+                    skippedInvalidBlockIds,
+                    skippedInvalidProperties,
+                    skippedOutOfWorld,
+                    skippedProtected,
+                    skippedNonReplaceable,
+                    appliedProperties,
+                    maxBlocks,
+                    updatedSnapshot
+            );
+        }
     }
 
     private record StateResult(BlockState state, int appliedProperties, int invalidProperties) {

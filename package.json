@@ -1,6 +1,6 @@
 {
   "name": "blockforge",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "private": true,
   "description": "Generate Minecraft-style voxel buildings from text prompts.",
   "license": "MIT",

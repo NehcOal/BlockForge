@@ -2,8 +2,7 @@ package com.blockforge.connector.item;
 
 import com.blockforge.connector.BlockForgeConnector;
 import com.blockforge.connector.blueprint.Blueprint;
-import com.blockforge.connector.builder.BlueprintPlacer;
-import com.blockforge.connector.material.MaterialBuildGate;
+import com.blockforge.connector.build.BuildService;
 import com.blockforge.connector.material.MaterialRequirement;
 import com.blockforge.connector.player.PlayerBlueprintSelection;
 import com.blockforge.connector.player.PlayerSelectionManager;
@@ -16,8 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 
 public class BuilderWandItem extends Item {
-    private static final BlueprintPlacer PLACER = new BlueprintPlacer();
-    private static final MaterialBuildGate MATERIALS = new MaterialBuildGate();
+    private static final BuildService BUILDS = new BuildService(BlockForgeConnector.UNDO);
 
     public BuilderWandItem(Properties properties) {
         super(properties);
@@ -66,42 +64,36 @@ public class BuilderWandItem extends Item {
         }
 
         BlockPos basePos = context.getClickedPos().relative(context.getClickedFace());
-        BlueprintPlacer.PlacementResult dryRun = PLACER.dryRun(blueprint);
-        if (dryRun.tooLarge() || dryRun.empty()) {
-            sendPlacementResult(player, dryRun, null);
-            return InteractionResult.FAIL;
-        }
+        BuildService.BuildResult buildResult = BUILDS.build(
+                serverLevel,
+                player,
+                basePos,
+                blueprint,
+                selection.getRotation()
+        );
 
-        MaterialBuildGate.BuildMaterialResult materialResult = MATERIALS.prepare(player, blueprint);
-        if (!materialResult.allowed()) {
-            player.sendSystemMessage(Component.literal("BlockForge Builder Wand rejected build: " + materialResult.message()));
-            if (materialResult.report() != null) {
-                sendMissingMaterials(player, materialResult.report().requirements());
+        if (!buildResult.allowed()) {
+            if (buildResult.placementResult() != null) {
+                sendPlacementResult(player, buildResult);
+            } else {
+                player.sendSystemMessage(Component.literal("BlockForge Builder Wand rejected build: " + buildResult.message()));
+            }
+
+            if (buildResult.materialReport() != null) {
+                sendMissingMaterials(player, buildResult.materialReport().requirements());
             }
             return InteractionResult.FAIL;
         }
 
-        BlueprintPlacer.PlacementResult result = PLACER.place(
-                serverLevel,
-                basePos,
-                blueprint,
-                selection.getRotation(),
-                player
-        );
-
-        if (result.snapshot() != null) {
-            BlockForgeConnector.UNDO.record(result.snapshot());
-        }
-
-        sendPlacementResult(player, result, materialResult);
+        sendPlacementResult(player, buildResult);
         return InteractionResult.SUCCESS;
     }
 
     private void sendPlacementResult(
             ServerPlayer player,
-            BlueprintPlacer.PlacementResult result,
-            MaterialBuildGate.BuildMaterialResult materialResult
+            BuildService.BuildResult buildResult
     ) {
+        var result = buildResult.placementResult();
         if (result.tooLarge()) {
             player.sendSystemMessage(Component.literal(
                     "Blueprint has " + result.totalBlocks() + " blocks, which exceeds the "
@@ -125,20 +117,28 @@ public class BuilderWandItem extends Item {
                 + ", nonReplaceable=" + result.skippedNonReplaceable()
                 + ". appliedProperties=" + result.appliedProperties()
                 + ". totalBlocks=" + result.totalBlocks()
-                + materialSummary(materialResult)
-                + ". Use /blockforge undo to revert blocks."));
+                + materialSummary(buildResult)
+                + undoHint(buildResult)));
     }
 
-    private String materialSummary(MaterialBuildGate.BuildMaterialResult materialResult) {
-        if (materialResult == null || materialResult.report() == null) {
+    private String materialSummary(BuildService.BuildResult buildResult) {
+        if (buildResult == null || buildResult.materialReport() == null) {
             return "";
         }
 
-        if (materialResult.creativeBypass()) {
+        if (buildResult.creativeBypass()) {
             return ". Creative mode: no materials consumed";
         }
 
-        return ". consumedItems=" + materialResult.consumedItems();
+        return ". consumedItems=" + buildResult.consumedItems();
+    }
+
+    private String undoHint(BuildService.BuildResult buildResult) {
+        if (buildResult != null && buildResult.consumedItems() > 0) {
+            return ". Use /blockforge undo to restore blocks and refund materials.";
+        }
+
+        return ". Use /blockforge undo to revert blocks.";
     }
 
     private void sendMissingMaterials(ServerPlayer player, java.util.List<MaterialRequirement> requirements) {

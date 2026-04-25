@@ -27,12 +27,12 @@ public class MaterialBuildGate {
             return BuildMaterialResult.denied("Not enough materials.", report);
         }
 
-        MaterialConsumer.ConsumeResult consumeResult = consumer.consume(player, report);
+        MaterialConsumer.ConsumeResult consumeResult = consumer.consume(player, blueprint.getId(), player.serverLevel().getGameTime(), report);
         if (!consumeResult.success()) {
             return BuildMaterialResult.denied(consumeResult.message(), report);
         }
 
-        return BuildMaterialResult.allowed(report, consumeResult.consumedItems(), false);
+        return BuildMaterialResult.allowed(report, consumeResult.transaction(), false);
     }
 
     public MaterialReport report(Blueprint blueprint, ServerPlayer player) {
@@ -43,15 +43,23 @@ public class MaterialBuildGate {
             boolean allowed,
             String message,
             MaterialReport report,
-            int consumedItems,
+            MaterialTransaction transaction,
             boolean creativeBypass
     ) {
         public static BuildMaterialResult allowed(MaterialReport report, int consumedItems, boolean creativeBypass) {
-            return new BuildMaterialResult(true, "", report, consumedItems, creativeBypass);
+            return new BuildMaterialResult(true, "", report, null, creativeBypass);
+        }
+
+        public static BuildMaterialResult allowed(MaterialReport report, MaterialTransaction transaction, boolean creativeBypass) {
+            return new BuildMaterialResult(true, "", report, transaction, creativeBypass);
         }
 
         public static BuildMaterialResult denied(String message, MaterialReport report) {
-            return new BuildMaterialResult(false, message, report, 0, false);
+            return new BuildMaterialResult(false, message, report, null, false);
+        }
+
+        public int consumedItems() {
+            return transaction == null ? 0 : transaction.totalConsumedItems();
         }
     }
 }

@@ -1,8 +1,11 @@
 package com.blockforge.connector.undo;
 
 import com.blockforge.connector.config.BlockForgeConfig;
+import com.blockforge.connector.material.MaterialConsumer;
+import com.blockforge.connector.material.MaterialRefundResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -18,6 +21,7 @@ import java.util.UUID;
 
 public class UndoManager {
     private final Map<UUID, Deque<PlacementSnapshot>> snapshotsByPlayer = new HashMap<>();
+    private final MaterialConsumer materialConsumer = new MaterialConsumer();
 
     public void record(PlacementSnapshot snapshot) {
         if (snapshot == null || snapshot.placedBlocks() <= 0 || snapshot.entries().isEmpty()) {
@@ -59,6 +63,10 @@ public class UndoManager {
     }
 
     public UndoResult restore(ServerLevel level, PlacementSnapshot snapshot) {
+        return restore(level, null, snapshot);
+    }
+
+    public UndoResult restore(ServerLevel level, ServerPlayer player, PlacementSnapshot snapshot) {
         int restored = 0;
         List<BlockSnapshotEntry> entries = snapshot.entries();
 
@@ -78,9 +86,16 @@ public class UndoManager {
             restored++;
         }
 
-        return new UndoResult(restored, snapshot.blueprintId());
+        MaterialRefundResult refundResult = materialConsumer.refundMaterials(player, snapshot.materialTransaction());
+
+        return new UndoResult(restored, snapshot.blueprintId(), refundResult, snapshot.consumedItemCount());
     }
 
-    public record UndoResult(int restoredBlocks, String blueprintId) {
+    public record UndoResult(
+            int restoredBlocks,
+            String blueprintId,
+            MaterialRefundResult refundResult,
+            int consumedItems
+    ) {
     }
 }

@@ -1,12 +1,14 @@
 package com.blockforge.connector.command;
 
 import com.blockforge.connector.BlockForgeConnector;
+import com.blockforge.connector.build.BuildService;
 import com.blockforge.connector.blueprint.Blueprint;
 import com.blockforge.connector.blueprint.ExampleBlueprintInstaller;
 import com.blockforge.connector.blueprint.BlueprintRegistry;
 import com.blockforge.connector.builder.BlueprintPlacer;
 import com.blockforge.connector.builder.BlueprintRotation;
 import com.blockforge.connector.material.MaterialBuildGate;
+import com.blockforge.connector.material.MaterialRefundResult;
 import com.blockforge.connector.material.MaterialReport;
 import com.blockforge.connector.material.MaterialRequirement;
 import com.blockforge.connector.network.BlockForgeNetwork;
@@ -32,6 +34,7 @@ public final class BlockForgeCommands {
     private static final BlueprintPlacer PLACER = new BlueprintPlacer();
     private static final ExampleBlueprintInstaller EXAMPLES = new ExampleBlueprintInstaller();
     private static final MaterialBuildGate MATERIALS = new MaterialBuildGate();
+    private static final BuildService BUILDS = new BuildService(BlockForgeConnector.UNDO);
 
     private BlockForgeCommands() {
     }
@@ -352,13 +355,9 @@ public final class BlockForgeCommands {
             return 0;
         }
 
-        UndoManager.UndoResult result = BlockForgeConnector.UNDO.restore(context.getSource().getLevel(), snapshot);
+        UndoManager.UndoResult result = BlockForgeConnector.UNDO.restore(context.getSource().getLevel(), player, snapshot);
         context.getSource().sendSuccess(
-                () -> Component.literal("BlockForge undo restored "
-                        + result.restoredBlocks()
-                        + " blocks from blueprint "
-                        + result.blueprintId()
-                        + "."),
+                () -> Component.literal(formatUndoResult(result)),
                 true
         );
         return result.restoredBlocks();
@@ -389,6 +388,8 @@ public final class BlockForgeCommands {
                             + snapshot.blueprintId()
                             + " | placed="
                             + snapshot.placedBlocks()
+                            + " | consumedItems="
+                            + snapshot.consumedItemCount()
                             + " | age="
                             + ageSeconds
                             + "s"),
@@ -566,36 +567,30 @@ public final class BlockForgeCommands {
             return 0;
         }
 
-        BlueprintPlacer.PlacementResult dryRun = PLACER.dryRun(blueprint);
-        if (dryRun.tooLarge() || dryRun.empty()) {
-            sendPlacementResult(context.getSource(), "Build rejected", dryRun, null);
-            return 0;
-        }
-
         ServerPlayer player = getPlayerOrNull(context);
-        MaterialBuildGate.BuildMaterialResult materialResult = MATERIALS.prepare(player, blueprint);
-        if (!materialResult.allowed()) {
-            context.getSource().sendFailure(Component.literal("BlockForge build rejected: " + materialResult.message()));
-            if (materialResult.report() != null) {
-                sendMaterialReport(context.getSource(), materialResult.report());
+        BuildService.BuildResult buildResult = BUILDS.build(
+                context.getSource().getLevel(),
+                player,
+                basePos,
+                blueprint,
+                rotation
+        );
+
+        if (!buildResult.allowed()) {
+            if (buildResult.placementResult() != null) {
+                sendPlacementResult(context.getSource(), "Build rejected", buildResult);
+            } else {
+                context.getSource().sendFailure(Component.literal("BlockForge build rejected: " + buildResult.message()));
+            }
+
+            if (buildResult.materialReport() != null) {
+                sendMaterialReport(context.getSource(), buildResult.materialReport());
             }
             return 0;
         }
 
-        BlueprintPlacer.PlacementResult result = PLACER.place(
-                context.getSource().getLevel(),
-                basePos,
-                blueprint,
-                rotation,
-                player
-        );
-
-        if (result.snapshot() != null) {
-            BlockForgeConnector.UNDO.record(result.snapshot());
-        }
-
-        sendPlacementResult(context.getSource(), "Build complete", result, materialResult);
-        return result.placedBlocks();
+        sendPlacementResult(context.getSource(), "Build complete", buildResult);
+        return buildResult.placementResult().placedBlocks();
     }
 
     private static ServerPlayer getPlayerOrNull(CommandContext<CommandSourceStack> context) {
@@ -638,9 +633,9 @@ public final class BlockForgeCommands {
     private static void sendPlacementResult(
             CommandSourceStack source,
             String label,
-            BlueprintPlacer.PlacementResult result,
-            MaterialBuildGate.BuildMaterialResult materialResult
+            BuildService.BuildResult buildResult
     ) {
+        BlueprintPlacer.PlacementResult result = buildResult.placementResult();
         if (result.tooLarge()) {
             source.sendFailure(Component.literal(
                     "Blueprint has " + result.totalBlocks() + " blocks, which exceeds the "
@@ -665,22 +660,59 @@ public final class BlockForgeCommands {
                         + ", nonReplaceable=" + result.skippedNonReplaceable()
                         + ". appliedProperties=" + result.appliedProperties()
                         + ". totalBlocks=" + result.totalBlocks()
-                        + materialSummary(materialResult)
-                        + ". Use /blockforge undo to revert."),
+                        + materialSummary(buildResult)
+                        + undoHint(buildResult)),
                 true
         );
     }
 
-    private static String materialSummary(MaterialBuildGate.BuildMaterialResult materialResult) {
-        if (materialResult == null || materialResult.report() == null) {
+    private static String materialSummary(BuildService.BuildResult buildResult) {
+        if (buildResult == null || buildResult.materialReport() == null) {
             return "";
         }
 
-        if (materialResult.creativeBypass()) {
+        if (buildResult.creativeBypass()) {
             return ". Creative mode: no materials consumed";
         }
 
-        return ". consumedItems=" + materialResult.consumedItems();
+        return ". consumedItems=" + buildResult.consumedItems();
+    }
+
+    private static String undoHint(BuildService.BuildResult buildResult) {
+        if (buildResult != null && buildResult.consumedItems() > 0) {
+            return ". Use /blockforge undo to restore blocks and refund materials.";
+        }
+
+        return ". Use /blockforge undo to revert blocks.";
+    }
+
+    private static String formatUndoResult(UndoManager.UndoResult result) {
+        MaterialRefundResult refund = result.refundResult();
+        if (result.consumedItems() <= 0) {
+            return "BlockForge undo restored "
+                    + result.restoredBlocks()
+                    + " blocks from blueprint "
+                    + result.blueprintId()
+                    + ". No materials were consumed.";
+        }
+
+        if (refund.droppedItems() > 0) {
+            return "BlockForge undo restored "
+                    + result.restoredBlocks()
+                    + " blocks and refunded "
+                    + refund.refundedItems()
+                    + " items, dropped "
+                    + refund.droppedItems()
+                    + " items near player.";
+        }
+
+        return "BlockForge undo restored "
+                + result.restoredBlocks()
+                + " blocks and refunded "
+                + refund.refundedItems()
+                + " items from blueprint "
+                + result.blueprintId()
+                + ".";
     }
 
     private static void sendDryRunResult(

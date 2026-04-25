@@ -2,6 +2,25 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [0.9.1] - Unreleased
+
+### Added
+
+- Material transactions for survival builds.
+- Undo material refunds for BlockForge placements.
+- Best-effort material rollback when a build consumes items but fails to place blocks.
+- Material refund drop handling when the player's inventory is full.
+- Shared `BuildService` path for command builds and Builder Wand builds.
+
+### Notes
+
+- Creative mode still bypasses material consumption and has no materials to refund.
+- Undo restores world blocks first, then refunds recorded survival materials.
+- If inventory space is unavailable during undo, refunded items are dropped near the player.
+- Undo does not restore XP, currency, or external economy state because BlockForge does not include an economy system.
+- v0.9.1 build validation passed.
+- Minecraft manual testing verified survival material refund on undo and full-inventory refund drops.
+
 ## [0.9.0] - Unreleased
 
 ### Added
@@ -20,7 +39,7 @@ All notable changes to BlockForge will be documented in this file.
 - Material cost mode is currently `simple`: one placed block costs one item from `block.asItem()`.
 - Creative mode does not consume materials.
 - Adventure and spectator builds are blocked by default.
-- Undo restores world blocks only; it does not refund consumed materials yet.
+- Undo restores world blocks only in v0.9.0; v0.9.1 adds material refunds.
 - v0.9.0 build validation passed.
 - Minecraft manual testing verified creative material bypass, survival missing-material rejection, survival material consumption, `/blockforge materials selected`, and block-only undo behavior.
 - Manual material results for `tiny_platform`: `requiredItems=9`, missing case `availableItems=0`, enough case `availableItems=9`, and survival build consumed 9 stone bricks from a stack of 16.

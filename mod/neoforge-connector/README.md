@@ -4,8 +4,9 @@ BlockForge Connector is a minimal NeoForge 1.21.1 mod that reads Blueprint JSON
 files exported by the BlockForge web app and places them in-game with commands.
 
 This MVP includes command placement, a basic Builder Wand, in-memory undo
-snapshots, a Ghost Preview candidate, and a Blueprint Selector GUI. It does not
-include blueprint editing, material refunds, or live Web integration yet.
+snapshots, undo material refunds, a Ghost Preview candidate, and a Blueprint
+Selector GUI. It does not include blueprint editing, external storage, or live
+Web integration yet.
 
 ## Target
 
@@ -169,6 +170,10 @@ Undo restores previous block states and attempts to restore BlockEntity NBT when
 an overwritten block entity was captured. By default, BlockEntity targets are
 protected and skipped instead of overwritten.
 
+If a survival build consumed materials, undo also refunds the recorded material
+transaction. If the player's inventory is full, leftover refunded items are
+dropped near the player.
+
 ## Safety Limits
 
 v0.6.1 centralizes Connector safety settings in `BlockForgeConfig`:
@@ -277,15 +282,25 @@ Build flow:
 1. Generate a material report from the selected blueprint.
 2. Check the player's inventory.
 3. Refuse the build if materials are missing.
-4. Consume materials if enough are available.
+4. Consume materials through a material transaction if enough are available.
 5. Place the blueprint through `BlueprintPlacer`.
+6. Record both the block snapshot and material transaction for undo.
 
-Known v0.9 limits:
+Undo flow:
 
-- Undo restores blocks only and does not refund consumed materials.
+1. Restore previous world blocks from the placement snapshot.
+2. Refund consumed survival materials from the material transaction.
+3. Drop refunded items near the player when the inventory is full.
+
+Known v0.9.1 limits:
+
+- Undo refunds BlockForge material transactions, but does not restore XP, currency, or external economy state.
 - No nearby chest or warehouse support.
 - No special cost table for doors, fluids, torches, or multi-block placements.
 - No material icons in the GUI yet.
+
+Manual Minecraft testing for v0.9.1 verified survival undo refunds and
+full-inventory refund drops.
 
 ## Usage Example
 
@@ -336,11 +351,11 @@ Recommended first in-game test:
 - BlockState support is limited to string properties accepted by the target Minecraft block.
 - Builder Wand selection is not persisted.
 - Undo history is in-memory and is not persisted.
-- Builder Wand has no material cost.
+- Builder Wand uses the same material transaction flow as command builds.
 - BlockEntity positions are protected by default.
 - Ghost Preview is a client-side candidate and still needs in-game validation.
 - Blueprint Selector GUI is an MVP and still needs in-game validation.
-- Undo does not refund materials yet.
+- Undo refunds recorded survival materials, but the history is still in-memory only.
 - No air clearing.
 - Invalid palette entries are skipped.
 - Invalid Minecraft block ids are skipped.
