@@ -1,0 +1,44 @@
+"use client";
+
+import { Canvas } from "@react-three/fiber";
+import { Suspense, useMemo } from "react";
+import { VoxelScene } from "@/components/VoxelScene";
+import { getCameraPosition } from "@/lib/voxel";
+import type { VoxelModel } from "@/types/blueprint";
+
+type VoxelPreview3DProps = {
+  emptyMessage?: string;
+  model: VoxelModel;
+};
+
+export function VoxelPreview3D({ emptyMessage, model }: VoxelPreview3DProps) {
+  const cameraPosition = useMemo(() => getCameraPosition(model), [model]);
+
+  if (model.blocks.length === 0) {
+    return (
+      <div className="flex h-[420px] items-center justify-center rounded-md border border-forge/20 bg-stone-950 text-sm text-stone-500">
+        {emptyMessage ?? "No voxel blocks to preview yet."}
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-[420px] overflow-hidden bg-transparent sm:h-[520px] xl:h-[560px]">
+      <Canvas
+        camera={{
+          fov: 45,
+          near: 0.1,
+          far: 1000,
+          position: cameraPosition
+        }}
+        dpr={[1, 1.5]}
+        gl={{ antialias: true, preserveDrawingBuffer: true }}
+        shadows
+      >
+        <Suspense fallback={null}>
+          <VoxelScene model={model} />
+        </Suspense>
+      </Canvas>
+    </div>
+  );
+}
