@@ -27,6 +27,15 @@ public class BlueprintPlacer {
         return evaluate(null, null, BlockPos.ZERO, blueprint, BlueprintRotation.NONE, false);
     }
 
+    public PlacementResult dryRun(
+            ServerLevel level,
+            BlockPos basePos,
+            Blueprint blueprint,
+            BlueprintRotation rotation
+    ) {
+        return evaluate(level, null, basePos, blueprint, rotation, false);
+    }
+
     public PlacementResult place(
             ServerLevel level,
             BlockPos basePos,
@@ -73,6 +82,7 @@ public class BlueprintPlacer {
         int appliedProperties = 0;
         int invalidProperties = 0;
         List<BlockSnapshotEntry> snapshotEntries = new ArrayList<>();
+        List<BlueprintBlock> acceptedBlocks = new ArrayList<>();
 
         for (BlueprintBlock blueprintBlock : blueprint.getBlocks()) {
             String stateKey = blueprintBlock.getState();
@@ -106,7 +116,7 @@ public class BlueprintPlacer {
             BlockState previousState = null;
             CompoundTag blockEntityTag = null;
 
-            if (placeBlocks) {
+            if (level != null) {
                 previousState = level.getBlockState(target);
                 BlockEntity blockEntity = level.getBlockEntity(target);
 
@@ -122,7 +132,7 @@ public class BlueprintPlacer {
                     continue;
                 }
 
-                if (blockEntity != null) {
+                if (placeBlocks && blockEntity != null) {
                     blockEntityTag = blockEntity.saveWithFullMetadata(level.registryAccess());
                 }
             }
@@ -136,6 +146,7 @@ public class BlueprintPlacer {
                 snapshotEntries.add(new BlockSnapshotEntry(target, previousState, blockEntityTag));
             }
 
+            acceptedBlocks.add(blueprintBlock);
             placed++;
         }
 
@@ -154,7 +165,8 @@ public class BlueprintPlacer {
                 nonReplaceable,
                 appliedProperties,
                 maxBlocks,
-                snapshot
+                snapshot,
+                acceptedBlocks
         );
     }
 
@@ -239,14 +251,19 @@ public class BlueprintPlacer {
             int skippedNonReplaceable,
             int appliedProperties,
             int maxBlocks,
-            PlacementSnapshot snapshot
+            PlacementSnapshot snapshot,
+            List<BlueprintBlock> acceptedBlocks
     ) {
+        public PlacementResult {
+            acceptedBlocks = acceptedBlocks == null ? List.of() : List.copyOf(acceptedBlocks);
+        }
+
         public static PlacementResult tooLarge(int totalBlocks, int maxBlocks) {
-            return new PlacementResult(true, false, totalBlocks, 0, 0, 0, 0, 0, 0, 0, 0, maxBlocks, null);
+            return new PlacementResult(true, false, totalBlocks, 0, 0, 0, 0, 0, 0, 0, 0, maxBlocks, null, List.of());
         }
 
         public static PlacementResult empty(int maxBlocks) {
-            return new PlacementResult(false, true, 0, 0, 0, 0, 0, 0, 0, 0, 0, maxBlocks, null);
+            return new PlacementResult(false, true, 0, 0, 0, 0, 0, 0, 0, 0, 0, maxBlocks, null, List.of());
         }
 
         public PlacementResult withSnapshot(PlacementSnapshot updatedSnapshot) {
@@ -263,7 +280,8 @@ public class BlueprintPlacer {
                     skippedNonReplaceable,
                     appliedProperties,
                     maxBlocks,
-                    updatedSnapshot
+                    updatedSnapshot,
+                    acceptedBlocks
             );
         }
     }

@@ -2,6 +2,25 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [1.0.1] - Unreleased
+
+### Fixed
+
+- Fixed survival-mode material over-consumption when a partial build skips protected, non-replaceable, out-of-world, or invalid targets.
+- Hardened NeoForge Connector blueprint parsing so malformed JSON shapes are reported as invalid blueprints instead of escaping as unchecked parser errors.
+- Added Connector-side validation for positive blueprint dimensions, in-bounds block coordinates, duplicate positions, and missing palette references.
+
+### Added
+
+- Added NeoForge Connector JUnit tests for malformed blueprint parsing and partial-build material counting.
+
+### 中文摘要
+
+- 修复生存模式部分放置时可能多扣材料的问题。
+- 加固蓝图 JSON 解析，坏蓝图会变成加载 warning，不再中断 reload。
+- 增加蓝图尺寸、坐标边界、重复坐标和 palette 引用校验。
+- 新增 Connector 单元测试覆盖本次 bugfix。
+
 ## [1.0.0-rc.1] - Unreleased
 
 ### Added

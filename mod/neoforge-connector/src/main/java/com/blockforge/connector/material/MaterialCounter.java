@@ -12,23 +12,46 @@ import net.minecraft.world.level.block.Block;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public class MaterialCounter {
+    private final Function<String, String> itemIdResolver;
+
+    public MaterialCounter() {
+        this(MaterialCounter::itemIdForBlock);
+    }
+
+    MaterialCounter(Function<String, String> itemIdResolver) {
+        this.itemIdResolver = itemIdResolver;
+    }
+
     public MaterialReport count(Blueprint blueprint) {
         return withAvailability(blueprint, Map.of());
     }
 
+    public MaterialReport count(Blueprint blueprint, List<BlueprintBlock> blocks) {
+        return withAvailability(blueprint, blocks, Map.of());
+    }
+
     public MaterialReport withAvailability(Blueprint blueprint, Map<String, Integer> availableItems) {
+        return withAvailability(blueprint, blueprint.getBlocks(), availableItems);
+    }
+
+    public MaterialReport withAvailability(
+            Blueprint blueprint,
+            List<BlueprintBlock> blocks,
+            Map<String, Integer> availableItems
+    ) {
         Map<String, MutableRequirement> requirements = new HashMap<>();
 
-        for (BlueprintBlock block : blueprint.getBlocks()) {
+        for (BlueprintBlock block : blocks) {
             BlueprintPaletteEntry paletteEntry = blueprint.getPalette().get(block.getState());
             if (paletteEntry == null || paletteEntry.name() == null || paletteEntry.name().isBlank()) {
                 continue;
             }
 
             String blockId = paletteEntry.name();
-            String countedItemId = itemIdForBlock(blockId);
+            String countedItemId = itemIdResolver.apply(blockId);
             String resolvedItemId = countedItemId == null ? "minecraft:air" : countedItemId;
 
             MutableRequirement requirement = requirements.computeIfAbsent(
@@ -58,7 +81,7 @@ public class MaterialCounter {
 
         return new MaterialReport(
                 blueprint.getId(),
-                blueprint.getBlockCount(),
+                blocks.size(),
                 totalRequired,
                 totalAvailable,
                 enough,
@@ -66,7 +89,7 @@ public class MaterialCounter {
         );
     }
 
-    private String itemIdForBlock(String blockId) {
+    private static String itemIdForBlock(String blockId) {
         ResourceLocation location = ResourceLocation.tryParse(blockId);
         if (location == null) {
             return "minecraft:air";
@@ -75,11 +98,11 @@ public class MaterialCounter {
         return BuiltInRegistries.BLOCK.getOptional(location)
                 .map(Block::asItem)
                 .filter(item -> item != Items.AIR)
-                .map(this::itemId)
+                .map(MaterialCounter::itemId)
                 .orElse("minecraft:air");
     }
 
-    private String itemId(Item item) {
+    private static String itemId(Item item) {
         ResourceLocation location = BuiltInRegistries.ITEM.getKey(item);
         return location == null ? "minecraft:air" : location.toString();
     }

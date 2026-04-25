@@ -5,6 +5,13 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
+## v1.0.1 Bug Fixes
+
+- Fixed survival material over-consumption when a build only places part of a blueprint because some target blocks are protected, non-replaceable, out of world, or otherwise skipped.
+- Hardened Connector blueprint parsing so malformed but syntactically valid JSON is reported as a load warning instead of escaping as an unchecked parser error.
+- Added Connector-side blueprint structure validation for positive size, in-bounds block coordinates, duplicate coordinates, and missing palette references.
+- Added NeoForge Connector unit tests covering malformed blueprint parsing and partial-build material counting.
+
 ## v1.0.0-rc.1 Features
 
 - 5 built-in voxel presets

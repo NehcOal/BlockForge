@@ -32,9 +32,9 @@ public class BuildService {
             Blueprint blueprint,
             BlueprintRotation rotation
     ) {
-        BlueprintPlacer.PlacementResult dryRun = placer.dryRun(blueprint);
-        if (dryRun.tooLarge() || dryRun.empty()) {
-            return BuildResult.rejected(dryRun, null, null, MaterialRefundResult.empty(), "");
+        BlueprintPlacer.PlacementResult preflight = placer.dryRun(level, basePos, blueprint, rotation);
+        if (preflight.tooLarge() || preflight.empty()) {
+            return BuildResult.rejected(preflight, null, null, MaterialRefundResult.empty(), "");
         }
 
         MaterialReport report = null;
@@ -42,7 +42,7 @@ public class BuildService {
 
         if (player != null && BlockForgeConfig.requireMaterialsInSurvival()) {
             PlayerInventoryMaterialChecker.AccessResult access = checker.canBuild(player);
-            report = checker.report(blueprint, player);
+            report = checker.report(blueprint, player, preflight.acceptedBlocks());
 
             if (!access.allowed()) {
                 return BuildResult.rejected(null, report, null, MaterialRefundResult.empty(), access.message());

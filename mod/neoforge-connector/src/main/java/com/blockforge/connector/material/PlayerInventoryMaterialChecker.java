@@ -1,6 +1,7 @@
 package com.blockforge.connector.material;
 
 import com.blockforge.connector.blueprint.Blueprint;
+import com.blockforge.connector.blueprint.BlueprintBlock;
 import com.blockforge.connector.config.BlockForgeConfig;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -10,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PlayerInventoryMaterialChecker {
@@ -30,15 +32,19 @@ public class PlayerInventoryMaterialChecker {
     }
 
     public MaterialReport report(Blueprint blueprint, ServerPlayer player) {
+        return report(blueprint, player, blueprint.getBlocks());
+    }
+
+    public MaterialReport report(Blueprint blueprint, ServerPlayer player, List<BlueprintBlock> blocks) {
         if (player == null) {
-            return counter.count(blueprint);
+            return counter.count(blueprint, blocks);
         }
 
         if (isCreativeBypass(player)) {
-            return creativeReport(blueprint);
+            return creativeReport(blueprint, blocks);
         }
 
-        return counter.withAvailability(blueprint, inventoryCounts(player));
+        return counter.withAvailability(blueprint, blocks, inventoryCounts(player));
     }
 
     public boolean isCreativeBypass(ServerPlayer player) {
@@ -61,8 +67,8 @@ public class PlayerInventoryMaterialChecker {
         return counts;
     }
 
-    private MaterialReport creativeReport(Blueprint blueprint) {
-        MaterialReport baseReport = counter.count(blueprint);
+    private MaterialReport creativeReport(Blueprint blueprint, List<BlueprintBlock> blocks) {
+        MaterialReport baseReport = counter.count(blueprint, blocks);
         return new MaterialReport(
                 baseReport.blueprintId(),
                 baseReport.totalBlocks(),
