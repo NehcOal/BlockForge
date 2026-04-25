@@ -2,6 +2,28 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [1.0.0-rc.1] - Unreleased
+
+### Added
+
+- Release candidate packaging documentation.
+- English and Chinese install guides.
+- GitHub Actions Web and NeoForge Connector CI jobs.
+- CI artifact upload for Connector jars.
+- NeoForge common config for Connector safety and material settings.
+
+### Changed
+
+- Updated Web and Connector versions to `1.0.0-rc.1`.
+- Cleaned up Connector mod metadata for the GitHub release candidate.
+- Documented release artifacts and the fastest in-game setup path.
+
+### Notes
+
+- Target versions remain Minecraft Java Edition `1.21.1`, NeoForge `21.1.227`, and Java `21`.
+- Defaults in the common config preserve the v0.9.1 validated behavior.
+- Minecraft manual smoke testing verified the v1.0 RC client launch and core Connector flow after common config registration.
+
 ## [0.9.1] - Unreleased
 
 ### Added
@@ -100,7 +122,7 @@ All notable changes to BlockForge will be documented in this file.
 
 ### Notes
 
-- Configuration values are currently code-level constants; a NeoForge common config file is planned for a later pass.
+- Configuration values are code-level constants in v0.6.1; v1.0.0-rc.1 moves them to a NeoForge common config.
 - Undo history is stored in memory and is not persisted across restarts or player reconnect workflows.
 - v0.6.1 build validation passed.
 - Minecraft manual testing verified Builder Wand placement with `state_test_house`: `placed=116`, `appliedProperties=10`, and zero missing palette, invalid block id, invalid properties, out-of-world, protected, or non-replaceable skips.

@@ -2,8 +2,8 @@
 
 从文本提示生成 Minecraft 风格 voxel 方块建筑蓝图。
 
-BlockForge 是一个本地优先的 Minecraft 风格方块建筑蓝图生成器。当前 v0.1 版本使用规则生成和内置 preset 模板，后续可以扩展为真正的
-AI 蓝图生成器。
+BlockForge 是一个本地优先的 Minecraft 风格方块建筑蓝图生成器。当前 v1.0.0-rc.1
+包含 Web 蓝图生成、3D 预览、导出链路，以及 NeoForge Connector 游戏内建造流程。
 
 [English README](./README.md) | [使用手册](./docs/USER_MANUAL.zh-CN.md)
 
@@ -18,7 +18,7 @@ AI 蓝图生成器。
 - 新增 NeoForge 1.21.1 BlockForge Connector MVP。
 - 新增 Builder Wand MVP，可通过法杖放置已选择蓝图。
 - 新增 `/blockforge undo`，可撤销最近一次 BlockForge 放置。
-- 新增放置快照和安全限制配置常量。
+- 新增放置快照和 NeoForge common config 安全配置。
 - 新增 Builder Wand Ghost Preview MVP 候选版。
 - 新增游戏内 Blueprint Selector GUI MVP，可选择蓝图和旋转角度。
 - 新增 `/blockforge gui` 和默认 `B` 键打开选择器。
@@ -61,6 +61,21 @@ pnpm dev
 ```text
 http://localhost:3000
 ```
+
+## 游戏内最快开始
+
+```text
+1. 安装 BlockForge Connector Mod。
+2. 执行 /blockforge examples install。
+3. 执行 /blockforge reload。
+4. 打开 /blockforge gui。
+5. 选择一个蓝图。
+6. 执行 /blockforge wand 获取法杖。
+7. 右键预览并建造。
+8. 使用 /blockforge undo 撤销。
+```
+
+完整安装步骤见：[安装指南](./docs/INSTALL.zh-CN.md)。
 
 ## 使用方式
 
@@ -184,7 +199,17 @@ v0.8 已通过 Gradle 构建，Minecraft 实机测试待进行。
 生存模式玩家在使用命令 build 或 Builder Wand 建造前，必须拥有足够材料。
 材料充足时会从背包扣除对应物品；创造模式会跳过材料检查和消耗。
 Undo 现在会恢复世界方块，并返还记录到的生存模式材料；如果玩家背包已满，
-返还材料会掉落在玩家附近。v0.9.1 已通过 Gradle 构建和 Minecraft 实机测试。
+返还材料会掉落在玩家附近。v1.0.0-rc.1 保留 v0.9.1 已验证行为，并补充
+release 打包、metadata、CI 和 common config 整理。当前 RC 已通过客户端启动和
+Connector 核心流程烟测。
+
+Connector common config：
+
+```text
+.minecraft/config/blockforge_connector-common.toml
+```
+
+该配置文件可调整安全限制、覆盖规则、Builder Wand 冷却、Undo 历史数量和生存模式材料需求。
 
 ## Minecraft Function 导出
 
@@ -249,7 +274,7 @@ pnpm lint
 - Blueprint Selector 增加搜索、分页和缩略图。
 - Undo 材料返还边界测试。
 - 为门、流体、火把和多方块结构添加特殊材料成本规则。
-- NeoForge common config 文件，替代当前代码级安全配置常量。
+- 改进 release artifact 自动发布。
 - Blueprint v1/v2 schema 校验工具。
 - `.schem` 导出。
 - 方块贴图渲染。

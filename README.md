@@ -5,7 +5,7 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v0.9.1 Features
+## v1.0.0-rc.1 Features
 
 - 5 built-in voxel presets
 - Interactive 3D browser preview
@@ -23,6 +23,8 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 - Survival-mode material checks and item consumption
 - Material transactions with undo refunds for survival builds
 - Creative-mode material bypass
+- NeoForge common config for Connector safety and material settings
+- CI jobs for Web and NeoForge Connector builds
 - Connector example blueprints and manual testing guide
 - Minecraft `.mcfunction` export
 - Minecraft Java 1.21.1 Data Pack ZIP export
@@ -73,6 +75,21 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Fastest In-Game Start
+
+```text
+1. Install the BlockForge Connector mod.
+2. Run /blockforge examples install.
+3. Run /blockforge reload.
+4. Open /blockforge gui.
+5. Select a blueprint.
+6. Get /blockforge wand.
+7. Right-click to preview and build.
+8. Use /blockforge undo to revert.
+```
+
+For full setup details, see [Install Guide](./docs/INSTALL.md).
 
 ## Usage
 
@@ -160,7 +177,7 @@ Undo the latest BlockForge placement:
 /blockforge undo clear
 ```
 
-v0.6.1 Gradle build passed; Minecraft manual testing is pending.
+v0.6.1 Gradle build and Minecraft manual testing passed.
 
 Ghost Preview MVP candidate:
 
@@ -174,7 +191,7 @@ Hold the Builder Wand and look at a block. The client draws a translucent
 bounding box and ground footprint at `clickedPos.relative(clickedFace)`. The
 preview uses the selected blueprint size and rotation, does not modify the
 world, and does not replace server-side placement checks. v0.7 Gradle build
-passed; Minecraft manual testing is pending.
+passed; Minecraft manual testing passed.
 
 Blueprint Selector GUI MVP:
 
@@ -201,7 +218,18 @@ Survival players must have enough matching items before command builds or
 Builder Wand builds. Creative players bypass material checks and consume
 nothing. Undo now restores world blocks and refunds recorded survival materials.
 If the player inventory is full, refunded items are dropped near the player.
-v0.9.1 Gradle build and Minecraft manual testing passed.
+v1.0.0-rc.1 keeps the v0.9.1-tested behavior and adds release packaging,
+metadata, CI, and common config polish. Minecraft smoke testing passed for
+client launch and the core Connector flow.
+
+Connector common config:
+
+```text
+.minecraft/config/blockforge_connector-common.toml
+```
+
+The config controls safety limits, replacement rules, Builder Wand cooldown,
+undo history size, and survival material requirements.
 
 ## Minecraft Function Export
 
@@ -248,9 +276,9 @@ examples/
 - Ghost Preview for the Builder Wand.
 - Full Ghost Preview collision and replacement checks.
 - Improve Blueprint Selector with search, paging, and thumbnails.
-- Add material refund edge-case tests and special cost rules for non-cube blocks.
+- Add material refund edge-case tests.
 - Add special material cost rules for doors, fluids, torches, and multi-block placements.
-- NeoForge common config file for Connector safety limits.
+- Improve release artifact publishing.
 - Blueprint v1/v2 schema validation tooling.
 - `.schem` export.
 - Block texture rendering.

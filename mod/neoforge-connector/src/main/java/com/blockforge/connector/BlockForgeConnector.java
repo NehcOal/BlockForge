@@ -3,6 +3,7 @@ package com.blockforge.connector;
 import com.blockforge.connector.blueprint.BlueprintLoader;
 import com.blockforge.connector.blueprint.BlueprintRegistry;
 import com.blockforge.connector.command.BlockForgeCommands;
+import com.blockforge.connector.config.BlockForgeConfig;
 import com.blockforge.connector.network.BlockForgeNetwork;
 import com.blockforge.connector.player.PlayerSelectionManager;
 import com.blockforge.connector.registry.ModItems;
@@ -11,7 +12,9 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -28,7 +31,8 @@ public class BlockForgeConnector {
     public static final PlayerSelectionManager SELECTIONS = new PlayerSelectionManager();
     public static final UndoManager UNDO = new UndoManager();
 
-    public BlockForgeConnector(IEventBus modEventBus) {
+    public BlockForgeConnector(IEventBus modEventBus, ModContainer modContainer) {
+        modContainer.registerConfig(ModConfig.Type.COMMON, BlockForgeConfig.SPEC);
         ModItems.register(modEventBus);
         modEventBus.addListener(BlockForgeNetwork::register);
         modEventBus.addListener(this::addCreativeTabItems);
