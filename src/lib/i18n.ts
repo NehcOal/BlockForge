@@ -50,9 +50,13 @@ export type AppCopy = {
     title: string;
     description: string;
     json: string;
+    blueprintJson: string;
+    blueprintV2Json: string;
     mcfunction: string;
     datapack: string;
     hint: string;
+    blueprintHint: string;
+    blueprintV2Hint: string;
     datapackHint: string;
   };
   footer: {
@@ -132,10 +136,15 @@ export const appCopy: Record<Locale, AppCopy> = {
       title: "Export",
       description: "Download voxel data or Minecraft function commands.",
       json: "Export JSON",
+      blueprintJson: "Export Blueprint JSON v1",
+      blueprintV2Json: "Export Blueprint JSON v2",
       mcfunction: "Export .mcfunction",
       datapack: "Export Data Pack ZIP",
       hint:
         "Export as Minecraft function commands for Java Edition datapack workflows.",
+      blueprintHint: "Stable blueprint file for BlockForge Mod Connector.",
+      blueprintV2Hint:
+        "Supports Minecraft BlockState properties for the newer BlockForge Connector.",
       datapackHint:
         "Download a Minecraft Java 1.21.1 data pack for the datapacks folder."
     },
@@ -208,9 +217,14 @@ export const appCopy: Record<Locale, AppCopy> = {
       title: "导出",
       description: "下载 voxel 数据，或导出 Minecraft function 命令。",
       json: "导出 JSON",
+      blueprintJson: "导出 Blueprint JSON v1",
+      blueprintV2Json: "导出 Blueprint JSON v2",
       mcfunction: "导出 .mcfunction",
       datapack: "导出 Data Pack ZIP",
       hint: "导出为 Minecraft Java Edition datapack 工作流可用的 function 命令。",
+      blueprintHint: "用于 BlockForge Mod Connector 的稳定蓝图协议文件。",
+      blueprintV2Hint:
+        "支持 Minecraft BlockState，供新版 BlockForge Connector 使用。",
       datapackHint:
         "下载可放入 Minecraft Java 1.21.1 datapacks 文件夹的数据包。"
     },

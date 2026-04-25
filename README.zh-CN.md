@@ -13,6 +13,16 @@ AI 蓝图生成器。
 - 基于 React Three Fiber 的浏览器 3D 预览。
 - 支持旋转、缩放、拖动查看模型。
 - 支持导出当前 `VoxelModel` 为 JSON。
+- 支持导出 BlockForge Blueprint v1 JSON，用于未来 Mod Connector。
+- 支持导出 BlockForge Blueprint v2 JSON，携带 Minecraft BlockState properties。
+- 新增 NeoForge 1.21.1 BlockForge Connector MVP。
+- 新增 Builder Wand MVP，可通过法杖放置已选择蓝图。
+- 新增 `/blockforge undo`，可撤销最近一次 BlockForge 放置。
+- 新增放置快照和安全限制配置常量。
+- 新增 Builder Wand Ghost Preview MVP 候选版。
+- 新增游戏内 Blueprint Selector GUI MVP，可选择蓝图和旋转角度。
+- 新增 `/blockforge gui` 和默认 `B` 键打开选择器。
+- 新增 Connector 示例蓝图和手动测试文档。
 - 支持导出 Minecraft `.mcfunction` 命令文件。
 - 支持导出 Minecraft Java 1.21.1 Data Pack ZIP。
 - 清晰的 TypeScript voxel 数据结构和校验工具。
@@ -53,13 +63,112 @@ http://localhost:3000
 1. 选择一个内置建筑模板。
 2. 在 3D 预览区查看生成的 voxel 模型。
 3. 使用鼠标旋转、缩放、拖动模型。
-4. 点击 `导出 Data Pack ZIP`。
-5. 把 zip 复制到 `.minecraft/saves/<world>/datapacks`。
-6. 执行 `/reload`。
-7. 执行 `/function blockforge:build/<blueprint_id>`。
-8. 点击 `Export JSON` 导出数据文件。
-9. 点击 `Export .mcfunction` 导出 Minecraft 命令文件。
-10. 可选：输入 prompt，更新页面中的本地提示状态。
+4. 点击 `导出 Blueprint JSON`，导出未来 BlockForge Mod Connector 可读取的蓝图协议文件。
+5. 点击 `导出 Data Pack ZIP`。
+6. 把 zip 复制到 `.minecraft/saves/<world>/datapacks`。
+7. 执行 `/reload`。
+8. 执行 `/function blockforge:build/<blueprint_id>`。
+9. 点击 `Export JSON` 导出数据文件。
+10. 点击 `Export .mcfunction` 导出 Minecraft 命令文件。
+11. 可选：输入 prompt，更新页面中的本地提示状态。
+
+## Blueprint 协议导出
+
+BlockForge Blueprint v1 是简单 block id 协议。它保留原始 voxel 坐标，并通过
+palette 把 BlockForge 方块类型映射到 Minecraft Java 方块 id。
+
+Blueprint v2 增加 Minecraft BlockState 支持。palette entry 使用 `{ name,
+properties }`，blocks 使用 `state` 字段引用 palette key。
+
+字段契约见：[Blueprint Protocol](./docs/BLUEPRINT_PROTOCOL.md)。
+
+## NeoForge Connector MVP
+
+仓库已包含最小版 NeoForge 1.21.1 Mod Connector：
+
+```text
+mod/neoforge-connector
+```
+
+它会读取 Web 端导出的 Blueprint v1 JSON：
+
+```text
+.minecraft/config/blockforge/blueprints/
+```
+
+然后通过命令在游戏内生成建筑：
+
+```mcfunction
+/blockforge build <id>
+/blockforge build <id> <x> <y> <z>
+/blockforge build <id> rotate <0|90|180|270>
+/blockforge build <id> at <x> <y> <z> rotate <0|90|180|270>
+```
+
+安装和命令详情见：[BlockForge Connector README](./mod/neoforge-connector/README.md)。
+
+实机测试建议先执行：
+
+```mcfunction
+/blockforge examples install
+/blockforge reload
+/blockforge list
+```
+
+完整清单见：[Mod Connector 手动测试](./docs/MOD_CONNECTOR_TESTING.md)。
+
+实机测试状态：已在 Minecraft Java Edition 1.21.1 + NeoForge 21.1.227 下通过，
+已验证内置 `tiny_platform`、`small_test_house` 和 `medieval_tower` 示例。
+
+Blueprint v2 实机测试状态：`state_test_house` 已通过，已验证 oak door
+properties、wall torch facing，以及 `rotate 90` / `rotate 180` 旋转生成。
+
+Builder Wand MVP 使用流程：
+
+```mcfunction
+/blockforge select state_test_house
+/blockforge rotate 90
+/blockforge wand
+```
+
+然后手持 Builder Wand 右键方块，蓝图会生成在被点击方块外侧。法杖需要权限等级
+2，并带有 2 秒冷却。
+
+撤销最近一次 BlockForge 放置：
+
+```mcfunction
+/blockforge undo list
+/blockforge undo
+/blockforge undo clear
+```
+
+v0.6.1 已通过 Gradle 构建，Minecraft 实机测试待进行。
+
+Ghost Preview MVP 候选版：
+
+```mcfunction
+/blockforge select tiny_platform
+/blockforge rotate 90
+/blockforge wand
+```
+
+手持 Builder Wand 并看向一个方块时，客户端会在
+`clickedPos.relative(clickedFace)` 位置绘制半透明包围盒和地面占位轮廓。
+预览使用当前选中蓝图尺寸和旋转角度，不修改世界，也不替代服务端真实放置校验。
+v0.7 已通过 Gradle 构建，Minecraft 实机测试待进行。
+
+Blueprint Selector GUI MVP：
+
+```mcfunction
+/blockforge examples install
+/blockforge reload
+/blockforge gui
+```
+
+也可以按默认 `B` 键打开选择器。玩家可以在 GUI 中选择蓝图，设置 `0°`、`90°`、
+`180°` 或 `270°` 旋转角度，然后点击 Select。客户端只发送选择请求，服务端会
+校验蓝图和旋转角度，校验通过后再同步给 Ghost Preview 和 Builder Wand。
+v0.8 已通过 Gradle 构建，Minecraft 实机测试待进行。
 
 ## Minecraft Function 导出
 
@@ -101,6 +210,10 @@ src/
 ├─ lib/voxel/           voxel 类型、preset、校验、渲染和导出逻辑
 ├─ test/                Vitest 测试文件
 └─ types/               共享 TypeScript 类型
+mod/
+└─ neoforge-connector/  NeoForge 1.21.1 Mod Connector MVP
+examples/
+└─ blueprints/          用于 Connector 测试的 Blueprint v1 示例
 ```
 
 ## 常用命令
@@ -115,6 +228,11 @@ pnpm lint
 ## Roadmap
 
 - 完整 datapack ZIP 导出。
+- Builder Wand 实机验证与 Ghost Preview。
+- Ghost Preview 的完整碰撞和覆盖检查。
+- Blueprint Selector 增加搜索、分页和缩略图。
+- NeoForge common config 文件，替代当前代码级安全配置常量。
+- Blueprint v1/v2 schema 校验工具。
 - `.schem` 导出。
 - 方块贴图渲染。
 - 使用 `InstancedMesh` 优化大模型渲染性能。
