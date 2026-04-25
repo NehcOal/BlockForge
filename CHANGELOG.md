@@ -2,6 +2,24 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [0.2.0] - 2026-04-25
+
+### Added
+
+- Minecraft Java Edition 1.21.1 Data Pack ZIP export.
+- `pack.mcmeta` generation with `pack_format` 48.
+- Data pack function output at `data/blockforge/function/build/<blueprint_id>.mcfunction`.
+- Optional `README.txt` inside generated data pack zip files.
+- `createSafeResourcePath()` for Minecraft-safe resource paths.
+- Export UI button for Data Pack ZIP downloads.
+- Export documentation covering JSON, `.mcfunction`, and Data Pack ZIP formats.
+- Vitest coverage for data pack metadata, zip contents, function paths, and setblock command output.
+
+### Notes
+
+- Data Pack ZIP export targets Minecraft Java Edition only.
+- Bedrock Edition, `.nbt`, `.schem`, and Mod integration are planned separately.
+
 ## [0.1.0] - 2026-04-25
 
 ### Added

@@ -51,7 +51,9 @@ export type AppCopy = {
     description: string;
     json: string;
     mcfunction: string;
+    datapack: string;
     hint: string;
+    datapackHint: string;
   };
   footer: {
     status: string;
@@ -131,8 +133,11 @@ export const appCopy: Record<Locale, AppCopy> = {
       description: "Download voxel data or Minecraft function commands.",
       json: "Export JSON",
       mcfunction: "Export .mcfunction",
+      datapack: "Export Data Pack ZIP",
       hint:
-        "Export as Minecraft function commands for Java Edition datapack workflows."
+        "Export as Minecraft function commands for Java Edition datapack workflows.",
+      datapackHint:
+        "Download a Minecraft Java 1.21.1 data pack for the datapacks folder."
     },
     footer: {
       status: "Project status: v0.1 MVP ready for release polish.",
@@ -204,7 +209,10 @@ export const appCopy: Record<Locale, AppCopy> = {
       description: "下载 voxel 数据，或导出 Minecraft function 命令。",
       json: "导出 JSON",
       mcfunction: "导出 .mcfunction",
-      hint: "导出为 Minecraft Java Edition datapack 工作流可用的 function 命令。"
+      datapack: "导出 Data Pack ZIP",
+      hint: "导出为 Minecraft Java Edition datapack 工作流可用的 function 命令。",
+      datapackHint:
+        "下载可放入 Minecraft Java 1.21.1 datapacks 文件夹的数据包。"
     },
     footer: {
       status: "项目状态：v0.1 MVP 已具备发布前整理条件。",

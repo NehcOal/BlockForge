@@ -5,12 +5,13 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v0.1.0 Features
+## v0.2.0 Features
 
 - 5 built-in voxel presets
 - Interactive 3D browser preview
 - JSON export
 - Minecraft `.mcfunction` export
+- Minecraft Java 1.21.1 Data Pack ZIP export
 - TypeScript-first voxel data model
 - Vitest coverage for core export and preset logic
 
@@ -21,6 +22,7 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 - Orbit, pan, and zoom controls for inspecting voxel models.
 - Export voxel models as JSON.
 - Export Minecraft `.mcfunction` commands.
+- Export Minecraft Java 1.21.1 Data Pack ZIP.
 - Typed voxel data model with validation helpers.
 - Vitest coverage for preset integrity, bounds, duplicate coordinates, block styles, and render-position helpers.
 
@@ -55,16 +57,37 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 1. Choose one of the preset blueprints.
 2. Preview it in 3D.
 3. Rotate, zoom, and pan the model with the preview controls.
-4. Export JSON for data use.
-5. Export `.mcfunction` for Minecraft command workflows.
-6. Optionally enter a prompt to update the local prompt state.
+4. Export Data Pack ZIP.
+5. Copy the zip into `.minecraft/saves/<world>/datapacks`.
+6. Run `/reload`.
+7. Run `/function blockforge:build/<blueprint_id>`.
+8. Export JSON for data use.
+9. Export `.mcfunction` for Minecraft command workflows.
+10. Optionally enter a prompt to update the local prompt state.
 
 ## Minecraft Function Export
 
 BlockForge can export each voxel block as a `setblock` command. The generated file is
 intended as a starting point for Minecraft Java Edition command/data-pack workflows.
 
-Advanced datapack ZIP export is planned for a future release.
+Advanced datapack workflows and additional structure formats are planned for future releases.
+
+## Data Pack ZIP Export
+
+BlockForge can export a ready-to-install Minecraft Java 1.21.1 data pack.
+The generated data pack contains a BlockForge function that places the selected voxel
+model with `setblock` commands.
+
+The generated zip contains:
+
+```text
+pack.mcmeta
+data/blockforge/function/build/<blueprint_id>.mcfunction
+README.txt
+```
+
+Install it by copying the zip into `.minecraft/saves/<world>/datapacks`, running
+`/reload`, then running `/function blockforge:build/<blueprint_id>`.
 
 ## Project Structure
 

@@ -10,7 +10,16 @@ export {
   validateVoxelModel
 } from "@/lib/voxel/utils";
 export { blockStyles } from "@/lib/voxel/blockStyles";
-export { createSafeFileName } from "@/lib/voxel/exportUtils";
+export {
+  createSafeFileName,
+  createSafeResourcePath
+} from "@/lib/voxel/exportUtils";
+export {
+  createPackMcmeta,
+  getFunctionName,
+  getFunctionPath,
+  voxelModelToDataPackZip
+} from "@/lib/voxel/datapack";
 export { minecraftBlockIds } from "@/lib/voxel/minecraftBlocks";
 export { voxelModelToMcFunction } from "@/lib/voxel/mcfunction";
 export {
@@ -33,3 +42,4 @@ export type {
   VoxelSize
 } from "@/lib/voxel/types";
 export type { McFunctionExportOptions } from "@/lib/voxel/mcfunction";
+export type { DataPackExportOptions } from "@/lib/voxel/datapack";

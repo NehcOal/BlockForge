@@ -1,4 +1,9 @@
-import { createSafeFileName, voxelModelToMcFunction } from "@/lib/voxel";
+import {
+  createSafeFileName,
+  getFunctionName,
+  voxelModelToMcFunction,
+  voxelModelToDataPackZip
+} from "@/lib/voxel";
 import type { AppCopy } from "@/lib/i18n";
 import type { VoxelModel } from "@/types/blueprint";
 
@@ -10,6 +15,16 @@ type ExportPanelProps = {
 export function ExportPanel({ copy, model }: ExportPanelProps) {
   function downloadFile(content: string, type: string, fileName: string) {
     const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = fileName;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function downloadBlob(blob: Blob, fileName: string) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
 
@@ -35,6 +50,14 @@ export function ExportPanel({ copy, model }: ExportPanelProps) {
     );
   }
 
+  async function handleDataPackExport() {
+    const blob = await voxelModelToDataPackZip(model, { includeReadme: true });
+    downloadBlob(
+      blob,
+      `blockforge-${getFunctionName(model)}-datapack.zip`
+    );
+  }
+
   return (
     <section className="forge-panel p-5">
       <div className="flex flex-col gap-4">
@@ -47,7 +70,7 @@ export function ExportPanel({ copy, model }: ExportPanelProps) {
             {copy.description}
           </p>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-3">
           <button
             className="forge-secondary-button px-4 py-3 text-sm"
             onClick={handleJsonExport}
@@ -62,9 +85,19 @@ export function ExportPanel({ copy, model }: ExportPanelProps) {
           >
             {copy.mcfunction}
           </button>
+          <button
+            className="forge-primary-button px-4 py-3 text-sm"
+            onClick={handleDataPackExport}
+            type="button"
+          >
+            {copy.datapack}
+          </button>
         </div>
         <p className="text-xs leading-5 text-stone-500">
           {copy.hint}
+        </p>
+        <p className="text-xs leading-5 text-stone-500">
+          {copy.datapackHint}
         </p>
       </div>
     </section>

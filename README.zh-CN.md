@@ -14,6 +14,7 @@ AI 蓝图生成器。
 - 支持旋转、缩放、拖动查看模型。
 - 支持导出当前 `VoxelModel` 为 JSON。
 - 支持导出 Minecraft `.mcfunction` 命令文件。
+- 支持导出 Minecraft Java 1.21.1 Data Pack ZIP。
 - 清晰的 TypeScript voxel 数据结构和校验工具。
 - 使用 Vitest 覆盖 preset、坐标边界、重复坐标、材质映射、渲染坐标和导出逻辑。
 
@@ -52,9 +53,13 @@ http://localhost:3000
 1. 选择一个内置建筑模板。
 2. 在 3D 预览区查看生成的 voxel 模型。
 3. 使用鼠标旋转、缩放、拖动模型。
-4. 点击 `Export JSON` 导出数据文件。
-5. 点击 `Export .mcfunction` 导出 Minecraft 命令文件。
-6. 可选：输入 prompt，更新页面中的本地提示状态。
+4. 点击 `导出 Data Pack ZIP`。
+5. 把 zip 复制到 `.minecraft/saves/<world>/datapacks`。
+6. 执行 `/reload`。
+7. 执行 `/function blockforge:build/<blueprint_id>`。
+8. 点击 `Export JSON` 导出数据文件。
+9. 点击 `Export .mcfunction` 导出 Minecraft 命令文件。
+10. 可选：输入 prompt，更新页面中的本地提示状态。
 
 ## Minecraft Function 导出
 
@@ -69,7 +74,23 @@ setblock ~ ~ ~ minecraft:stone_bricks replace
 setblock ~1 ~0 ~2 minecraft:glass replace
 ```
 
-注意：当前版本只导出 `.mcfunction` 文件。完整 datapack ZIP 导出会在后续版本中实现。
+注意：当前版本已经支持 `.mcfunction` 和 Data Pack ZIP。更完整的高级 datapack 工作流会在后续版本中增强。
+
+## Data Pack ZIP 导出
+
+BlockForge 可以导出可直接安装的 Minecraft Java 1.21.1 数据包。
+生成的数据包包含一个 BlockForge function，用 `setblock` 命令放置当前选中的 voxel 模型。
+
+生成的 zip 包含：
+
+```text
+pack.mcmeta
+data/blockforge/function/build/<blueprint_id>.mcfunction
+README.txt
+```
+
+使用方式：把 zip 复制到 `.minecraft/saves/<world>/datapacks`，执行 `/reload`，
+然后运行 `/function blockforge:build/<blueprint_id>`。
 
 ## 项目结构
 

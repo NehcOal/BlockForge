@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createSafeFileName } from "@/lib/voxel";
+import { createSafeFileName, createSafeResourcePath } from "@/lib/voxel";
 
 describe("export utils", () => {
   it("creates safe mcfunction filenames", () => {
@@ -17,6 +17,14 @@ describe("export utils", () => {
     );
     expect(createSafeFileName(" !!! ", "mcfunction")).toBe(
       "blockforge-blueprint.mcfunction"
+    );
+  });
+
+  it("creates safe Minecraft resource paths", () => {
+    expect(createSafeResourcePath("Medieval Tower")).toBe("medieval_tower");
+    expect(createSafeResourcePath("Small Cottage")).toBe("small_cottage");
+    expect(createSafeResourcePath("Builds/Castle Gate!!")).toBe(
+      "builds/castle_gate"
     );
   });
 });
