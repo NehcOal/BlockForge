@@ -15,6 +15,7 @@ Web integration yet.
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector`
+- Mod Version: `1.0.0-rc.1`
 
 ## Blueprint Protocol Support
 
@@ -174,18 +175,27 @@ If a survival build consumed materials, undo also refunds the recorded material
 transaction. If the player's inventory is full, leftover refunded items are
 dropped near the player.
 
-## Safety Limits
+## Common Config
 
-v0.6.1 centralizes Connector safety settings in `BlockForgeConfig`:
+The Connector writes a NeoForge common config file:
+
+```text
+.minecraft/config/blockforge_connector-common.toml
+```
+
+Default settings:
 
 - `maxBlocksPerBuild`: `10000`
 - `wandCooldownSeconds`: `2`
 - `maxUndoSnapshotsPerPlayer`: `5`
 - `allowReplaceNonAir`: `true`
 - `protectBlockEntities`: `true`
+- `requireMaterialsInSurvival`: `true`
+- `creativeModeBypassesMaterials`: `true`
+- `allowBuildInAdventureMode`: `false`
+- `allowBuildInSpectatorMode`: `false`
 
-These are code-level constants for now. A NeoForge common config file is planned
-for a later pass.
+Defaults match the behavior validated before the v1.0 release candidate.
 
 ## Ghost Preview MVP Candidate
 
@@ -292,15 +302,16 @@ Undo flow:
 2. Refund consumed survival materials from the material transaction.
 3. Drop refunded items near the player when the inventory is full.
 
-Known v0.9.1 limits:
+Known v1.0.0-rc.1 limits:
 
 - Undo refunds BlockForge material transactions, but does not restore XP, currency, or external economy state.
 - No nearby chest or warehouse support.
 - No special cost table for doors, fluids, torches, or multi-block placements.
 - No material icons in the GUI yet.
 
-Manual Minecraft testing for v0.9.1 verified survival undo refunds and
-full-inventory refund drops.
+Manual Minecraft testing before v1.0.0-rc.1 verified survival undo refunds and
+full-inventory refund drops. The v1.0 RC also passed a smoke test for client
+launch and the core Connector flow after common config registration.
 
 ## Usage Example
 

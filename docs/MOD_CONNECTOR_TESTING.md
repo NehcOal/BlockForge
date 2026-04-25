@@ -998,3 +998,29 @@ Expected result:
 
 测试结论：v0.9.1 已补齐 v0.9 的核心限制。BlockForge 现在可以在生存模式下完成
 材料检查、材料扣除、建造、Undo 方块回滚、Undo 材料返还，以及背包满时的返还掉落。
+
+## 28. v1.0 RC Smoke Test Result
+
+Status: passed on Minecraft Java Edition `1.21.1` + NeoForge `21.1.227`.
+
+Verified:
+
+- The client launches with BlockForge Connector `1.0.0-rc.1`.
+- NeoForge common config registration does not prevent startup.
+- Core Connector flow still works after the release-candidate packaging changes.
+
+The v1.0 RC smoke test is intentionally narrower than the previous full manual
+tests because this release pass focuses on packaging, metadata, CI, docs, and
+common config registration.
+
+## 29. v1.0 RC 中文烟测结果
+
+状态：已在 Minecraft Java Edition `1.21.1` + NeoForge `21.1.227` 环境下通过。
+
+已验证：
+
+- BlockForge Connector `1.0.0-rc.1` 可以正常启动客户端。
+- NeoForge common config 注册不会导致启动失败。
+- Release Candidate 的打包、metadata、CI 文档和 common config 改动没有破坏核心 Connector 流程。
+
+本轮是 v1.0 RC 发布前烟测，范围小于前面版本的完整实机测试，重点验证发布整理改动没有引入启动或核心流程问题。

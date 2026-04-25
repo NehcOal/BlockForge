@@ -4,13 +4,10 @@
 
 - Stabilize BlockForge Blueprint v1 as the Web and Mod shared protocol.
 - Add schema validation tooling for exported blueprint files.
-- Run full Minecraft client/server manual validation for the Builder Wand MVP.
-- Run full Minecraft client/server manual validation for undo and safety-limit behavior.
-- Run full Minecraft client/server manual validation for the Ghost Preview MVP candidate.
 - Add Ghost Preview collision and replacement scans.
-- Replace code-level Connector safety constants with a NeoForge common config file.
-- Validate Blueprint Selector GUI in Minecraft and add search/paging when the blueprint list grows.
-- Validate material transaction refunds in Minecraft and add special cost rules for non-cube blocks.
+- Add search/paging when the Blueprint Selector list grows.
+- Add special material cost rules for non-cube blocks.
+- Improve release artifact publishing beyond CI artifact upload.
 - Add Java-side parser tests when the Connector test setup is stable.
 - Expand Blueprint v2 block state coverage beyond basic string properties.
 
