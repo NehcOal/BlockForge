@@ -10,7 +10,7 @@
 - Add Ghost Preview collision and replacement scans.
 - Replace code-level Connector safety constants with a NeoForge common config file.
 - Validate Blueprint Selector GUI in Minecraft and add search/paging when the blueprint list grows.
-- Add material refund support for undo and special cost rules for non-cube blocks.
+- Validate material transaction refunds in Minecraft and add special cost rules for non-cube blocks.
 - Add Java-side parser tests when the Connector test setup is stable.
 - Expand Blueprint v2 block state coverage beyond basic string properties.
 

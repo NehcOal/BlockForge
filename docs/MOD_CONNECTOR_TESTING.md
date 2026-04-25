@@ -736,7 +736,7 @@ Undo check:
 Expected result:
 
 - World blocks are restored.
-- Consumed materials are not refunded in v0.9.
+- Consumed materials are not refunded in v0.9. v0.9.1 adds material refunds.
 
 ## 25. 中文材料需求 / 生存成本 MVP 测试计划
 
@@ -839,3 +839,162 @@ Undo 测试：
 测试结论：Material Requirements / Survival Cost MVP 已完成游戏内闭环验证。
 创造模式绕过、生存模式材料不足拒绝、生存模式材料足够扣除并建造、Undo 仅恢复方块
 这四条核心规则均按预期工作。
+
+## 26. Material Transaction / Undo Refund Test Plan
+
+Build status: v0.9.1 Gradle build passed. Minecraft manual testing is pending.
+
+Survival refund test:
+
+```mcfunction
+/gamemode survival
+/clear
+/give @s minecraft:stone_bricks 9
+/blockforge select tiny_platform
+/blockforge materials selected
+```
+
+Place `tiny_platform` with the Builder Wand.
+
+Expected result:
+
+- Build succeeds.
+- Inventory stone bricks decrease from `9` to `0`.
+- Output says to use `/blockforge undo` to restore blocks and refund materials.
+
+Then run:
+
+```mcfunction
+/blockforge undo
+```
+
+Expected result:
+
+- World blocks are restored.
+- `9` stone bricks are refunded to the player inventory.
+- Output includes restored block count and refunded item count.
+
+Full-inventory refund drop test:
+
+```mcfunction
+/gamemode survival
+/clear
+/give @s minecraft:stone_bricks 9
+```
+
+Fill the remaining inventory slots with any filler item, build `tiny_platform`,
+then run:
+
+```mcfunction
+/blockforge undo
+```
+
+Expected result:
+
+- World blocks are restored.
+- Any refunded items that do not fit in the inventory are dropped near the player.
+- Output includes dropped item count when drops occur.
+
+Creative no-refund test:
+
+```mcfunction
+/gamemode creative
+/blockforge select tiny_platform
+```
+
+Place with the Builder Wand, then run:
+
+```mcfunction
+/blockforge undo
+```
+
+Expected result:
+
+- World blocks are restored.
+- Output says no materials were consumed.
+
+## 27. 中文材料事务 / Undo 返还测试计划
+
+构建状态：v0.9.1 已通过 Gradle build，并已完成 Minecraft 实机验证。
+
+测试 1：生存模式材料返还
+
+```mcfunction
+/gamemode survival
+/clear
+/give @s minecraft:stone_bricks 9
+/blockforge select tiny_platform
+/blockforge materials selected
+```
+
+手持 Builder Wand 生成 `tiny_platform`。
+
+预期结果：
+
+- 建造成功。
+- 石砖从 `9` 个变成 `0` 个。
+- 建造提示包含 `/blockforge undo`，说明可恢复方块并返还材料。
+
+然后执行：
+
+```mcfunction
+/blockforge undo
+```
+
+预期结果：
+
+- 世界方块恢复。
+- 石砖返还为 `9` 个。
+- 输出包含恢复方块数量和返还物品数量。
+
+测试 2：背包满时返还掉落
+
+```mcfunction
+/gamemode survival
+/clear
+/give @s minecraft:stone_bricks 9
+```
+
+填满剩余背包格，生成 `tiny_platform`，再执行：
+
+```mcfunction
+/blockforge undo
+```
+
+预期结果：
+
+- 世界方块恢复。
+- 背包放不下的返还材料会掉落在玩家附近。
+- 如果发生掉落，输出包含 dropped item count。
+
+测试 3：创造模式不返还
+
+```mcfunction
+/gamemode creative
+/blockforge select tiny_platform
+```
+
+用 Builder Wand 生成后执行：
+
+```mcfunction
+/blockforge undo
+```
+
+预期结果：
+
+- 世界方块恢复。
+- 输出提示没有消耗材料。
+
+### v0.9.1 中文实机测试结果
+
+状态：已在 Minecraft Java Edition `1.21.1` + NeoForge `21.1.227` 环境下通过。
+
+已验证行为：
+
+- 生存模式下使用 Builder Wand 生成 `tiny_platform` 会消耗 `9` 个 `minecraft:stone_bricks`。
+- 执行 `/blockforge undo` 后，已放置方块恢复到放置前状态。
+- 执行 `/blockforge undo` 后，`9` 个 `minecraft:stone_bricks` 成功返还到玩家背包。
+- 背包满时执行 `/blockforge undo`，无法放入背包的返还材料会掉落在玩家附近。
+
+测试结论：v0.9.1 已补齐 v0.9 的核心限制。BlockForge 现在可以在生存模式下完成
+材料检查、材料扣除、建造、Undo 方块回滚、Undo 材料返还，以及背包满时的返还掉落。
