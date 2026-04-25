@@ -2,10 +2,17 @@
 
 从文本提示生成 Minecraft 风格 voxel 方块建筑蓝图。
 
-BlockForge 是一个本地优先的 Minecraft 风格方块建筑蓝图生成器。当前 v1.0.0-rc.1
+BlockForge 是一个本地优先的 Minecraft 风格方块建筑蓝图生成器。当前 v1.0.1
 包含 Web 蓝图生成、3D 预览、导出链路，以及 NeoForge Connector 游戏内建造流程。
 
 [English README](./README.md) | [使用手册](./docs/USER_MANUAL.zh-CN.md)
+
+## v1.0.1 Bug 修复
+
+- 修复生存模式材料可能被多扣的问题：当部分目标方块因受保护、不可替换、超出世界高度或其他原因被跳过时，现在只按实际可放置方块计算材料消耗。
+- 加固 Connector 蓝图解析：格式不正确但 JSON 语法合法的蓝图文件会被记录为加载 warning，不再让未捕获解析异常中断 reload。
+- 增加 Connector 侧蓝图结构校验：检查尺寸必须为正数、方块坐标必须在声明尺寸内、坐标不能重复、方块引用必须存在于 palette。
+- 新增 NeoForge Connector 单元测试，覆盖坏蓝图解析和部分放置时的材料统计。
 
 ## 功能特性
 
