@@ -157,24 +157,30 @@ public class FabricBlueprintSelectorScreen extends Screen {
 
         context.drawText(textRenderer, Text.literal(summary.name()), x, y + 28, 0xFFFFFFFF, false);
         context.drawText(textRenderer, Text.literal(summary.id()), x, y + 40, 0xFF9AA8B5, false);
-        context.drawText(textRenderer, Text.translatable("screen.blockforge_connector.size", summary.sizeLabel()), x, y + 56, 0xFFC9D7E2, false);
-        context.drawText(textRenderer, Text.translatable("screen.blockforge_connector.blocks", summary.blockCount()), x, y + 68, 0xFFC9D7E2, false);
-        context.drawText(textRenderer, Text.literal("schemaVersion=" + summary.schemaVersion()), x, y + 80, 0xFFC9D7E2, false);
+        context.drawText(textRenderer, Text.literal(sourceLabel(summary.id())), x, y + 52, 0xFFB6C7D4, false);
+        context.drawText(textRenderer, Text.translatable("screen.blockforge_connector.size", summary.sizeLabel()), x, y + 64, 0xFFC9D7E2, false);
+        context.drawText(textRenderer, Text.translatable("screen.blockforge_connector.blocks", summary.blockCount()), x, y + 76, 0xFFC9D7E2, false);
+        context.drawText(textRenderer, Text.literal("schemaVersion=" + summary.schemaVersion()), x, y + 88, 0xFFC9D7E2, false);
         context.drawText(
                 textRenderer,
                 Text.translatable("screen.blockforge_connector.block_states", summary.hasBlockStates()),
                 x,
-                y + 92,
+                y + 100,
                 summary.hasBlockStates() ? 0xFF8EF0B4 : 0xFFB6C7D4,
                 false
         );
-        context.drawText(textRenderer, Text.translatable("screen.blockforge_connector.rotation"), x, y + 104, 0xFFE7F7FF, false);
+        context.drawText(textRenderer, Text.translatable("screen.blockforge_connector.rotation"), x, y + 112, 0xFFE7F7FF, false);
         context.drawText(textRenderer, Text.literal("Material sources: "
                 + (FabricMaterialSourceSettings.enableNearbyContainers() ? "Nearby containers enabled" : "Player inventory only")), x, y + 140, 0xFFC9D7E2, false);
         context.drawText(textRenderer, Text.literal("Source priority="
                 + FabricMaterialSourceSettings.materialSourcePriority()
                 + " | radius="
                 + FabricMaterialSourceSettings.nearbyContainerSearchRadius()), x, y + 152, 0xFF9AA8B5, false);
+    }
+
+    private String sourceLabel(String id) {
+        int separator = id.indexOf('/');
+        return separator > 0 ? "source=pack | pack=" + id.substring(0, separator) : "source=loose";
     }
 
     @Override

@@ -4,6 +4,64 @@ This checklist prepares the NeoForge Connector for real Minecraft validation.
 Passing `gradlew build` confirms compilation only; it does not replace in-game
 testing.
 
+## v1.4.0 Blueprint Pack Regression
+
+Release version:
+
+```text
+1.4.0-alpha.1
+```
+
+Expected release jars:
+
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.4.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.4.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.4.0-alpha.1.jar
+```
+
+Prepare a pack:
+
+1. Zip `examples/packs/starter_buildings/` so `blockforge-pack.json` is at the
+   zip root.
+2. Rename it to `starter_buildings.blockforgepack.zip`.
+3. Put it in `config/blockforge/packs/` for the tested instance.
+
+Run this section separately for NeoForge, Fabric, and Forge:
+
+```mcfunction
+/blockforge packs validate
+/blockforge packs list
+/blockforge packs info starter_buildings
+/blockforge packs blueprints starter_buildings
+/blockforge reload
+/blockforge list
+/blockforge info starter_buildings/tiny_platform
+/blockforge select starter_buildings/tiny_platform
+/blockforge gui
+/blockforge wand
+```
+
+Manual checks:
+
+1. GUI Selector shows `starter_buildings/tiny_platform`.
+2. GUI details label the blueprint as `source=pack`.
+3. Builder Wand can place the pack blueprint.
+4. Ghost Preview follows the selected pack blueprint dimensions.
+5. `/blockforge materials starter_buildings/tiny_platform` works.
+6. `/blockforge undo` restores the placement and material transaction.
+
+Pack error cases:
+
+- Missing `blockforge-pack.json` reports a warning and does not crash reload.
+- `blueprints/../evil.json` is rejected.
+- Absolute blueprint paths are rejected.
+- Missing blueprint files are reported as warnings.
+- Duplicate manifest blueprint ids are rejected.
+- Invalid blueprint JSON is reported as a warning.
+
+Status: v1.4.0 manual Minecraft regression testing is pending.
+
 Fabric and Forge Alpha are also covered here as separate checklists. NeoForge
 remains the full-featured Connector; Fabric and Forge now include GUI Selector,
 Builder Wand, Ghost Preview, Survival Material Cost, and Material Refund Undo

@@ -4,9 +4,10 @@ BlockForge Connector Forge is the Forge alpha for BlockForge
 Blueprint JSON placement. It proves the minimum Forge loop for loading,
 listing, dry-running, building, Builder Wand placement, and undoing blueprints
 with an Alpha GUI Selector, Ghost Preview outline, Survival Material Cost, and
-Material Refund Undo. v1.3.5 adds Forge nearby container sourcing Alpha,
-disabled by default. A focused v1.3.5 Forge client smoke test passed for
-source-aware material consumption and undo refund.
+Material Refund Undo. v1.3.5 adds Forge nearby container sourcing Alpha. A
+focused v1.3.5 Forge client smoke test passed for source-aware material
+consumption and undo refund. v1.4.0 adds Blueprint Pack loading Alpha from
+`config/blockforge/packs/`.
 
 ## Target
 
@@ -15,7 +16,7 @@ source-aware material consumption and undo refund.
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector Forge`
-- Mod Version: `1.3.5-alpha.1`
+- Mod Version: `1.4.0-alpha.1`
 
 ## Build
 
@@ -34,7 +35,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge-connector-forge-1.3.5-alpha.1.jar
+build/libs/blockforge-connector-forge-1.4.0-alpha.1.jar
 ```
 
 ## Blueprint Folder
@@ -47,6 +48,17 @@ Connectors:
 ```
 
 The folder is created automatically by reload and example installation flows.
+
+## Blueprint Pack Folder
+
+Forge also reads pack zips from:
+
+```text
+.minecraft/config/blockforge/packs/
+```
+
+Pack blueprint ids use `packId/blueprintId`, for example
+`starter_buildings/tiny_platform`.
 
 Supported file names:
 
@@ -84,6 +96,12 @@ Existing files are skipped and not overwritten.
 /blockforge examples list
 /blockforge examples install
 /blockforge reload
+/blockforge packs folder
+/blockforge packs reload
+/blockforge packs list
+/blockforge packs info <packId>
+/blockforge packs blueprints <packId>
+/blockforge packs validate
 /blockforge list
 /blockforge select <id>
 /blockforge selected
@@ -109,12 +127,13 @@ Existing files are skipped and not overwritten.
 
 Permissions:
 
-- Permission level `2`: `build`, `reload`, `examples install`, `undo`, `wand`.
-- Regular players: `folder`, `list`, `info`, `dryrun`, `materials`, `sources`, `examples list`, `select`, `selected`, `rotate`, `gui`.
+- Permission level `2`: `build`, `reload`, `packs reload`, `examples install`, `undo`, `wand`.
+- Regular players: `folder`, `packs folder/list/info/blueprints/validate`, `list`, `info`, `dryrun`, `materials`, `sources`, `examples list`, `select`, `selected`, `rotate`, `gui`.
 
 ## What Forge Alpha Supports
 
 - Loads BlockForge Blueprint JSON from the shared config folder.
+- Loads Blueprint Pack zip files from the shared pack folder.
 - Installs bundled example blueprints.
 - Lists and inspects loaded blueprints.
 - Runs command dry-runs with placement statistics.
@@ -134,6 +153,7 @@ Permissions:
 - Can consume from nearby containers and refund to the original source when
   possible.
 - Can enable or tune nearby source behavior at runtime with `/blockforge sources`.
+- Can validate and list Blueprint Packs with `/blockforge packs`.
 - Bypasses material consumption in creative mode.
 - Places the selected blueprint with the Builder Wand by right-clicking a block.
 - Records per-player block-state snapshots in an in-memory undo history.
@@ -173,6 +193,8 @@ and Spectator mode builds are rejected by the Alpha material gate.
 - Nearby chest material sourcing is Alpha, disabled by default, and has no
   config file yet; `/blockforge sources enable|disable|priority|radius` changes
   runtime server settings for the current session only.
+- Blueprint Pack loading is Alpha. Pack zips are read directly and are not
+  extracted to disk.
 - No recipe substitutions.
 - No BlockEntity NBT snapshot or restore.
 - No persistence for undo snapshots.

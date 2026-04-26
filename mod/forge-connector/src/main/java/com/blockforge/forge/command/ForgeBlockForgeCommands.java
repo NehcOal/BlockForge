@@ -9,6 +9,8 @@ import com.blockforge.common.material.source.MaterialSourcePriority;
 import com.blockforge.common.material.source.MaterialSourceReport;
 import com.blockforge.common.material.source.MaterialSourceScanResult;
 import com.blockforge.common.material.source.MaterialSourceType;
+import com.blockforge.common.pack.BlueprintPackRegistryEntry;
+import com.blockforge.common.pack.LoadedBlueprintPack;
 import com.blockforge.common.rotation.BlueprintRotation;
 import com.blockforge.common.selection.PlayerSelection;
 import com.blockforge.forge.blueprint.ForgeBlueprintRegistry;
@@ -22,6 +24,8 @@ import com.blockforge.forge.player.ForgePlayerSelectionManager;
 import com.blockforge.forge.registry.ForgeModItems;
 import com.blockforge.forge.undo.ForgeUndoManager;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
@@ -63,6 +67,22 @@ public final class ForgeBlockForgeCommands {
                 .then(Commands.literal("reload")
                         .requires(source -> source.hasPermission(2))
                         .executes(context -> reload(context, registry)))
+                .then(Commands.literal("packs")
+                        .then(Commands.literal("folder")
+                                .executes(context -> packsFolder(context, registry)))
+                        .then(Commands.literal("reload")
+                                .requires(source -> source.hasPermission(2))
+                                .executes(context -> reload(context, registry)))
+                        .then(Commands.literal("list")
+                                .executes(context -> packsList(context, registry)))
+                        .then(Commands.literal("info")
+                                .then(packIdArgument(registry)
+                                        .executes(context -> packsInfo(context, registry))))
+                        .then(Commands.literal("blueprints")
+                                .then(packIdArgument(registry)
+                                        .executes(context -> packsBlueprints(context, registry))))
+                        .then(Commands.literal("validate")
+                                .executes(context -> packsValidate(context, registry))))
                 .then(Commands.literal("list")
                         .executes(context -> list(context, registry)))
                 .then(Commands.literal("select")
@@ -248,7 +268,7 @@ public final class ForgeBlockForgeCommands {
     private static RequiredArgumentBuilder<CommandSourceStack, String> blueprintIdArgument(
             ForgeBlueprintRegistry registry
     ) {
-        return Commands.argument("id", StringArgumentType.word())
+        return Commands.argument("id", BlueprintIdArgumentType.id())
                 .suggests((context, builder) -> SharedSuggestionProvider.suggest(registry.getIds(), builder));
     }
 
@@ -265,6 +285,16 @@ public final class ForgeBlockForgeCommands {
                         "PLAYER_ONLY",
                         "CONTAINER_ONLY"
                 ), builder));
+    }
+
+    private static RequiredArgumentBuilder<CommandSourceStack, String> packIdArgument(
+            ForgeBlueprintRegistry registry
+    ) {
+        return Commands.argument("packId", StringArgumentType.word())
+                .suggests((context, builder) -> SharedSuggestionProvider.suggest(
+                        registry.getPacks().stream().map(pack -> pack.manifest().packId()).toList(),
+                        builder
+                ));
     }
 
     private static int showFolder(
@@ -330,7 +360,11 @@ public final class ForgeBlockForgeCommands {
             // Console reloads have no client preview to update.
         }
         context.getSource().sendSuccess(
-                () -> Component.literal("Loaded " + summary.loadedCount() + " BlockForge Forge blueprint(s)."),
+                () -> Component.literal("Loaded "
+                        + summary.loadedCount()
+                        + " BlockForge Forge blueprint(s) from loose files and "
+                        + summary.packCount()
+                        + " pack(s)."),
                 true
         );
 
@@ -339,6 +373,109 @@ public final class ForgeBlockForgeCommands {
         }
 
         return summary.loadedCount();
+    }
+
+    private static int packsFolder(
+            CommandContext<CommandSourceStack> context,
+            ForgeBlueprintRegistry registry
+    ) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge Forge pack folder: " + registry.getPackDirectory()),
+                false
+        );
+        return 1;
+    }
+
+    private static int packsList(
+            CommandContext<CommandSourceStack> context,
+            ForgeBlueprintRegistry registry
+    ) {
+        if (registry.getPacks().isEmpty()) {
+            context.getSource().sendFailure(Component.literal("No BlockForge Forge packs loaded from " + registry.getPackDirectory()));
+            return 0;
+        }
+
+        context.getSource().sendSuccess(() -> Component.literal("Loaded BlockForge Forge packs:"), false);
+        for (LoadedBlueprintPack pack : registry.getPacks()) {
+            context.getSource().sendSuccess(
+                    () -> Component.literal("- "
+                            + pack.manifest().packId()
+                            + " | "
+                            + pack.manifest().name()
+                            + " | version="
+                            + pack.manifest().version()
+                            + " | blueprints="
+                            + pack.entries().size()
+                            + " | warnings="
+                            + pack.warnings().size()),
+                    false
+            );
+        }
+        return registry.getPacks().size();
+    }
+
+    private static int packsInfo(
+            CommandContext<CommandSourceStack> context,
+            ForgeBlueprintRegistry registry
+    ) {
+        LoadedBlueprintPack pack = findPack(context, registry);
+        if (pack == null) {
+            return 0;
+        }
+
+        context.getSource().sendSuccess(
+                () -> Component.literal(pack.manifest().packId()
+                        + " | "
+                        + pack.manifest().name()
+                        + " | version="
+                        + pack.manifest().version()
+                        + " | author="
+                        + pack.manifest().author()
+                        + " | tags="
+                        + String.join(",", pack.manifest().tags())
+                        + " | description="
+                        + pack.manifest().description()),
+                false
+        );
+        return 1;
+    }
+
+    private static int packsBlueprints(
+            CommandContext<CommandSourceStack> context,
+            ForgeBlueprintRegistry registry
+    ) {
+        LoadedBlueprintPack pack = findPack(context, registry);
+        if (pack == null) {
+            return 0;
+        }
+
+        for (BlueprintPackRegistryEntry entry : pack.entries()) {
+            context.getSource().sendSuccess(
+                    () -> Component.literal("- " + entry.registryId() + " | " + entry.name() + " | " + entry.path()),
+                    false
+            );
+        }
+        return pack.entries().size();
+    }
+
+    private static int packsValidate(
+            CommandContext<CommandSourceStack> context,
+            ForgeBlueprintRegistry registry
+    ) {
+        var result = registry.validatePacks();
+        context.getSource().sendSuccess(
+                () -> Component.literal("Validated BlockForge Forge packs: packs="
+                        + result.packs().size()
+                        + " | blueprints="
+                        + result.blueprints().size()
+                        + " | warnings="
+                        + result.warnings().size()),
+                false
+        );
+        for (String warning : result.warnings()) {
+            context.getSource().sendFailure(Component.literal("Warning: " + warning));
+        }
+        return result.packs().size();
     }
 
     private static int list(
@@ -978,6 +1115,21 @@ public final class ForgeBlockForgeCommands {
         });
     }
 
+    private static LoadedBlueprintPack findPack(
+            CommandContext<CommandSourceStack> context,
+            ForgeBlueprintRegistry registry
+    ) {
+        String packId = StringArgumentType.getString(context, "packId");
+        return registry.getPacks()
+                .stream()
+                .filter(pack -> pack.manifest().packId().equals(packId))
+                .findFirst()
+                .orElseGet(() -> {
+                    context.getSource().sendFailure(Component.literal("Unknown BlockForge Forge pack id: " + packId));
+                    return null;
+                });
+    }
+
     private static String describe(Blueprint blueprint) {
         return blueprint.getId()
                 + " | "
@@ -988,5 +1140,20 @@ public final class ForgeBlockForgeCommands {
                 + blueprint.getSize().format()
                 + " | blocks="
                 + blueprint.getBlockCount();
+    }
+
+    private static final class BlueprintIdArgumentType implements ArgumentType<String> {
+        private static BlueprintIdArgumentType id() {
+            return new BlueprintIdArgumentType();
+        }
+
+        @Override
+        public String parse(StringReader reader) {
+            int start = reader.getCursor();
+            while (reader.canRead() && reader.peek() != ' ') {
+                reader.skip();
+            }
+            return reader.getString().substring(start, reader.getCursor());
+        }
     }
 }

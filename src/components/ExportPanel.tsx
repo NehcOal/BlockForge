@@ -1,11 +1,14 @@
+import { useRef, useState } from "react";
 import {
   createBlueprintJsonFileName,
   createBlueprintV2JsonFileName,
   createSafeFileName,
   getFunctionName,
+  importBlueprintPackZip,
   voxelModelToBlueprintV2Json,
   voxelModelToBlueprintJson,
   voxelModelToMcFunction,
+  voxelModelsToBlueprintPackZip,
   voxelModelToDataPackZip
 } from "@/lib/voxel";
 import type { AppCopy } from "@/lib/i18n";
@@ -17,6 +20,9 @@ type ExportPanelProps = {
 };
 
 export function ExportPanel({ copy, model }: ExportPanelProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [packImportStatus, setPackImportStatus] = useState("");
+
   function downloadFile(content: string, type: string, fileName: string) {
     const blob = new Blob([content], { type });
     const url = URL.createObjectURL(blob);
@@ -78,6 +84,39 @@ export function ExportPanel({ copy, model }: ExportPanelProps) {
     );
   }
 
+  async function handleBlueprintPackExport() {
+    const blob = await voxelModelsToBlueprintPackZip([model], {
+      packId: `blockforge_${getFunctionName(model)}`,
+      name: `${model.name} Pack`,
+      version: "1.0.0",
+      description: model.description,
+      author: "BlockForge",
+      license: "MIT",
+      tags: ["blockforge", "blueprint"]
+    });
+    downloadBlob(blob, `blockforge-${getFunctionName(model)}.blockforgepack.zip`);
+  }
+
+  async function handleBlueprintPackImport(file: File | undefined) {
+    if (!file) {
+      return;
+    }
+
+    try {
+      const imported = await importBlueprintPackZip(file);
+      setPackImportStatus(
+        `${copy.importSuccess}: ${imported.manifest.name} v${imported.manifest.version} | ${imported.blueprints.length} blueprint(s): ${imported.blueprints.map((blueprint) => blueprint.registryId).join(", ")}`
+      );
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      setPackImportStatus(`${copy.importError}: ${message}`);
+    } finally {
+      if (inputRef.current) {
+        inputRef.current.value = "";
+      }
+    }
+  }
+
   return (
     <section className="forge-panel p-5">
       <div className="flex flex-col gap-4">
@@ -116,6 +155,27 @@ export function ExportPanel({ copy, model }: ExportPanelProps) {
             >
               {copy.blueprintV2Json}
             </button>
+            <button
+              className="forge-primary-button px-4 py-3 text-sm"
+              onClick={handleBlueprintPackExport}
+              type="button"
+            >
+              {copy.blueprintPack}
+            </button>
+            <input
+              accept=".blockforgepack.zip,.zip,application/zip"
+              className="hidden"
+              onChange={(event) => void handleBlueprintPackImport(event.target.files?.[0])}
+              ref={inputRef}
+              type="file"
+            />
+            <button
+              className="forge-secondary-button px-4 py-3 text-sm"
+              onClick={() => inputRef.current?.click()}
+              type="button"
+            >
+              {copy.importBlueprintPack}
+            </button>
           </div>
           <div className="grid gap-2">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-stone-500">
@@ -146,6 +206,14 @@ export function ExportPanel({ copy, model }: ExportPanelProps) {
         <p className="text-xs leading-5 text-stone-500">
           {copy.blueprintV2Hint}
         </p>
+        <p className="text-xs leading-5 text-stone-500">
+          {copy.blueprintPackHint}
+        </p>
+        {packImportStatus ? (
+          <p className="rounded border border-forge/30 bg-black/20 px-3 py-2 text-xs leading-5 text-stone-300">
+            {packImportStatus}
+          </p>
+        ) : null}
         <p className="text-xs leading-5 text-stone-500">
           {copy.datapackHint}
         </p>

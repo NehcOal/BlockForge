@@ -2,6 +2,38 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [1.4.0] - Unreleased
+
+### Added
+
+- Added Blueprint Pack v1 protocol documentation and JSON schema.
+- Added Web Blueprint Pack export using Blueprint JSON v2 inside
+  `.blockforgepack.zip`.
+- Added Web Blueprint Pack import with manifest validation, blueprint JSON
+  validation, and path traversal rejection.
+- Added common Blueprint Pack metadata DTOs and registry id helpers.
+- Added NeoForge, Fabric, and Forge pack loaders for
+  `config/blockforge/packs/`.
+- Added `/blockforge packs folder|reload|list|info|blueprints|validate` on all
+  three connectors.
+- Added `examples/packs/starter_buildings/` as a source example pack.
+- Added Blueprint Pack Vitest coverage for manifest creation, export, import,
+  path traversal rejection, missing manifest, and invalid blueprint JSON.
+
+### Changed
+
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.4.0-alpha.1`.
+- `/blockforge reload` now scans loose blueprints and Blueprint Packs.
+- Pack blueprints use `packId/blueprintId` registry ids to avoid loose
+  blueprint collisions.
+- GUI Selector details now label blueprints as `source=loose` or `source=pack`.
+
+### Notes
+
+- Blueprint Pack support is Alpha.
+- Pack zip files are read directly and are not extracted to disk.
+- v1.4.0 manual Minecraft regression testing is pending.
+
 ## [1.3.5] - Unreleased
 
 ### Added

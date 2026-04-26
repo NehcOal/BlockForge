@@ -2,7 +2,8 @@
 
 ## Near Term
 
-- Build v1.3 nearby material source adapters on top of the common-core source model.
+- Stabilize v1.4 Blueprint Pack import/export across Web, NeoForge, Fabric,
+  and Forge.
 - Keep NeoForge 1.21.1 as the recommended complete Connector target.
 - Keep Fabric and Forge 1.21.1 as Alpha connectors while refund undo and material UX mature.
 - Defer small v1.3.x manual Minecraft testing until the v1.3.5 multiloader regression pass.
@@ -13,8 +14,7 @@
 - Add GUI material summaries for Fabric and Forge.
 - Stabilize nearby container material sourcing Alpha across NeoForge, Fabric,
   and Forge.
-- Run the v1.3.5 multiloader nearby source regression in real Minecraft
-  clients.
+- Run the v1.4.0 Blueprint Pack regression in real Minecraft clients.
 - Add special material cost rules for non-cube blocks.
 - Improve release artifact publishing beyond CI artifact upload.
 - Add Java-side parser tests when the Connector test setup is stable.
@@ -23,6 +23,8 @@
 ## Export Formats
 
 - Keep JSON, Blueprint v1/v2 JSON, `.mcfunction`, and Function Data Pack ZIP exports stable.
+- Stabilize `.blockforgepack.zip` import/export and add imported pack library
+  management after the Alpha protocol proves out.
 - Add Minecraft Structure `.nbt` export.
 - Add Structure Data Pack ZIP export for `/place template` workflows.
 - Explore `.schem` export after the native Minecraft formats are reliable.
@@ -55,6 +57,8 @@
 - v1.3.1: NeoForge nearby container material sourcing reference implementation.
 - v1.3.5: Fabric / Forge nearby container adapters plus batched multiloader
   in-game regression checklist for v1.3.
-- v1.3.6+: Material source UX refinement and config-file polish.
+- v1.4.0: Blueprint Pack import/export on Web and pack loading on NeoForge,
+  Fabric, and Forge.
+- v1.4.1+: Imported pack library management and pack UX polish.
 
 See [Multi-loader Plan](./MULTILOADER_PLAN.md) for details.

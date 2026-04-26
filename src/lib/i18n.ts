@@ -52,11 +52,16 @@ export type AppCopy = {
     json: string;
     blueprintJson: string;
     blueprintV2Json: string;
+    blueprintPack: string;
+    importBlueprintPack: string;
     mcfunction: string;
     datapack: string;
     hint: string;
     blueprintHint: string;
     blueprintV2Hint: string;
+    blueprintPackHint: string;
+    importSuccess: string;
+    importError: string;
     datapackHint: string;
   };
   footer: {
@@ -138,6 +143,8 @@ export const appCopy: Record<Locale, AppCopy> = {
       json: "Export JSON",
       blueprintJson: "Export Blueprint JSON v1",
       blueprintV2Json: "Export Blueprint JSON v2",
+      blueprintPack: "Export Blueprint Pack",
+      importBlueprintPack: "Import Blueprint Pack",
       mcfunction: "Export .mcfunction",
       datapack: "Export Data Pack ZIP",
       hint:
@@ -145,6 +152,10 @@ export const appCopy: Record<Locale, AppCopy> = {
       blueprintHint: "Stable blueprint file for BlockForge Mod Connector.",
       blueprintV2Hint:
         "Supports Minecraft BlockState properties for the newer BlockForge Connector.",
+      blueprintPackHint:
+        "Share multiple Blueprint JSON v2 files as a .blockforgepack.zip.",
+      importSuccess: "Imported pack",
+      importError: "Pack import failed",
       datapackHint:
         "Download a Minecraft Java 1.21.1 data pack for the datapacks folder."
     },
@@ -219,12 +230,18 @@ export const appCopy: Record<Locale, AppCopy> = {
       json: "导出 JSON",
       blueprintJson: "导出 Blueprint JSON v1",
       blueprintV2Json: "导出 Blueprint JSON v2",
+      blueprintPack: "导出蓝图包",
+      importBlueprintPack: "导入蓝图包",
       mcfunction: "导出 .mcfunction",
       datapack: "导出 Data Pack ZIP",
       hint: "导出为 Minecraft Java Edition datapack 工作流可用的 function 命令。",
       blueprintHint: "用于 BlockForge Mod Connector 的稳定蓝图协议文件。",
       blueprintV2Hint:
         "支持 Minecraft BlockState，供新版 BlockForge Connector 使用。",
+      blueprintPackHint:
+        "把多个 Blueprint JSON v2 打包成可分享的 .blockforgepack.zip。",
+      importSuccess: "已导入蓝图包",
+      importError: "蓝图包导入失败",
       datapackHint:
         "下载可放入 Minecraft Java 1.21.1 datapacks 文件夹的数据包。"
     },

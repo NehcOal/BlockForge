@@ -5,21 +5,20 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v1.3.5 Nearby Material Source Multiloader Alpha
+## v1.4.0 Blueprint Pack Import / Export Alpha
 
-BlockForge v1.3.5-alpha.1 adds nearby container material sourcing across
-NeoForge, Fabric, and Forge as an Alpha regression candidate. When nearby
-containers are enabled, survival builds can combine player inventory materials
-with loaded nearby container inventories, then undo can refund materials back to
-the original source when possible. The feature is disabled by default, avoids
-loading new chunks, and still needs the full v1.3.5 manual Minecraft
-regression pass. Forge has passed a focused source-aware refund smoke test.
+BlockForge v1.4.0-alpha.1 adds Blueprint Pack import/export. The Web app can
+export the current model as a `.blockforgepack.zip` using Blueprint JSON v2 and
+can import a pack zip with manifest and path validation. NeoForge, Fabric, and
+Forge now scan `config/blockforge/packs/`, merge pack blueprints into the
+existing registry, and let GUI Selector, Builder Wand, Ghost Preview,
+materials, build, and undo flows use ids like `starter_buildings/tiny_platform`.
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-1.3.5-alpha.1.jar`
-- `blockforge-connector-fabric-1.3.5-alpha.1.jar`
-- `blockforge-connector-forge-1.3.5-alpha.1.jar`
+- `blockforge-connector-neoforge-1.4.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.4.0-alpha.1.jar`
+- `blockforge-connector-forge-1.4.0-alpha.1.jar`
 
 ## Loader Feature Matrix
 
@@ -38,6 +37,16 @@ Expected release jars:
 | Material refund undo | ✅ | ✅ Alpha | ✅ Alpha |
 | BlockEntity NBT undo | ✅ best effort | ❌ | ❌ |
 | Nearby chest material sourcing | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Blueprint Pack import | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+
+## Blueprint Pack Matrix
+
+| Feature | Web | NeoForge | Fabric | Forge |
+|---|---|---|---|---|
+| Export `.blockforgepack.zip` | ✅ Alpha | N/A | N/A | N/A |
+| Import `.blockforgepack.zip` | ✅ Alpha | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Pack manifest validation | ✅ Alpha | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Pack blueprint registry ids | N/A | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 
 Fabric and Forge GUI Selector, Builder Wand, Ghost Preview, Survival Material
 Cost, and Material Refund Undo support are Alpha. Ghost Preview only renders a
@@ -50,6 +59,7 @@ v1.3.5 smoke test where player-sourced materials returned to the player and
 chest-sourced materials returned to the original chest.
 
 See [Material Sources](./docs/MATERIAL_SOURCES.md) for the v1.3 design notes.
+See [Blueprint Packs](./docs/BLUEPRINT_PACKS.md) for the v1.4 pack format.
 
 Fabric / Forge GUI + Builder Wand + Ghost Preview + Survival Materials Alpha flow:
 

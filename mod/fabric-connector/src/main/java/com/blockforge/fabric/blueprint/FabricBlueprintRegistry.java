@@ -1,35 +1,49 @@
 package com.blockforge.fabric.blueprint;
 
 import com.blockforge.common.blueprint.Blueprint;
+import com.blockforge.common.pack.LoadedBlueprintPack;
+import com.blockforge.fabric.pack.FabricBlueprintPackLoader;
+import com.blockforge.fabric.pack.FabricBlueprintPackRegistry;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public class FabricBlueprintRegistry {
     private final Path directory;
     private final FabricBlueprintLoader loader;
+    private final FabricBlueprintPackRegistry packRegistry;
     private final Map<String, Blueprint> blueprints = new LinkedHashMap<>();
+    private Set<String> looseBlueprintIds = Set.of();
     private List<String> warnings = List.of();
 
     public FabricBlueprintRegistry(Path directory) {
         this.directory = directory;
         this.loader = new FabricBlueprintLoader();
+        this.packRegistry = new FabricBlueprintPackRegistry(FabricBlueprintPackLoader.defaultPackDirectory());
     }
 
     public LoadSummary reload() {
         FabricBlueprintLoader.LoadResult result = loader.load(directory);
         blueprints.clear();
+        List<String> nextWarnings = new ArrayList<>(result.warnings());
 
         for (Blueprint blueprint : result.blueprints()) {
             blueprints.put(blueprint.getId(), blueprint);
         }
+        looseBlueprintIds = Set.copyOf(blueprints.keySet());
 
-        warnings = result.warnings();
-        return new LoadSummary(blueprints.size(), warnings);
+        FabricBlueprintPackRegistry.LoadResult packResult = packRegistry.reload(looseBlueprintIds);
+        blueprints.putAll(packResult.blueprints());
+        nextWarnings.addAll(packResult.warnings());
+
+        warnings = List.copyOf(nextWarnings);
+        return new LoadSummary(blueprints.size(), packRegistry.getPacks().size(), warnings);
     }
 
     public Optional<Blueprint> get(String id) {
@@ -52,6 +66,18 @@ public class FabricBlueprintRegistry {
         return directory;
     }
 
-    public record LoadSummary(int loadedCount, List<String> warnings) {
+    public Path getPackDirectory() {
+        return packRegistry.getDirectory();
+    }
+
+    public List<LoadedBlueprintPack> getPacks() {
+        return packRegistry.getPacks();
+    }
+
+    public FabricBlueprintPackRegistry.LoadResult validatePacks() {
+        return packRegistry.validate(looseBlueprintIds);
+    }
+
+    public record LoadSummary(int loadedCount, int packCount, List<String> warnings) {
     }
 }

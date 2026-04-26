@@ -2,25 +2,26 @@
 
 从文本提示生成 Minecraft 风格 voxel 方块建筑蓝图。
 
-BlockForge 是一个本地优先的 Minecraft 风格方块建筑蓝图生成器。当前 v1.3.5
+BlockForge 是一个本地优先的 Minecraft 风格方块建筑蓝图生成器。当前 v1.4.0
 包含 Web 蓝图生成、3D 预览、导出链路、NeoForge Connector 游戏内建造流程，以及
 Fabric / Forge Connector Alpha GUI Selector + Builder Wand + Ghost Preview + 生存材料成本 + Undo 材料返还 + 附近容器材料来源闭环。
+本版本新增 Blueprint Pack 导入 / 导出 Alpha。
 
 [English README](./README.md) | [使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v1.3.5 附近容器材料来源多加载器 Alpha
+## v1.4.0 Blueprint Pack 导入 / 导出 Alpha
 
-BlockForge v1.3.5-alpha.1 为 NeoForge / Fabric / Forge 三端补齐 nearby
-container material sourcing Alpha。开启 nearby containers 后，生存模式 build 可以
-同时使用玩家背包和附近已加载容器中的材料，undo 时会优先尝试把材料返还到原来源。
-该功能默认关闭，不加载新区块，不跨维度，仍需 v1.3.5 完整集中实机回归测试。
-Forge 已完成一次按来源返还的专项 smoke test。
+BlockForge v1.4.0-alpha.1 新增 Blueprint Pack 导入 / 导出。Web 端可以把当前
+模型导出为 `.blockforgepack.zip`，并在导入时校验 manifest、蓝图 JSON 和安全路径。
+NeoForge / Fabric / Forge 会扫描 `config/blockforge/packs/`，把 pack 内蓝图合并到
+现有 registry，GUI Selector、Builder Wand、Ghost Preview、materials、build、undo
+都可以使用 `starter_buildings/tiny_platform` 这类 pack 蓝图 id。
 
 预期发布 jar：
 
-- `blockforge-connector-neoforge-1.3.5-alpha.1.jar`
-- `blockforge-connector-fabric-1.3.5-alpha.1.jar`
-- `blockforge-connector-forge-1.3.5-alpha.1.jar`
+- `blockforge-connector-neoforge-1.4.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.4.0-alpha.1.jar`
+- `blockforge-connector-forge-1.4.0-alpha.1.jar`
 
 ## Loader 功能矩阵
 
@@ -39,6 +40,16 @@ Forge 已完成一次按来源返还的专项 smoke test。
 | Undo 材料返还 | ✅ | ✅ Alpha | ✅ Alpha |
 | BlockEntity NBT undo | ✅ best effort | ❌ | ❌ |
 | 附近箱子材料来源 | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Blueprint Pack 导入 | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+
+## Blueprint Pack 矩阵
+
+| 功能 | Web | NeoForge | Fabric | Forge |
+|---|---|---|---|---|
+| 导出 `.blockforgepack.zip` | ✅ Alpha | N/A | N/A | N/A |
+| 导入 `.blockforgepack.zip` | ✅ Alpha | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Pack manifest 校验 | ✅ Alpha | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Pack 蓝图 registry id | N/A | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 
 Fabric 和 Forge 的 GUI Selector、Builder Wand、Ghost Preview、生存材料成本与
 Undo 材料返还仍是 Alpha。Ghost Preview 只显示随旋转变化的包围盒和地面 footprint；
@@ -48,6 +59,7 @@ Fabric / Forge 现在会扣除生存模式材料，并在 `/blockforge undo` 时
 玩家身上的材料会返还到玩家背包，箱子里的材料会返还到原箱子。
 
 v1.3 设计说明见：[Material Sources](./docs/MATERIAL_SOURCES.md)。
+v1.4 蓝图包说明见：[Blueprint Packs](./docs/BLUEPRINT_PACKS.md)。
 
 Fabric / Forge GUI + Builder Wand + Ghost Preview + 生存材料 Alpha 流程：
 

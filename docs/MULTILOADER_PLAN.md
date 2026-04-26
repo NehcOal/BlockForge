@@ -91,7 +91,9 @@ be added after the three connector modules settle.
   implementation.
 - `v1.3.5`: Fabric and Forge nearby container adapters plus batched
   multiloader in-game regression for v1.3 material source work.
-- `v1.3.6+`: deeper material UX, GUI material summaries, and follow-up
+- `v1.4.0`: Blueprint Pack import/export on Web plus pack loading on NeoForge,
+  Fabric, and Forge.
+- `v1.4.1+`: imported pack library UX, deeper material UX, and follow-up
   stabilization.
 
 ## Current Risks
@@ -243,3 +245,16 @@ be added after the three connector modules settle.
   undo can prefer refunding to original containers.
 - Manual Minecraft testing is deferred until the v1.3.5 multiloader regression
   pass.
+
+## v1.4.0 Status
+
+- v1.4.0 introduces Blueprint Pack v1 as a shareable
+  `.blockforgepack.zip` format.
+- Web exports Blueprint JSON v2 into pack zips and imports pack zips with
+  manifest, blueprint JSON, and path traversal validation.
+- NeoForge, Fabric, and Forge scan `config/blockforge/packs/` during reload.
+- Loose blueprint ids stay unchanged; pack blueprints use
+  `packId/blueprintId`.
+- Pack blueprints flow through the existing registry, GUI Selector, Builder
+  Wand, Ghost Preview, material, build, and undo paths.
+- Manual Minecraft testing is pending for v1.4.0.

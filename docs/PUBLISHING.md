@@ -2,15 +2,16 @@
 
 ## Scope
 
-This guide prepares the `1.3.5-alpha.1` multi-loader Alpha release. It does not
+This guide prepares the `1.4.0-alpha.1` multi-loader Alpha release. It does not
 publish automatically to GitHub, Modrinth, or CurseForge.
 
 NeoForge is the recommended full-experience Connector. Fabric and Forge are
 Alpha connectors with command builds, GUI Selector Alpha, Builder Wand Alpha
 placement, Ghost Preview Alpha outlines, Survival Material Cost Alpha, and
 Material Refund Undo Alpha. v1.3.1 adds NeoForge nearby container material
-sourcing Alpha; v1.3.5 extends nearby container sourcing to Fabric and Forge
-as an Alpha regression candidate.
+sourcing Alpha; v1.3.5 extends nearby container sourcing to Fabric and Forge.
+v1.4.0 adds Blueprint Pack import/export and connector-side pack loading as an
+Alpha regression candidate.
 
 ## Build Before Publishing
 
@@ -36,14 +37,14 @@ gradlew.bat build
 Expected jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.3.5-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.3.5-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.3.5-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.4.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.4.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.4.0-alpha.1.jar
 ```
 
 ## GitHub Alpha Release
 
-1. Create a GitHub release for `v1.3.5-alpha.1`.
+1. Create a GitHub release for `v1.4.0-alpha.1`.
 2. Use `docs/RELEASE_NOTES_TEMPLATE.md` as the release body starting point.
 3. Upload the three loader jars.
 4. Confirm every jar file name includes the loader name.
@@ -51,9 +52,10 @@ mod/forge-connector/build/libs/blockforge-connector-forge-1.3.5-alpha.1.jar
 6. Recommend NeoForge for the most complete experience.
 7. Label Fabric and Forge clearly as GUI Selector + Builder Wand + Ghost
    Preview + Survival Material Cost + Material Refund Undo Alpha.
-8. Mention that nearby chest material sourcing is Alpha on all loaders,
-   disabled by default, and pending v1.3.5 manual Minecraft regression.
-9. Do not claim Fabric or Forge BlockEntity NBT undo, collision-aware preview,
+8. Mention that nearby chest material sourcing is Alpha on all loaders.
+9. Mention that Blueprint Pack import/export is Alpha and uses
+   `.blockforgepack.zip`.
+10. Do not claim Fabric or Forge BlockEntity NBT undo, collision-aware preview,
    full block preview support, protected-container permission checks, or GUI
    material source details.
 
@@ -72,6 +74,8 @@ If publishing to Modrinth:
 - State clearly that Fabric and Forge are Alpha parity connectors.
 - State clearly that nearby chest material sourcing is Alpha on all three
   loaders, disabled by default, and pending manual Minecraft regression.
+- State clearly that Blueprint Pack loading is Alpha and pack zips are read
+  from `config/blockforge/packs/`.
 - NeoForge, Fabric, and Forge can be published as separate files under one
   project version if the metadata stays clear, or as separate version entries if
   that is easier to maintain.
@@ -92,6 +96,8 @@ If publishing to CurseForge:
   in-game regression passes.
 - Do not market nearby chest sourcing as stable until v1.3.5 in-game
   validation is complete.
+- Do not market Blueprint Pack support as stable until v1.4.0 in-game
+  validation is complete.
 - Do not bundle all three loader jars into one zip for normal mod-manager
   installs.
 
@@ -103,11 +109,11 @@ Use this wording consistently:
 - Fabric Alpha: Connector for examples, reload, list, info, dryrun, build,
   GUI selection, rotation, Builder Wand placement, Ghost Preview outline,
   survival material cost, block undo, survival material refund undo, and
-  nearby container material sourcing Alpha.
+  nearby container material sourcing Alpha, and Blueprint Pack loading Alpha.
 - Forge Alpha: Connector for examples, reload, list, info, dryrun, build,
   GUI selection, rotation, Builder Wand placement, Ghost Preview outline,
   survival material cost, block undo, survival material refund undo, and
-  nearby container material sourcing Alpha.
+  nearby container material sourcing Alpha, and Blueprint Pack loading Alpha.
 
 ## CI Artifacts
 

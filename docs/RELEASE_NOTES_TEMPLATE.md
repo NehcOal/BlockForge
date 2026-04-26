@@ -1,9 +1,9 @@
-# BlockForge v1.3.5-alpha.1 - Nearby Material Source Multiloader Alpha
+# BlockForge v1.4.0-alpha.1 - Blueprint Pack Import / Export Alpha
 
 ## Release Type
 
-- Version: `1.3.5-alpha.1`
-- Type: Nearby Material Source Multiloader Alpha regression candidate
+- Version: `1.4.0-alpha.1`
+- Type: Blueprint Pack Import / Export Alpha regression candidate
 - Stability: Alpha for Fabric and Forge, recommended full experience on NeoForge
 
 ## Supported Minecraft Version
@@ -19,9 +19,9 @@
 
 ## Download Files
 
-- `blockforge-connector-neoforge-1.3.5-alpha.1.jar`
-- `blockforge-connector-fabric-1.3.5-alpha.1.jar`
-- `blockforge-connector-forge-1.3.5-alpha.1.jar`
+- `blockforge-connector-neoforge-1.4.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.4.0-alpha.1.jar`
+- `blockforge-connector-forge-1.4.0-alpha.1.jar`
 
 ## Feature Matrix
 
@@ -40,11 +40,14 @@
 | Material refund undo | ✅ | ✅ Alpha | ✅ Alpha |
 | BlockEntity NBT undo | ✅ best effort | ❌ | ❌ |
 | Nearby chest material sourcing | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Blueprint Pack import | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 
 NeoForge is the most complete connector for now. Fabric and Forge include GUI
 Selector, Builder Wand, Ghost Preview, Survival Material Cost, and Material
 Refund Undo Alpha support. Nearby chest material sourcing is implemented as a
 multiloader Alpha feature in v1.3.5 and disabled by default on every loader.
+Blueprint Pack import is Alpha on all three connectors; Web export/import is
+also Alpha.
 
 ## Verified Tests
 
@@ -67,8 +70,9 @@ Manual Minecraft status:
   v1.3.5 focused nearby container smoke test passed: player-sourced materials
   refund to player inventory, and chest-sourced materials refund to the
   original chest.
-- v1.3.5 build validation: pending before release.
-- Full NeoForge / Fabric / Forge v1.3.5 regression testing is still pending.
+- v1.4.0 build validation: pending before release.
+- Full NeoForge / Fabric / Forge v1.4.0 Blueprint Pack regression testing is
+  still pending.
 
 ## Known Limitations
 
@@ -86,6 +90,10 @@ Manual Minecraft status:
 - Fabric and Forge undo snapshots are in-memory and capped at 20 snapshots per player.
 - Fabric and Forge do not persist undo history across disconnects or restarts.
 - Dedicated server smoke testing is pending for this release candidate.
+- Web pack import currently displays an import summary and does not persist an
+  imported pack library.
+- Blueprint Pack zips are loaded from `config/blockforge/packs/`; there is no
+  remote download or server-client pack sync.
 - No automatic publishing to Modrinth or CurseForge is performed by this release
   template.
 

@@ -15,7 +15,7 @@ Web integration yet.
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector NeoForge`
-- Mod Version: `1.3.5-alpha.1`
+- Mod Version: `1.4.0-alpha.1`
 
 ## Multi-loader Architecture Status
 
@@ -43,6 +43,8 @@ containers through item handler capability, consumes materials by configured
 source priority, and tries to refund materials to their original containers on
 undo.
 
+v1.4.0 adds Blueprint Pack loading Alpha from `config/blockforge/packs/`.
+
 ## Blueprint Protocol Support
 
 - Blueprint v1: simple palette keys mapped to Minecraft block ids.
@@ -68,7 +70,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge-connector-neoforge-1.3.5-alpha.1.jar
+build/libs/blockforge-connector-neoforge-1.4.0-alpha.1.jar
 ```
 
 ## Blueprint Folder
@@ -81,6 +83,17 @@ At runtime, the mod reads blueprint files from:
 
 The folder is created automatically when the server starts or when blueprints
 are reloaded.
+
+## Blueprint Pack Folder
+
+NeoForge also reads Blueprint Pack zip files from:
+
+```text
+.minecraft/config/blockforge/packs/
+```
+
+Pack blueprint ids use `packId/blueprintId`, for example
+`starter_buildings/tiny_platform`.
 
 Supported file names:
 
@@ -128,6 +141,12 @@ registry:
 /blockforge examples list
 /blockforge examples install
 /blockforge reload
+/blockforge packs folder
+/blockforge packs reload
+/blockforge packs list
+/blockforge packs info <packId>
+/blockforge packs blueprints <packId>
+/blockforge packs validate
 /blockforge list
 /blockforge select <id>
 /blockforge selected
@@ -154,8 +173,9 @@ Permissions:
 - `build` requires permission level `2`.
 - `reload` requires permission level `2`.
 - `wand` requires permission level `2`.
-- `undo` and `undo clear` require permission level `2`.
+- `undo`, `undo clear`, and `packs reload` require permission level `2`.
 - `folder`, `list`, `info`, and `dryrun` are available to regular players.
+- `packs folder/list/info/blueprints/validate` are available to regular players.
 - `gui` is available to regular players.
 - `materials` is available to regular players.
 - `sources scan` and `sources selected` are available to regular players.
@@ -345,6 +365,7 @@ Known limits:
 - Undo refunds BlockForge material transactions, but does not restore XP, currency, or external economy state.
 - Nearby container material sourcing is Alpha, disabled by default, and pending
   v1.3.5 manual Minecraft regression.
+- Blueprint Pack loading is Alpha, pending v1.4.0 manual Minecraft regression.
 - No special cost table for doors, fluids, torches, or multi-block placements.
 - No material icons in the GUI yet.
 - Fabric and Forge have Alpha parity for core builder flows and nearby

@@ -5,7 +5,7 @@ Connector jar 的安装方式。
 
 ## 版本
 
-- BlockForge Web：`1.3.5-alpha.1`
+- BlockForge Web：`1.4.0-alpha.1`
 - Minecraft Java Edition：`1.21.1`
 - Java：`21`
 - NeoForge：`21.1.227`
@@ -17,7 +17,8 @@ Connector jar 的安装方式。
 
 NeoForge 是当前推荐的完整游戏内体验。Fabric 和 Forge 是带 GUI Selector Alpha、
 Builder Wand Alpha、Ghost Preview Alpha 轮廓预览、生存材料成本 Alpha 与 Undo 材料返还 Alpha 的轻量 Alpha。
-v1.3.5 已为三端补齐附近箱子取材 Alpha；该功能默认关闭，并仍需集中实机回归测试。
+v1.3.5 已为三端补齐附近箱子取材 Alpha。v1.4.0 新增 Blueprint Pack 导入 / 导出
+Alpha，并从 `config/blockforge/packs/` 加载蓝图包。v1.4.0 实机回归仍待执行。
 
 | Connector | 适合场景 | 当前状态 |
 |---|---|---|
@@ -71,9 +72,9 @@ Windows 用户在对应目录执行 `gradlew.bat build`。
 预期 release jar 名称：
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.3.5-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.3.5-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.3.5-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.4.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.4.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.4.0-alpha.1.jar
 ```
 
 把对应 loader 的 jar 放入 Minecraft 实例的 `mods` 文件夹。
@@ -87,6 +88,36 @@ mod/forge-connector/build/libs/blockforge-connector-forge-1.3.5-alpha.1.jar
 ```
 
 Mod 启动或执行 reload 时会自动创建该目录。
+
+## 蓝图包目录
+
+三端也会读取 Blueprint Pack zip：
+
+```text
+.minecraft/config/blockforge/packs/
+```
+
+支持：
+
+```text
+*.blockforgepack.zip
+*.zip
+```
+
+常用命令：
+
+```mcfunction
+/blockforge packs validate
+/blockforge packs list
+/blockforge packs blueprints starter_buildings
+/blockforge reload
+```
+
+Pack 蓝图 id 使用 `packId/blueprintId`，例如：
+
+```mcfunction
+/blockforge select starter_buildings/tiny_platform
+```
 
 ## 安装示例蓝图
 
@@ -169,12 +200,12 @@ GUI 材料摘要计划后续补齐。
 
 ## Release Artifacts
 
-BlockForge v1.3.5-alpha.1 release 应包含：
+BlockForge v1.4.0-alpha.1 release 应包含：
 
 - GitHub tag 提供的 Web source release。
-- `blockforge-connector-neoforge-1.3.5-alpha.1.jar`
-- `blockforge-connector-fabric-1.3.5-alpha.1.jar`
-- `blockforge-connector-forge-1.3.5-alpha.1.jar`
+- `blockforge-connector-neoforge-1.4.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.4.0-alpha.1.jar`
+- `blockforge-connector-forge-1.4.0-alpha.1.jar`
 - `examples/blueprints/`
 - `docs/BLUEPRINT_PROTOCOL.md`
 - `docs/MOD_CONNECTOR_TESTING.md`
