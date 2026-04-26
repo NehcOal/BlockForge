@@ -4,6 +4,7 @@ import com.blockforge.common.blueprint.Blueprint;
 import com.blockforge.common.selection.PlayerSelection;
 import com.blockforge.fabric.BlockForgeFabric;
 import com.blockforge.fabric.builder.FabricBlueprintPlacer;
+import com.blockforge.fabric.material.FabricMaterialBuildGate;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -14,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class FabricBuilderWandItem extends Item {
     private static final FabricBlueprintPlacer PLACER = new FabricBlueprintPlacer();
+    private static final FabricMaterialBuildGate MATERIALS = new FabricMaterialBuildGate();
 
     public FabricBuilderWandItem(Settings settings) {
         super(settings);
@@ -54,6 +56,19 @@ public class FabricBuilderWandItem extends Item {
 
         ServerWorld world = (ServerWorld) context.getWorld();
         BlockPos basePos = context.getBlockPos().offset(context.getSide());
+        FabricBlueprintPlacer.PlacementResult dryRun = PLACER.dryRun(world, basePos, blueprint, selection.rotation());
+        if (dryRun.tooLarge() || dryRun.empty() || dryRun.placedBlocks() == 0) {
+            sendPlacementResult(player, dryRun);
+            return ActionResult.FAIL;
+        }
+
+        FabricMaterialBuildGate.BuildMaterialResult materialResult = MATERIALS.prepare(player, blueprint);
+        if (!materialResult.allowed()) {
+            player.sendMessage(Text.literal(materialResult.message()), false);
+            sendMissingMaterials(player, materialResult);
+            return ActionResult.FAIL;
+        }
+
         FabricBlueprintPlacer.PlacementResult result = PLACER.place(
                 world,
                 player,
@@ -67,6 +82,7 @@ public class FabricBuilderWandItem extends Item {
         }
 
         sendPlacementResult(player, result);
+        sendMaterialResult(player, materialResult);
 
         if (result.placedBlocks() > 0) {
             BlockForgeFabric.SELECTIONS.markBuilt(selection, now);
@@ -109,5 +125,46 @@ public class FabricBuilderWandItem extends Item {
                 + ". totalBlocks="
                 + result.totalBlocks()
                 + ". Use /blockforge undo to revert blocks."), false);
+    }
+
+    private static void sendMaterialResult(
+            ServerPlayerEntity player,
+            FabricMaterialBuildGate.BuildMaterialResult materialResult
+    ) {
+        if (materialResult.report() == null) {
+            return;
+        }
+
+        if (materialResult.creativeBypass()) {
+            player.sendMessage(Text.literal("Creative mode: no materials consumed."), false);
+            return;
+        }
+
+        player.sendMessage(Text.literal("Consumed "
+                + materialResult.consumedItems()
+                + " items. Materials are not refunded yet in Fabric alpha."), false);
+    }
+
+    private static void sendMissingMaterials(
+            ServerPlayerEntity player,
+            FabricMaterialBuildGate.BuildMaterialResult materialResult
+    ) {
+        if (materialResult.report() == null) {
+            return;
+        }
+
+        materialResult.report()
+                .requirements()
+                .stream()
+                .filter(requirement -> requirement.missing() > 0)
+                .limit(5)
+                .forEach(requirement -> player.sendMessage(Text.literal("Missing materials: "
+                        + requirement.itemId()
+                        + " missing="
+                        + requirement.missing()
+                        + " required="
+                        + requirement.required()
+                        + " available="
+                        + requirement.available()), false));
     }
 }

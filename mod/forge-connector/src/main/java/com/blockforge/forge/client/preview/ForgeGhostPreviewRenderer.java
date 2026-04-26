@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
-import org.joml.Matrix4f;
 
 public final class ForgeGhostPreviewRenderer {
     private ForgeGhostPreviewRenderer() {
@@ -32,7 +31,6 @@ public final class ForgeGhostPreviewRenderer {
         MultiBufferSource.BufferSource bufferSource = minecraft.renderBuffers().bufferSource();
         VertexConsumer lines = bufferSource.getBuffer(RenderType.lines());
         PoseStack poseStack = new PoseStack();
-        Matrix4f eventPose = event.getPoseStack();
         Vec3 cameraPosition = event.getCamera().getPosition();
 
         double minX = target.x();
@@ -45,7 +43,6 @@ public final class ForgeGhostPreviewRenderer {
                 ? new PreviewColor(0.15F, 0.95F, 0.95F, 0.85F)
                 : new PreviewColor(1.0F, 0.2F, 0.2F, 0.9F);
 
-        poseStack.last().pose().set(eventPose);
         poseStack.pushPose();
         poseStack.translate(-cameraPosition.x, -cameraPosition.y, -cameraPosition.z);
         LevelRenderer.renderLineBox(

@@ -2,6 +2,41 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [1.2.3] - Unreleased
+
+### Added
+
+- Added common material cost mode and `MaterialCounterCore` helpers for loader-neutral material aggregation.
+- Added Fabric Survival Material Cost Alpha for command builds and Builder Wand builds.
+- Added Forge Survival Material Cost Alpha for command builds and Builder Wand builds.
+- Added Fabric and Forge `/blockforge materials <id>` and `/blockforge materials selected`.
+- Added Fabric and Forge inventory material checkers and material consumers.
+- Added Fabric and Forge per-player undo history stacks for repeated undo.
+
+### Changed
+
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.2.3-alpha.1`.
+- Fabric and Forge survival builds now reject missing materials before placement.
+- Fabric and Forge creative builds bypass material consumption.
+- Fixed Forge Ghost Preview line boxes rendering with a skewed/slanted transform.
+- Fabric and Forge `/blockforge undo` now pops prior placements from a per-player
+  history stack instead of keeping only one snapshot.
+- Updated the Loader Feature Matrix to mark Fabric and Forge Survival Material Cost support as Alpha.
+
+### Notes
+
+- Fabric and Forge Adventure and Spectator builds are rejected by the Alpha material gate.
+- Fabric and Forge consume survival materials before placement after a dry-run precheck.
+- Fabric and Forge `/blockforge undo` restores blocks only and does not refund consumed materials yet.
+- Fabric / Forge GUI material summary is planned for v1.2.4; v1.2.3 exposes material reports through commands.
+- Fabric / Forge cumulative v1.2.0-v1.2.3 manual smoke testing was run on
+  2026-04-26. The session exercised GUI selection, Builder Wand placement,
+  Ghost Preview display, creative material bypass, and undo behavior.
+- The manual smoke found two regressions that were fixed in this branch: Forge
+  Ghost Preview skewed rendering and Fabric / Forge single-snapshot undo.
+- Targeted survival missing-material rejection and survival item consumption
+  retesting is still recommended before a public v1.2.3 release.
+
 ## [1.2.2] - Unreleased
 
 ### Added

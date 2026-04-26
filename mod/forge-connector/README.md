@@ -3,8 +3,8 @@
 BlockForge Connector Forge is the Forge alpha for BlockForge
 Blueprint JSON placement. It proves the minimum Forge loop for loading,
 listing, dry-running, building, Builder Wand placement, and undoing blueprints
-with an Alpha GUI Selector and Ghost Preview outline. It does not port the
-NeoForge survival material system yet.
+with an Alpha GUI Selector, Ghost Preview outline, and Survival Material Cost
+MVP. Material refund undo is still planned for a later Alpha.
 
 ## Target
 
@@ -13,7 +13,7 @@ NeoForge survival material system yet.
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector Forge`
-- Mod Version: `1.2.2-alpha.1`
+- Mod Version: `1.2.3-alpha.1`
 
 ## Build
 
@@ -32,7 +32,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge-connector-forge-1.2.2-alpha.1.jar
+build/libs/blockforge-connector-forge-1.2.3-alpha.1.jar
 ```
 
 ## Blueprint Folder
@@ -88,6 +88,8 @@ Existing files are skipped and not overwritten.
 /blockforge rotate <0|90|180|270>
 /blockforge wand
 /blockforge gui
+/blockforge materials <id>
+/blockforge materials selected
 /blockforge info <id>
 /blockforge dryrun <id>
 /blockforge build <id>
@@ -99,7 +101,7 @@ Existing files are skipped and not overwritten.
 Permissions:
 
 - Permission level `2`: `build`, `reload`, `examples install`, `undo`, `wand`.
-- Regular players: `folder`, `list`, `info`, `dryrun`, `examples list`, `select`, `selected`, `rotate`, `gui`.
+- Regular players: `folder`, `list`, `info`, `dryrun`, `materials`, `examples list`, `select`, `selected`, `rotate`, `gui`.
 
 ## What Forge Alpha Supports
 
@@ -113,9 +115,13 @@ Permissions:
 - Opens an Alpha Blueprint Selector GUI with `/blockforge gui` or the default `B` key.
 - Gives `blockforge_connector:builder_wand` through `/blockforge wand`.
 - Shows a Ghost Preview Alpha bounding box and ground footprint while holding the Builder Wand.
+- Reports material needs with `/blockforge materials <id>` and `/blockforge materials selected`.
+- Rejects survival builds when required materials are missing.
+- Consumes survival inventory items before command or Builder Wand placement.
+- Bypasses material consumption in creative mode.
 - Places the selected blueprint with the Builder Wand by right-clicking a block.
-- Records the latest per-player block-state snapshot.
-- Restores the latest Forge build with `/blockforge undo`.
+- Records per-player block-state snapshots in an in-memory undo history.
+- Restores recent Forge builds with repeated `/blockforge undo` calls.
 
 ## GUI + Builder Wand + Ghost Preview Alpha Flow
 
@@ -124,6 +130,7 @@ Permissions:
 /blockforge reload
 /blockforge list
 /blockforge gui
+/blockforge materials selected
 /blockforge wand
 ```
 
@@ -132,26 +139,34 @@ choose `0°`, `90°`, `180°`, or `270°`, then click Select. Hold the Builder W
 and look at a block to see the Ghost Preview outline. Right-click to build.
 Forge places the selected blueprint at `clickedPos.relative(clickedFace)`. The wand has a 2 second
 cooldown per player. Command builds are not throttled by the wand cooldown. Run
-`/blockforge undo` to restore the latest wand or command placement.
+`/blockforge undo` to restore the most recent wand or command placement; repeat
+the command to walk backward through that player's in-memory history.
+
+In survival mode, Forge checks and consumes the required blueprint materials
+before command or Builder Wand builds. Creative mode consumes nothing. Adventure
+and Spectator mode builds are rejected by the Alpha material gate.
 
 ## Current Limits
 
 - Ghost Preview only renders a bounding box and ground footprint.
 - No collision scan, material status, per-block transparent preview, or texture preview.
 - Failed or invalid selection requests clear the client preview and show the server error message.
-- No material requirements, inventory consumption, or refunds.
+- No material refund undo. `/blockforge undo` restores blocks only.
+- No GUI material summary yet; use `/blockforge materials <id>` or `/blockforge materials selected`.
+- No nearby chest material sourcing or recipe substitutions.
 - No BlockEntity NBT snapshot or restore.
 - No persistence for undo snapshots.
+- Undo history is capped at 20 snapshots per player.
 - GUI Selector is Alpha and only syncs blueprint list, selected blueprint, and rotation.
 - If the default `B` key conflicts, change it in Minecraft Controls.
 - No protected block entity checks in the Alpha placer.
 - Command-loop manual Minecraft testing has passed for the Alpha command flow.
-- GUI Selector, Builder Wand, and Ghost Preview parity manual Minecraft testing is pending.
+- GUI Selector, Builder Wand, Ghost Preview, and Survival Material Cost parity manual Minecraft testing is pending.
 
 ## Difference From NeoForge And Fabric
 
 NeoForge remains the most complete Connector. It currently owns common config,
-survival materials, inventory transactions, and undo material refunds.
+material refund undo, and deeper material behavior.
 
 Fabric and Forge Alpha are intentionally smaller and parallel in scope: they
 prove each loader can reuse `mod/common` for blueprint parsing, rotation, build

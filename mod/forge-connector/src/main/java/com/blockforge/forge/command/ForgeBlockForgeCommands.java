@@ -1,11 +1,14 @@
 package com.blockforge.forge.command;
 
 import com.blockforge.common.blueprint.Blueprint;
+import com.blockforge.common.material.MaterialReport;
+import com.blockforge.common.material.MaterialRequirement;
 import com.blockforge.common.rotation.BlueprintRotation;
 import com.blockforge.common.selection.PlayerSelection;
 import com.blockforge.forge.blueprint.ForgeBlueprintRegistry;
 import com.blockforge.forge.blueprint.ForgeExampleBlueprintInstaller;
 import com.blockforge.forge.builder.ForgeBlueprintPlacer;
+import com.blockforge.forge.material.ForgeMaterialBuildGate;
 import com.blockforge.forge.network.ForgeBlueprintGuiNetworking;
 import com.blockforge.forge.player.ForgePlayerSelectionManager;
 import com.blockforge.forge.registry.ForgeModItems;
@@ -28,6 +31,7 @@ import java.util.List;
 public final class ForgeBlockForgeCommands {
     private static final ForgeBlueprintPlacer PLACER = new ForgeBlueprintPlacer();
     private static final ForgeExampleBlueprintInstaller EXAMPLES = new ForgeExampleBlueprintInstaller();
+    private static final ForgeMaterialBuildGate MATERIALS = new ForgeMaterialBuildGate();
 
     private ForgeBlockForgeCommands() {
     }
@@ -65,6 +69,11 @@ public final class ForgeBlockForgeCommands {
                         .executes(ForgeBlockForgeCommands::giveWand))
                 .then(Commands.literal("gui")
                         .executes(ForgeBlockForgeCommands::openGui))
+                .then(Commands.literal("materials")
+                        .then(Commands.literal("selected")
+                                .executes(context -> materialsSelected(context, registry, selectionManager)))
+                        .then(blueprintIdArgument(registry)
+                                .executes(context -> materials(context, registry))))
                 .then(Commands.literal("info")
                         .then(blueprintIdArgument(registry)
                                 .executes(context -> info(context, registry))))
@@ -351,6 +360,52 @@ public final class ForgeBlockForgeCommands {
         return result.placedBlocks();
     }
 
+    private static int materials(
+            CommandContext<CommandSourceStack> context,
+            ForgeBlueprintRegistry registry
+    ) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        Blueprint blueprint = findBlueprint(context, registry);
+        if (blueprint == null) {
+            return 0;
+        }
+
+        sendMaterialReport(context.getSource(), MATERIALS.report(blueprint, player));
+        return 1;
+    }
+
+    private static int materialsSelected(
+            CommandContext<CommandSourceStack> context,
+            ForgeBlueprintRegistry registry,
+            ForgePlayerSelectionManager selectionManager
+    ) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        PlayerSelection selection = selectionManager.get(player.getUUID()).orElse(null);
+        if (selection == null) {
+            context.getSource().sendFailure(Component.literal("No BlockForge Forge blueprint selected. Use /blockforge select <id> first."));
+            return 0;
+        }
+
+        Blueprint blueprint = registry.get(selection.selectedBlueprintId()).orElse(null);
+        if (blueprint == null) {
+            selectionManager.clear(player.getUUID());
+            ForgeBlueprintGuiNetworking.clearPreview(player, "Selected BlockForge Forge blueprint no longer exists.");
+            context.getSource().sendFailure(Component.literal("Selected BlockForge Forge blueprint no longer exists. Use /blockforge select <id> again."));
+            return 0;
+        }
+
+        sendMaterialReport(context.getSource(), MATERIALS.report(blueprint, player));
+        return 1;
+    }
+
     private static int buildAtPlayer(
             CommandContext<CommandSourceStack> context,
             ForgeBlueprintRegistry registry,
@@ -397,6 +452,28 @@ public final class ForgeBlockForgeCommands {
             return 0;
         }
 
+        ForgeBlueprintPlacer.PlacementResult dryRun = PLACER.dryRun(
+                context.getSource().getLevel(),
+                basePos,
+                blueprint,
+                rotation
+        );
+        if (dryRun.tooLarge() || dryRun.empty()) {
+            sendPlacementResult(context.getSource(), dryRun);
+            return 0;
+        }
+        if (dryRun.placedBlocks() == 0) {
+            context.getSource().sendFailure(Component.literal("Blueprint has no valid placeable blocks and cannot be built."));
+            return 0;
+        }
+
+        ForgeMaterialBuildGate.BuildMaterialResult materialResult = MATERIALS.prepare(player, blueprint);
+        if (!materialResult.allowed()) {
+            context.getSource().sendFailure(Component.literal(materialResult.message()));
+            sendMissingMaterials(context.getSource(), materialResult.report());
+            return 0;
+        }
+
         ForgeBlueprintPlacer.PlacementResult result = PLACER.place(
                 context.getSource().getLevel(),
                 player,
@@ -410,6 +487,7 @@ public final class ForgeBlockForgeCommands {
         }
 
         sendPlacementResult(context.getSource(), result);
+        sendMaterialResult(context.getSource(), materialResult);
         return result.placedBlocks();
     }
 
@@ -471,6 +549,66 @@ public final class ForgeBlockForgeCommands {
                         + ". Use /blockforge undo to revert blocks."),
                 true
         );
+    }
+
+    private static void sendMaterialResult(
+            CommandSourceStack source,
+            ForgeMaterialBuildGate.BuildMaterialResult materialResult
+    ) {
+        if (materialResult.report() == null) {
+            return;
+        }
+
+        if (materialResult.creativeBypass()) {
+            source.sendSuccess(() -> Component.literal("Creative mode: no materials consumed."), false);
+            return;
+        }
+
+        source.sendSuccess(
+                () -> Component.literal("Consumed "
+                        + materialResult.consumedItems()
+                        + " items. Materials are not refunded yet in Forge alpha."),
+                true
+        );
+    }
+
+    private static void sendMaterialReport(CommandSourceStack source, MaterialReport report) {
+        source.sendSuccess(
+                () -> Component.literal("BlockForge Forge materials: "
+                        + report.blueprintId()
+                        + " | requiredItems="
+                        + report.totalRequiredItems()
+                        + " | availableItems="
+                        + report.totalAvailableItems()
+                        + " | missingItemTypes="
+                        + report.missingItemTypes()
+                        + " | enoughMaterials="
+                        + report.enoughMaterials()),
+                false
+        );
+        sendMissingMaterials(source, report);
+    }
+
+    private static void sendMissingMaterials(CommandSourceStack source, MaterialReport report) {
+        if (report == null) {
+            return;
+        }
+
+        report.requirements()
+                .stream()
+                .filter(requirement -> requirement.missing() > 0)
+                .limit(10)
+                .forEach(requirement -> source.sendFailure(Component.literal("Missing materials: " + describeRequirement(requirement))));
+    }
+
+    private static String describeRequirement(MaterialRequirement requirement) {
+        return requirement.itemId()
+                + " missing="
+                + requirement.missing()
+                + " required="
+                + requirement.required()
+                + " available="
+                + requirement.available();
     }
 
     private static void sendDryRunResult(

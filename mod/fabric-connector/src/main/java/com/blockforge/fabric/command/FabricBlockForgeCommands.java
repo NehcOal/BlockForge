@@ -1,11 +1,14 @@
 package com.blockforge.fabric.command;
 
 import com.blockforge.common.blueprint.Blueprint;
+import com.blockforge.common.material.MaterialReport;
+import com.blockforge.common.material.MaterialRequirement;
 import com.blockforge.common.rotation.BlueprintRotation;
 import com.blockforge.common.selection.PlayerSelection;
 import com.blockforge.fabric.blueprint.FabricBlueprintRegistry;
 import com.blockforge.fabric.blueprint.FabricExampleBlueprintInstaller;
 import com.blockforge.fabric.builder.FabricBlueprintPlacer;
+import com.blockforge.fabric.material.FabricMaterialBuildGate;
 import com.blockforge.fabric.network.FabricBlueprintGuiNetworking;
 import com.blockforge.fabric.player.FabricPlayerSelectionManager;
 import com.blockforge.fabric.registry.FabricModItems;
@@ -28,6 +31,7 @@ import java.util.List;
 public final class FabricBlockForgeCommands {
     private static final FabricBlueprintPlacer PLACER = new FabricBlueprintPlacer();
     private static final FabricExampleBlueprintInstaller EXAMPLES = new FabricExampleBlueprintInstaller();
+    private static final FabricMaterialBuildGate MATERIALS = new FabricMaterialBuildGate();
 
     private FabricBlockForgeCommands() {
     }
@@ -64,6 +68,11 @@ public final class FabricBlockForgeCommands {
                         .executes(FabricBlockForgeCommands::giveWand))
                 .then(CommandManager.literal("gui")
                         .executes(FabricBlockForgeCommands::openGui))
+                .then(CommandManager.literal("materials")
+                        .then(CommandManager.literal("selected")
+                                .executes(context -> materialsSelected(context, registry, selectionManager)))
+                        .then(blueprintIdArgument(registry)
+                                .executes(context -> materials(context, registry))))
                 .then(CommandManager.literal("info")
                         .then(blueprintIdArgument(registry)
                                 .executes(context -> info(context, registry))))
@@ -352,6 +361,52 @@ public final class FabricBlockForgeCommands {
         return result.placedBlocks();
     }
 
+    private static int materials(
+            CommandContext<ServerCommandSource> context,
+            FabricBlueprintRegistry registry
+    ) {
+        ServerPlayerEntity player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        Blueprint blueprint = findBlueprint(context, registry);
+        if (blueprint == null) {
+            return 0;
+        }
+
+        sendMaterialReport(context.getSource(), MATERIALS.report(blueprint, player));
+        return 1;
+    }
+
+    private static int materialsSelected(
+            CommandContext<ServerCommandSource> context,
+            FabricBlueprintRegistry registry,
+            FabricPlayerSelectionManager selectionManager
+    ) {
+        ServerPlayerEntity player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        PlayerSelection selection = selectionManager.get(player.getUuid()).orElse(null);
+        if (selection == null) {
+            context.getSource().sendError(Text.literal("No BlockForge Fabric blueprint selected. Use /blockforge select <id> first."));
+            return 0;
+        }
+
+        Blueprint blueprint = registry.get(selection.selectedBlueprintId()).orElse(null);
+        if (blueprint == null) {
+            selectionManager.clear(player.getUuid());
+            FabricBlueprintGuiNetworking.clearPreview(player, "Selected BlockForge Fabric blueprint no longer exists.");
+            context.getSource().sendError(Text.literal("Selected BlockForge Fabric blueprint no longer exists. Use /blockforge select <id> again."));
+            return 0;
+        }
+
+        sendMaterialReport(context.getSource(), MATERIALS.report(blueprint, player));
+        return 1;
+    }
+
     private static int buildAtPlayer(
             CommandContext<ServerCommandSource> context,
             FabricBlueprintRegistry registry,
@@ -398,6 +453,28 @@ public final class FabricBlockForgeCommands {
             return 0;
         }
 
+        FabricBlueprintPlacer.PlacementResult dryRun = PLACER.dryRun(
+                context.getSource().getWorld(),
+                basePos,
+                blueprint,
+                rotation
+        );
+        if (dryRun.tooLarge() || dryRun.empty()) {
+            sendPlacementResult(context.getSource(), dryRun);
+            return 0;
+        }
+        if (dryRun.placedBlocks() == 0) {
+            context.getSource().sendError(Text.literal("Blueprint has no valid placeable blocks and cannot be built."));
+            return 0;
+        }
+
+        FabricMaterialBuildGate.BuildMaterialResult materialResult = MATERIALS.prepare(player, blueprint);
+        if (!materialResult.allowed()) {
+            context.getSource().sendError(Text.literal(materialResult.message()));
+            sendMissingMaterials(context.getSource(), materialResult.report());
+            return 0;
+        }
+
         FabricBlueprintPlacer.PlacementResult result = PLACER.place(
                 context.getSource().getWorld(),
                 player,
@@ -411,6 +488,7 @@ public final class FabricBlockForgeCommands {
         }
 
         sendPlacementResult(context.getSource(), result);
+        sendMaterialResult(context.getSource(), materialResult);
         return result.placedBlocks();
     }
 
@@ -472,6 +550,66 @@ public final class FabricBlockForgeCommands {
                         + ". Use /blockforge undo to revert blocks."),
                 true
         );
+    }
+
+    private static void sendMaterialResult(
+            ServerCommandSource source,
+            FabricMaterialBuildGate.BuildMaterialResult materialResult
+    ) {
+        if (materialResult.report() == null) {
+            return;
+        }
+
+        if (materialResult.creativeBypass()) {
+            source.sendFeedback(() -> Text.literal("Creative mode: no materials consumed."), false);
+            return;
+        }
+
+        source.sendFeedback(
+                () -> Text.literal("Consumed "
+                        + materialResult.consumedItems()
+                        + " items. Materials are not refunded yet in Fabric alpha."),
+                true
+        );
+    }
+
+    private static void sendMaterialReport(ServerCommandSource source, MaterialReport report) {
+        source.sendFeedback(
+                () -> Text.literal("BlockForge Fabric materials: "
+                        + report.blueprintId()
+                        + " | requiredItems="
+                        + report.totalRequiredItems()
+                        + " | availableItems="
+                        + report.totalAvailableItems()
+                        + " | missingItemTypes="
+                        + report.missingItemTypes()
+                        + " | enoughMaterials="
+                        + report.enoughMaterials()),
+                false
+        );
+        sendMissingMaterials(source, report);
+    }
+
+    private static void sendMissingMaterials(ServerCommandSource source, MaterialReport report) {
+        if (report == null) {
+            return;
+        }
+
+        report.requirements()
+                .stream()
+                .filter(requirement -> requirement.missing() > 0)
+                .limit(10)
+                .forEach(requirement -> source.sendError(Text.literal("Missing materials: " + describeRequirement(requirement))));
+    }
+
+    private static String describeRequirement(MaterialRequirement requirement) {
+        return requirement.itemId()
+                + " missing="
+                + requirement.missing()
+                + " required="
+                + requirement.required()
+                + " available="
+                + requirement.available();
     }
 
     private static void sendDryRunResult(

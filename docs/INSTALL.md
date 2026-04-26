@@ -5,7 +5,7 @@ for NeoForge, Fabric, and Forge.
 
 ## Versions
 
-- BlockForge Web: `1.2.2-alpha.1`
+- BlockForge Web: `1.2.3-alpha.1`
 - Minecraft Java Edition: `1.21.1`
 - Java: `21`
 - NeoForge: `21.1.227`
@@ -16,13 +16,14 @@ for NeoForge, Fabric, and Forge.
 ## Choose A Loader
 
 NeoForge is the recommended complete in-game experience. Fabric and Forge are
-Alpha connectors with command builds, GUI Selector Alpha, Builder Wand Alpha placement, and Ghost Preview Alpha outlines.
+Alpha connectors with command builds, GUI Selector Alpha, Builder Wand Alpha
+placement, Ghost Preview Alpha outlines, and Survival Material Cost Alpha.
 
 | Connector | Best For | Current Status |
 |---|---|---|
 | NeoForge | GUI Selector, Builder Wand, Ghost Preview, survival materials, material refund undo | Most complete |
-| Fabric Alpha | Command reload/list/dryrun/build/undo, GUI Selector Alpha, Builder Wand Alpha, and Ghost Preview Alpha validation | Alpha |
-| Forge Alpha | Command reload/list/dryrun/build/undo, GUI Selector Alpha, Builder Wand Alpha, and Ghost Preview Alpha validation | Alpha |
+| Fabric Alpha | Command reload/list/dryrun/build/undo, GUI Selector Alpha, Builder Wand Alpha, Ghost Preview Alpha, and survival material cost validation | Alpha |
+| Forge Alpha | Command reload/list/dryrun/build/undo, GUI Selector Alpha, Builder Wand Alpha, Ghost Preview Alpha, and survival material cost validation | Alpha |
 
 Do not install multiple BlockForge connector jars into the same Minecraft
 instance at once. Pick the jar that matches the loader for that instance.
@@ -71,9 +72,9 @@ Windows users can run `gradlew.bat build` in the same directories.
 Expected release jar names:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.2-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.2-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.2.2-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.3-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.3-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.2.3-alpha.1.jar
 ```
 
 Copy the matching jar into the Minecraft instance `mods` folder.
@@ -111,9 +112,11 @@ This command flow is supported on NeoForge, Fabric Alpha, and Forge Alpha:
 /blockforge list
 /blockforge info tiny_platform
 /blockforge dryrun tiny_platform
+/blockforge materials tiny_platform
 /blockforge build tiny_platform
 /blockforge undo
 /blockforge select tiny_platform
+/blockforge materials selected
 /blockforge rotate 90
 /blockforge wand
 /blockforge build state_test_house rotate 90
@@ -142,7 +145,7 @@ placement area before you build.
 In survival mode, NeoForge checks required materials before building. Undo
 restores blocks and refunds recorded survival materials.
 
-## Fabric / Forge GUI + Wand + Ghost Preview Alpha
+## Fabric / Forge GUI + Wand + Ghost Preview + Materials Alpha
 
 Fabric and Forge can open the Blueprint Selector with:
 
@@ -158,20 +161,25 @@ Hold the Builder Wand and look at a block to see the Ghost Preview Alpha
 outline. It renders a bounding box and ground footprint only; the preview does
 not modify the world.
 
+In survival mode, Fabric and Forge check required blueprint materials before
+command or Builder Wand builds. Missing materials reject the build; enough
+materials are consumed before placement. Creative mode consumes nothing.
+
 ## Fabric / Forge Alpha Limits
 
 Fabric and Forge Alpha support command builds, Builder Wand Alpha placement, and
-block undo. They do not support survival material costs, material refund undo,
-or BlockEntity NBT undo yet.
+block undo. They do not support material refund undo or BlockEntity NBT undo yet.
+Use `/blockforge materials <id>` or `/blockforge materials selected` for material
+reports; GUI material summary is planned later.
 
 ## Release Artifacts
 
-A BlockForge v1.2.2-alpha.1 release should include:
+A BlockForge v1.2.3-alpha.1 release should include:
 
 - Web source release from the GitHub tag.
-- `blockforge-connector-neoforge-1.2.2-alpha.1.jar`
-- `blockforge-connector-fabric-1.2.2-alpha.1.jar`
-- `blockforge-connector-forge-1.2.2-alpha.1.jar`
+- `blockforge-connector-neoforge-1.2.3-alpha.1.jar`
+- `blockforge-connector-fabric-1.2.3-alpha.1.jar`
+- `blockforge-connector-forge-1.2.3-alpha.1.jar`
 - `examples/blueprints/`
 - `docs/BLUEPRINT_PROTOCOL.md`
 - `docs/MOD_CONNECTOR_TESTING.md`

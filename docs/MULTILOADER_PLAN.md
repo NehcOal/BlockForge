@@ -82,7 +82,8 @@ be added after the three connector modules settle.
 - `v1.2.0`: Fabric and Forge Builder Wand Alpha parity.
 - `v1.2.1`: Fabric and Forge GUI Selector Alpha parity.
 - `v1.2.2`: Fabric and Forge Ghost Preview Alpha parity.
-- `v1.2.3+`: continue Fabric and Forge parity work after GUI, wand, and preview testing.
+- `v1.2.3`: Fabric and Forge Survival Material Cost Alpha parity.
+- `v1.2.4+`: Fabric and Forge material refund undo and deeper material UX.
 
 ## Current Risks
 
@@ -95,6 +96,8 @@ be added after the three connector modules settle.
   and footprint.
 - Registry lookup, inventory mutation, and world placement must remain in each
   loader adapter to avoid leaking Minecraft runtime types into common core.
+- Fabric and Forge material refund undo is not implemented yet, so consumed
+  materials are not restored by `/blockforge undo` in v1.2.3.
 
 ## v1.1.3 Status
 
@@ -120,7 +123,7 @@ be added after the three connector modules settle.
 - Fabric and Forge players can use `/blockforge select`, `/blockforge selected`,
   `/blockforge rotate`, and `/blockforge wand`.
 - Fabric and Forge wand placement reuses the existing loader-specific placer and
-  latest-placement undo snapshot flow.
+  per-player undo history flow.
 - Player selection state is in-memory and can be lost when a player disconnects
   or the server restarts.
 - Wand placement has a 2 second per-player cooldown. Command builds are not
@@ -158,3 +161,21 @@ be added after the three connector modules settle.
   per-block transparent previews, texture previews, survival material cost,
   material refund undo, blueprint editing, or Web sync.
 - Fabric / Forge Ghost Preview manual Minecraft testing is pending.
+
+## v1.2.3 Status
+
+- Fabric and Forge add Survival Material Cost Alpha support for command builds
+  and Builder Wand builds.
+- `/blockforge materials <id>` and `/blockforge materials selected` report
+  required items, available items, missing item types, and missing materials.
+- Common core provides loader-neutral material aggregation helpers. Fabric and
+  Forge still own registry lookup, block-to-item mapping, inventory scans, and
+  item consumption.
+- Creative players bypass material consumption. Survival players must have the
+  required items. Adventure and Spectator builds are rejected by the Alpha
+  material gate.
+- Fabric and Forge run a dry-run placement precheck before consuming materials.
+- `/blockforge undo` restores blocks only and does not refund materials yet.
+- GUI material summary is planned for v1.2.4; v1.2.3 exposes material reports
+  through commands.
+- Fabric / Forge Survival Material Cost manual Minecraft testing is pending.

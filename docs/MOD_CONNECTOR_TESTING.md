@@ -5,9 +5,81 @@ Passing `gradlew build` confirms compilation only; it does not replace in-game
 testing.
 
 Fabric and Forge Alpha are also covered here as separate checklists. NeoForge
-remains the full-featured Connector; Fabric and Forge now include GUI Selector
-Builder Wand, and Ghost Preview Alpha support but still intentionally do not
-cover survival material cost, material refunds, or BlockEntity NBT undo.
+remains the full-featured Connector; Fabric and Forge now include GUI Selector,
+Builder Wand, Ghost Preview, and Survival Material Cost Alpha support. Fabric
+and Forge still intentionally do not cover material refunds or BlockEntity NBT
+undo.
+
+## v1.2.3 Fabric / Forge Survival Material Cost Alpha Checklist
+
+Release version:
+
+```text
+1.2.3-alpha.1
+```
+
+Expected release jars:
+
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.3-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.3-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.2.3-alpha.1.jar
+```
+
+Recommended Fabric and Forge preview test flow:
+
+```mcfunction
+/blockforge examples install
+/blockforge reload
+/blockforge select tiny_platform
+/blockforge materials selected
+/blockforge wand
+```
+
+Recommended survival cost manual test:
+
+1. Run `/blockforge examples install`.
+2. Run `/blockforge reload`.
+3. Run `/blockforge select tiny_platform`.
+4. Run `/blockforge materials selected`.
+5. Run `/blockforge wand`.
+6. In creative mode, build with the Builder Wand; it should consume no materials.
+7. Switch to survival mode.
+8. Clear inventory.
+9. Run `/blockforge materials selected`; it should show missing stone bricks.
+10. Try the Builder Wand build; it should be rejected.
+11. Give the required stone bricks.
+12. Build with the Builder Wand; it should succeed and consume materials.
+13. Run `/blockforge undo`; it should restore blocks but not refund materials.
+
+Expected result:
+
+- `/blockforge materials <id>` and `/blockforge materials selected` show
+  required items, available items, missing item types, and missing materials.
+- Creative mode prints that no materials were consumed.
+- Survival mode rejects builds when required materials are missing.
+- Survival mode consumes required inventory items before command or Builder Wand
+  placement.
+- Adventure and Spectator mode builds are rejected by the Alpha material gate.
+- `/blockforge undo` restores the latest placement after building; repeated
+  calls should walk back through earlier placements for the same player.
+- Fabric / Forge v1.2.0 through v1.2.3 cumulative manual smoke testing was run
+  on 2026-04-26 in Fabric and Forge development clients.
+
+Manual result notes from 2026-04-26:
+
+- Fabric: GUI selection, Ghost Preview outline, Builder Wand placement, creative
+  material bypass, and repeated placement/undo flow were exercised.
+- Forge: GUI selection, Builder Wand placement, creative material bypass, and
+  placement/undo flow were exercised.
+- Forge Ghost Preview initially rendered as a skewed/slanted line box. Fixed by
+  removing the deprecated event pose matrix from the Forge preview renderer and
+  rendering the line box camera-relative like Fabric.
+- Fabric and Forge undo initially only kept one snapshot per player. Fixed by
+  replacing the single latest snapshot with a 20-entry per-player undo history.
+- Post-fix Fabric, Forge, and NeoForge Gradle builds passed.
+- Targeted survival missing-material rejection and survival material consumption
+  retesting is still recommended before a public v1.2.3 release.
 
 ## v1.2.2 Fabric / Forge Ghost Preview Alpha Checklist
 
@@ -48,7 +120,8 @@ Expected result:
 - Valid previews render cyan/green; height-invalid previews render red.
 - Looking away from blocks hides the preview.
 - Right-click build still goes through the server Builder Wand placement path.
-- `/blockforge undo` restores the latest placement after building.
+- `/blockforge undo` restores the latest placement after building; repeated
+  calls should walk back through earlier placements for the same player.
 - No world blocks are modified by the preview itself.
 - Fabric / Forge Ghost Preview manual Minecraft testing is pending.
 
@@ -254,7 +327,7 @@ Known Fabric command-loop Alpha limits:
 - No survival material cost or inventory mutation.
 - No material refund.
 - No BlockEntity NBT snapshot or restore.
-- Undo is in-memory and only stores the latest Fabric build per player.
+- Undo is in-memory and stores up to 20 Fabric builds per player.
 
 Fabric v1.1.1 manual Minecraft test status: passed for the command-loop Alpha.
 
@@ -327,7 +400,7 @@ Known Forge command-loop Alpha limits:
 - No survival material cost or inventory mutation.
 - No material refund.
 - No BlockEntity NBT snapshot or restore.
-- Undo is in-memory and only stores the latest Forge build per player.
+- Undo is in-memory and stores up to 20 Forge builds per player.
 
 Forge v1.1.2 manual Minecraft test status: passed for the command-loop Alpha.
 
@@ -378,7 +451,7 @@ Copy the generated jar into the test instance `mods` folder.
 Example:
 
 ```text
-.minecraft/mods/blockforge-connector-neoforge-1.2.2-alpha.1.jar
+.minecraft/mods/blockforge-connector-neoforge-1.2.3-alpha.1.jar
 ```
 
 ## 4. Install Example Blueprints
