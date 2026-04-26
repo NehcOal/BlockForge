@@ -83,7 +83,9 @@ be added after the three connector modules settle.
 - `v1.2.1`: Fabric and Forge GUI Selector Alpha parity.
 - `v1.2.2`: Fabric and Forge Ghost Preview Alpha parity.
 - `v1.2.3`: Fabric and Forge Survival Material Cost Alpha parity.
-- `v1.2.4+`: Fabric and Forge material refund undo and deeper material UX.
+- `v1.2.4`: Fabric and Forge Material Refund Undo Alpha parity.
+- `v1.2.5+`: deeper material UX, GUI material summaries, and follow-up
+  stabilization.
 
 ## Current Risks
 
@@ -96,8 +98,10 @@ be added after the three connector modules settle.
   and footprint.
 - Registry lookup, inventory mutation, and world placement must remain in each
   loader adapter to avoid leaking Minecraft runtime types into common core.
-- Fabric and Forge material refund undo is not implemented yet, so consumed
-  materials are not restored by `/blockforge undo` in v1.2.3.
+- Fabric and Forge Material Refund Undo is Alpha as of v1.2.4. Refunded items
+  that do not fit in the player inventory drop near the player.
+- Fabric and Forge still do not support nearby chest sourcing, GUI material
+  icons, collision-aware preview, or BlockEntity NBT undo.
 
 ## v1.1.3 Status
 
@@ -176,6 +180,24 @@ be added after the three connector modules settle.
   material gate.
 - Fabric and Forge run a dry-run placement precheck before consuming materials.
 - `/blockforge undo` restores blocks only and does not refund materials yet.
-- GUI material summary is planned for v1.2.4; v1.2.3 exposes material reports
+- GUI material summary is planned for a later release; v1.2.3 exposes material reports
   through commands.
 - Fabric / Forge Survival Material Cost manual Minecraft testing is pending.
+
+## v1.2.4 Status
+
+- Fabric and Forge add Material Refund Undo Alpha support for command builds
+  and Builder Wand builds.
+- Common core provides `MaterialRefundResult` alongside existing
+  `ConsumedMaterialEntry` and `MaterialTransaction` DTOs.
+- Fabric and Forge undo snapshots now attach the material transaction recorded
+  during survival builds.
+- `/blockforge undo` restores blocks first, then refunds consumed survival
+  materials. If the inventory is full, overflow items drop near the player.
+- Creative builds create a creative-bypass transaction with no consumed items,
+  so undo reports that no materials were consumed.
+- If material consumption succeeds but placement does not produce an undo
+  snapshot, Fabric and Forge roll back the consumed materials.
+- Fabric and Forge still do not include nearby chest sourcing, recipe
+  substitutions, GUI material icons, or BlockEntity NBT undo.
+- Fabric / Forge Material Refund Undo manual Minecraft testing is pending.

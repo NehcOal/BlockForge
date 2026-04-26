@@ -2,6 +2,30 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [1.2.4] - Unreleased
+
+### Added
+
+- Added common `MaterialRefundResult` for loader-neutral material refund results.
+- Added Fabric Material Refund Undo Alpha for command builds and Builder Wand builds.
+- Added Forge Material Refund Undo Alpha for command builds and Builder Wand builds.
+- Added Fabric and Forge material transactions on undo snapshots.
+- Added inventory-full refund overflow drops near the player.
+
+### Changed
+
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.2.4-alpha.1`.
+- Fabric and Forge successful survival builds now tell players that undo restores blocks and refunds materials.
+- Fabric and Forge `/blockforge undo` now restores blocks and refunds consumed survival materials.
+- Fabric and Forge build rollback now refunds materials if material consumption succeeds but no undo snapshot is produced.
+- Updated the Loader Feature Matrix to mark Fabric and Forge Material Refund Undo support as Alpha.
+
+### Notes
+
+- Creative builds create a creative-bypass transaction with no consumed items and do not refund materials on undo.
+- Fabric and Forge material refund undo is Alpha and does not include nearby chest sourcing, recipe substitutions, GUI material icons, or BlockEntity NBT undo.
+- Fabric / Forge Material Refund Undo manual Minecraft testing is pending and intentionally deferred for a later batch regression pass.
+
 ## [1.2.3] - Unreleased
 
 ### Added

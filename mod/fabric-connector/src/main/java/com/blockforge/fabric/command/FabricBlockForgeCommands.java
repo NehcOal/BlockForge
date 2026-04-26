@@ -3,6 +3,7 @@ package com.blockforge.fabric.command;
 import com.blockforge.common.blueprint.Blueprint;
 import com.blockforge.common.material.MaterialReport;
 import com.blockforge.common.material.MaterialRequirement;
+import com.blockforge.common.material.MaterialRefundResult;
 import com.blockforge.common.rotation.BlueprintRotation;
 import com.blockforge.common.selection.PlayerSelection;
 import com.blockforge.fabric.blueprint.FabricBlueprintRegistry;
@@ -484,7 +485,21 @@ public final class FabricBlockForgeCommands {
         );
 
         if (result.snapshot() != null) {
-            undoManager.record(result.snapshot());
+            undoManager.record(result.snapshot().withMaterialTransaction(materialResult.transaction()));
+        } else if (materialResult.transaction() != null) {
+            MaterialRefundResult rollbackResult = MATERIALS.rollback(player, materialResult.transaction());
+            sendPlacementResult(context.getSource(), result);
+            if (materialResult.transaction().hasConsumedItems()) {
+                context.getSource().sendError(Text.literal("Build placed no blocks; rolled back "
+                        + rollbackResult.refundedItems()
+                        + " consumed items"
+                        + (rollbackResult.droppedItems() > 0
+                        ? ", dropped " + rollbackResult.droppedItems() + " items near player."
+                        : ".")));
+            } else {
+                sendMaterialResult(context.getSource(), materialResult);
+            }
+            return 0;
         }
 
         sendPlacementResult(context.getSource(), result);
@@ -508,10 +523,8 @@ public final class FabricBlockForgeCommands {
         }
 
         FabricUndoManager.UndoResult result = undoManager.restore(context.getSource().getWorld(), player, snapshot);
-        context.getSource().sendFeedback(
-                () -> Text.literal("BlockForge Fabric undo restored " + result.restoredBlocks() + " blocks."),
-                true
-        );
+        MaterialRefundResult refundResult = MATERIALS.refund(player, snapshot.materialTransaction());
+        sendUndoResult(context.getSource(), result, refundResult, snapshot);
         return result.restoredBlocks();
     }
 
@@ -547,9 +560,42 @@ public final class FabricBlockForgeCommands {
                         + result.appliedProperties()
                         + ". totalBlocks="
                         + result.totalBlocks()
-                        + ". Use /blockforge undo to revert blocks."),
+                        + ". Use /blockforge undo to restore blocks and refund materials."),
                 true
         );
+    }
+
+    private static void sendUndoResult(
+            ServerCommandSource source,
+            FabricUndoManager.UndoResult result,
+            MaterialRefundResult refundResult,
+            FabricUndoManager.PlacementSnapshot snapshot
+    ) {
+        if (snapshot.materialTransaction() == null || snapshot.materialTransaction().creativeBypass()) {
+            source.sendFeedback(
+                    () -> Text.literal("Undo complete. Restored "
+                            + result.restoredBlocks()
+                            + " blocks. No materials were consumed."),
+                    true
+            );
+            return;
+        }
+
+        source.sendFeedback(
+                () -> Text.literal("Undo complete. Restored "
+                        + result.restoredBlocks()
+                        + " blocks and refunded "
+                        + refundResult.refundedItems()
+                        + " items"
+                        + (refundResult.droppedItems() > 0
+                        ? ", dropped " + refundResult.droppedItems() + " items near player."
+                        : ".")),
+                true
+        );
+
+        for (String warning : refundResult.warnings()) {
+            source.sendError(Text.literal("Warning: " + warning));
+        }
     }
 
     private static void sendMaterialResult(
@@ -568,7 +614,7 @@ public final class FabricBlockForgeCommands {
         source.sendFeedback(
                 () -> Text.literal("Consumed "
                         + materialResult.consumedItems()
-                        + " items. Materials are not refunded yet in Fabric alpha."),
+                        + " items. Use /blockforge undo to restore blocks and refund materials."),
                 true
         );
     }

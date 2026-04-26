@@ -5,19 +5,19 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v1.2.3 Fabric / Forge Survival Material Cost Parity
+## v1.2.4 Fabric / Forge Material Refund Undo Parity
 
-BlockForge v1.2.3-alpha.1 adds Fabric and Forge Survival Material Cost Alpha
+BlockForge v1.2.4-alpha.1 adds Fabric and Forge Material Refund Undo Alpha
 parity. NeoForge is still the most complete connector for now. Fabric and Forge
-now count blueprint material requirements, report missing items, reject survival
-builds when materials are missing, and consume player inventory items before
-command or Builder Wand builds.
+now record survival material transactions during command or Builder Wand builds,
+restore blocks on `/blockforge undo`, and refund consumed materials. If the
+player inventory is full, refunded items drop near the player.
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-1.2.3-alpha.1.jar`
-- `blockforge-connector-fabric-1.2.3-alpha.1.jar`
-- `blockforge-connector-forge-1.2.3-alpha.1.jar`
+- `blockforge-connector-neoforge-1.2.4-alpha.1.jar`
+- `blockforge-connector-fabric-1.2.4-alpha.1.jar`
+- `blockforge-connector-forge-1.2.4-alpha.1.jar`
 
 ## Loader Feature Matrix
 
@@ -33,14 +33,14 @@ Expected release jars:
 | Builder Wand | yes | yes, Alpha | yes, Alpha |
 | Ghost Preview | yes | yes, Alpha | yes, Alpha |
 | Survival material cost | yes | yes, Alpha | yes, Alpha |
-| Material refund undo | yes | no | no |
+| Material refund undo | yes | yes, Alpha | yes, Alpha |
 | BlockEntity NBT undo | yes, best effort | no | no |
 
 Fabric and Forge GUI Selector, Builder Wand, Ghost Preview, and Survival
 Material Cost support are Alpha. Ghost Preview only renders a rotation-aware
-bounding box and ground footprint. Fabric and Forge now consume survival
-materials, but `/blockforge undo` only restores blocks and does not refund
-materials yet.
+bounding box and ground footprint. Fabric and Forge undo now restores blocks
+and refunds consumed survival materials, but still does not restore BlockEntity
+NBT.
 
 Fabric / Forge GUI + Builder Wand + Ghost Preview + Survival Materials Alpha flow:
 
@@ -57,7 +57,8 @@ You can also press the default `B` key to open the selector. Choose a blueprint
 and rotation, click Select, hold the Builder Wand, look at a block to see the
 Ghost Preview outline, right-click to build, then run `/blockforge undo` to
 restore the placed blocks. In survival mode, materials must be present and are
-consumed before the build; creative mode consumes nothing.
+consumed before the build; creative mode consumes nothing. Undo refunds survival
+materials and drops overflow near the player if the inventory is full.
 
 ## v1.1.1 Fabric Connector Alpha
 
@@ -67,9 +68,9 @@ JSON files, dry-run a build plan, place blueprints in the world, and undo
 recent Fabric builds per player.
 
 Fabric Alpha reuses `mod/common` for blueprint parsing, rotation, and build
-planning data. As of v1.2.3, Fabric includes GUI Selector, Builder Wand, Ghost
-Preview, and Survival Material Cost Alpha. It still does not include material
-refunds or BlockEntity NBT undo yet. NeoForge remains the most complete and
+planning data. As of v1.2.4, Fabric includes GUI Selector, Builder Wand, Ghost
+Preview, Survival Material Cost, and Material Refund Undo Alpha. It still does
+not include BlockEntity NBT undo yet. NeoForge remains the most complete and
 stable Connector target.
 
 See [Fabric Connector README](./mod/fabric-connector/README.md) for commands,
@@ -83,9 +84,9 @@ reload and list Blueprint JSON files, dry-run a build plan, place blueprints in
 the world, and undo recent Forge builds per player.
 
 Forge Alpha reuses `mod/common` for blueprint parsing, rotation, and build
-planning data. As of v1.2.3, Forge includes GUI Selector, Builder Wand, Ghost
-Preview, and Survival Material Cost Alpha. It still does not include material
-refunds or BlockEntity NBT undo yet. NeoForge remains the most complete and
+planning data. As of v1.2.4, Forge includes GUI Selector, Builder Wand, Ghost
+Preview, Survival Material Cost, and Material Refund Undo Alpha. It still does
+not include BlockEntity NBT undo yet. NeoForge remains the most complete and
 stable Connector target.
 
 See [Forge Connector README](./mod/forge-connector/README.md) for commands,

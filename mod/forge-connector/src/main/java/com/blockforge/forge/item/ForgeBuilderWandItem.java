@@ -78,7 +78,21 @@ public class ForgeBuilderWandItem extends Item {
         );
 
         if (result.snapshot() != null) {
-            BlockForgeForge.UNDO.record(result.snapshot());
+            BlockForgeForge.UNDO.record(result.snapshot().withMaterialTransaction(materialResult.transaction()));
+        } else if (materialResult.transaction() != null) {
+            var rollbackResult = MATERIALS.rollback(player, materialResult.transaction());
+            sendPlacementResult(player, result);
+            if (materialResult.transaction().hasConsumedItems()) {
+                player.sendSystemMessage(Component.literal("Build placed no blocks; rolled back "
+                        + rollbackResult.refundedItems()
+                        + " consumed items"
+                        + (rollbackResult.droppedItems() > 0
+                        ? ", dropped " + rollbackResult.droppedItems() + " items near player."
+                        : ".")));
+            } else {
+                sendMaterialResult(player, materialResult);
+            }
+            return InteractionResult.FAIL;
         }
 
         sendPlacementResult(player, result);
@@ -124,7 +138,7 @@ public class ForgeBuilderWandItem extends Item {
                 + result.appliedProperties()
                 + ". totalBlocks="
                 + result.totalBlocks()
-                + ". Use /blockforge undo to revert blocks."));
+                + ". Use /blockforge undo to restore blocks and refund materials."));
     }
 
     private static void sendMaterialResult(
@@ -142,7 +156,7 @@ public class ForgeBuilderWandItem extends Item {
 
         player.sendSystemMessage(Component.literal("Consumed "
                 + materialResult.consumedItems()
-                + " items. Materials are not refunded yet in Forge alpha."));
+                + " items. Use /blockforge undo to restore blocks and refund materials."));
     }
 
     private static void sendMissingMaterials(

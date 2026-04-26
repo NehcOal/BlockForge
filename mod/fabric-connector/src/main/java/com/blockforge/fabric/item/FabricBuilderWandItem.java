@@ -78,7 +78,21 @@ public class FabricBuilderWandItem extends Item {
         );
 
         if (result.snapshot() != null) {
-            BlockForgeFabric.UNDO.record(result.snapshot());
+            BlockForgeFabric.UNDO.record(result.snapshot().withMaterialTransaction(materialResult.transaction()));
+        } else if (materialResult.transaction() != null) {
+            var rollbackResult = MATERIALS.rollback(player, materialResult.transaction());
+            sendPlacementResult(player, result);
+            if (materialResult.transaction().hasConsumedItems()) {
+                player.sendMessage(Text.literal("Build placed no blocks; rolled back "
+                        + rollbackResult.refundedItems()
+                        + " consumed items"
+                        + (rollbackResult.droppedItems() > 0
+                        ? ", dropped " + rollbackResult.droppedItems() + " items near player."
+                        : ".")), false);
+            } else {
+                sendMaterialResult(player, materialResult);
+            }
+            return ActionResult.FAIL;
         }
 
         sendPlacementResult(player, result);
@@ -124,7 +138,7 @@ public class FabricBuilderWandItem extends Item {
                 + result.appliedProperties()
                 + ". totalBlocks="
                 + result.totalBlocks()
-                + ". Use /blockforge undo to revert blocks."), false);
+                + ". Use /blockforge undo to restore blocks and refund materials."), false);
     }
 
     private static void sendMaterialResult(
@@ -142,7 +156,7 @@ public class FabricBuilderWandItem extends Item {
 
         player.sendMessage(Text.literal("Consumed "
                 + materialResult.consumedItems()
-                + " items. Materials are not refunded yet in Fabric alpha."), false);
+                + " items. Use /blockforge undo to restore blocks and refund materials."), false);
     }
 
     private static void sendMissingMaterials(

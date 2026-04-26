@@ -11,7 +11,7 @@ public record MaterialTransaction(
         boolean creativeBypass
 ) {
     public MaterialTransaction {
-        consumedItems = List.copyOf(consumedItems);
+        consumedItems = consumedItems == null ? List.of() : List.copyOf(consumedItems);
     }
 
     public static MaterialTransaction creative(UUID playerId, String blueprintId, long createdAtGameTime) {

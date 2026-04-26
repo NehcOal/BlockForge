@@ -2,12 +2,13 @@
 
 ## Scope
 
-This guide prepares the `1.2.3-alpha.1` multi-loader Alpha release. It does not
+This guide prepares the `1.2.4-alpha.1` multi-loader Alpha release. It does not
 publish automatically to GitHub, Modrinth, or CurseForge.
 
 NeoForge is the recommended full-experience Connector. Fabric and Forge are
-Alpha connectors with command builds, GUI Selector Alpha, Builder Wand Alpha placement, and Ghost Preview Alpha outlines.
-v1.2.3 also includes Fabric and Forge Survival Material Cost Alpha.
+Alpha connectors with command builds, GUI Selector Alpha, Builder Wand Alpha
+placement, Ghost Preview Alpha outlines, Survival Material Cost Alpha, and
+Material Refund Undo Alpha.
 
 ## Build Before Publishing
 
@@ -33,18 +34,19 @@ gradlew.bat build
 Expected jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.3-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.3-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.2.3-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.4-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.4-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.2.4-alpha.1.jar
 ```
 
 ## GitHub Alpha Release
 
-1. Create a GitHub release for `v1.2.3-alpha.1`.
+1. Create a GitHub release for `v1.2.4-alpha.1`.
 2. Use `docs/RELEASE_NOTES_TEMPLATE.md` as the release body starting point.
 3. Upload the three loader jars.
-4. Label Fabric and Forge clearly as GUI Selector + Builder Wand + Ghost Preview + Survival Material Cost Alpha.
-5. Do not claim Fabric or Forge material refunds, BlockEntity NBT undo,
+4. Label Fabric and Forge clearly as GUI Selector + Builder Wand + Ghost
+   Preview + Survival Material Cost + Material Refund Undo Alpha.
+5. Do not claim Fabric or Forge BlockEntity NBT undo, nearby chest sourcing,
    collision-aware preview, full block preview support, or GUI material summary.
 
 ## Modrinth Preparation
@@ -83,10 +85,10 @@ Use this wording consistently:
 - NeoForge: recommended complete Connector.
 - Fabric Alpha: Connector for examples, reload, list, info, dryrun, build,
   GUI selection, rotation, Builder Wand placement, Ghost Preview outline,
-  survival material cost, and block-only undo.
+  survival material cost, block undo, and survival material refund undo.
 - Forge Alpha: Connector for examples, reload, list, info, dryrun, build,
   GUI selection, rotation, Builder Wand placement, Ghost Preview outline,
-  survival material cost, and block-only undo.
+  survival material cost, block undo, and survival material refund undo.
 
 ## CI Artifacts
 

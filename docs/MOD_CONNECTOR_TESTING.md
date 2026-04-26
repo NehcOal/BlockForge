@@ -6,9 +6,82 @@ testing.
 
 Fabric and Forge Alpha are also covered here as separate checklists. NeoForge
 remains the full-featured Connector; Fabric and Forge now include GUI Selector,
-Builder Wand, Ghost Preview, and Survival Material Cost Alpha support. Fabric
-and Forge still intentionally do not cover material refunds or BlockEntity NBT
-undo.
+Builder Wand, Ghost Preview, Survival Material Cost, and Material Refund Undo
+Alpha support. Fabric and Forge still intentionally do not cover BlockEntity
+NBT undo.
+
+## v1.2.4 Fabric / Forge Material Refund Undo Alpha Checklist
+
+Release version:
+
+```text
+1.2.4-alpha.1
+```
+
+Expected release jars:
+
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.4-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.4-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.2.4-alpha.1.jar
+```
+
+Recommended Fabric and Forge material refund test flow:
+
+```mcfunction
+/blockforge examples install
+/blockforge reload
+/blockforge select tiny_platform
+/blockforge wand
+/gamemode survival
+/clear
+/give @s minecraft:stone_bricks 9
+```
+
+Build `tiny_platform` with the Builder Wand, then run:
+
+```mcfunction
+/blockforge undo
+```
+
+Expected result:
+
+- Survival build succeeds when the player has the required materials.
+- `9` stone bricks are consumed during the build.
+- `/blockforge undo` restores the placed blocks.
+- `/blockforge undo` refunds `9` stone bricks to the player inventory.
+- The success message includes restored block count and refunded item count.
+
+Backpack full test:
+
+1. Fill the player inventory after giving the required build materials.
+2. Build `tiny_platform`.
+3. Run `/blockforge undo`.
+4. Confirm overflow refunded items drop near the player and the output includes
+   dropped item count.
+
+Creative test:
+
+1. Run `/gamemode creative`.
+2. Build `tiny_platform`.
+3. Run `/blockforge undo`.
+4. Confirm blocks are restored and the output says no materials were consumed.
+
+Known v1.2.4 Fabric / Forge limits:
+
+- Material Refund Undo is Alpha.
+- No nearby chest sourcing.
+- No recipe substitutions.
+- No GUI material icons.
+- No BlockEntity NBT undo.
+- Fabric / Forge Material Refund Undo manual Minecraft testing is pending.
+
+Manual testing plan:
+
+- v1.2.4 will not receive immediate standalone in-game testing.
+- Fabric and Forge manual regression will be batched after several follow-up
+  iterations, then run across Builder Wand, GUI Selector, Ghost Preview,
+  Survival Material Cost, Material Refund Undo, and repeated undo history.
 
 ## v1.2.3 Fabric / Forge Survival Material Cost Alpha Checklist
 
@@ -451,7 +524,7 @@ Copy the generated jar into the test instance `mods` folder.
 Example:
 
 ```text
-.minecraft/mods/blockforge-connector-neoforge-1.2.3-alpha.1.jar
+.minecraft/mods/blockforge-connector-neoforge-1.2.4-alpha.1.jar
 ```
 
 ## 4. Install Example Blueprints

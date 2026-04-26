@@ -2,6 +2,8 @@ package com.blockforge.fabric.material;
 
 import com.blockforge.common.blueprint.Blueprint;
 import com.blockforge.common.material.MaterialReport;
+import com.blockforge.common.material.MaterialRefundResult;
+import com.blockforge.common.material.MaterialTransaction;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public class FabricMaterialBuildGate {
@@ -10,7 +12,7 @@ public class FabricMaterialBuildGate {
 
     public BuildMaterialResult prepare(ServerPlayerEntity player, Blueprint blueprint) {
         if (player == null || !FabricPlayerInventoryMaterialChecker.REQUIRE_MATERIALS_IN_SURVIVAL) {
-            return BuildMaterialResult.allowed(null, 0, false);
+            return BuildMaterialResult.allowed(null, null);
         }
 
         FabricPlayerInventoryMaterialChecker.AccessResult access = checker.canBuild(player);
@@ -20,38 +22,56 @@ public class FabricMaterialBuildGate {
 
         MaterialReport report = checker.report(blueprint, player);
         if (checker.isCreativeBypass(player)) {
-            return BuildMaterialResult.allowed(report, 0, true);
+            return BuildMaterialResult.allowed(
+                    report,
+                    MaterialTransaction.creative(player.getUuid(), blueprint.getId(), player.getServerWorld().getTime())
+            );
         }
 
         if (!report.enoughMaterials()) {
             return BuildMaterialResult.denied("Not enough materials.", report);
         }
 
-        FabricMaterialConsumer.ConsumeResult consumeResult = consumer.consume(player, report);
+        FabricMaterialConsumer.ConsumeResult consumeResult = consumer.consumeMaterials(player, report);
         if (!consumeResult.success()) {
             return BuildMaterialResult.denied(consumeResult.message(), report);
         }
 
-        return BuildMaterialResult.allowed(report, consumeResult.consumedItems(), false);
+        return BuildMaterialResult.allowed(report, consumeResult.transaction());
     }
 
     public MaterialReport report(Blueprint blueprint, ServerPlayerEntity player) {
         return checker.report(blueprint, player);
     }
 
+    public MaterialRefundResult rollback(ServerPlayerEntity player, MaterialTransaction transaction) {
+        return consumer.refundMaterials(player, transaction);
+    }
+
+    public MaterialRefundResult refund(ServerPlayerEntity player, MaterialTransaction transaction) {
+        return consumer.refundMaterials(player, transaction);
+    }
+
     public record BuildMaterialResult(
             boolean allowed,
             String message,
             MaterialReport report,
-            int consumedItems,
-            boolean creativeBypass
+            MaterialTransaction transaction
     ) {
-        public static BuildMaterialResult allowed(MaterialReport report, int consumedItems, boolean creativeBypass) {
-            return new BuildMaterialResult(true, "", report, consumedItems, creativeBypass);
+        public static BuildMaterialResult allowed(MaterialReport report, MaterialTransaction transaction) {
+            return new BuildMaterialResult(true, "", report, transaction);
         }
 
         public static BuildMaterialResult denied(String message, MaterialReport report) {
-            return new BuildMaterialResult(false, message, report, 0, false);
+            return new BuildMaterialResult(false, message, report, null);
+        }
+
+        public int consumedItems() {
+            return transaction == null ? 0 : transaction.totalConsumedItems();
+        }
+
+        public boolean creativeBypass() {
+            return transaction != null && transaction.creativeBypass();
         }
     }
 }

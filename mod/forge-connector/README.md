@@ -4,7 +4,7 @@ BlockForge Connector Forge is the Forge alpha for BlockForge
 Blueprint JSON placement. It proves the minimum Forge loop for loading,
 listing, dry-running, building, Builder Wand placement, and undoing blueprints
 with an Alpha GUI Selector, Ghost Preview outline, and Survival Material Cost
-MVP. Material refund undo is still planned for a later Alpha.
+MVP. v1.2.4 also refunds consumed survival materials during undo.
 
 ## Target
 
@@ -13,7 +13,7 @@ MVP. Material refund undo is still planned for a later Alpha.
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector Forge`
-- Mod Version: `1.2.3-alpha.1`
+- Mod Version: `1.2.4-alpha.1`
 
 ## Build
 
@@ -32,7 +32,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge-connector-forge-1.2.3-alpha.1.jar
+build/libs/blockforge-connector-forge-1.2.4-alpha.1.jar
 ```
 
 ## Blueprint Folder
@@ -118,6 +118,8 @@ Permissions:
 - Reports material needs with `/blockforge materials <id>` and `/blockforge materials selected`.
 - Rejects survival builds when required materials are missing.
 - Consumes survival inventory items before command or Builder Wand placement.
+- Refunds consumed survival materials when `/blockforge undo` restores the placement.
+- Drops refund overflow near the player when the inventory is full.
 - Bypasses material consumption in creative mode.
 - Places the selected blueprint with the Builder Wand by right-clicking a block.
 - Records per-player block-state snapshots in an in-memory undo history.
@@ -139,8 +141,9 @@ choose `0°`, `90°`, `180°`, or `270°`, then click Select. Hold the Builder W
 and look at a block to see the Ghost Preview outline. Right-click to build.
 Forge places the selected blueprint at `clickedPos.relative(clickedFace)`. The wand has a 2 second
 cooldown per player. Command builds are not throttled by the wand cooldown. Run
-`/blockforge undo` to restore the most recent wand or command placement; repeat
-the command to walk backward through that player's in-memory history.
+`/blockforge undo` to restore the most recent wand or command placement and
+refund consumed survival materials; repeat the command to walk backward through
+that player's in-memory history.
 
 In survival mode, Forge checks and consumes the required blueprint materials
 before command or Builder Wand builds. Creative mode consumes nothing. Adventure
@@ -151,7 +154,7 @@ and Spectator mode builds are rejected by the Alpha material gate.
 - Ghost Preview only renders a bounding box and ground footprint.
 - No collision scan, material status, per-block transparent preview, or texture preview.
 - Failed or invalid selection requests clear the client preview and show the server error message.
-- No material refund undo. `/blockforge undo` restores blocks only.
+- Material refund undo is Alpha; inventory overflow is dropped near the player.
 - No GUI material summary yet; use `/blockforge materials <id>` or `/blockforge materials selected`.
 - No nearby chest material sourcing or recipe substitutions.
 - No BlockEntity NBT snapshot or restore.
@@ -161,7 +164,7 @@ and Spectator mode builds are rejected by the Alpha material gate.
 - If the default `B` key conflicts, change it in Minecraft Controls.
 - No protected block entity checks in the Alpha placer.
 - Command-loop manual Minecraft testing has passed for the Alpha command flow.
-- GUI Selector, Builder Wand, Ghost Preview, and Survival Material Cost parity manual Minecraft testing is pending.
+- GUI Selector, Builder Wand, Ghost Preview, Survival Material Cost, and Material Refund Undo parity manual Minecraft testing is pending.
 
 ## Difference From NeoForge And Fabric
 

@@ -1,7 +1,10 @@
 package com.blockforge.forge.material;
 
+import com.blockforge.common.material.ConsumedMaterialEntry;
 import com.blockforge.common.material.MaterialReport;
 import com.blockforge.common.material.MaterialRequirement;
+import com.blockforge.common.material.MaterialRefundResult;
+import com.blockforge.common.material.MaterialTransaction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -9,19 +12,28 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 public class ForgeMaterialConsumer {
-    public ConsumeResult consume(ServerPlayer player, MaterialReport report) {
+    public ConsumeResult consumeMaterials(ServerPlayer player, MaterialReport report) {
         if (player == null) {
-            return new ConsumeResult(false, 0, "This build requires a player.");
+            return ConsumeResult.failed("This build requires a player.");
         }
         if (player.isCreative()) {
-            return new ConsumeResult(true, 0, "Creative mode: no materials consumed.");
+            return ConsumeResult.success(MaterialTransaction.creative(
+                    player.getUUID(),
+                    report.blueprintId(),
+                    player.level().getGameTime()
+            ));
         }
         if (!report.enoughMaterials()) {
-            return new ConsumeResult(false, 0, "Not enough materials.");
+            return ConsumeResult.failed("Not enough materials.");
         }
 
-        int consumedItems = 0;
+        Map<String, Integer> consumedItems = new LinkedHashMap<>();
         for (MaterialRequirement requirement : report.requirements()) {
             if (!requirement.consumable() || requirement.required() <= 0) {
                 continue;
@@ -29,17 +41,60 @@ public class ForgeMaterialConsumer {
 
             Item item = itemForId(requirement.itemId());
             if (item == Items.AIR) {
-                return new ConsumeResult(false, consumedItems, "Cannot consume item: " + requirement.itemId());
+                MaterialTransaction partial = transaction(player, report.blueprintId(), consumedItems);
+                rollback(player, partial);
+                return ConsumeResult.failed("Cannot consume item: " + requirement.itemId());
             }
 
             int consumed = consumeItem(player, item, requirement.required());
-            consumedItems += consumed;
+            if (consumed > 0) {
+                consumedItems.merge(requirement.itemId(), consumed, Integer::sum);
+            }
             if (consumed < requirement.required()) {
-                return new ConsumeResult(false, consumedItems, "Could not consume enough of " + requirement.itemId());
+                MaterialTransaction partial = transaction(player, report.blueprintId(), consumedItems);
+                rollback(player, partial);
+                return ConsumeResult.failed("Could not consume enough of " + requirement.itemId());
             }
         }
 
-        return new ConsumeResult(true, consumedItems, "");
+        return ConsumeResult.success(transaction(player, report.blueprintId(), consumedItems));
+    }
+
+    public MaterialRefundResult refundMaterials(ServerPlayer player, MaterialTransaction transaction) {
+        if (player == null || transaction == null || transaction.creativeBypass() || transaction.consumedItems().isEmpty()) {
+            return MaterialRefundResult.none();
+        }
+
+        int refundedItems = 0;
+        int droppedItems = 0;
+        List<String> warnings = new ArrayList<>();
+
+        for (ConsumedMaterialEntry entry : transaction.consumedItems()) {
+            Item item = itemForId(entry.itemId());
+            if (item == Items.AIR) {
+                warnings.add("Cannot refund unknown item: " + entry.itemId());
+                continue;
+            }
+
+            int remaining = entry.count();
+            while (remaining > 0) {
+                int amount = Math.min(remaining, item.getDefaultMaxStackSize());
+                ItemStack stack = new ItemStack(item, amount);
+                int before = stack.getCount();
+                player.getInventory().add(stack);
+                int leftover = stack.getCount();
+                refundedItems += before - leftover;
+
+                if (leftover > 0) {
+                    player.drop(new ItemStack(item, leftover), false);
+                    droppedItems += leftover;
+                }
+
+                remaining -= amount;
+            }
+        }
+
+        return new MaterialRefundResult(refundedItems, droppedItems, warnings);
     }
 
     private int consumeItem(ServerPlayer player, Item item, int required) {
@@ -69,6 +124,35 @@ public class ForgeMaterialConsumer {
         return BuiltInRegistries.ITEM.getOptional(location).orElse(Items.AIR);
     }
 
-    public record ConsumeResult(boolean success, int consumedItems, String message) {
+    private void rollback(ServerPlayer player, MaterialTransaction transaction) {
+        refundMaterials(player, transaction);
+    }
+
+    private MaterialTransaction transaction(
+            ServerPlayer player,
+            String blueprintId,
+            Map<String, Integer> consumedItems
+    ) {
+        List<ConsumedMaterialEntry> entries = consumedItems.entrySet()
+                .stream()
+                .map(entry -> new ConsumedMaterialEntry(entry.getKey(), entry.getValue()))
+                .toList();
+        return new MaterialTransaction(
+                player.getUUID(),
+                blueprintId,
+                entries,
+                player.level().getGameTime(),
+                false
+        );
+    }
+
+    public record ConsumeResult(boolean success, MaterialTransaction transaction, String message) {
+        public static ConsumeResult success(MaterialTransaction transaction) {
+            return new ConsumeResult(true, transaction, "");
+        }
+
+        public static ConsumeResult failed(String message) {
+            return new ConsumeResult(false, null, message);
+        }
     }
 }

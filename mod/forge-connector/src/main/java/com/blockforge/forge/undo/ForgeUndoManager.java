@@ -1,5 +1,6 @@
 package com.blockforge.forge.undo;
 
+import com.blockforge.common.material.MaterialTransaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -68,10 +69,34 @@ public class ForgeUndoManager {
             String blueprintId,
             long createdAtGameTime,
             int placedBlocks,
-            List<BlockSnapshotEntry> entries
+            List<BlockSnapshotEntry> entries,
+            MaterialTransaction materialTransaction
     ) {
+        public PlacementSnapshot(
+                UUID playerId,
+                String playerName,
+                String blueprintId,
+                long createdAtGameTime,
+                int placedBlocks,
+                List<BlockSnapshotEntry> entries
+        ) {
+            this(playerId, playerName, blueprintId, createdAtGameTime, placedBlocks, entries, null);
+        }
+
         public PlacementSnapshot {
             entries = entries == null ? List.of() : List.copyOf(entries);
+        }
+
+        public PlacementSnapshot withMaterialTransaction(MaterialTransaction transaction) {
+            return new PlacementSnapshot(
+                    playerId,
+                    playerName,
+                    blueprintId,
+                    createdAtGameTime,
+                    placedBlocks,
+                    entries,
+                    transaction
+            );
         }
     }
 
