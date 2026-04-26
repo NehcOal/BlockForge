@@ -1,0 +1,8 @@
+* text=auto
+
+# Gradle wrapper scripts must keep LF on Linux CI runners.
+gradlew text eol=lf
+mod/**/gradlew text eol=lf
+
+# Windows launchers should keep CRLF.
+*.bat text eol=crlf

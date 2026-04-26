@@ -10,25 +10,43 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ForgeUndoManager {
+    private static final int MAX_HISTORY_PER_PLAYER = 20;
     private static final int RESTORE_FLAGS = Block.UPDATE_CLIENTS
             | Block.UPDATE_SUPPRESS_DROPS
             | Block.UPDATE_KNOWN_SHAPE;
 
-    private final Map<UUID, PlacementSnapshot> latestByPlayer = new ConcurrentHashMap<>();
+    private final Map<UUID, ConcurrentLinkedDeque<PlacementSnapshot>> historyByPlayer = new ConcurrentHashMap<>();
 
     public void record(PlacementSnapshot snapshot) {
         if (snapshot == null || snapshot.entries().isEmpty()) {
             return;
         }
 
-        latestByPlayer.put(snapshot.playerId(), snapshot);
+        ConcurrentLinkedDeque<PlacementSnapshot> history = historyByPlayer.computeIfAbsent(
+                snapshot.playerId(),
+                ignored -> new ConcurrentLinkedDeque<>()
+        );
+        history.addLast(snapshot);
+        while (history.size() > MAX_HISTORY_PER_PLAYER) {
+            history.pollFirst();
+        }
     }
 
     public Optional<PlacementSnapshot> popLatest(UUID playerId) {
-        return Optional.ofNullable(latestByPlayer.remove(playerId));
+        ConcurrentLinkedDeque<PlacementSnapshot> history = historyByPlayer.get(playerId);
+        if (history == null) {
+            return Optional.empty();
+        }
+
+        PlacementSnapshot snapshot = history.pollLast();
+        if (history.isEmpty()) {
+            historyByPlayer.remove(playerId, history);
+        }
+        return Optional.ofNullable(snapshot);
     }
 
     public UndoResult restore(ServerLevel level, ServerPlayer player, PlacementSnapshot snapshot) {

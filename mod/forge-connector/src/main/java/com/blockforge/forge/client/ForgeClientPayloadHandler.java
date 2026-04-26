@@ -2,6 +2,7 @@ package com.blockforge.forge.client;
 
 import com.blockforge.forge.client.gui.ForgeBlueprintClientCache;
 import com.blockforge.forge.client.gui.ForgeBlueprintSelectorScreen;
+import com.blockforge.forge.client.preview.ForgeClientPreviewState;
 import com.blockforge.forge.network.ForgeBlueprintGuiNetworking;
 import net.minecraft.client.Minecraft;
 
@@ -23,6 +24,16 @@ public final class ForgeClientPayloadHandler {
         if (payload.success()) {
             ForgeBlueprintClientCache.setSelected(payload.selectedBlueprintId(), payload.rotationDegrees());
         }
+        ForgeBlueprintSelectorScreen.refreshOpenScreen();
+    }
+
+    public static void handlePreviewSelection(ForgeBlueprintGuiNetworking.PreviewSelectionPayload payload) {
+        ForgeClientPreviewState.apply(payload);
+    }
+
+    public static void handleClearPreview(ForgeBlueprintGuiNetworking.ClearPreviewPayload payload) {
+        ForgeClientPreviewState.clear();
+        ForgeBlueprintClientCache.setMessage(payload.reason());
         ForgeBlueprintSelectorScreen.refreshOpenScreen();
     }
 }

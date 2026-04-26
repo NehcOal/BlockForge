@@ -26,6 +26,8 @@ public final class FabricBlueprintGuiNetworking {
     public static final CustomPayload.Id<BlueprintListPayload> BLUEPRINT_LIST_ID = id("blueprint_list");
     public static final CustomPayload.Id<SelectBlueprintRequestPayload> SELECT_BLUEPRINT_REQUEST_ID = id("select_blueprint_request");
     public static final CustomPayload.Id<SelectionResultPayload> SELECTION_RESULT_ID = id("selection_result");
+    public static final CustomPayload.Id<PreviewSelectionPayload> PREVIEW_SELECTION_ID = id("preview_selection");
+    public static final CustomPayload.Id<ClearPreviewPayload> CLEAR_PREVIEW_ID = id("clear_preview");
 
     private FabricBlueprintGuiNetworking() {
     }
@@ -35,6 +37,8 @@ public final class FabricBlueprintGuiNetworking {
         PayloadTypeRegistry.playS2C().register(BLUEPRINT_LIST_ID, BlueprintListPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(SELECT_BLUEPRINT_REQUEST_ID, SelectBlueprintRequestPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(SELECTION_RESULT_ID, SelectionResultPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(PREVIEW_SELECTION_ID, PreviewSelectionPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(CLEAR_PREVIEW_ID, ClearPreviewPayload.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(
                 BLUEPRINT_LIST_REQUEST_ID,
@@ -51,6 +55,39 @@ public final class FabricBlueprintGuiNetworking {
                 createListView(BlockForgeFabric.BLUEPRINTS, BlockForgeFabric.SELECTIONS, player),
                 openScreen
         ));
+        syncPreviewSelection(player);
+    }
+
+    public static void syncPreviewSelection(ServerPlayerEntity player) {
+        PlayerSelection selection = BlockForgeFabric.SELECTIONS.get(player.getUuid()).orElse(null);
+        if (selection == null) {
+            clearPreview(player, "No BlockForge Fabric blueprint selected.");
+            return;
+        }
+
+        Blueprint blueprint = BlockForgeFabric.BLUEPRINTS.get(selection.selectedBlueprintId()).orElse(null);
+        if (blueprint == null) {
+            BlockForgeFabric.SELECTIONS.clear(player.getUuid());
+            clearPreview(player, "Selected BlockForge Fabric blueprint no longer exists.");
+            return;
+        }
+
+        syncPreviewSelection(player, blueprint, selection.rotationDegrees());
+    }
+
+    public static void syncPreviewSelection(ServerPlayerEntity player, Blueprint blueprint, int rotationDegrees) {
+        ServerPlayNetworking.send(player, new PreviewSelectionPayload(
+                blueprint.getId(),
+                blueprint.getName(),
+                blueprint.getSize().width(),
+                blueprint.getSize().height(),
+                blueprint.getSize().depth(),
+                rotationDegrees
+        ));
+    }
+
+    public static void clearPreview(ServerPlayerEntity player, String reason) {
+        ServerPlayNetworking.send(player, new ClearPreviewPayload(reason == null ? "" : reason));
     }
 
     private static void handleSelectionRequest(ServerPlayerEntity player, SelectBlueprintRequestPayload payload) {
@@ -58,12 +95,14 @@ public final class FabricBlueprintGuiNetworking {
         try {
             request = new SelectionRequest(payload.blueprintId(), payload.rotationDegrees());
         } catch (IllegalArgumentException error) {
+            clearPreview(player, error.getMessage());
             sendSelectionResult(player, false, error.getMessage(), "", 0);
             return;
         }
 
         Blueprint blueprint = BlockForgeFabric.BLUEPRINTS.get(request.blueprintId()).orElse(null);
         if (blueprint == null) {
+            clearPreview(player, "Unknown BlockForge Fabric blueprint id: " + request.blueprintId());
             sendSelectionResult(player, false, "Unknown BlockForge Fabric blueprint id: " + request.blueprintId(), "", 0);
             return;
         }
@@ -75,6 +114,7 @@ public final class FabricBlueprintGuiNetworking {
                 + " | rotation="
                 + request.rotationDegrees()
                 + "."), false);
+        syncPreviewSelection(player, blueprint, request.rotationDegrees());
         sendSelectionResult(player, true, "Selected " + blueprint.getId(), blueprint.getId(), request.rotationDegrees());
     }
 
@@ -236,6 +276,65 @@ public final class FabricBlueprintGuiNetworking {
         @Override
         public Id<? extends CustomPayload> getId() {
             return SELECTION_RESULT_ID;
+        }
+    }
+
+    public record PreviewSelectionPayload(
+            String blueprintId,
+            String blueprintName,
+            int width,
+            int height,
+            int depth,
+            int rotationDegrees
+    ) implements CustomPayload {
+        public static final PacketCodec<RegistryByteBuf, PreviewSelectionPayload> CODEC = PacketCodec.of(
+                PreviewSelectionPayload::write,
+                PreviewSelectionPayload::read
+        );
+
+        private static PreviewSelectionPayload read(RegistryByteBuf buffer) {
+            return new PreviewSelectionPayload(
+                    buffer.readString(),
+                    buffer.readString(),
+                    buffer.readVarInt(),
+                    buffer.readVarInt(),
+                    buffer.readVarInt(),
+                    buffer.readVarInt()
+            );
+        }
+
+        private static void write(PreviewSelectionPayload payload, RegistryByteBuf buffer) {
+            buffer.writeString(payload.blueprintId());
+            buffer.writeString(payload.blueprintName());
+            buffer.writeVarInt(payload.width());
+            buffer.writeVarInt(payload.height());
+            buffer.writeVarInt(payload.depth());
+            buffer.writeVarInt(payload.rotationDegrees());
+        }
+
+        @Override
+        public Id<? extends CustomPayload> getId() {
+            return PREVIEW_SELECTION_ID;
+        }
+    }
+
+    public record ClearPreviewPayload(String reason) implements CustomPayload {
+        public static final PacketCodec<RegistryByteBuf, ClearPreviewPayload> CODEC = PacketCodec.of(
+                ClearPreviewPayload::write,
+                ClearPreviewPayload::read
+        );
+
+        private static ClearPreviewPayload read(RegistryByteBuf buffer) {
+            return new ClearPreviewPayload(buffer.readString());
+        }
+
+        private static void write(ClearPreviewPayload payload, RegistryByteBuf buffer) {
+            buffer.writeString(payload.reason());
+        }
+
+        @Override
+        public Id<? extends CustomPayload> getId() {
+            return CLEAR_PREVIEW_ID;
         }
     }
 
