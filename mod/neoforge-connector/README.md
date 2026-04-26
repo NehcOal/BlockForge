@@ -29,11 +29,12 @@ owns command registration, item registration, GUI screens, payload networking,
 Ghost Preview rendering, common config registration, real `setBlock` placement,
 inventory checks, and material consumption/refund integration.
 
-Fabric Connector Alpha now exists under `mod/fabric-connector` in v1.1.1. It is
-command-only and reuses common blueprint parsing, rotation, and build planning
-data. It does not include the NeoForge GUI, Ghost Preview, Builder Wand,
+Fabric Connector Alpha exists under `mod/fabric-connector` in v1.1.1, and Forge
+Connector Alpha exists under `mod/forge-connector` in v1.1.2. Both are
+command-only and reuse common blueprint parsing, rotation, and build planning
+data. They do not include the NeoForge GUI, Ghost Preview, Builder Wand,
 survival material cost, inventory consumption, material refunds, or BlockEntity
-NBT undo yet. Forge is still planned.
+NBT undo yet.
 
 ## Blueprint Protocol Support
 
@@ -326,8 +327,7 @@ Known v1.1.x limits:
 - No nearby chest or warehouse support.
 - No special cost table for doors, fluids, torches, or multi-block placements.
 - No material icons in the GUI yet.
-- Fabric exists as command-only Alpha and is not feature-parity yet.
-- Forge connector is planned but not implemented.
+- Fabric and Forge exist as command-only Alpha connectors and are not feature-parity yet.
 
 Manual Minecraft testing before v1.0.0-rc.1 verified survival undo refunds and
 full-inventory refund drops. The v1.0 RC also passed a smoke test for client

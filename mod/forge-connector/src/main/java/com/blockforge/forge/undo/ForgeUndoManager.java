@@ -1,10 +1,10 @@
-package com.blockforge.fabric.undo;
+package com.blockforge.forge.undo;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 import java.util.Map;
@@ -12,10 +12,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class FabricUndoManager {
-    private static final int RESTORE_FLAGS = Block.NOTIFY_LISTENERS
-            | Block.FORCE_STATE
-            | Block.SKIP_DROPS;
+public class ForgeUndoManager {
+    private static final int RESTORE_FLAGS = Block.UPDATE_CLIENTS
+            | Block.UPDATE_SUPPRESS_DROPS
+            | Block.UPDATE_KNOWN_SHAPE;
 
     private final Map<UUID, PlacementSnapshot> latestByPlayer = new ConcurrentHashMap<>();
 
@@ -31,17 +31,17 @@ public class FabricUndoManager {
         return Optional.ofNullable(latestByPlayer.remove(playerId));
     }
 
-    public UndoResult restore(ServerWorld world, ServerPlayerEntity player, PlacementSnapshot snapshot) {
+    public UndoResult restore(ServerLevel level, ServerPlayer player, PlacementSnapshot snapshot) {
         int restored = 0;
         List<BlockSnapshotEntry> entries = snapshot.entries();
 
         for (int index = entries.size() - 1; index >= 0; index--) {
             BlockSnapshotEntry entry = entries.get(index);
-            world.setBlockState(entry.position(), entry.previousState(), RESTORE_FLAGS);
+            level.setBlock(entry.position(), entry.previousState(), RESTORE_FLAGS);
             restored++;
         }
 
-        return new UndoResult(snapshot.blueprintId(), player.getUuid(), restored);
+        return new UndoResult(snapshot.blueprintId(), player.getUUID(), restored);
     }
 
     public record PlacementSnapshot(
@@ -59,7 +59,7 @@ public class FabricUndoManager {
 
     public record BlockSnapshotEntry(BlockPos position, BlockState previousState) {
         public BlockSnapshotEntry {
-            position = position.toImmutable();
+            position = position.immutable();
         }
     }
 

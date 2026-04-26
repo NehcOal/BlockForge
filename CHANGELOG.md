@@ -2,6 +2,31 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [1.1.2] - Unreleased
+
+### Added
+
+- Added `mod/forge-connector`, a Forge 1.21.1 command-only Connector Alpha.
+- Added Forge commands for `folder`, `examples list`, `examples install`, `reload`, `list`, `info`, `dryrun`, `build`, rotated build, coordinate build, and `undo`.
+- Added Forge example blueprint resources for `tiny_platform`, `small_test_house`, `state_test_house`, and `medieval_tower`.
+- Added Forge placement and per-player latest-build undo snapshots.
+- Added a Forge CI job that runs only when `mod/forge-connector` exists and uploads Forge jars.
+- Added `mod/forge-connector/README.md`.
+
+### Changed
+
+- Forge Connector reuses `mod/common` through an additional Java source root for blueprint parsing, rotation, and `BuildPlan` data.
+- Forge and Fabric Alpha undo restoration now suppresses drops during block-state rollback so attached blocks such as doors and torches do not drop as items during undo.
+- Updated Web/package metadata toward `1.1.2-alpha.1`.
+- Updated multi-loader docs to mark Forge as command-only Alpha while NeoForge remains the complete Connector.
+
+### Notes
+
+- Forge Alpha does not include GUI, Ghost Preview, Builder Wand, survival materials, inventory consumption, material refunds, or BlockEntity NBT undo.
+- Fabric Alpha command-loop manual testing passed before this Forge branch.
+- Manual Minecraft Forge command-loop testing passed for example install, reload, list, dryrun, build, rotated `state_test_house`, undo, and invalid blueprint id handling.
+- Initial Forge undo testing exposed attached-block item drops for doors/torches; the Alpha undo path now suppresses drops during restoration.
+
 ## [1.1.1] - Unreleased
 
 ### Added
@@ -23,7 +48,7 @@ All notable changes to BlockForge will be documented in this file.
 
 - Fabric Alpha does not include GUI, Ghost Preview, Builder Wand, survival materials, inventory consumption, material refunds, or BlockEntity NBT undo.
 - NeoForge remains the stable and most complete in-game target.
-- Manual Minecraft Fabric regression testing is pending.
+- Manual Minecraft Fabric command-loop testing passed for example install, reload, list, dryrun, build, rotated `state_test_house`, undo, and invalid blueprint id handling.
 
 ## [1.1.0] - Unreleased
 

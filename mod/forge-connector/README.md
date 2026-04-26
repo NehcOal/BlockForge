@@ -1,19 +1,18 @@
-# BlockForge Connector Fabric Alpha
+# BlockForge Connector Forge Alpha
 
-BlockForge Connector Fabric is the command-only Fabric alpha for BlockForge
-Blueprint JSON placement. It proves the minimum Fabric loop for loading,
+BlockForge Connector Forge is the command-only Forge alpha for BlockForge
+Blueprint JSON placement. It proves the minimum Forge loop for loading,
 listing, dry-running, building, and undoing blueprints without porting the
 NeoForge GUI, Ghost Preview, Builder Wand, or survival material system yet.
 
 ## Target
 
 - Minecraft Java Edition: `1.21.1`
-- Fabric Loader: `0.19.2`
-- Fabric API: `0.116.11+1.21.1`
+- Forge: `52.1.14`
 - Java: `21`
 - Mod ID: `blockforge_connector`
-- Mod Name: `BlockForge Connector Fabric`
-- Mod Version: `1.1.1-alpha.1`
+- Mod Name: `BlockForge Connector Forge`
+- Mod Version: `1.1.2-alpha.1`
 
 ## Build
 
@@ -32,12 +31,13 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge_connector_fabric-1.1.1-alpha.1.jar
+build/libs/blockforge_connector_forge-1.1.2-alpha.1.jar
 ```
 
 ## Blueprint Folder
 
-Fabric reads the same BlockForge blueprint directory as the NeoForge Connector:
+Forge reads the same BlockForge blueprint directory as the NeoForge and Fabric
+Connectors:
 
 ```text
 .minecraft/config/blockforge/blueprints/
@@ -57,7 +57,7 @@ as `skippedInvalidProperties`.
 
 ## Built-In Examples
 
-The Fabric jar includes:
+The Forge jar includes:
 
 - `tiny_platform`
 - `small_test_house`
@@ -95,7 +95,7 @@ Permissions:
 - Permission level `2`: `build`, `reload`, `examples install`, `undo`.
 - Regular players: `folder`, `list`, `info`, `dryrun`, `examples list`.
 
-## What Fabric Alpha Supports
+## What Forge Alpha Supports
 
 - Loads BlockForge Blueprint JSON from the shared config folder.
 - Installs bundled example blueprints.
@@ -104,7 +104,7 @@ Permissions:
 - Builds blueprints at the player position or explicit coordinates.
 - Reuses common coordinate rotation and horizontal `facing` rotation.
 - Records the latest per-player block-state snapshot.
-- Restores the latest Fabric build with `/blockforge undo`.
+- Restores the latest Forge build with `/blockforge undo`.
 
 ## Current Limits
 
@@ -114,14 +114,16 @@ Permissions:
 - No material requirements, inventory consumption, or refunds.
 - No BlockEntity NBT snapshot or restore.
 - No persistence for undo snapshots.
-- No Fabric networking or client renderer yet.
+- No Forge networking or client renderer yet.
 - No protected block entity checks in the Alpha placer.
-- Command-loop manual Minecraft testing has passed for v1.1.1 Alpha.
+- No manual Minecraft Forge regression test has been run yet.
 
-## Difference From NeoForge
+## Difference From NeoForge And Fabric
 
 NeoForge remains the most complete Connector. It currently owns the Blueprint
 Selector GUI, Ghost Preview, Builder Wand, common config, survival materials,
-inventory transactions, and undo material refunds. Fabric and Forge Alpha are
-intentionally smaller and command-only so each loader adapter can stabilize
-before feature parity work begins.
+inventory transactions, and undo material refunds.
+
+Fabric and Forge Alpha are intentionally command-only and parallel in scope:
+they prove each loader can reuse `mod/common` for blueprint parsing, rotation,
+and build planning before feature parity work begins.

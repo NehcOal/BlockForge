@@ -71,9 +71,6 @@ jobs:
           path: mod/neoforge-connector/build/libs/*.jar
           if-no-files-found: error
 
-      # Multi-loader roadmap:
-      # Forge CI is planned for v1.1.2 after the Forge connector module exists.
-
   fabric:
     name: Fabric Connector
     runs-on: ubuntu-latest
@@ -118,4 +115,50 @@ jobs:
         with:
           name: blockforge-fabric-connector-jar
           path: mod/fabric-connector/build/libs/*.jar
+          if-no-files-found: error
+
+  forge:
+    name: Forge Connector
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check Forge connector presence
+        id: forge
+        run: |
+          if [ -f mod/forge-connector/build.gradle ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Java 21
+        if: steps.forge.outputs.present == 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Gradle
+        if: steps.forge.outputs.present == 'true'
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make Gradle wrapper executable
+        if: steps.forge.outputs.present == 'true'
+        run: chmod +x ./gradlew
+        working-directory: mod/forge-connector
+
+      - name: Build Forge Mod
+        if: steps.forge.outputs.present == 'true'
+        run: ./gradlew build
+        working-directory: mod/forge-connector
+
+      - name: Upload Forge jar
+        if: steps.forge.outputs.present == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: blockforge-forge-connector-jar
+          path: mod/forge-connector/build/libs/*.jar
           if-no-files-found: error

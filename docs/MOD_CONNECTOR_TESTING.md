@@ -4,9 +4,10 @@ This checklist prepares the NeoForge Connector for real Minecraft validation.
 Passing `gradlew build` confirms compilation only; it does not replace in-game
 testing.
 
-Fabric Alpha is also covered here as a separate command-only checklist. NeoForge
-remains the full-featured Connector; Fabric v1.1.1 intentionally does not cover
-GUI, Ghost Preview, Builder Wand, or survival material flows yet.
+Fabric and Forge Alpha are also covered here as separate command-only
+checklists. NeoForge remains the full-featured Connector; Fabric v1.1.1 and
+Forge v1.1.2 intentionally do not cover GUI, Ghost Preview, Builder Wand, or
+survival material flows yet.
 
 ## 1. Environment Requirements
 
@@ -19,6 +20,12 @@ Fabric Alpha requirements:
 - Minecraft Java Edition `1.21.1`
 - Fabric Loader `0.19.2`
 - Fabric API `0.116.11+1.21.1`
+- Java `21`
+
+Forge Alpha requirements:
+
+- Minecraft Java Edition `1.21.1`
+- Forge `52.1.14`
 - Java `21`
 
 ## Fabric Alpha Build And Smoke Checklist
@@ -81,7 +88,101 @@ Known Fabric Alpha limits:
 - No BlockEntity NBT snapshot or restore.
 - Undo is in-memory and only stores the latest Fabric build per player.
 
-Fabric v1.1.1 manual Minecraft test status: pending.
+Fabric v1.1.1 manual Minecraft test status: passed for the command-loop Alpha.
+
+Verified Fabric commands and behaviors:
+
+- `/blockforge examples install`
+- `/blockforge reload`
+- `/blockforge list`
+- `/blockforge dryrun tiny_platform`
+- `/blockforge build tiny_platform`
+- `/blockforge undo`
+- `/blockforge build state_test_house rotate 90`
+- `/blockforge undo`
+- Invalid blueprint id handling does not crash.
+
+## Forge Alpha Build And Smoke Checklist
+
+From `mod/forge-connector`:
+
+```bash
+./gradlew build
+```
+
+On Windows:
+
+```powershell
+gradlew.bat build
+```
+
+The jar is generated in:
+
+```text
+mod/forge-connector/build/libs/
+```
+
+Recommended first Forge in-game test:
+
+```mcfunction
+/blockforge folder
+/blockforge examples list
+/blockforge examples install
+/blockforge reload
+/blockforge list
+/blockforge info tiny_platform
+/blockforge dryrun tiny_platform
+/blockforge build tiny_platform
+/blockforge undo
+```
+
+Also test coordinate and rotation builds:
+
+```mcfunction
+/blockforge build tiny_platform 0 80 0
+/blockforge build state_test_house rotate 90
+```
+
+Expected Forge Alpha result:
+
+- Commands register under `/blockforge`.
+- Example blueprints install without overwriting existing files.
+- Reload reads `*.blueprint.json` and `*.json` from `.minecraft/config/blockforge/blueprints/`.
+- `dryrun` reports schema version, size, block count, palette count, build plan validity, and skipped counts.
+- `build` places valid blocks and skips invalid/out-of-world entries.
+- `undo` restores the latest Forge build for the current player.
+
+Known Forge Alpha limits:
+
+- No GUI.
+- No Ghost Preview.
+- No Builder Wand.
+- No survival material cost or inventory mutation.
+- No material refund.
+- No BlockEntity NBT snapshot or restore.
+- Undo is in-memory and only stores the latest Forge build per player.
+
+Forge v1.1.2 manual Minecraft test status: passed for the command-loop Alpha.
+
+Verified Forge commands and behaviors:
+
+- `/blockforge examples install`
+- `/blockforge reload`
+- `/blockforge list`
+- `/blockforge dryrun tiny_platform`
+- `/blockforge build tiny_platform`
+- `/blockforge undo`
+- `/blockforge build state_test_house rotate 90`
+- `/blockforge undo`
+- Invalid blueprint id handling does not crash.
+
+Observed Forge undo issue and fix:
+
+- Initial `state_test_house` undo restored the block count but allowed attached
+  door and torch states to drop items during rollback.
+- Forge undo now restores snapshot block states with drop suppression.
+- Forge Alpha still does not refund materials; that remains a NeoForge full
+  Connector feature.
 
 ## 2. Build The Mod
 

@@ -21,6 +21,22 @@ Connector target.
 See [Fabric Connector README](./mod/fabric-connector/README.md) for commands,
 installation notes, and current limitations.
 
+## v1.1.2 Forge Connector Alpha
+
+BlockForge v1.1.2 adds `mod/forge-connector`, a Forge 1.21.1 command-only
+Connector Alpha. It matches the Fabric Alpha command loop: install examples,
+reload and list Blueprint JSON files, dry-run a build plan, place blueprints in
+the world, and undo the latest Forge build per player.
+
+Forge Alpha reuses `mod/common` for blueprint parsing, rotation, and build
+planning data. It intentionally does not include GUI, Ghost Preview, Builder
+Wand, survival material costs, inventory consumption, material refunds, or
+BlockEntity NBT undo yet. NeoForge remains the most complete and stable
+Connector target.
+
+See [Forge Connector README](./mod/forge-connector/README.md) for commands,
+installation notes, and current limitations.
+
 ## v1.1.0 Multi-loader Architecture
 
 BlockForge v1.1.0 starts the multi-loader architecture work. NeoForge 1.21.1
@@ -65,6 +81,7 @@ and version roadmap.
 - NeoForge common config for Connector safety and material settings
 - CI jobs for Web and NeoForge Connector builds
 - CI job for Fabric Connector Alpha builds
+- CI job for Forge Connector Alpha builds
 - Connector example blueprints and manual testing guide
 - Minecraft `.mcfunction` export
 - Minecraft Java 1.21.1 Data Pack ZIP export
@@ -208,7 +225,43 @@ Fast command loop:
 /blockforge undo
 ```
 
-Manual Minecraft Fabric testing is pending.
+Fabric manual command-loop testing passed for example installation, reload,
+list, dryrun, build, undo, rotated `state_test_house`, and invalid blueprint id
+handling.
+
+## Forge Connector Alpha
+
+The repository also includes a Forge 1.21.1 command-only alpha at
+`mod/forge-connector`.
+
+Build it with:
+
+```powershell
+cd mod/forge-connector
+gradlew.bat build
+```
+
+The Forge jar is generated in:
+
+```text
+mod/forge-connector/build/libs/
+```
+
+Fast command loop:
+
+```mcfunction
+/blockforge examples install
+/blockforge reload
+/blockforge list
+/blockforge dryrun tiny_platform
+/blockforge build tiny_platform
+/blockforge undo
+```
+
+Forge manual command-loop testing passed for example installation, reload, list,
+dryrun, build, undo, rotated `state_test_house`, and invalid blueprint id
+handling. A Forge undo edge case that dropped doors/torches during rollback was
+fixed by suppressing drops during snapshot restoration.
 
 For real Minecraft testing, start with:
 
@@ -338,6 +391,7 @@ src/
 mod/
 ├─ common/              Loader-neutral Java core for future multi-loader support
 ├─ fabric-connector/    Fabric 1.21.1 command-only Connector Alpha
+├─ forge-connector/     Forge 1.21.1 command-only Connector Alpha
 └─ neoforge-connector/  NeoForge 1.21.1 Mod Connector
 examples/
 └─ blueprints/          Blueprint v1 files for Connector testing
@@ -353,8 +407,7 @@ examples/
 - Add special material cost rules for doors, fluids, torches, and multi-block placements.
 - Improve release artifact publishing.
 - Blueprint v1/v2 schema validation tooling.
-- Fabric 1.21.1 Connector parity work after command Alpha validation.
-- Forge 1.21.1 Connector alpha.
+- Fabric and Forge Connector parity work after command Alpha validation.
 - `.schem` export.
 - Block texture rendering.
 - InstancedMesh performance optimization for larger voxel models.

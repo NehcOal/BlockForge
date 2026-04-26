@@ -59,8 +59,8 @@ Each loader adapter owns API-specific integration:
 
 ## Current Gradle Organization
 
-In v1.1.1, `mod/common` is included by the NeoForge and Fabric builds as an
-additional Java source root:
+In v1.1.2, `mod/common` is included by the NeoForge, Fabric, and Forge builds
+as an additional Java source root:
 
 ```groovy
 sourceSets.main.java {
@@ -68,15 +68,15 @@ sourceSets.main.java {
 }
 ```
 
-This keeps the existing NeoForge Gradle project stable while Fabric Alpha proves
-the minimum adapter surface. A full multi-project Gradle layout can be added
-after `fabric-connector` and `forge-connector` both exist.
+This keeps the existing loader Gradle projects stable while Fabric and Forge
+Alpha prove the minimum adapter surface. A full multi-project Gradle layout can
+be added after the three connector modules settle.
 
 ## Version Plan
 
 - `v1.1.0`: common core and NeoForge adapter integration.
 - `v1.1.1`: Fabric Connector command Alpha.
-- `v1.1.2`: Forge Connector alpha.
+- `v1.1.2`: Forge Connector command Alpha.
 - `v1.1.3`: parity pass across NeoForge, Fabric, and Forge.
 
 ## Current Risks
@@ -89,12 +89,13 @@ after `fabric-connector` and `forge-connector` both exist.
 - Registry lookup, inventory mutation, and world placement must remain in each
   loader adapter to avoid leaking Minecraft runtime types into common core.
 
-## v1.1.1 Status
+## v1.1.2 Status
 
 - NeoForge remains the complete and stable in-game target.
-- Fabric now has a command-only Alpha under `mod/fabric-connector`.
-- Fabric Alpha supports blueprint reload/list/info/dryrun/build/undo and bundled example installation.
-- Fabric Alpha reuses common blueprint parsing, rotation, and build planning data.
-- Fabric Alpha does not include GUI, Ghost Preview, Builder Wand, survival material costs, inventory transactions, material refunds, or BlockEntity NBT undo.
-- Forge support is planned but not implemented.
-- Manual Minecraft Fabric regression testing is pending.
+- Fabric has a command-only Alpha under `mod/fabric-connector`.
+- Fabric Alpha command-loop manual testing passed for example install, reload, list, dryrun, build, rotated `state_test_house`, undo, and invalid blueprint id handling.
+- Forge now has a command-only Alpha under `mod/forge-connector`.
+- Fabric and Forge Alpha both reuse common blueprint parsing, rotation, and build planning data.
+- Fabric and Forge Alpha do not include GUI, Ghost Preview, Builder Wand, survival material costs, inventory transactions, material refunds, or BlockEntity NBT undo.
+- Forge Alpha command-loop manual testing passed for example install, reload, list, dryrun, build, rotated `state_test_house`, undo, and invalid blueprint id handling.
+- Forge and Fabric Alpha undo restoration suppresses drops during block-state rollback.
