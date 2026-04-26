@@ -80,15 +80,18 @@ be added after the three connector modules settle.
 - `v1.1.3`: multi-loader Alpha stabilization, documentation alignment, CI
   artifacts, and release packaging.
 - `v1.2.0`: Fabric and Forge Builder Wand Alpha parity.
-- `v1.2.1+`: continue Fabric and Forge parity work after wand testing.
+- `v1.2.1`: Fabric and Forge GUI Selector Alpha parity.
+- `v1.2.2+`: continue Fabric and Forge parity work after GUI and wand testing.
 
 ## Current Risks
 
-- Fabric networking and rendering differ from NeoForge and will need their own
+- Fabric networking and rendering differ from NeoForge and require their own
   adapter code.
 - Forge and NeoForge are related but not API-identical, so Forge cannot be
   treated as a drop-in copy.
-- GUI and Ghost Preview will need loader-specific implementations.
+- Ghost Preview will need loader-specific implementations. Fabric and Forge now
+  have GUI Selector Alpha screens, but they are intentionally narrower than the
+  NeoForge selector.
 - Registry lookup, inventory mutation, and world placement must remain in each
   loader adapter to avoid leaking Minecraft runtime types into common core.
 
@@ -121,3 +124,19 @@ be added after the three connector modules settle.
   or the server restarts.
 - Wand placement has a 2 second per-player cooldown. Command builds are not
   throttled by this cooldown.
+
+## v1.2.1 Status
+
+- Fabric and Forge add GUI Selector Alpha support for selecting a blueprint and
+  rotation.
+- The GUI opens through `/blockforge gui` or the default `B` key.
+- Fabric and Forge use loader-specific networking payloads to request blueprint
+  lists, submit selection requests, and receive server-validated selection
+  results.
+- The server validates blueprint id existence and rotation before updating the
+  player selection manager.
+- GUI selections feed the same selection state used by `/blockforge selected`
+  and Builder Wand placement.
+- Fabric and Forge still do not include Ghost Preview, survival material cost,
+  material refund undo, advanced thumbnails, blueprint editing, or Web sync.
+- Fabric / Forge GUI and Builder Wand manual Minecraft testing is pending.

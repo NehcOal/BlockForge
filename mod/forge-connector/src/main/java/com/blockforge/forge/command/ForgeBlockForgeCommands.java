@@ -6,6 +6,7 @@ import com.blockforge.common.selection.PlayerSelection;
 import com.blockforge.forge.blueprint.ForgeBlueprintRegistry;
 import com.blockforge.forge.blueprint.ForgeExampleBlueprintInstaller;
 import com.blockforge.forge.builder.ForgeBlueprintPlacer;
+import com.blockforge.forge.network.ForgeBlueprintGuiNetworking;
 import com.blockforge.forge.player.ForgePlayerSelectionManager;
 import com.blockforge.forge.registry.ForgeModItems;
 import com.blockforge.forge.undo.ForgeUndoManager;
@@ -55,13 +56,15 @@ public final class ForgeBlockForgeCommands {
                         .then(blueprintIdArgument(registry)
                                 .executes(context -> select(context, registry, selectionManager))))
                 .then(Commands.literal("selected")
-                        .executes(context -> selected(context, selectionManager)))
+                        .executes(context -> selected(context, registry, selectionManager)))
                 .then(Commands.literal("rotate")
                         .then(rotationArgument()
                                 .executes(context -> rotate(context, selectionManager))))
                 .then(Commands.literal("wand")
                         .requires(source -> source.hasPermission(2))
                         .executes(ForgeBlockForgeCommands::giveWand))
+                .then(Commands.literal("gui")
+                        .executes(ForgeBlockForgeCommands::openGui))
                 .then(Commands.literal("info")
                         .then(blueprintIdArgument(registry)
                                 .executes(context -> info(context, registry))))
@@ -112,6 +115,7 @@ public final class ForgeBlockForgeCommands {
 
     private static int selected(
             CommandContext<CommandSourceStack> context,
+            ForgeBlueprintRegistry registry,
             ForgePlayerSelectionManager selectionManager
     ) {
         ServerPlayer player = getPlayer(context);
@@ -125,6 +129,12 @@ public final class ForgeBlockForgeCommands {
             return 0;
         }
 
+        if (registry.get(selection.selectedBlueprintId()).isEmpty()) {
+            selectionManager.clear(player.getUUID());
+            context.getSource().sendFailure(Component.literal("Selected BlockForge Forge blueprint no longer exists. Use /blockforge select <id> again."));
+            return 0;
+        }
+
         context.getSource().sendSuccess(
                 () -> Component.literal("Selected BlockForge Forge blueprint: "
                         + selection.selectedBlueprintId()
@@ -132,6 +142,16 @@ public final class ForgeBlockForgeCommands {
                         + selection.rotationDegrees()),
                 false
         );
+        return 1;
+    }
+
+    private static int openGui(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        ForgeBlueprintGuiNetworking.sendBlueprintList(player, true);
         return 1;
     }
 

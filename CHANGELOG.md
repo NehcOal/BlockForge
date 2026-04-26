@@ -2,6 +2,29 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [1.2.1] - Unreleased
+
+### Added
+
+- Added common GUI DTOs for blueprint list summaries and server-validated selection requests.
+- Added Fabric Blueprint Selector GUI Alpha, opened with `/blockforge gui` or the default `B` key.
+- Added Forge Blueprint Selector GUI Alpha, opened with `/blockforge gui` or the default `B` key.
+- Added Fabric and Forge GUI networking payloads for blueprint list sync, selection requests, and selection results.
+- Added English and Chinese GUI/keybinding translations for Fabric and Forge.
+
+### Changed
+
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.2.1-alpha.1`.
+- Updated Fabric and Forge `/blockforge selected` to clear stale selections after blueprint reload removes the selected id.
+- Updated the Loader Feature Matrix to mark Fabric and Forge GUI Selector support as Alpha.
+- Updated Fabric and Forge docs with the GUI + Builder Wand Alpha flow.
+
+### Notes
+
+- Fabric and Forge GUI Selector only chooses blueprint id and rotation; it does not add Ghost Preview, survival material cost, material refund undo, thumbnails, editor workflows, or Web sync.
+- Fabric / Forge GUI manual Minecraft testing is pending.
+- Fabric / Forge Builder Wand manual Minecraft testing from v1.2.0 is still pending unless tested in game.
+
 ## [1.2.0] - Unreleased
 
 ### Added

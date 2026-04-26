@@ -6,6 +6,7 @@ import com.blockforge.common.selection.PlayerSelection;
 import com.blockforge.fabric.blueprint.FabricBlueprintRegistry;
 import com.blockforge.fabric.blueprint.FabricExampleBlueprintInstaller;
 import com.blockforge.fabric.builder.FabricBlueprintPlacer;
+import com.blockforge.fabric.network.FabricBlueprintGuiNetworking;
 import com.blockforge.fabric.player.FabricPlayerSelectionManager;
 import com.blockforge.fabric.registry.FabricModItems;
 import com.blockforge.fabric.undo.FabricUndoManager;
@@ -54,13 +55,15 @@ public final class FabricBlockForgeCommands {
                         .then(blueprintIdArgument(registry)
                                 .executes(context -> select(context, registry, selectionManager))))
                 .then(CommandManager.literal("selected")
-                        .executes(context -> selected(context, selectionManager)))
+                        .executes(context -> selected(context, registry, selectionManager)))
                 .then(CommandManager.literal("rotate")
                         .then(rotationArgument()
                                 .executes(context -> rotate(context, selectionManager))))
                 .then(CommandManager.literal("wand")
                         .requires(source -> source.hasPermissionLevel(2))
                         .executes(FabricBlockForgeCommands::giveWand))
+                .then(CommandManager.literal("gui")
+                        .executes(FabricBlockForgeCommands::openGui))
                 .then(CommandManager.literal("info")
                         .then(blueprintIdArgument(registry)
                                 .executes(context -> info(context, registry))))
@@ -111,6 +114,7 @@ public final class FabricBlockForgeCommands {
 
     private static int selected(
             CommandContext<ServerCommandSource> context,
+            FabricBlueprintRegistry registry,
             FabricPlayerSelectionManager selectionManager
     ) {
         ServerPlayerEntity player = getPlayer(context);
@@ -124,6 +128,12 @@ public final class FabricBlockForgeCommands {
             return 0;
         }
 
+        if (registry.get(selection.selectedBlueprintId()).isEmpty()) {
+            selectionManager.clear(player.getUuid());
+            context.getSource().sendError(Text.literal("Selected BlockForge Fabric blueprint no longer exists. Use /blockforge select <id> again."));
+            return 0;
+        }
+
         context.getSource().sendFeedback(
                 () -> Text.literal("Selected BlockForge Fabric blueprint: "
                         + selection.selectedBlueprintId()
@@ -131,6 +141,16 @@ public final class FabricBlockForgeCommands {
                         + selection.rotationDegrees()),
                 false
         );
+        return 1;
+    }
+
+    private static int openGui(CommandContext<ServerCommandSource> context) {
+        ServerPlayerEntity player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        FabricBlueprintGuiNetworking.sendBlueprintList(player, true);
         return 1;
     }
 

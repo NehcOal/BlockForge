@@ -26,6 +26,10 @@ public class ForgePlayerSelectionManager {
         return Optional.ofNullable(selections.get(playerId));
     }
 
+    public void clear(UUID playerId) {
+        selections.remove(playerId);
+    }
+
     public Optional<PlayerSelection> rotate(UUID playerId, int rotationDegrees) {
         BlueprintRotationSelection.validate(rotationDegrees);
         PlayerSelection existing = selections.get(playerId);

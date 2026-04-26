@@ -3,6 +3,7 @@ package com.blockforge.fabric;
 import com.blockforge.fabric.blueprint.FabricBlueprintLoader;
 import com.blockforge.fabric.blueprint.FabricBlueprintRegistry;
 import com.blockforge.fabric.command.FabricBlockForgeCommands;
+import com.blockforge.fabric.network.FabricBlueprintGuiNetworking;
 import com.blockforge.fabric.player.FabricPlayerSelectionManager;
 import com.blockforge.fabric.registry.FabricModItems;
 import com.blockforge.fabric.undo.FabricUndoManager;
@@ -22,6 +23,7 @@ public class BlockForgeFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         FabricModItems.register();
+        FabricBlueprintGuiNetworking.registerServer();
         BLUEPRINTS.reload();
         FabricBlockForgeCommands.register(BLUEPRINTS, UNDO, SELECTIONS);
         LOGGER.info(

@@ -3,6 +3,7 @@ package com.blockforge.forge;
 import com.blockforge.forge.blueprint.ForgeBlueprintLoader;
 import com.blockforge.forge.blueprint.ForgeBlueprintRegistry;
 import com.blockforge.forge.command.ForgeBlockForgeCommands;
+import com.blockforge.forge.network.ForgeBlueprintGuiNetworking;
 import com.blockforge.forge.player.ForgePlayerSelectionManager;
 import com.blockforge.forge.registry.ForgeModItems;
 import com.blockforge.forge.undo.ForgeUndoManager;
@@ -28,6 +29,7 @@ public class BlockForgeForge {
     public BlockForgeForge(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
         ForgeModItems.register(modEventBus);
+        ForgeBlueprintGuiNetworking.register();
         BLUEPRINTS.reload();
         MinecraftForge.EVENT_BUS.register(this);
         LOGGER.info(

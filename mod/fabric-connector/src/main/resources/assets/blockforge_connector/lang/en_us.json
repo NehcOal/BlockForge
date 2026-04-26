@@ -1,4 +1,19 @@
 {
   "modmenu.nameTranslation.blockforge_connector": "BlockForge Connector Fabric",
-  "item.blockforge_connector.builder_wand": "BlockForge Builder Wand"
+  "item.blockforge_connector.builder_wand": "BlockForge Builder Wand",
+  "key.categories.blockforge_connector": "BlockForge",
+  "key.blockforge_connector.open_blueprint_selector": "Open BlockForge Blueprint Selector",
+  "screen.blockforge_connector.blueprint_selector": "BlockForge Blueprints",
+  "screen.blockforge_connector.blueprints": "Blueprints",
+  "screen.blockforge_connector.details": "Blueprint Details",
+  "screen.blockforge_connector.no_selection": "Select a blueprint.",
+  "screen.blockforge_connector.rotation": "Rotation",
+  "screen.blockforge_connector.select": "Select",
+  "screen.blockforge_connector.close": "Close",
+  "screen.blockforge_connector.blocks": "Blocks: %s",
+  "screen.blockforge_connector.size": "Size: %s",
+  "screen.blockforge_connector.block_states": "Supports BlockState: %s",
+  "screen.blockforge_connector.hint": "Select a blueprint, choose rotation, then use Builder Wand to build.",
+  "screen.blockforge_connector.empty": "No blueprints loaded. Run /blockforge examples install and /blockforge reload.",
+  "screen.blockforge_connector.loading": "Loading blueprints..."
 }

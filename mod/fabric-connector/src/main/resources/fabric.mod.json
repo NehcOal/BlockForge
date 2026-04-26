@@ -16,6 +16,9 @@
   "entrypoints": {
     "main": [
       "com.blockforge.fabric.BlockForgeFabric"
+    ],
+    "client": [
+      "com.blockforge.fabric.client.BlockForgeFabricClient"
     ]
   },
   "depends": {

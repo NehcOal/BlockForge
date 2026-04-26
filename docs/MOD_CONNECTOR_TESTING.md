@@ -5,9 +5,52 @@ Passing `gradlew build` confirms compilation only; it does not replace in-game
 testing.
 
 Fabric and Forge Alpha are also covered here as separate checklists. NeoForge
-remains the full-featured Connector; Fabric and Forge now include Builder Wand
-Alpha support but still intentionally do not cover GUI, Ghost Preview, survival
-material cost, material refunds, or BlockEntity NBT undo.
+remains the full-featured Connector; Fabric and Forge now include GUI Selector
+and Builder Wand Alpha support but still intentionally do not cover Ghost
+Preview, survival material cost, material refunds, or BlockEntity NBT undo.
+
+## v1.2.1 Fabric / Forge GUI Selector Alpha Checklist
+
+Release version:
+
+```text
+1.2.1-alpha.1
+```
+
+Expected release jars:
+
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.1-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.1-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.2.1-alpha.1.jar
+```
+
+Recommended Fabric and Forge GUI test flow:
+
+```mcfunction
+/blockforge examples install
+/blockforge reload
+/blockforge list
+/blockforge gui
+/blockforge selected
+/blockforge wand
+```
+
+Also test the default `B` key from a player client.
+
+Expected result:
+
+- `/blockforge gui` opens the Blueprint Selector on Fabric and Forge clients.
+- Pressing `B` opens the same selector unless the key is rebound or conflicts.
+- The GUI requests a server blueprint list on open.
+- The left list shows loaded blueprint name/id/size/block count/schema version.
+- The right panel shows details and rotation buttons for `0°`, `90°`, `180°`, and `270°`.
+- Clicking Select sends a server-validated selection request.
+- `/blockforge selected` matches the GUI-selected blueprint and rotation.
+- Builder Wand placement uses the GUI-selected blueprint and rotation.
+- `/blockforge undo` restores the latest GUI-selected wand placement.
+- If no blueprints are loaded, the GUI shows the examples install/reload hint.
+- Fabric / Forge GUI manual Minecraft testing is pending.
 
 ## v1.2.0 Fabric / Forge Builder Wand Alpha Checklist
 
@@ -161,9 +204,9 @@ Expected Fabric Alpha result:
 - `build` places valid blocks and skips invalid/out-of-world entries.
 - `undo` restores the latest Fabric build for the current player.
 
-Known Fabric Alpha limits:
+Known Fabric command-loop Alpha limits:
 
-- No GUI.
+- GUI exists as of v1.2.1 Alpha; this command-loop checklist does not cover it.
 - No Ghost Preview.
 - No survival material cost or inventory mutation.
 - No material refund.
@@ -234,9 +277,9 @@ Expected Forge Alpha result:
 - `build` places valid blocks and skips invalid/out-of-world entries.
 - `undo` restores the latest Forge build for the current player.
 
-Known Forge Alpha limits:
+Known Forge command-loop Alpha limits:
 
-- No GUI.
+- GUI exists as of v1.2.1 Alpha; this command-loop checklist does not cover it.
 - No Ghost Preview.
 - No survival material cost or inventory mutation.
 - No material refund.
@@ -292,7 +335,7 @@ Copy the generated jar into the test instance `mods` folder.
 Example:
 
 ```text
-.minecraft/mods/blockforge-connector-neoforge-1.2.0-alpha.1.jar
+.minecraft/mods/blockforge-connector-neoforge-1.2.1-alpha.1.jar
 ```
 
 ## 4. Install Example Blueprints

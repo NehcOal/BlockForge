@@ -5,18 +5,18 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v1.2.0 Fabric / Forge Builder Wand Parity
+## v1.2.1 Fabric / Forge GUI Selector Parity
 
-BlockForge v1.2.0-alpha.1 adds Fabric and Forge Builder Wand Alpha parity.
+BlockForge v1.2.1-alpha.1 adds Fabric and Forge GUI Selector Alpha parity.
 NeoForge is still the most complete connector for now. Fabric and Forge now
-support selecting a blueprint, setting rotation, receiving a Builder Wand, and
-placing the selected blueprint by right-clicking a block.
+support selecting a blueprint and rotation from `/blockforge gui` or the
+default `B` key, then building with the Builder Wand.
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-1.2.0-alpha.1.jar`
-- `blockforge-connector-fabric-1.2.0-alpha.1.jar`
-- `blockforge-connector-forge-1.2.0-alpha.1.jar`
+- `blockforge-connector-neoforge-1.2.1-alpha.1.jar`
+- `blockforge-connector-fabric-1.2.1-alpha.1.jar`
+- `blockforge-connector-forge-1.2.1-alpha.1.jar`
 
 ## Loader Feature Matrix
 
@@ -28,30 +28,31 @@ Expected release jars:
 | Build command | yes | yes | yes |
 | Rotation | yes | yes | yes |
 | Undo blocks | yes | yes | yes |
-| GUI Selector | yes | no | no |
+| GUI Selector | yes | yes, Alpha | yes, Alpha |
 | Builder Wand | yes | yes, Alpha | yes, Alpha |
 | Ghost Preview | yes | no | no |
 | Survival material cost | yes | no | no |
 | Material refund undo | yes | no | no |
 | BlockEntity NBT undo | yes, best effort | no | no |
 
-Fabric and Forge Builder Wand support is Alpha. They intentionally do not
-include GUI, Ghost Preview, survival material cost, material refund undo, or
+Fabric and Forge GUI Selector and Builder Wand support are Alpha. The GUI only
+selects a blueprint and rotation; Fabric and Forge still intentionally do not
+include Ghost Preview, survival material cost, material refund undo, or
 BlockEntity NBT undo.
 
-Fabric / Forge Builder Wand Alpha flow:
+Fabric / Forge GUI + Builder Wand Alpha flow:
 
 ```mcfunction
 /blockforge examples install
 /blockforge reload
 /blockforge list
-/blockforge select tiny_platform
-/blockforge rotate 90
+/blockforge gui
 /blockforge wand
 ```
 
-Hold the Builder Wand, right-click a block, then run `/blockforge undo` to
-restore the placed blocks.
+You can also press the default `B` key to open the selector. Choose a blueprint
+and rotation, click Select, hold the Builder Wand, right-click a block, then run
+`/blockforge undo` to restore the placed blocks.
 
 ## v1.1.1 Fabric Connector Alpha
 
@@ -61,8 +62,8 @@ JSON files, dry-run a build plan, place blueprints in the world, and undo the
 latest Fabric build per player.
 
 Fabric Alpha reuses `mod/common` for blueprint parsing, rotation, and build
-planning data. As of v1.2.0, Fabric includes Builder Wand Alpha placement. It
-still does not include GUI, Ghost Preview, survival material costs, inventory
+planning data. As of v1.2.1, Fabric includes GUI Selector and Builder Wand
+Alpha placement. It still does not include Ghost Preview, survival material costs, inventory
 consumption, material refunds, or BlockEntity NBT undo yet. NeoForge remains
 the most complete and stable Connector target.
 
@@ -77,8 +78,8 @@ reload and list Blueprint JSON files, dry-run a build plan, place blueprints in
 the world, and undo the latest Forge build per player.
 
 Forge Alpha reuses `mod/common` for blueprint parsing, rotation, and build
-planning data. As of v1.2.0, Forge includes Builder Wand Alpha placement. It
-still does not include GUI, Ghost Preview, survival material costs, inventory
+planning data. As of v1.2.1, Forge includes GUI Selector and Builder Wand
+Alpha placement. It still does not include Ghost Preview, survival material costs, inventory
 consumption, material refunds, or BlockEntity NBT undo yet. NeoForge remains
 the most complete and stable Connector target.
 
@@ -246,7 +247,7 @@ and command details.
 
 ## Fabric Connector Alpha
 
-The repository also includes a Fabric 1.21.1 command-only alpha at
+The repository also includes a Fabric 1.21.1 alpha at
 `mod/fabric-connector`.
 
 Build it with:
@@ -279,7 +280,7 @@ handling.
 
 ## Forge Connector Alpha
 
-The repository also includes a Forge 1.21.1 command-only alpha at
+The repository also includes a Forge 1.21.1 alpha at
 `mod/forge-connector`.
 
 Build it with:
@@ -438,8 +439,8 @@ src/
 └─ types/               Shared TypeScript types
 mod/
 ├─ common/              Loader-neutral Java core for future multi-loader support
-├─ fabric-connector/    Fabric 1.21.1 command-only Connector Alpha
-├─ forge-connector/     Forge 1.21.1 command-only Connector Alpha
+├─ fabric-connector/    Fabric 1.21.1 Connector Alpha
+├─ forge-connector/     Forge 1.21.1 Connector Alpha
 └─ neoforge-connector/  NeoForge 1.21.1 Mod Connector
 examples/
 └─ blueprints/          Blueprint v1 files for Connector testing
