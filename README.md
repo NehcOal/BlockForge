@@ -5,19 +5,20 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v1.2.5 Multiloader Parity Alpha
+## v1.3.0 Nearby Material Source Common Core
 
-BlockForge v1.2.5-alpha.1 is a multiloader parity release-candidate pass.
-NeoForge is still the recommended complete connector. Fabric and Forge now have
-Alpha parity for command builds, GUI Selector, Builder Wand, Ghost Preview,
-survival material cost, and material refund undo, but they should still be
-treated as Alpha connectors.
+BlockForge v1.3.0-alpha.1 starts the common-core design for nearby material
+sources. It adds loader-neutral models for player inventory, future nearby
+containers, scan plans, material source reports, and source-aware material
+transactions. NeoForge is still the recommended complete connector. Fabric and
+Forge remain Alpha parity connectors. No loader scans or consumes nearby
+container materials yet.
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-1.2.5-alpha.1.jar`
-- `blockforge-connector-fabric-1.2.5-alpha.1.jar`
-- `blockforge-connector-forge-1.2.5-alpha.1.jar`
+- `blockforge-connector-neoforge-1.3.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.3.0-alpha.1.jar`
+- `blockforge-connector-forge-1.3.0-alpha.1.jar`
 
 ## Loader Feature Matrix
 
@@ -35,13 +36,16 @@ Expected release jars:
 | Survival material cost | ✅ | ✅ Alpha | ✅ Alpha |
 | Material refund undo | ✅ | ✅ Alpha | ✅ Alpha |
 | BlockEntity NBT undo | ✅ best effort | ❌ | ❌ |
-| Nearby chest sourcing | ❌ | ❌ | ❌ |
+| Nearby chest material sourcing | planned | planned | planned |
 
 Fabric and Forge GUI Selector, Builder Wand, Ghost Preview, Survival Material
 Cost, and Material Refund Undo support are Alpha. Ghost Preview only renders a
 rotation-aware bounding box and ground footprint. Fabric and Forge undo now
 restores blocks and refunds consumed survival materials, but still does not
-restore BlockEntity NBT.
+restore BlockEntity NBT. Nearby chest material sourcing is planned for future
+loader adapters and is not active in v1.3.0.
+
+See [Material Sources](./docs/MATERIAL_SOURCES.md) for the v1.3 design notes.
 
 Fabric / Forge GUI + Builder Wand + Ghost Preview + Survival Materials Alpha flow:
 

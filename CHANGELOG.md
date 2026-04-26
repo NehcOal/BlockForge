@@ -2,6 +2,33 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [1.3.0] - Unreleased
+
+### Added
+
+- Added common material source data models for player inventory, nearby
+  containers, and mixed sources.
+- Added `MaterialSourceConfig` with safe defaults for future nearby container
+  sourcing.
+- Added material source scan plan and scan result models.
+- Added `MaterialSourcePlanner` for loader-neutral source report planning.
+- Added `docs/MATERIAL_SOURCES.md` for the v1.3 nearby material source design.
+
+### Changed
+
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.3.0-alpha.1`.
+- Extended `ConsumedMaterialEntry` and `MaterialTransaction` with optional
+  source metadata while keeping existing player-inventory constructors.
+- Updated the Loader Feature Matrix to mark nearby chest material sourcing as
+  planned for NeoForge, Fabric, and Forge.
+
+### Notes
+
+- No loader-specific nearby chest sourcing is implemented yet.
+- No Builder Wand, GUI, or placement behavior changes are included in v1.3.0.
+- Manual Minecraft testing is deferred until the v1.3.5 multiloader regression
+  pass.
+
 ## [1.2.5] - Unreleased
 
 ### Changed

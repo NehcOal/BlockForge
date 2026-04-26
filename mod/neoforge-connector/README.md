@@ -15,7 +15,7 @@ Web integration yet.
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector NeoForge`
-- Mod Version: `1.2.0-alpha.1`
+- Mod Version: `1.3.0-alpha.1`
 
 ## Multi-loader Architecture Status
 
@@ -31,10 +31,13 @@ inventory checks, and material consumption/refund integration.
 
 Fabric Connector Alpha exists under `mod/fabric-connector`, and Forge
 Connector Alpha exists under `mod/forge-connector`. Both reuse common blueprint
-parsing, rotation, and build planning data and now include Builder Wand Alpha
-placement. They do not include the NeoForge GUI, Ghost Preview, survival
-material cost, inventory consumption, material refunds, or BlockEntity NBT undo
-yet.
+parsing, rotation, build planning, preview DTOs, and material source groundwork.
+They now include Builder Wand, GUI Selector, Ghost Preview, survival material
+cost, and material refund undo as Alpha features. They do not include
+BlockEntity NBT undo or active nearby chest material sourcing yet.
+
+v1.3.0 adds nearby material source common-core models only. NeoForge does not
+scan or consume from nearby containers in this release.
 
 ## Blueprint Protocol Support
 
@@ -61,7 +64,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge-connector-neoforge-1.2.0-alpha.1.jar
+build/libs/blockforge-connector-neoforge-1.3.0-alpha.1.jar
 ```
 
 ## Blueprint Folder

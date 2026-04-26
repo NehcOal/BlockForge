@@ -5,7 +5,7 @@ Connector jar 的安装方式。
 
 ## 版本
 
-- BlockForge Web：`1.2.5-alpha.1`
+- BlockForge Web：`1.3.0-alpha.1`
 - Minecraft Java Edition：`1.21.1`
 - Java：`21`
 - NeoForge：`21.1.227`
@@ -17,6 +17,7 @@ Connector jar 的安装方式。
 
 NeoForge 是当前推荐的完整游戏内体验。Fabric 和 Forge 是带 GUI Selector Alpha、
 Builder Wand Alpha、Ghost Preview Alpha 轮廓预览、生存材料成本 Alpha 与 Undo 材料返还 Alpha 的轻量 Alpha。
+v1.3.0 只新增附近材料来源 common-core 模型；三端都尚未启用附近箱子取材。
 
 | Connector | 适合场景 | 当前状态 |
 |---|---|---|
@@ -70,9 +71,9 @@ Windows 用户在对应目录执行 `gradlew.bat build`。
 预期 release jar 名称：
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.5-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.5-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.2.5-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.3.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.3.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.3.0-alpha.1.jar
 ```
 
 把对应 loader 的 jar 放入 Minecraft 实例的 `mods` 文件夹。
@@ -168,12 +169,12 @@ GUI 材料摘要计划后续补齐。
 
 ## Release Artifacts
 
-BlockForge v1.2.5-alpha.1 release 应包含：
+BlockForge v1.3.0-alpha.1 release 应包含：
 
 - GitHub tag 提供的 Web source release。
-- `blockforge-connector-neoforge-1.2.5-alpha.1.jar`
-- `blockforge-connector-fabric-1.2.5-alpha.1.jar`
-- `blockforge-connector-forge-1.2.5-alpha.1.jar`
+- `blockforge-connector-neoforge-1.3.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.3.0-alpha.1.jar`
+- `blockforge-connector-forge-1.3.0-alpha.1.jar`
 - `examples/blueprints/`
 - `docs/BLUEPRINT_PROTOCOL.md`
 - `docs/MOD_CONNECTOR_TESTING.md`

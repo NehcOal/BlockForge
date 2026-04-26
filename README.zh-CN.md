@@ -2,24 +2,24 @@
 
 从文本提示生成 Minecraft 风格 voxel 方块建筑蓝图。
 
-BlockForge 是一个本地优先的 Minecraft 风格方块建筑蓝图生成器。当前 v1.2.5
+BlockForge 是一个本地优先的 Minecraft 风格方块建筑蓝图生成器。当前 v1.3.0
 包含 Web 蓝图生成、3D 预览、导出链路、NeoForge Connector 游戏内建造流程，以及
 Fabric / Forge Connector Alpha GUI Selector + Builder Wand + Ghost Preview + 生存材料成本 + Undo 材料返还闭环。
 
 [English README](./README.md) | [使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v1.2.5 Multiloader Parity Alpha
+## v1.3.0 Nearby Material Source Common Core
 
-BlockForge v1.2.5-alpha.1 是三端功能对齐后的 release-candidate 整理版本。
-NeoForge 仍然是当前推荐的完整体验版本。Fabric 和 Forge 已具备命令建造、GUI
-Selector、Builder Wand、Ghost Preview、生存材料成本和 Undo 材料返还的 Alpha
-parity，但仍应按 Alpha connector 使用。
+BlockForge v1.3.0-alpha.1 开始为 nearby material source 做 common core。这个版本
+只新增 loader-neutral 的玩家背包、未来附近容器、扫描计划、材料来源报告和带来源信息
+的材料事务模型。NeoForge 仍然是当前推荐的完整体验版本；Fabric 和 Forge 仍是 Alpha
+parity connector。本轮不实现真实箱子扫描，也不从附近容器扣材料。
 
 预期发布 jar：
 
-- `blockforge-connector-neoforge-1.2.5-alpha.1.jar`
-- `blockforge-connector-fabric-1.2.5-alpha.1.jar`
-- `blockforge-connector-forge-1.2.5-alpha.1.jar`
+- `blockforge-connector-neoforge-1.3.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.3.0-alpha.1.jar`
+- `blockforge-connector-forge-1.3.0-alpha.1.jar`
 
 ## Loader 功能矩阵
 
@@ -37,12 +37,15 @@ parity，但仍应按 Alpha connector 使用。
 | 生存模式材料成本 | ✅ | ✅ Alpha | ✅ Alpha |
 | Undo 材料返还 | ✅ | ✅ Alpha | ✅ Alpha |
 | BlockEntity NBT undo | ✅ best effort | ❌ | ❌ |
-| 附近箱子取材 | ❌ | ❌ | ❌ |
+| 附近箱子材料来源 | planned | planned | planned |
 
 Fabric 和 Forge 的 GUI Selector、Builder Wand、Ghost Preview、生存材料成本与
 Undo 材料返还仍是 Alpha。Ghost Preview 只显示随旋转变化的包围盒和地面 footprint；
 Fabric / Forge 现在会扣除生存模式材料，并在 `/blockforge undo` 时恢复方块和返还材料，
-但仍不支持 BlockEntity NBT undo。
+但仍不支持 BlockEntity NBT undo。附近箱子材料来源将在后续 loader adapter 中实现，
+v1.3.0 尚未启用。
+
+v1.3 设计说明见：[Material Sources](./docs/MATERIAL_SOURCES.md)。
 
 Fabric / Forge GUI + Builder Wand + Ghost Preview + 生存材料 Alpha 流程：
 

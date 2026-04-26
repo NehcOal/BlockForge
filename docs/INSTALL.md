@@ -5,7 +5,7 @@ for NeoForge, Fabric, and Forge.
 
 ## Versions
 
-- BlockForge Web: `1.2.5-alpha.1`
+- BlockForge Web: `1.3.0-alpha.1`
 - Minecraft Java Edition: `1.21.1`
 - Java: `21`
 - NeoForge: `21.1.227`
@@ -18,7 +18,8 @@ for NeoForge, Fabric, and Forge.
 NeoForge is the recommended complete in-game experience. Fabric and Forge are
 Alpha connectors with command builds, GUI Selector Alpha, Builder Wand Alpha
 placement, Ghost Preview Alpha outlines, Survival Material Cost Alpha, and
-Material Refund Undo Alpha.
+Material Refund Undo Alpha. v1.3.0 adds nearby material source common-core
+models only; nearby chest sourcing is not active in any loader yet.
 
 | Connector | Best For | Current Status |
 |---|---|---|
@@ -73,9 +74,9 @@ Windows users can run `gradlew.bat build` in the same directories.
 Expected release jar names:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.5-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.5-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.2.5-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.3.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.3.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.3.0-alpha.1.jar
 ```
 
 Copy the matching jar into the Minecraft instance `mods` folder.
@@ -178,12 +179,12 @@ reports; GUI material summary is planned later.
 
 ## Release Artifacts
 
-A BlockForge v1.2.5-alpha.1 release should include:
+A BlockForge v1.3.0-alpha.1 release should include:
 
 - Web source release from the GitHub tag.
-- `blockforge-connector-neoforge-1.2.5-alpha.1.jar`
-- `blockforge-connector-fabric-1.2.5-alpha.1.jar`
-- `blockforge-connector-forge-1.2.5-alpha.1.jar`
+- `blockforge-connector-neoforge-1.3.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.3.0-alpha.1.jar`
+- `blockforge-connector-forge-1.3.0-alpha.1.jar`
 - `examples/blueprints/`
 - `docs/BLUEPRINT_PROTOCOL.md`
 - `docs/MOD_CONNECTOR_TESTING.md`

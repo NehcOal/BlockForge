@@ -86,7 +86,10 @@ be added after the three connector modules settle.
 - `v1.2.4`: Fabric and Forge Material Refund Undo Alpha parity.
 - `v1.2.5`: Multiloader Parity Alpha regression and release-candidate
   documentation.
-- `v1.2.6+`: deeper material UX, GUI material summaries, and follow-up
+- `v1.3.0`: Nearby Material Source common core.
+- `v1.3.5`: batched multiloader in-game regression for v1.3 material source
+  groundwork and adapter work.
+- `v1.3.6+`: deeper material UX, GUI material summaries, and follow-up
   stabilization.
 
 ## Current Risks
@@ -220,3 +223,19 @@ be added after the three connector modules settle.
 - Fabric and Forge undo history is documented as a 20-entry per-player in-memory
   Alpha history stack.
 - Dedicated server smoke testing remains pending.
+
+## v1.3.0 Status
+
+- v1.3.0 adds common-core material source models only.
+- `MaterialSourceConfig` keeps nearby containers disabled by default with radius
+  `8` and max scanned containers `64`.
+- `MaterialSourceScanPlan` and `MaterialSourceScanResult` describe future loader
+  scans without referencing Minecraft world types.
+- `MaterialSourcePlanner` can prepare loader-neutral source reports and leaves
+  real inventory/container details to loader adapters.
+- `ConsumedMaterialEntry` and `MaterialTransaction` now carry optional source
+  metadata while remaining compatible with player-inventory-only transactions.
+- NeoForge, Fabric, and Forge nearby container adapters are planned but not
+  implemented.
+- Manual Minecraft testing is deferred until the v1.3.5 multiloader regression
+  pass.

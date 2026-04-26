@@ -10,6 +10,46 @@ Builder Wand, Ghost Preview, Survival Material Cost, and Material Refund Undo
 Alpha support. Fabric and Forge still intentionally do not cover BlockEntity
 NBT undo.
 
+## v1.3.x Testing Strategy
+
+v1.3.x introduces nearby material source groundwork. Small v1.3.x versions use
+build validation only:
+
+- `pnpm lint`
+- `pnpm test`
+- `pnpm build`
+- NeoForge Gradle build
+- Fabric Gradle build
+- Forge Gradle build
+
+Manual Minecraft testing is deferred until the v1.3.5 multiloader regression
+pass. Do not mark nearby container sourcing as passed until loader adapters
+exist and real in-game tests are run.
+
+## v1.3.0 Nearby Material Source Common Core Checklist
+
+Release version:
+
+```text
+1.3.0-alpha.1
+```
+
+Expected release jars:
+
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.3.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.3.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.3.0-alpha.1.jar
+```
+
+Expected result:
+
+- Common material source DTOs compile in all three loader modules.
+- Existing player-inventory material transactions remain compatible.
+- No loader scans nearby containers yet.
+- No Builder Wand, GUI, placement, or undo behavior changes are expected.
+- Manual Minecraft testing is deferred until v1.3.5.
+
 ## v1.2.5 Multiloader Regression Test
 
 Release version:
