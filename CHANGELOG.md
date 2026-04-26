@@ -2,6 +2,31 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [1.1.0] - Unreleased
+
+### Added
+
+- Added `mod/common` as the first multi-loader common core for future Fabric and Forge connectors.
+- Added loader-neutral blueprint, rotation, build planning, material, undo, platform, and utility packages under `com.blockforge.common`.
+- Added `BuildPlan` and `PlannedBlock` data structures for describing planned placements without touching a Minecraft world.
+- Added `docs/MULTILOADER_PLAN.md` with the v1.1 multi-loader architecture plan.
+
+### Changed
+
+- NeoForge Connector now compiles `mod/common/src/main/java` as a shared Java source root.
+- NeoForge blueprint parsing delegates to the common parser while preserving the existing NeoForge-facing model classes.
+- NeoForge rotation logic delegates to the common rotation enum.
+- NeoForge material counting delegates to the common material counter while registry and inventory access remain NeoForge-specific.
+- NeoForge placement preflight now exposes a common `BuildPlan` alongside the existing placement result.
+- Updated Web and Connector versions to `1.1.0`.
+
+### Notes
+
+- NeoForge 1.21.1 remains the only stable in-game target in v1.1.0.
+- Fabric and Forge connectors are planned but not implemented in this release.
+- Fabric / Forge CI jobs are intentionally not enabled until their modules exist.
+- Manual Minecraft regression testing is pending.
+
 ## [1.0.1] - Unreleased
 
 ### Fixed

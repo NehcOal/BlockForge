@@ -70,3 +70,7 @@ jobs:
           name: blockforge-connector-jar
           path: mod/neoforge-connector/build/libs/*.jar
           if-no-files-found: error
+
+      # Multi-loader roadmap:
+      # Fabric and Forge CI jobs are planned for v1.1.1 / v1.1.2 after their
+      # connector modules exist. Keep this job NeoForge-only in v1.1.0.

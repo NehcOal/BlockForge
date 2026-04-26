@@ -2,10 +2,23 @@
 
 从文本提示生成 Minecraft 风格 voxel 方块建筑蓝图。
 
-BlockForge 是一个本地优先的 Minecraft 风格方块建筑蓝图生成器。当前 v1.0.1
+BlockForge 是一个本地优先的 Minecraft 风格方块建筑蓝图生成器。当前 v1.1.0
 包含 Web 蓝图生成、3D 预览、导出链路，以及 NeoForge Connector 游戏内建造流程。
 
 [English README](./README.md) | [使用手册](./docs/USER_MANUAL.zh-CN.md)
+
+## v1.1.0 Multi-loader 架构
+
+BlockForge v1.1.0 开始进入多加载器架构阶段。NeoForge 1.21.1 仍然是当前稳定
+Connector 目标；Fabric 1.21.1 和 Forge 1.21.1 支持已进入规划，但本版本不实现
+Fabric / Forge 端功能。
+
+本版本新增 `mod/common`，作为 loader-neutral 的 Java common core，用于复用蓝图解析、
+旋转、build planning、材料数据、undo 记录、platform adapter 接口和工具类型。
+NeoForge Connector 已在低风险位置复用 common core；命令注册、物品注册、GUI、网络、
+Ghost Preview 渲染、config 注册、真实 world setBlock 和背包访问仍保留在 NeoForge 适配层。
+
+架构计划见：[Multi-loader Plan](./docs/MULTILOADER_PLAN.md)。
 
 ## v1.0.1 Bug 修复
 
@@ -259,7 +272,8 @@ src/
 ├─ test/                Vitest 测试文件
 └─ types/               共享 TypeScript 类型
 mod/
-└─ neoforge-connector/  NeoForge 1.21.1 Mod Connector MVP
+├─ common/              面向多加载器的 loader-neutral Java core
+└─ neoforge-connector/  NeoForge 1.21.1 Mod Connector
 examples/
 └─ blueprints/          用于 Connector 测试的 Blueprint v1 示例
 ```

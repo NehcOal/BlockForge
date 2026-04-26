@@ -9,20 +9,19 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 public class MaterialCounter {
-    private final Function<String, String> itemIdResolver;
+    private final com.blockforge.common.material.MaterialCounter counter;
 
     public MaterialCounter() {
         this(MaterialCounter::itemIdForBlock);
     }
 
     MaterialCounter(Function<String, String> itemIdResolver) {
-        this.itemIdResolver = itemIdResolver;
+        this.counter = new com.blockforge.common.material.MaterialCounter(itemIdResolver);
     }
 
     public MaterialReport count(Blueprint blueprint) {
@@ -42,50 +41,31 @@ public class MaterialCounter {
             List<BlueprintBlock> blocks,
             Map<String, Integer> availableItems
     ) {
-        Map<String, MutableRequirement> requirements = new HashMap<>();
-
-        for (BlueprintBlock block : blocks) {
-            BlueprintPaletteEntry paletteEntry = blueprint.getPalette().get(block.getState());
-            if (paletteEntry == null || paletteEntry.name() == null || paletteEntry.name().isBlank()) {
-                continue;
-            }
-
-            String blockId = paletteEntry.name();
-            String countedItemId = itemIdResolver.apply(blockId);
-            String resolvedItemId = countedItemId == null ? "minecraft:air" : countedItemId;
-
-            MutableRequirement requirement = requirements.computeIfAbsent(
-                    resolvedItemId,
-                    ignored -> new MutableRequirement(block.getState(), blockId, resolvedItemId)
-            );
-            requirement.required++;
-        }
-
-        List<MaterialRequirement> resolvedRequirements = requirements.values()
+        com.blockforge.common.material.MaterialReport report = counter.withAvailability(
+                blueprint.getId(),
+                blocks,
+                blueprint.getPalette(),
+                availableItems
+        );
+        List<MaterialRequirement> requirements = report.requirements()
                 .stream()
-                .map(requirement -> requirement.toRequirement(availableItems.getOrDefault(requirement.itemId, 0)))
-                .sorted((left, right) -> left.itemId().compareTo(right.itemId()))
+                .map(requirement -> new MaterialRequirement(
+                        requirement.blockStateKey(),
+                        requirement.blockId(),
+                        requirement.itemId(),
+                        requirement.required(),
+                        requirement.available(),
+                        requirement.missing()
+                ))
                 .toList();
 
-        int totalRequired = resolvedRequirements.stream()
-                .filter(MaterialRequirement::consumable)
-                .mapToInt(MaterialRequirement::required)
-                .sum();
-        int totalAvailable = resolvedRequirements.stream()
-                .filter(MaterialRequirement::consumable)
-                .mapToInt(requirement -> Math.min(requirement.available(), requirement.required()))
-                .sum();
-        boolean enough = resolvedRequirements.stream()
-                .filter(MaterialRequirement::consumable)
-                .allMatch(requirement -> requirement.missing() == 0);
-
         return new MaterialReport(
-                blueprint.getId(),
-                blocks.size(),
-                totalRequired,
-                totalAvailable,
-                enough,
-                resolvedRequirements
+                report.blueprintId(),
+                report.totalBlocks(),
+                report.totalRequiredItems(),
+                report.totalAvailableItems(),
+                report.enoughMaterials(),
+                requirements
         );
     }
 
@@ -107,27 +87,4 @@ public class MaterialCounter {
         return location == null ? "minecraft:air" : location.toString();
     }
 
-    private static final class MutableRequirement {
-        private final String blockStateKey;
-        private final String blockId;
-        private final String itemId;
-        private int required;
-
-        private MutableRequirement(String blockStateKey, String blockId, String itemId) {
-            this.blockStateKey = blockStateKey;
-            this.blockId = blockId;
-            this.itemId = itemId;
-        }
-
-        private MaterialRequirement toRequirement(int available) {
-            return new MaterialRequirement(
-                    blockStateKey,
-                    blockId,
-                    itemId,
-                    required,
-                    available,
-                    Math.max(0, required - available)
-            );
-        }
-    }
 }

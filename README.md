@@ -5,6 +5,22 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
+## v1.1.0 Multi-loader Architecture
+
+BlockForge v1.1.0 starts the multi-loader architecture work. NeoForge 1.21.1
+remains the current stable Connector target, while Fabric 1.21.1 and Forge
+1.21.1 support are planned for later alpha releases.
+
+This release adds `mod/common`, a loader-neutral Java core for blueprint
+parsing, rotation, build planning, material data, undo records, platform
+adapter interfaces, and utility types. The NeoForge Connector now reuses this
+common core where it is safe to do so, while command registration, item
+registration, GUI, networking, Ghost Preview rendering, config registration,
+world placement, and inventory access remain NeoForge-specific.
+
+See [Multi-loader Plan](./docs/MULTILOADER_PLAN.md) for the architecture plan
+and version roadmap.
+
 ## v1.0.1 Bug Fixes
 
 - Fixed survival material over-consumption when a build only places part of a blueprint because some target blocks are protected, non-replaceable, out of world, or otherwise skipped.
@@ -272,7 +288,8 @@ src/
 ├─ test/                Vitest test files
 └─ types/               Shared TypeScript types
 mod/
-└─ neoforge-connector/  NeoForge 1.21.1 Mod Connector MVP
+├─ common/              Loader-neutral Java core for future multi-loader support
+└─ neoforge-connector/  NeoForge 1.21.1 Mod Connector
 examples/
 └─ blueprints/          Blueprint v1 files for Connector testing
 ```
@@ -287,6 +304,8 @@ examples/
 - Add special material cost rules for doors, fluids, torches, and multi-block placements.
 - Improve release artifact publishing.
 - Blueprint v1/v2 schema validation tooling.
+- Fabric 1.21.1 Connector alpha.
+- Forge 1.21.1 Connector alpha.
 - `.schem` export.
 - Block texture rendering.
 - InstancedMesh performance optimization for larger voxel models.

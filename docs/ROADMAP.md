@@ -2,6 +2,10 @@
 
 ## Near Term
 
+- Continue v1.1 multi-loader architecture work around `mod/common`.
+- Keep NeoForge 1.21.1 as the current stable Connector target.
+- Add Fabric 1.21.1 Connector alpha after common blueprint, material, rotation, build planning, and undo contracts settle.
+- Add Forge 1.21.1 Connector alpha after the Fabric alpha exposes the minimum shared adapter surface.
 - Stabilize BlockForge Blueprint v1 as the Web and Mod shared protocol.
 - Add schema validation tooling for exported blueprint files.
 - Add Ghost Preview collision and replacement scans.
@@ -29,3 +33,12 @@
 - Improve block visual materials.
 - Add optional Minecraft-like textures.
 - Use `InstancedMesh` when model size grows beyond the current preset scale.
+
+## Multi-loader Plan
+
+- v1.1.0: common core for blueprint, rotation, material data, build planning, undo records, and platform adapter interfaces.
+- v1.1.1: Fabric Connector alpha.
+- v1.1.2: Forge Connector alpha.
+- v1.1.3: parity pass across NeoForge, Fabric, and Forge.
+
+See [Multi-loader Plan](./MULTILOADER_PLAN.md) for details.

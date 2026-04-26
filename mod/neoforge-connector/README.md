@@ -15,7 +15,21 @@ Web integration yet.
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector`
-- Mod Version: `1.0.0-rc.1`
+- Mod Version: `1.1.0`
+
+## Multi-loader Architecture Status
+
+BlockForge v1.1.0 introduces `mod/common` as a loader-neutral common core for
+future Fabric and Forge connectors. NeoForge remains the current stable target.
+
+The NeoForge Connector now reuses common blueprint parsing, rotation, material
+counting, and build planning data where the contracts are stable. NeoForge still
+owns command registration, item registration, GUI screens, payload networking,
+Ghost Preview rendering, common config registration, real `setBlock` placement,
+inventory checks, and material consumption/refund integration.
+
+Fabric and Forge connectors are planned, but they are not implemented or usable
+in v1.1.0.
 
 ## Blueprint Protocol Support
 
@@ -302,16 +316,18 @@ Undo flow:
 2. Refund consumed survival materials from the material transaction.
 3. Drop refunded items near the player when the inventory is full.
 
-Known v1.0.0-rc.1 limits:
+Known v1.1.0 limits:
 
 - Undo refunds BlockForge material transactions, but does not restore XP, currency, or external economy state.
 - No nearby chest or warehouse support.
 - No special cost table for doors, fluids, torches, or multi-block placements.
 - No material icons in the GUI yet.
+- Fabric and Forge connectors are planned but not implemented.
 
 Manual Minecraft testing before v1.0.0-rc.1 verified survival undo refunds and
 full-inventory refund drops. The v1.0 RC also passed a smoke test for client
-launch and the core Connector flow after common config registration.
+launch and the core Connector flow after common config registration. v1.1.0
+has Gradle build coverage, but Minecraft manual regression testing is pending.
 
 ## Usage Example
 
