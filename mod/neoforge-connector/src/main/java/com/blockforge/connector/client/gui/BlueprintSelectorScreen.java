@@ -6,6 +6,7 @@ import com.blockforge.connector.network.payload.MaterialReportRequestPayload;
 import com.blockforge.connector.network.payload.MaterialRequirementSummary;
 import com.blockforge.connector.network.payload.RequestBlueprintListPayload;
 import com.blockforge.connector.network.payload.SelectBlueprintRequestPayload;
+import com.blockforge.connector.config.BlockForgeConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -189,7 +190,27 @@ public class BlueprintSelectorScreen extends Screen {
                 false
         );
         graphics.drawString(font, Component.translatable("screen.blockforge_connector.rotation"), x, y + 72 + 32, 0xFFE7F7FF, false);
-        renderMaterialReport(graphics, x, y + 132);
+        graphics.drawString(
+                font,
+                Component.literal("Material sources: "
+                        + (BlockForgeConfig.enableNearbyContainers()
+                        ? "Nearby containers enabled"
+                        : "Player inventory only")),
+                x,
+                y + 116,
+                0xFFC9D7E2,
+                false
+        );
+        graphics.drawString(
+                font,
+                Component.literal("Source priority=" + BlockForgeConfig.materialSourcePriority()
+                        + " | radius=" + BlockForgeConfig.nearbyContainerSearchRadius()),
+                x,
+                y + 128,
+                0xFFB6C7D4,
+                false
+        );
+        renderMaterialReport(graphics, x, y + 152);
     }
 
     private void renderMaterialReport(GuiGraphics graphics, int x, int y) {

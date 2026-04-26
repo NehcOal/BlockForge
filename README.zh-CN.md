@@ -2,24 +2,25 @@
 
 从文本提示生成 Minecraft 风格 voxel 方块建筑蓝图。
 
-BlockForge 是一个本地优先的 Minecraft 风格方块建筑蓝图生成器。当前 v1.3.1
+BlockForge 是一个本地优先的 Minecraft 风格方块建筑蓝图生成器。当前 v1.3.5
 包含 Web 蓝图生成、3D 预览、导出链路、NeoForge Connector 游戏内建造流程，以及
-Fabric / Forge Connector Alpha GUI Selector + Builder Wand + Ghost Preview + 生存材料成本 + Undo 材料返还闭环。
+Fabric / Forge Connector Alpha GUI Selector + Builder Wand + Ghost Preview + 生存材料成本 + Undo 材料返还 + 附近容器材料来源闭环。
 
 [English README](./README.md) | [使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v1.3.1 NeoForge 附近容器材料来源 Alpha
+## v1.3.5 附近容器材料来源多加载器 Alpha
 
-BlockForge v1.3.1-alpha.1 新增 NeoForge nearby container material sourcing
-参考实现。NeoForge common config 开启后，生存模式 build 可以同时使用玩家背包和附近
-已加载容器中的材料，undo 时会优先尝试把材料返还到原容器。Fabric 和 Forge 保持
-v1.2 Alpha parity 功能集；附近容器取材仍是 planned。
+BlockForge v1.3.5-alpha.1 为 NeoForge / Fabric / Forge 三端补齐 nearby
+container material sourcing Alpha。开启 nearby containers 后，生存模式 build 可以
+同时使用玩家背包和附近已加载容器中的材料，undo 时会优先尝试把材料返还到原来源。
+该功能默认关闭，不加载新区块，不跨维度，仍需 v1.3.5 完整集中实机回归测试。
+Forge 已完成一次按来源返还的专项 smoke test。
 
 预期发布 jar：
 
-- `blockforge-connector-neoforge-1.3.1-alpha.1.jar`
-- `blockforge-connector-fabric-1.3.1-alpha.1.jar`
-- `blockforge-connector-forge-1.3.1-alpha.1.jar`
+- `blockforge-connector-neoforge-1.3.5-alpha.1.jar`
+- `blockforge-connector-fabric-1.3.5-alpha.1.jar`
+- `blockforge-connector-forge-1.3.5-alpha.1.jar`
 
 ## Loader 功能矩阵
 
@@ -37,13 +38,14 @@ v1.2 Alpha parity 功能集；附近容器取材仍是 planned。
 | 生存模式材料成本 | ✅ | ✅ Alpha | ✅ Alpha |
 | Undo 材料返还 | ✅ | ✅ Alpha | ✅ Alpha |
 | BlockEntity NBT undo | ✅ best effort | ❌ | ❌ |
-| 附近箱子材料来源 | ✅ Alpha | planned | planned |
+| 附近箱子材料来源 | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 
 Fabric 和 Forge 的 GUI Selector、Builder Wand、Ghost Preview、生存材料成本与
 Undo 材料返还仍是 Alpha。Ghost Preview 只显示随旋转变化的包围盒和地面 footprint；
 Fabric / Forge 现在会扣除生存模式材料，并在 `/blockforge undo` 时恢复方块和返还材料，
-但仍不支持 BlockEntity NBT undo。NeoForge 附近箱子材料来源是 Alpha，默认关闭，只扫描
-已加载区块，并统一推迟到 v1.3.5 做 Minecraft 实机回归。
+但仍不支持 BlockEntity NBT undo。三端附近箱子材料来源均为 Alpha，默认关闭，只扫描
+已加载区块。NeoForge / Fabric 仍待 v1.3.5 实机回归；Forge 已通过专项测试：
+玩家身上的材料会返还到玩家背包，箱子里的材料会返还到原箱子。
 
 v1.3 设计说明见：[Material Sources](./docs/MATERIAL_SOURCES.md)。
 

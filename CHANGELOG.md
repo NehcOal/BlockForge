@@ -2,14 +2,16 @@
 
 All notable changes to BlockForge will be documented in this file.
 
-## [1.3.1] - Unreleased
+## [1.3.5] - Unreleased
 
 ### Added
 
-- Added NeoForge nearby container material sourcing Alpha.
-- Added NeoForge source scanner for loaded block entities with item handler
-  capability.
-- Added NeoForge `/blockforge sources scan` and `/blockforge sources selected`.
+- Added nearby container material sourcing Alpha for NeoForge, Fabric, and
+  Forge.
+- Added NeoForge / Fabric / Forge source scanners for loaded nearby containers.
+- Added Fabric and Forge source-aware material consumption and undo refund.
+- Added `/blockforge sources scan` and `/blockforge sources selected` on all
+  three loaders.
 - Added common material source data models for player inventory, nearby
   containers, and mixed sources.
 - Added `MaterialSourceConfig` with safe defaults for future nearby container
@@ -20,22 +22,27 @@ All notable changes to BlockForge will be documented in this file.
 
 ### Changed
 
-- Aligned Web, NeoForge, Fabric, and Forge versions to `1.3.1-alpha.1`.
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.3.5-alpha.1`.
 - Extended `ConsumedMaterialEntry` and `MaterialTransaction` with optional
   source metadata while keeping existing player-inventory constructors.
-- Updated NeoForge survival material flow to optionally combine player
-  inventory and nearby containers by configured source priority.
-- Updated NeoForge undo material refund to prefer original nearby containers,
-  then player inventory, then player-near drops.
+- Updated NeoForge, Fabric, and Forge survival material flow to optionally
+  combine player inventory and nearby containers by configured source priority.
+- Updated undo material refund to prefer original nearby containers, then
+  player inventory, then player-near drops where supported.
 - Updated the Loader Feature Matrix to mark nearby chest material sourcing as
-  NeoForge Alpha and Fabric / Forge planned.
+  Alpha on all three loaders.
 
 ### Notes
 
-- NeoForge nearby container sourcing is disabled by default.
-- Fabric and Forge nearby chest sourcing are still planned.
-- Manual Minecraft testing is deferred until the v1.3.5 multiloader regression
-  pass.
+- Nearby container sourcing is disabled by default on all loaders.
+- Fabric and Forge use runtime `/blockforge sources` settings for this Alpha;
+  config file support is planned.
+- Forge nearby container source-aware consumption and undo refund passed a
+  focused real-client smoke test on 2026-04-26: player-sourced materials
+  returned to the player inventory, and chest-sourced materials returned to the
+  original chest.
+- NeoForge and Fabric nearby container sourcing manual testing remains pending
+  for the v1.3.5 multiloader regression pass.
 
 ## [1.2.5] - Unreleased
 

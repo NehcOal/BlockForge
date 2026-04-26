@@ -6,18 +6,18 @@ BlockForge v1.3 starts the common-core design for nearby material sourcing. The
 goal is to let future loader adapters build with materials from the player
 inventory, nearby containers, or a mix of both.
 
-v1.3.0 added loader-neutral data models and planning types. v1.3.1 adds the
-NeoForge reference adapter that scans loaded nearby containers, consumes from
-their item capabilities, and refunds to original containers during undo when
-possible. Fabric and Forge adapters are still planned.
+v1.3.0 added loader-neutral data models and planning types. v1.3.1 added the
+NeoForge reference adapter. v1.3.5 extends the Alpha implementation to Fabric
+and Forge so all three loaders can scan loaded nearby containers, consume from
+container inventories, and refund to original sources during undo when possible.
 
 ## Why Material Sources
 
-The current Fabric and Forge Alpha material flow only checks and consumes the
+The v1.2 Fabric and Forge Alpha material flow only checked and consumed the
 player inventory. Larger blueprints usually need more materials than a player
 wants to carry directly. A material source abstraction gives all loaders the
-same vocabulary for reporting where materials can come from before each loader
-implements its own Minecraft API integration.
+same vocabulary for reporting where materials can come from while each loader
+uses its own Minecraft inventory API.
 
 ## Source Types
 
@@ -55,6 +55,7 @@ active source until a loader adapter explicitly enables nearby containers.
 - scan center position
 - radius
 - maximum containers
+- dimension id
 - priority
 
 `MaterialSourceScanResult` describes what the loader found:
@@ -64,9 +65,8 @@ active source until a loader adapter explicitly enables nearby containers.
 - found container count
 - warnings
 
-The plan and result do not touch Minecraft world APIs. NeoForge v1.3.1 adapts
-them to a real scanner; Fabric and Forge will each implement their own scanner
-later.
+The plan and result do not touch Minecraft world APIs. NeoForge, Fabric, and
+Forge each adapt them to loader-specific scanners in v1.3.5.
 
 ## Reports, Reservations, And Transactions
 
@@ -88,26 +88,46 @@ before.
 v1.3.x uses a batched testing strategy:
 
 - Small v1.3.x versions run Web and Gradle build validation only.
-- Manual Minecraft testing is deferred until the v1.3.5 multiloader regression
+- Manual Minecraft testing is batched into the v1.3.5 multiloader regression
   pass.
-- Do not mark nearby container sourcing as passed until real loader adapters and
-  in-game tests exist.
+- Mark a loader as passed only after that loader has been run in a real
+  Minecraft client.
 
 ## Current Status
 
 - `v1.3.0`: common core only.
 - `v1.3.1`: NeoForge nearby container sourcing reference implementation.
-- NeoForge adapter: Alpha, disabled by default.
-- Fabric adapter: planned.
-- Forge adapter: planned.
-- GUI material source display: planned.
+- `v1.3.5`: NeoForge / Fabric / Forge nearby container sourcing Alpha.
+- NeoForge adapter: Alpha, disabled by default, backed by common config.
+- Fabric adapter: Alpha, disabled by default, uses runtime `/blockforge sources`
+  settings for the current server session until config file support lands.
+- Forge adapter: Alpha, disabled by default, uses runtime `/blockforge sources`
+  settings for the current server session until config file support lands.
+- Forge manual status: focused source-aware consume/refund smoke test passed on
+  2026-04-26. Player-sourced materials returned to player inventory, and
+  chest-sourced materials returned to the original chest.
+- NeoForge / Fabric manual status: nearby container sourcing still pending for
+  the v1.3.5 multiloader regression.
+- GUI material source display: minimal hint only.
 
-## NeoForge v1.3.1 Adapter
+## Loader Adapters
 
 NeoForge uses its common config to keep nearby containers disabled by default.
 When enabled, it scans around the build origin with radius `8` by default and
 stops after `64` container sources. The scanner only checks loaded chunks in the
-current dimension and queries `IItemHandler` capability from block entities.
+current dimension and queries item handler capability from block entities.
+
+Fabric uses vanilla inventory access for nearby loaded block entities in this
+Alpha. It does not load chunks, does not scan across dimensions, and keeps
+nearby containers disabled by default. Use `/blockforge sources enable` plus
+optional `/blockforge sources priority ...` and `/blockforge sources radius ...`
+for the current server session until Fabric config file support is added.
+
+Forge uses item handler capability on loaded block entities. It does not assume
+all containers are chests, does not load chunks, and keeps nearby containers
+disabled by default. Use `/blockforge sources enable` plus optional
+`/blockforge sources priority ...` and `/blockforge sources radius ...` for the
+current server session until Forge config file support is added.
 
 The source priority controls reservation order:
 
@@ -117,16 +137,16 @@ The source priority controls reservation order:
 - `CONTAINER_ONLY`: ignore player inventory for material sourcing.
 
 Undo records source-aware material transactions. If
-`returnRefundsToOriginalSource=true`, NeoForge tries to insert refunded items
-back into the original nearby container; overflow falls back to player inventory
-and then drops near the player.
+`returnRefundsToOriginalSource=true`, adapters try to insert refunded items back
+into the original nearby container; overflow falls back to player inventory and
+then drops near the player.
 
 ## Safety Limits
 
 - Nearby containers are disabled by default.
 - Default search radius is `8`.
 - Default container scan cap is `64`.
-- Future adapters must not scan across dimensions.
-- Future adapters must not load unloaded chunks just to find materials.
-- Future adapters must not automatically take from protected containers; this
+- Adapters must not scan across dimensions.
+- Adapters must not load unloaded chunks just to find materials.
+- Adapters must not automatically take from protected containers; this
   must integrate with permissions/protection systems first.

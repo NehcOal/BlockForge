@@ -5,20 +5,21 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v1.3.1 NeoForge Nearby Material Source Alpha
+## v1.3.5 Nearby Material Source Multiloader Alpha
 
-BlockForge v1.3.1-alpha.1 adds the NeoForge reference implementation for
-nearby container material sourcing. When the NeoForge common config enables it,
-survival builds can combine player inventory materials with loaded nearby
-container inventories, then undo can refund materials back to the original
-container when possible. Fabric and Forge keep their v1.2 Alpha parity feature
-set; nearby container sourcing is still planned for those loaders.
+BlockForge v1.3.5-alpha.1 adds nearby container material sourcing across
+NeoForge, Fabric, and Forge as an Alpha regression candidate. When nearby
+containers are enabled, survival builds can combine player inventory materials
+with loaded nearby container inventories, then undo can refund materials back to
+the original source when possible. The feature is disabled by default, avoids
+loading new chunks, and still needs the full v1.3.5 manual Minecraft
+regression pass. Forge has passed a focused source-aware refund smoke test.
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-1.3.1-alpha.1.jar`
-- `blockforge-connector-fabric-1.3.1-alpha.1.jar`
-- `blockforge-connector-forge-1.3.1-alpha.1.jar`
+- `blockforge-connector-neoforge-1.3.5-alpha.1.jar`
+- `blockforge-connector-fabric-1.3.5-alpha.1.jar`
+- `blockforge-connector-forge-1.3.5-alpha.1.jar`
 
 ## Loader Feature Matrix
 
@@ -36,15 +37,17 @@ Expected release jars:
 | Survival material cost | ✅ | ✅ Alpha | ✅ Alpha |
 | Material refund undo | ✅ | ✅ Alpha | ✅ Alpha |
 | BlockEntity NBT undo | ✅ best effort | ❌ | ❌ |
-| Nearby chest material sourcing | ✅ Alpha | planned | planned |
+| Nearby chest material sourcing | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 
 Fabric and Forge GUI Selector, Builder Wand, Ghost Preview, Survival Material
 Cost, and Material Refund Undo support are Alpha. Ghost Preview only renders a
 rotation-aware bounding box and ground footprint. Fabric and Forge undo now
 restores blocks and refunds consumed survival materials, but still does not
-restore BlockEntity NBT. NeoForge nearby chest material sourcing is Alpha,
-disabled by default, scans only loaded chunks, and is scheduled for manual
-Minecraft regression in v1.3.5.
+restore BlockEntity NBT. Nearby chest material sourcing is Alpha on all three
+loaders, disabled by default, scans only loaded chunks, and is pending manual
+Minecraft regression for NeoForge and Fabric. Forge has passed a focused
+v1.3.5 smoke test where player-sourced materials returned to the player and
+chest-sourced materials returned to the original chest.
 
 See [Material Sources](./docs/MATERIAL_SOURCES.md) for the v1.3 design notes.
 

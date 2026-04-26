@@ -15,7 +15,7 @@ Web integration yet.
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector NeoForge`
-- Mod Version: `1.3.1-alpha.1`
+- Mod Version: `1.3.5-alpha.1`
 
 ## Multi-loader Architecture Status
 
@@ -33,11 +33,12 @@ Fabric Connector Alpha exists under `mod/fabric-connector`, and Forge
 Connector Alpha exists under `mod/forge-connector`. Both reuse common blueprint
 parsing, rotation, build planning, preview DTOs, and material source groundwork.
 They now include Builder Wand, GUI Selector, Ghost Preview, survival material
-cost, and material refund undo as Alpha features. They do not include
-BlockEntity NBT undo or active nearby chest material sourcing yet.
+cost, material refund undo, and nearby chest material sourcing as Alpha
+features. They do not include BlockEntity NBT undo yet.
 
-v1.3.1 adds NeoForge nearby container material sourcing Alpha. It is disabled
-by default in common config. When enabled, NeoForge scans loaded nearby
+v1.3.5 keeps NeoForge nearby container material sourcing Alpha and brings the
+same source model to Fabric / Forge. It is disabled by default in common
+config. When enabled, NeoForge scans loaded nearby
 containers through item handler capability, consumes materials by configured
 source priority, and tries to refund materials to their original containers on
 undo.
@@ -67,7 +68,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge-connector-neoforge-1.3.1-alpha.1.jar
+build/libs/blockforge-connector-neoforge-1.3.5-alpha.1.jar
 ```
 
 ## Blueprint Folder
@@ -346,8 +347,8 @@ Known limits:
   v1.3.5 manual Minecraft regression.
 - No special cost table for doors, fluids, torches, or multi-block placements.
 - No material icons in the GUI yet.
-- Fabric and Forge have Alpha parity for core builder flows, but nearby
-  container sourcing is not implemented there yet.
+- Fabric and Forge have Alpha parity for core builder flows and nearby
+  container sourcing, but still use simpler config surfaces.
 
 Manual Minecraft testing before v1.0.0-rc.1 verified survival undo refunds and
 full-inventory refund drops. The v1.0 RC also passed a smoke test for client

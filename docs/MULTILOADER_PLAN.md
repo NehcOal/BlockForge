@@ -89,8 +89,8 @@ be added after the three connector modules settle.
 - `v1.3.0`: Nearby Material Source common core.
 - `v1.3.1`: NeoForge nearby container material sourcing reference
   implementation.
-- `v1.3.5`: batched multiloader in-game regression for v1.3 material source
-  groundwork and adapter work.
+- `v1.3.5`: Fabric and Forge nearby container adapters plus batched
+  multiloader in-game regression for v1.3 material source work.
 - `v1.3.6+`: deeper material UX, GUI material summaries, and follow-up
   stabilization.
 
@@ -227,20 +227,19 @@ be added after the three connector modules settle.
   Alpha history stack.
 - Dedicated server smoke testing remains pending.
 
-## v1.3.1 Status
+## v1.3.5 Status
 
-- v1.3.1 adds the NeoForge nearby container material sourcing reference
-  implementation on top of the v1.3.0 common-core models.
+- v1.3.5 extends nearby container material sourcing to NeoForge, Fabric, and
+  Forge as a multiloader Alpha regression candidate.
 - `MaterialSourceConfig` keeps nearby containers disabled by default with radius
   `8` and max scanned containers `64`.
-- NeoForge scans only loaded chunks in the current dimension and queries block
-  entity `IItemHandler` capability instead of assuming specific container
-  classes.
-- NeoForge source reports merge player inventory and nearby containers using
+- NeoForge and Forge scan only loaded chunks in the current dimension and query
+  item handler capability instead of assuming specific container classes.
+- Fabric scans loaded vanilla inventories in the current dimension for this
+  Alpha.
+- Source reports merge player inventory and nearby containers using
   `PLAYER_FIRST`, `CONTAINER_FIRST`, `PLAYER_ONLY`, or `CONTAINER_ONLY`.
-- NeoForge material transactions now record source metadata for container
-  consumption so undo can prefer refunding to original containers.
-- Fabric and Forge nearby container adapters remain planned and are not
-  implemented in v1.3.1.
+- Material transactions now record source metadata for container consumption so
+  undo can prefer refunding to original containers.
 - Manual Minecraft testing is deferred until the v1.3.5 multiloader regression
   pass.

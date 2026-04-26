@@ -62,7 +62,7 @@ public class FabricBuilderWandItem extends Item {
             return ActionResult.FAIL;
         }
 
-        FabricMaterialBuildGate.BuildMaterialResult materialResult = MATERIALS.prepare(player, blueprint);
+        FabricMaterialBuildGate.BuildMaterialResult materialResult = MATERIALS.prepare(player, world, basePos, blueprint);
         if (!materialResult.allowed()) {
             player.sendMessage(Text.literal(materialResult.message()), false);
             sendMissingMaterials(player, materialResult);
@@ -156,7 +156,10 @@ public class FabricBuilderWandItem extends Item {
 
         player.sendMessage(Text.literal("Consumed "
                 + materialResult.consumedItems()
-                + " items. Use /blockforge undo to restore blocks and refund materials."), false);
+                + (materialResult.consumedFromNearbyContainers() > 0
+                ? " items (nearbyContainers=" + materialResult.consumedFromNearbyContainers() + ")"
+                : " items")
+                + ". Use /blockforge undo to restore blocks and refund materials."), false);
     }
 
     private static void sendMissingMaterials(

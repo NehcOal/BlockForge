@@ -4,12 +4,19 @@ import com.blockforge.common.blueprint.Blueprint;
 import com.blockforge.common.material.MaterialReport;
 import com.blockforge.common.material.MaterialRequirement;
 import com.blockforge.common.material.MaterialRefundResult;
+import com.blockforge.common.material.source.MaterialSourceItemEntry;
+import com.blockforge.common.material.source.MaterialSourcePriority;
+import com.blockforge.common.material.source.MaterialSourceReport;
+import com.blockforge.common.material.source.MaterialSourceScanResult;
+import com.blockforge.common.material.source.MaterialSourceType;
 import com.blockforge.common.rotation.BlueprintRotation;
 import com.blockforge.common.selection.PlayerSelection;
 import com.blockforge.fabric.blueprint.FabricBlueprintRegistry;
 import com.blockforge.fabric.blueprint.FabricExampleBlueprintInstaller;
 import com.blockforge.fabric.builder.FabricBlueprintPlacer;
 import com.blockforge.fabric.material.FabricMaterialBuildGate;
+import com.blockforge.fabric.material.source.FabricMaterialSourceScanner;
+import com.blockforge.fabric.material.source.FabricMaterialSourceSettings;
 import com.blockforge.fabric.network.FabricBlueprintGuiNetworking;
 import com.blockforge.fabric.player.FabricPlayerSelectionManager;
 import com.blockforge.fabric.registry.FabricModItems;
@@ -33,6 +40,7 @@ public final class FabricBlockForgeCommands {
     private static final FabricBlueprintPlacer PLACER = new FabricBlueprintPlacer();
     private static final FabricExampleBlueprintInstaller EXAMPLES = new FabricExampleBlueprintInstaller();
     private static final FabricMaterialBuildGate MATERIALS = new FabricMaterialBuildGate();
+    private static final FabricMaterialSourceScanner SOURCE_SCANNER = new FabricMaterialSourceScanner();
 
     private FabricBlockForgeCommands() {
     }
@@ -74,6 +82,27 @@ public final class FabricBlockForgeCommands {
                                 .executes(context -> materialsSelected(context, registry, selectionManager)))
                         .then(blueprintIdArgument(registry)
                                 .executes(context -> materials(context, registry))))
+                .then(CommandManager.literal("sources")
+                        .then(CommandManager.literal("status")
+                                .executes(FabricBlockForgeCommands::sourcesStatus))
+                        .then(CommandManager.literal("enable")
+                                .requires(source -> source.hasPermissionLevel(2))
+                                .executes(context -> setSourcesEnabled(context, true)))
+                        .then(CommandManager.literal("disable")
+                                .requires(source -> source.hasPermissionLevel(2))
+                                .executes(context -> setSourcesEnabled(context, false)))
+                        .then(CommandManager.literal("priority")
+                                .requires(source -> source.hasPermissionLevel(2))
+                                .then(sourcePriorityArgument()
+                                        .executes(FabricBlockForgeCommands::setSourcePriority)))
+                        .then(CommandManager.literal("radius")
+                                .requires(source -> source.hasPermissionLevel(2))
+                                .then(CommandManager.argument("radius", IntegerArgumentType.integer(1, 32))
+                                        .executes(FabricBlockForgeCommands::setSourceRadius)))
+                        .then(CommandManager.literal("scan")
+                                .executes(FabricBlockForgeCommands::sourcesScan))
+                        .then(CommandManager.literal("selected")
+                                .executes(context -> sourcesSelected(context, registry, selectionManager))))
                 .then(CommandManager.literal("info")
                         .then(blueprintIdArgument(registry)
                                 .executes(context -> info(context, registry))))
@@ -227,6 +256,16 @@ public final class FabricBlockForgeCommands {
                 .suggests((context, builder) -> CommandSource.suggestMatching(List.of("0", "90", "180", "270"), builder));
     }
 
+    private static RequiredArgumentBuilder<ServerCommandSource, String> sourcePriorityArgument() {
+        return CommandManager.argument("priority", StringArgumentType.word())
+                .suggests((context, builder) -> CommandSource.suggestMatching(List.of(
+                        "PLAYER_FIRST",
+                        "CONTAINER_FIRST",
+                        "PLAYER_ONLY",
+                        "CONTAINER_ONLY"
+                ), builder));
+    }
+
     private static int showFolder(
             CommandContext<ServerCommandSource> context,
             FabricBlueprintRegistry registry
@@ -359,6 +398,11 @@ public final class FabricBlockForgeCommands {
                 BlueprintRotation.NONE
         );
         sendDryRunResult(context.getSource(), blueprint, result);
+        sendSourceSettings(context.getSource());
+        ServerPlayerEntity player = getPlayerOrNull(context);
+        if (player != null) {
+            sendMaterialSourceReport(context.getSource(), MATERIALS.sourceReport(blueprint, player, context.getSource().getWorld(), basePos));
+        }
         return result.placedBlocks();
     }
 
@@ -376,7 +420,11 @@ public final class FabricBlockForgeCommands {
             return 0;
         }
 
-        sendMaterialReport(context.getSource(), MATERIALS.report(blueprint, player));
+        MaterialReport report = MATERIALS.report(blueprint, player);
+        sendMaterialReport(context.getSource(), report);
+        if (FabricMaterialSourceSettings.enableNearbyContainers()) {
+            sendMaterialSourceReport(context.getSource(), MATERIALS.sourceReport(blueprint, player, context.getSource().getWorld(), player.getBlockPos()));
+        }
         return 1;
     }
 
@@ -404,8 +452,103 @@ public final class FabricBlockForgeCommands {
             return 0;
         }
 
-        sendMaterialReport(context.getSource(), MATERIALS.report(blueprint, player));
+        MaterialReport report = MATERIALS.report(blueprint, player);
+        sendMaterialReport(context.getSource(), report);
+        if (FabricMaterialSourceSettings.enableNearbyContainers()) {
+            sendMaterialSourceReport(context.getSource(), MATERIALS.sourceReport(blueprint, player, context.getSource().getWorld(), player.getBlockPos()));
+        }
         return 1;
+    }
+
+    private static int sourcesStatus(CommandContext<ServerCommandSource> context) {
+        sendSourceSettings(context.getSource());
+        return 1;
+    }
+
+    private static int setSourcesEnabled(CommandContext<ServerCommandSource> context, boolean enabled) {
+        FabricMaterialSourceSettings.setEnableNearbyContainers(enabled);
+        sendSourceSettings(context.getSource());
+        return 1;
+    }
+
+    private static int setSourcePriority(CommandContext<ServerCommandSource> context) {
+        try {
+            MaterialSourcePriority priority = MaterialSourcePriority.valueOf(StringArgumentType.getString(context, "priority").toUpperCase());
+            FabricMaterialSourceSettings.setMaterialSourcePriority(priority);
+            sendSourceSettings(context.getSource());
+            return 1;
+        } catch (IllegalArgumentException error) {
+            context.getSource().sendError(Text.literal("Unsupported material source priority. Use PLAYER_FIRST, CONTAINER_FIRST, PLAYER_ONLY, or CONTAINER_ONLY."));
+            return 0;
+        }
+    }
+
+    private static int setSourceRadius(CommandContext<ServerCommandSource> context) {
+        FabricMaterialSourceSettings.setNearbyContainerSearchRadius(IntegerArgumentType.getInteger(context, "radius"));
+        sendSourceSettings(context.getSource());
+        return 1;
+    }
+
+    private static int sourcesScan(CommandContext<ServerCommandSource> context) {
+        ServerPlayerEntity player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        FabricMaterialSourceScanner.Scan scan = SOURCE_SCANNER.scan(
+                player,
+                context.getSource().getWorld(),
+                player.getBlockPos(),
+                FabricMaterialSourceSettings.config()
+        );
+        MaterialSourceScanResult result = scan.result();
+        context.getSource().sendFeedback(
+                () -> Text.literal("BlockForge Fabric material sources scan: enabled="
+                        + FabricMaterialSourceSettings.enableNearbyContainers()
+                        + " | radius="
+                        + FabricMaterialSourceSettings.nearbyContainerSearchRadius()
+                        + " | foundContainers="
+                        + result.foundContainers()
+                        + " | scannedBlocks="
+                        + result.scannedBlocks()),
+                false
+        );
+        result.sources()
+                .stream()
+                .limit(12)
+                .forEach(source -> context.getSource().sendFeedback(
+                        () -> Text.literal("- " + source.displayName() + " @ " + source.x() + "," + source.y() + "," + source.z()),
+                        false
+                ));
+        result.warnings().forEach(warning -> context.getSource().sendError(Text.literal("Warning: " + warning)));
+        return result.foundContainers();
+    }
+
+    private static int sourcesSelected(
+            CommandContext<ServerCommandSource> context,
+            FabricBlueprintRegistry registry,
+            FabricPlayerSelectionManager selectionManager
+    ) {
+        ServerPlayerEntity player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        PlayerSelection selection = selectionManager.get(player.getUuid()).orElse(null);
+        if (selection == null) {
+            context.getSource().sendError(Text.literal("No BlockForge Fabric blueprint selected. Use /blockforge select <id> first."));
+            return 0;
+        }
+
+        Blueprint blueprint = registry.get(selection.selectedBlueprintId()).orElse(null);
+        if (blueprint == null) {
+            context.getSource().sendError(Text.literal("Selected BlockForge Fabric blueprint no longer exists. Use /blockforge select <id> again."));
+            return 0;
+        }
+
+        MaterialSourceReport report = MATERIALS.sourceReport(blueprint, player, context.getSource().getWorld(), player.getBlockPos());
+        sendMaterialSourceReport(context.getSource(), report);
+        return report.totalRequiredItems();
     }
 
     private static int buildAtPlayer(
@@ -469,10 +612,13 @@ public final class FabricBlockForgeCommands {
             return 0;
         }
 
-        FabricMaterialBuildGate.BuildMaterialResult materialResult = MATERIALS.prepare(player, blueprint);
+        FabricMaterialBuildGate.BuildMaterialResult materialResult = MATERIALS.prepare(player, context.getSource().getWorld(), basePos, blueprint);
         if (!materialResult.allowed()) {
             context.getSource().sendError(Text.literal(materialResult.message()));
             sendMissingMaterials(context.getSource(), materialResult.report());
+            if (materialResult.sourceReport() != null) {
+                sendMaterialSourceReport(context.getSource(), materialResult.sourceReport());
+            }
             return 0;
         }
 
@@ -614,7 +760,10 @@ public final class FabricBlockForgeCommands {
         source.sendFeedback(
                 () -> Text.literal("Consumed "
                         + materialResult.consumedItems()
-                        + " items. Use /blockforge undo to restore blocks and refund materials."),
+                        + (materialResult.consumedFromNearbyContainers() > 0
+                        ? " items (nearbyContainers=" + materialResult.consumedFromNearbyContainers() + ")"
+                        : " items")
+                        + ". Use /blockforge undo to restore blocks and refund materials."),
                 true
         );
     }
@@ -634,6 +783,82 @@ public final class FabricBlockForgeCommands {
                 false
         );
         sendMissingMaterials(source, report);
+    }
+
+    private static void sendSourceSettings(ServerCommandSource source) {
+        source.sendFeedback(
+                () -> Text.literal("BlockForge Fabric material sources settings: enabled="
+                        + FabricMaterialSourceSettings.enableNearbyContainers()
+                        + " | priority="
+                        + FabricMaterialSourceSettings.materialSourcePriority()
+                        + " | radius="
+                        + FabricMaterialSourceSettings.nearbyContainerSearchRadius()
+                        + " | maxContainers="
+                        + FabricMaterialSourceSettings.nearbyContainerMaxScanned()
+                        + " | returnRefundsToOriginalSource="
+                        + FabricMaterialSourceSettings.returnRefundsToOriginalSource()
+                        + " | allowPartialFromContainers="
+                        + FabricMaterialSourceSettings.allowPartialFromContainers()),
+                false
+        );
+    }
+
+    private static void sendMaterialSourceReport(ServerCommandSource source, MaterialSourceReport report) {
+        source.sendFeedback(
+                () -> Text.literal("BlockForge Fabric material sources: "
+                        + report.blueprintId()
+                        + " | enabled="
+                        + FabricMaterialSourceSettings.enableNearbyContainers()
+                        + " | priority="
+                        + FabricMaterialSourceSettings.materialSourcePriority()
+                        + " | radius="
+                        + FabricMaterialSourceSettings.nearbyContainerSearchRadius()
+                        + " | requiredItems="
+                        + report.totalRequiredItems()
+                        + " | availableItems="
+                        + report.totalAvailableItems()
+                        + " | missingItems="
+                        + report.totalMissingItems()
+                        + " | enoughMaterials="
+                        + report.enoughMaterials()
+                        + " | playerReserved="
+                        + reservedFrom(report, MaterialSourceType.PLAYER_INVENTORY)
+                        + " | containerReserved="
+                        + reservedFrom(report, MaterialSourceType.NEARBY_CONTAINER)),
+                false
+        );
+
+        int shown = 0;
+        for (MaterialSourceItemEntry entry : report.entries()) {
+            if (shown >= 8) {
+                source.sendFeedback(() -> Text.literal("... more material source entries omitted."), false);
+                break;
+            }
+            if (entry.reserved() <= 0 && entry.available() <= 0) {
+                continue;
+            }
+            source.sendFeedback(
+                    () -> Text.literal("- "
+                            + entry.itemId()
+                            + " source="
+                            + (entry.source() == null ? "unknown" : entry.source().displayName())
+                            + " available="
+                            + entry.available()
+                            + ", reserved="
+                            + entry.reserved()),
+                    false
+            );
+            shown++;
+        }
+        report.warnings().forEach(warning -> source.sendError(Text.literal("Warning: " + warning)));
+    }
+
+    private static int reservedFrom(MaterialSourceReport report, MaterialSourceType type) {
+        return report.entries()
+                .stream()
+                .filter(entry -> entry.source() != null && entry.source().type() == type)
+                .mapToInt(MaterialSourceItemEntry::reserved)
+                .sum();
     }
 
     private static void sendMissingMaterials(ServerCommandSource source, MaterialReport report) {
@@ -711,6 +936,14 @@ public final class FabricBlockForgeCommands {
             return context.getSource().getPlayer();
         } catch (Exception error) {
             context.getSource().sendError(Text.literal("This command requires a player source."));
+            return null;
+        }
+    }
+
+    private static ServerPlayerEntity getPlayerOrNull(CommandContext<ServerCommandSource> context) {
+        try {
+            return context.getSource().getPlayer();
+        } catch (Exception error) {
             return null;
         }
     }

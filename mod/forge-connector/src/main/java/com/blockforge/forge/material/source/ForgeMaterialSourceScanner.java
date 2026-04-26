@@ -1,4 +1,4 @@
-package com.blockforge.connector.material.source;
+package com.blockforge.forge.material.source;
 
 import com.blockforge.common.material.source.MaterialSourceConfig;
 import com.blockforge.common.material.source.MaterialSourceRef;
@@ -8,13 +8,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.items.IItemHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NeoForgeMaterialSourceScanner {
+public class ForgeMaterialSourceScanner {
     public Scan scan(
             ServerPlayer player,
             ServerLevel level,
@@ -26,11 +26,11 @@ public class NeoForgeMaterialSourceScanner {
             return new Scan(new MaterialSourceScanResult(List.of(), 0, 0, List.of()), List.of());
         }
 
-        List<NeoForgeContainerMaterialSource> containers = new ArrayList<>();
         List<MaterialSourceRef> refs = new ArrayList<>();
+        List<ForgeContainerMaterialSource> containers = new ArrayList<>();
         List<String> warnings = new ArrayList<>();
-        int radius = resolvedConfig.searchRadius();
         int scannedBlocks = 0;
+        int radius = resolvedConfig.searchRadius();
 
         outer:
         for (int x = center.getX() - radius; x <= center.getX() + radius; x++) {
@@ -51,7 +51,7 @@ public class NeoForgeMaterialSourceScanner {
                         continue;
                     }
 
-                    IItemHandler handler = itemHandler(level, pos, blockEntity);
+                    IItemHandler handler = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
                     if (handler == null) {
                         continue;
                     }
@@ -66,7 +66,7 @@ public class NeoForgeMaterialSourceScanner {
                             pos.getZ()
                     );
                     refs.add(ref);
-                    containers.add(new NeoForgeContainerMaterialSource(level, pos, ref, handler));
+                    containers.add(new ForgeContainerMaterialSource(level, pos, ref, handler));
 
                     if (containers.size() >= resolvedConfig.maxContainersScanned()) {
                         warnings.add("Reached nearby container scan limit: " + resolvedConfig.maxContainersScanned());
@@ -76,14 +76,15 @@ public class NeoForgeMaterialSourceScanner {
             }
         }
 
-        return new Scan(
-                new MaterialSourceScanResult(refs, scannedBlocks, containers.size(), warnings),
-                containers
-        );
+        return new Scan(new MaterialSourceScanResult(refs, scannedBlocks, containers.size(), warnings), containers);
     }
 
-    public NeoForgeContainerMaterialSource sourceFor(ServerLevel level, MaterialSourceRef ref) {
+    public ForgeContainerMaterialSource sourceFor(ServerLevel level, MaterialSourceRef ref) {
         if (level == null || ref == null || ref.type() != MaterialSourceType.NEARBY_CONTAINER) {
+            return null;
+        }
+        String currentDimension = level.dimension().location().toString();
+        if (!ref.dimensionId().isBlank() && !ref.dimensionId().equals(currentDimension)) {
             return null;
         }
 
@@ -97,32 +98,19 @@ public class NeoForgeMaterialSourceScanner {
             return null;
         }
 
-        IItemHandler handler = itemHandler(level, pos, blockEntity);
+        IItemHandler handler = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
         if (handler == null) {
             return null;
         }
 
-        return new NeoForgeContainerMaterialSource(level, pos, ref, handler);
-    }
-
-    private IItemHandler itemHandler(ServerLevel level, BlockPos pos, BlockEntity blockEntity) {
-        return level.getCapability(
-                Capabilities.ItemHandler.BLOCK,
-                pos,
-                blockEntity.getBlockState(),
-                blockEntity,
-                null
-        );
+        return new ForgeContainerMaterialSource(level, pos, ref, handler);
     }
 
     private String sourceId(ServerLevel level, BlockPos pos) {
         return level.dimension().location() + ":" + pos.getX() + "," + pos.getY() + "," + pos.getZ();
     }
 
-    public record Scan(
-            MaterialSourceScanResult result,
-            List<NeoForgeContainerMaterialSource> containers
-    ) {
+    public record Scan(MaterialSourceScanResult result, List<ForgeContainerMaterialSource> containers) {
         public Scan {
             containers = containers == null ? List.of() : List.copyOf(containers);
         }

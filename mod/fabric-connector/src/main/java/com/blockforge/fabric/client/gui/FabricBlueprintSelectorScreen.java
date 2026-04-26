@@ -1,6 +1,7 @@
 package com.blockforge.fabric.client.gui;
 
 import com.blockforge.common.gui.BlueprintSummary;
+import com.blockforge.fabric.material.source.FabricMaterialSourceSettings;
 import com.blockforge.fabric.network.FabricBlueprintGuiNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
@@ -70,7 +71,7 @@ public class FabricBlueprintSelectorScreen extends Screen {
             row++;
         }
 
-        int rotationY = top + 96;
+        int rotationY = top + 116;
         for (int index = 0; index < ROTATIONS.length; index++) {
             int degrees = ROTATIONS[index];
             ButtonWidget button = ButtonWidget.builder(Text.literal(degrees + "\u00b0"), ignored -> {
@@ -86,13 +87,13 @@ public class FabricBlueprintSelectorScreen extends Screen {
         }
 
         ButtonWidget selectButton = ButtonWidget.builder(Text.translatable("screen.blockforge_connector.select"), ignored -> submitSelection())
-                .dimensions(detailsLeft, top + 132, 82, 20)
+                .dimensions(detailsLeft, top + 162, 82, 20)
                 .build();
         selectButton.active = FabricBlueprintClientCache.selectedBlueprint().isPresent();
         addDrawableChild(selectButton);
 
         addDrawableChild(ButtonWidget.builder(Text.translatable("screen.blockforge_connector.close"), ignored -> close())
-                .dimensions(detailsLeft + 90, top + 132, 82, 20)
+                .dimensions(detailsLeft + 90, top + 162, 82, 20)
                 .build());
     }
 
@@ -167,7 +168,13 @@ public class FabricBlueprintSelectorScreen extends Screen {
                 summary.hasBlockStates() ? 0xFF8EF0B4 : 0xFFB6C7D4,
                 false
         );
-        context.drawText(textRenderer, Text.translatable("screen.blockforge_connector.rotation"), x, y + 116, 0xFFE7F7FF, false);
+        context.drawText(textRenderer, Text.translatable("screen.blockforge_connector.rotation"), x, y + 104, 0xFFE7F7FF, false);
+        context.drawText(textRenderer, Text.literal("Material sources: "
+                + (FabricMaterialSourceSettings.enableNearbyContainers() ? "Nearby containers enabled" : "Player inventory only")), x, y + 140, 0xFFC9D7E2, false);
+        context.drawText(textRenderer, Text.literal("Source priority="
+                + FabricMaterialSourceSettings.materialSourcePriority()
+                + " | radius="
+                + FabricMaterialSourceSettings.nearbyContainerSearchRadius()), x, y + 152, 0xFF9AA8B5, false);
     }
 
     @Override

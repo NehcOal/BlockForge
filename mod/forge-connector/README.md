@@ -4,8 +4,9 @@ BlockForge Connector Forge is the Forge alpha for BlockForge
 Blueprint JSON placement. It proves the minimum Forge loop for loading,
 listing, dry-running, building, Builder Wand placement, and undoing blueprints
 with an Alpha GUI Selector, Ghost Preview outline, Survival Material Cost, and
-Material Refund Undo. v1.3.1 adds NeoForge nearby container sourcing, but this
-Forge connector does not scan or consume nearby containers yet.
+Material Refund Undo. v1.3.5 adds Forge nearby container sourcing Alpha,
+disabled by default. A focused v1.3.5 Forge client smoke test passed for
+source-aware material consumption and undo refund.
 
 ## Target
 
@@ -14,7 +15,7 @@ Forge connector does not scan or consume nearby containers yet.
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector Forge`
-- Mod Version: `1.3.1-alpha.1`
+- Mod Version: `1.3.5-alpha.1`
 
 ## Build
 
@@ -33,7 +34,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge-connector-forge-1.3.1-alpha.1.jar
+build/libs/blockforge-connector-forge-1.3.5-alpha.1.jar
 ```
 
 ## Blueprint Folder
@@ -91,6 +92,13 @@ Existing files are skipped and not overwritten.
 /blockforge gui
 /blockforge materials <id>
 /blockforge materials selected
+/blockforge sources status
+/blockforge sources enable
+/blockforge sources disable
+/blockforge sources priority <PLAYER_FIRST|CONTAINER_FIRST|PLAYER_ONLY|CONTAINER_ONLY>
+/blockforge sources radius <1-32>
+/blockforge sources scan
+/blockforge sources selected
 /blockforge info <id>
 /blockforge dryrun <id>
 /blockforge build <id>
@@ -102,7 +110,7 @@ Existing files are skipped and not overwritten.
 Permissions:
 
 - Permission level `2`: `build`, `reload`, `examples install`, `undo`, `wand`.
-- Regular players: `folder`, `list`, `info`, `dryrun`, `materials`, `examples list`, `select`, `selected`, `rotate`, `gui`.
+- Regular players: `folder`, `list`, `info`, `dryrun`, `materials`, `sources`, `examples list`, `select`, `selected`, `rotate`, `gui`.
 
 ## What Forge Alpha Supports
 
@@ -121,6 +129,11 @@ Permissions:
 - Consumes survival inventory items before command or Builder Wand placement.
 - Refunds consumed survival materials when `/blockforge undo` restores the placement.
 - Drops refund overflow near the player when the inventory is full.
+- Can scan loaded nearby item handler containers as Alpha material sources when
+  nearby containers are enabled.
+- Can consume from nearby containers and refund to the original source when
+  possible.
+- Can enable or tune nearby source behavior at runtime with `/blockforge sources`.
 - Bypasses material consumption in creative mode.
 - Places the selected blueprint with the Builder Wand by right-clicking a block.
 - Records per-player block-state snapshots in an in-memory undo history.
@@ -157,7 +170,10 @@ and Spectator mode builds are rejected by the Alpha material gate.
 - Failed or invalid selection requests clear the client preview and show the server error message.
 - Material refund undo is Alpha; inventory overflow is dropped near the player.
 - No GUI material summary yet; use `/blockforge materials <id>` or `/blockforge materials selected`.
-- No nearby chest material sourcing or recipe substitutions.
+- Nearby chest material sourcing is Alpha, disabled by default, and has no
+  config file yet; `/blockforge sources enable|disable|priority|radius` changes
+  runtime server settings for the current session only.
+- No recipe substitutions.
 - No BlockEntity NBT snapshot or restore.
 - No persistence for undo snapshots.
 - Undo history is capped at 20 snapshots per player.
@@ -165,12 +181,16 @@ and Spectator mode builds are rejected by the Alpha material gate.
 - If the default `B` key conflicts, change it in Minecraft Controls.
 - No protected block entity checks in the Alpha placer.
 - Command-loop manual Minecraft testing has passed for the Alpha command flow.
-- GUI Selector, Builder Wand, Ghost Preview, Survival Material Cost, and Material Refund Undo parity manual Minecraft testing is pending.
+- GUI Selector, Builder Wand, Ghost Preview, Survival Material Cost, and
+  Material Refund Undo have passed prior Forge Alpha smoke testing.
+- v1.3.5 nearby container sourcing focused smoke test passed: materials
+  consumed from the player inventory refund to the player inventory, and
+  materials consumed from a nearby chest refund to that chest.
 
 ## Difference From NeoForge And Fabric
 
-NeoForge remains the most complete Connector. It currently owns common config,
-material refund undo, and deeper material behavior.
+NeoForge remains the most complete Connector. It currently owns common config
+and deeper material behavior.
 
 Fabric and Forge Alpha are intentionally smaller and parallel in scope: they
 prove each loader can reuse `mod/common` for blueprint parsing, rotation, build

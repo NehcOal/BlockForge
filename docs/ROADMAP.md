@@ -11,8 +11,10 @@
 - Add Ghost Preview collision and replacement scans.
 - Add search/paging when the Blueprint Selector list grows.
 - Add GUI material summaries for Fabric and Forge.
-- Stabilize NeoForge nearby container material sourcing Alpha.
-- Add Fabric and Forge nearby container material sourcing adapters.
+- Stabilize nearby container material sourcing Alpha across NeoForge, Fabric,
+  and Forge.
+- Run the v1.3.5 multiloader nearby source regression in real Minecraft
+  clients.
 - Add special material cost rules for non-cube blocks.
 - Improve release artifact publishing beyond CI artifact upload.
 - Add Java-side parser tests when the Connector test setup is stable.
@@ -51,7 +53,8 @@
 - v1.2.5: Multiloader Parity Alpha regression and release-candidate documentation.
 - v1.3.0: Nearby Material Source common core.
 - v1.3.1: NeoForge nearby container material sourcing reference implementation.
-- v1.3.5: batched multiloader in-game regression for v1.3.
-- v1.3.6+: Fabric and Forge material UX refinement.
+- v1.3.5: Fabric / Forge nearby container adapters plus batched multiloader
+  in-game regression checklist for v1.3.
+- v1.3.6+: Material source UX refinement and config-file polish.
 
 See [Multi-loader Plan](./MULTILOADER_PLAN.md) for details.

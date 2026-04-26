@@ -2,14 +2,15 @@
 
 ## Scope
 
-This guide prepares the `1.3.1-alpha.1` multi-loader Alpha release. It does not
+This guide prepares the `1.3.5-alpha.1` multi-loader Alpha release. It does not
 publish automatically to GitHub, Modrinth, or CurseForge.
 
 NeoForge is the recommended full-experience Connector. Fabric and Forge are
 Alpha connectors with command builds, GUI Selector Alpha, Builder Wand Alpha
 placement, Ghost Preview Alpha outlines, Survival Material Cost Alpha, and
 Material Refund Undo Alpha. v1.3.1 adds NeoForge nearby container material
-sourcing Alpha. Fabric and Forge nearby chest sourcing remain planned.
+sourcing Alpha; v1.3.5 extends nearby container sourcing to Fabric and Forge
+as an Alpha regression candidate.
 
 ## Build Before Publishing
 
@@ -35,14 +36,14 @@ gradlew.bat build
 Expected jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.3.1-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.3.1-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.3.1-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.3.5-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.3.5-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.3.5-alpha.1.jar
 ```
 
 ## GitHub Alpha Release
 
-1. Create a GitHub release for `v1.3.1-alpha.1`.
+1. Create a GitHub release for `v1.3.5-alpha.1`.
 2. Use `docs/RELEASE_NOTES_TEMPLATE.md` as the release body starting point.
 3. Upload the three loader jars.
 4. Confirm every jar file name includes the loader name.
@@ -50,11 +51,11 @@ mod/forge-connector/build/libs/blockforge-connector-forge-1.3.1-alpha.1.jar
 6. Recommend NeoForge for the most complete experience.
 7. Label Fabric and Forge clearly as GUI Selector + Builder Wand + Ghost
    Preview + Survival Material Cost + Material Refund Undo Alpha.
-8. Mention that nearby chest material sourcing is NeoForge Alpha, disabled by
-   default, and Fabric / Forge planned.
-9. Do not claim Fabric or Forge BlockEntity NBT undo, active nearby chest
-   sourcing, collision-aware preview, full block preview support, or GUI
-   material summary.
+8. Mention that nearby chest material sourcing is Alpha on all loaders,
+   disabled by default, and pending v1.3.5 manual Minecraft regression.
+9. Do not claim Fabric or Forge BlockEntity NBT undo, collision-aware preview,
+   full block preview support, protected-container permission checks, or GUI
+   material source details.
 
 ## Modrinth Preparation
 
@@ -69,8 +70,8 @@ If publishing to Modrinth:
 - Mark Fabric API as required for the Fabric file.
 - Use clear file display names that include the loader and version.
 - State clearly that Fabric and Forge are Alpha parity connectors.
-- State clearly that nearby chest material sourcing is active only in NeoForge
-  Alpha and disabled by default.
+- State clearly that nearby chest material sourcing is Alpha on all three
+  loaders, disabled by default, and pending manual Minecraft regression.
 - NeoForge, Fabric, and Forge can be published as separate files under one
   project version if the metadata stays clear, or as separate version entries if
   that is easier to maintain.
@@ -101,10 +102,12 @@ Use this wording consistently:
 - NeoForge: recommended complete Connector.
 - Fabric Alpha: Connector for examples, reload, list, info, dryrun, build,
   GUI selection, rotation, Builder Wand placement, Ghost Preview outline,
-  survival material cost, block undo, and survival material refund undo.
+  survival material cost, block undo, survival material refund undo, and
+  nearby container material sourcing Alpha.
 - Forge Alpha: Connector for examples, reload, list, info, dryrun, build,
   GUI selection, rotation, Builder Wand placement, Ghost Preview outline,
-  survival material cost, block undo, and survival material refund undo.
+  survival material cost, block undo, survival material refund undo, and
+  nearby container material sourcing Alpha.
 
 ## CI Artifacts
 

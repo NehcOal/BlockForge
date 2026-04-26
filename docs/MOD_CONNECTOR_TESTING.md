@@ -23,67 +23,148 @@ build validation only:
 - Forge Gradle build
 
 Manual Minecraft testing is deferred until the v1.3.5 multiloader regression
-pass. Do not mark NeoForge nearby container sourcing as passed until the v1.3.5
-real in-game regression is run. Fabric and Forge nearby container sourcing
-remain planned.
+pass. Do not mark nearby container sourcing as passed on any loader until that
+loader has been run in a real Minecraft client.
 
-## v1.3.1 NeoForge Nearby Container Source Build Checklist
+## v1.3.5 Nearby Container Source Multiloader Regression Checklist
 
 Release version:
 
 ```text
-1.3.1-alpha.1
+1.3.5-alpha.1
 ```
 
 Expected release jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.3.1-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.3.1-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.3.1-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.3.5-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.3.5-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.3.5-alpha.1.jar
 ```
 
 Expected result:
 
 - Common material source DTOs compile in all three loader modules.
 - Existing player-inventory material transactions remain compatible.
-- NeoForge compiles with nearby container scanner, source report, source-aware
-  consumption, and source-aware undo refund.
-- Fabric and Forge compile with version/docs only; no nearby container adapter
-  is expected yet.
-- Manual Minecraft testing is deferred until v1.3.5.
+- NeoForge, Fabric, and Forge compile with nearby container scanner, source
+  report, source-aware consumption, and source-aware undo refund.
+- Manual Minecraft testing remains pending for loaders that have not yet been
+  run in real clients.
+- Forge nearby container source-aware consumption and undo refund passed a
+  focused real-client smoke test on 2026-04-26.
 
-### v1.3.5 Pending NeoForge Nearby Container Manual Test
+Current manual status:
+
+- NeoForge nearby container sourcing: pending.
+- Fabric nearby container sourcing: pending.
+- Forge nearby container sourcing: passed for source-aware consume and refund.
+
+Forge v1.3.5 focused smoke result:
+
+- Runtime nearby sourcing was enabled with `/blockforge sources enable`.
+- Materials consumed from the player inventory returned to the player
+  inventory after `/blockforge undo`.
+- Materials consumed from a nearby chest returned to that chest after
+  `/blockforge undo`.
+- Result summary: source-aware refund works for player and chest sources in
+  the Forge development client.
+
+Run this section separately for NeoForge, Fabric, and Forge.
+
+### Basic Setup
 
 ```mcfunction
 /blockforge examples install
 /blockforge reload
+/blockforge gui
 /blockforge select tiny_platform
+/blockforge wand
+```
+
+Expected result:
+
+- Examples install and reload correctly.
+- GUI opens and selection state syncs with `/blockforge selected`.
+- Builder Wand is available and uses the selected blueprint.
+
+### Player Inventory Material Source
+
+```mcfunction
 /gamemode survival
 /clear
+/give @s minecraft:stone_bricks 9
+/blockforge materials selected
+```
+
+Manual checks:
+
+1. Build `tiny_platform` with the Builder Wand.
+2. Confirm the build succeeds.
+3. Confirm player inventory materials are consumed.
+4. Run `/blockforge undo`.
+5. Confirm blocks are restored and materials are refunded.
+
+### Nearby Container Material Source
+
+```mcfunction
 /blockforge sources scan
 /blockforge sources selected
 ```
 
 Manual checks:
 
-1. Set `enableNearbyContainers=true` in the NeoForge common config.
+1. Enable nearby containers for the tested loader.
+   - NeoForge: set `enableNearbyContainers=true` in common config.
+   - Fabric / Forge: run `/blockforge sources enable` for the current server
+     session.
 2. Place a chest or barrel near the build position.
 3. Put the required `minecraft:stone_bricks` into the container.
-4. Run `/blockforge sources scan` and confirm the container is listed.
-5. Run `/blockforge sources selected` and confirm container availability is
+4. Clear the player inventory.
+5. Run `/blockforge sources scan` and confirm the container is listed.
+6. Run `/blockforge sources selected` and confirm container availability is
    counted.
-6. Build with Builder Wand.
-7. Confirm materials are consumed from the nearby container.
-8. Run `/blockforge undo`.
-9. Confirm blocks are restored and materials return to the original container
-   when possible, otherwise player inventory or player-near drops.
+7. Build with Builder Wand.
+8. Confirm materials are consumed from the nearby container.
+9. Run `/blockforge undo`.
+10. Confirm blocks are restored.
+11. Confirm materials return to the original container when possible,
+    otherwise to player inventory or player-near drops.
 
-Expected v1.3.1 documentation status:
+### Source Priority
 
-- Build validation only.
-- NeoForge nearby container manual testing pending until v1.3.5.
-- Fabric / Forge nearby container manual testing not applicable yet.
+Test each priority mode:
+
+```mcfunction
+/blockforge sources priority PLAYER_FIRST
+/blockforge sources priority CONTAINER_FIRST
+/blockforge sources priority PLAYER_ONLY
+/blockforge sources priority CONTAINER_ONLY
+```
+
+Expected result:
+
+- `PLAYER_FIRST` consumes player inventory first, then nearby containers.
+- `CONTAINER_FIRST` consumes nearby containers first, then player inventory.
+- `PLAYER_ONLY` ignores nearby containers.
+- `CONTAINER_ONLY` ignores player inventory.
+
+### Nearby Container Edge Cases
+
+Manual checks:
+
+1. Container has insufficient materials: build is rejected and missing items are
+   reported.
+2. Containers exceed `maxContainersScanned`: scan reports the limit warning.
+3. Container is outside radius: it is not counted.
+4. Inventory is full during refund: overflow items drop near the player.
+5. Original container is broken before undo: refund falls back to player
+   inventory or drops.
+
+Expected v1.3.5 documentation status:
+
+- Build validation complete.
+- NeoForge / Fabric / Forge nearby container manual testing pending.
+- Do not mark v1.3.5 as in-game passed until the full regression above is run.
 
 ## v1.2.5 Multiloader Regression Test
 
