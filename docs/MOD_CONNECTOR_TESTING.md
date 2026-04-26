@@ -4,11 +4,309 @@ This checklist prepares the NeoForge Connector for real Minecraft validation.
 Passing `gradlew build` confirms compilation only; it does not replace in-game
 testing.
 
+Fabric and Forge Alpha are also covered here as separate checklists. NeoForge
+remains the full-featured Connector; Fabric and Forge now include GUI Selector
+and Builder Wand Alpha support but still intentionally do not cover Ghost
+Preview, survival material cost, material refunds, or BlockEntity NBT undo.
+
+## v1.2.1 Fabric / Forge GUI Selector Alpha Checklist
+
+Release version:
+
+```text
+1.2.1-alpha.1
+```
+
+Expected release jars:
+
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.1-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.1-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.2.1-alpha.1.jar
+```
+
+Recommended Fabric and Forge GUI test flow:
+
+```mcfunction
+/blockforge examples install
+/blockforge reload
+/blockforge list
+/blockforge gui
+/blockforge selected
+/blockforge wand
+```
+
+Also test the default `B` key from a player client.
+
+Expected result:
+
+- `/blockforge gui` opens the Blueprint Selector on Fabric and Forge clients.
+- Pressing `B` opens the same selector unless the key is rebound or conflicts.
+- The GUI requests a server blueprint list on open.
+- The left list shows loaded blueprint name/id/size/block count/schema version.
+- The right panel shows details and rotation buttons for `0°`, `90°`, `180°`, and `270°`.
+- Clicking Select sends a server-validated selection request.
+- `/blockforge selected` matches the GUI-selected blueprint and rotation.
+- Builder Wand placement uses the GUI-selected blueprint and rotation.
+- `/blockforge undo` restores the latest GUI-selected wand placement.
+- If no blueprints are loaded, the GUI shows the examples install/reload hint.
+- Fabric / Forge GUI manual Minecraft testing is pending.
+
+## v1.2.0 Fabric / Forge Builder Wand Alpha Checklist
+
+Release version:
+
+```text
+1.2.0-alpha.1
+```
+
+Expected release jars:
+
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.2.0-alpha.1.jar
+```
+
+Recommended Fabric and Forge wand test flow:
+
+```mcfunction
+/blockforge examples install
+/blockforge reload
+/blockforge list
+/blockforge select tiny_platform
+/blockforge selected
+/blockforge rotate 90
+/blockforge wand
+```
+
+Then hold the Builder Wand, right-click a block, and run:
+
+```mcfunction
+/blockforge undo
+```
+
+Expected result:
+
+- `/blockforge wand` gives `blockforge_connector:builder_wand`.
+- Right-click placement uses the selected blueprint and rotation.
+- Placement happens at the clicked block plus clicked side.
+- Output includes the same placed/skipped statistics as command builds.
+- `/blockforge undo` restores the latest wand placement.
+- Repeated right-clicks within 2 seconds are blocked by the wand cooldown.
+- Command builds are not throttled by the wand cooldown.
+- Fabric / Forge Builder Wand manual Minecraft testing is pending.
+
+## v1.1.3 Multi-loader Alpha Checklist
+
+Release version:
+
+```text
+1.1.3-alpha.1
+```
+
+Expected release jars:
+
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.1.3-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.1.3-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.1.3-alpha.1.jar
+```
+
+Required build checks:
+
+```powershell
+pnpm lint
+pnpm test
+pnpm build
+cd mod/neoforge-connector
+gradlew.bat build
+cd ..\fabric-connector
+gradlew.bat build
+cd ..\forge-connector
+gradlew.bat build
+```
+
+Manual testing status for v1.1.3:
+
+- NeoForge remains the recommended full-experience Connector.
+- Fabric Alpha command-loop testing passed in v1.1.1.
+- Forge Alpha command-loop testing passed in v1.1.2.
+- v1.1.3 is a stabilization and packaging pass; it does not add new gameplay
+  features to Fabric or Forge.
+
 ## 1. Environment Requirements
 
 - Minecraft Java Edition `1.21.1`
 - NeoForge `21.1.227`
 - Java `21`
+
+Fabric Alpha requirements:
+
+- Minecraft Java Edition `1.21.1`
+- Fabric Loader `0.19.2`
+- Fabric API `0.116.11+1.21.1`
+- Java `21`
+
+Forge Alpha requirements:
+
+- Minecraft Java Edition `1.21.1`
+- Forge `52.1.14`
+- Java `21`
+
+## Fabric Alpha Build And Smoke Checklist
+
+From `mod/fabric-connector`:
+
+```bash
+./gradlew build
+```
+
+On Windows:
+
+```powershell
+gradlew.bat build
+```
+
+The jar is generated in:
+
+```text
+mod/fabric-connector/build/libs/
+```
+
+Recommended first Fabric in-game test:
+
+```mcfunction
+/blockforge folder
+/blockforge examples list
+/blockforge examples install
+/blockforge reload
+/blockforge list
+/blockforge info tiny_platform
+/blockforge dryrun tiny_platform
+/blockforge build tiny_platform
+/blockforge undo
+```
+
+Also test coordinate and rotation builds:
+
+```mcfunction
+/blockforge build tiny_platform 0 80 0
+/blockforge build state_test_house rotate 90
+```
+
+Expected Fabric Alpha result:
+
+- Commands register under `/blockforge`.
+- Example blueprints install without overwriting existing files.
+- Reload reads `*.blueprint.json` and `*.json` from `.minecraft/config/blockforge/blueprints/`.
+- `dryrun` reports schema version, size, block count, palette count, build plan validity, and skipped counts.
+- `build` places valid blocks and skips invalid/out-of-world entries.
+- `undo` restores the latest Fabric build for the current player.
+
+Known Fabric command-loop Alpha limits:
+
+- GUI exists as of v1.2.1 Alpha; this command-loop checklist does not cover it.
+- No Ghost Preview.
+- No survival material cost or inventory mutation.
+- No material refund.
+- No BlockEntity NBT snapshot or restore.
+- Undo is in-memory and only stores the latest Fabric build per player.
+
+Fabric v1.1.1 manual Minecraft test status: passed for the command-loop Alpha.
+
+Verified Fabric commands and behaviors:
+
+- `/blockforge examples install`
+- `/blockforge reload`
+- `/blockforge list`
+- `/blockforge dryrun tiny_platform`
+- `/blockforge build tiny_platform`
+- `/blockforge undo`
+- `/blockforge build state_test_house rotate 90`
+- `/blockforge undo`
+- Invalid blueprint id handling does not crash.
+
+## Forge Alpha Build And Smoke Checklist
+
+From `mod/forge-connector`:
+
+```bash
+./gradlew build
+```
+
+On Windows:
+
+```powershell
+gradlew.bat build
+```
+
+The jar is generated in:
+
+```text
+mod/forge-connector/build/libs/
+```
+
+Recommended first Forge in-game test:
+
+```mcfunction
+/blockforge folder
+/blockforge examples list
+/blockforge examples install
+/blockforge reload
+/blockforge list
+/blockforge info tiny_platform
+/blockforge dryrun tiny_platform
+/blockforge build tiny_platform
+/blockforge undo
+```
+
+Also test coordinate and rotation builds:
+
+```mcfunction
+/blockforge build tiny_platform 0 80 0
+/blockforge build state_test_house rotate 90
+```
+
+Expected Forge Alpha result:
+
+- Commands register under `/blockforge`.
+- Example blueprints install without overwriting existing files.
+- Reload reads `*.blueprint.json` and `*.json` from `.minecraft/config/blockforge/blueprints/`.
+- `dryrun` reports schema version, size, block count, palette count, build plan validity, and skipped counts.
+- `build` places valid blocks and skips invalid/out-of-world entries.
+- `undo` restores the latest Forge build for the current player.
+
+Known Forge command-loop Alpha limits:
+
+- GUI exists as of v1.2.1 Alpha; this command-loop checklist does not cover it.
+- No Ghost Preview.
+- No survival material cost or inventory mutation.
+- No material refund.
+- No BlockEntity NBT snapshot or restore.
+- Undo is in-memory and only stores the latest Forge build per player.
+
+Forge v1.1.2 manual Minecraft test status: passed for the command-loop Alpha.
+
+Verified Forge commands and behaviors:
+
+- `/blockforge examples install`
+- `/blockforge reload`
+- `/blockforge list`
+- `/blockforge dryrun tiny_platform`
+- `/blockforge build tiny_platform`
+- `/blockforge undo`
+- `/blockforge build state_test_house rotate 90`
+- `/blockforge undo`
+- Invalid blueprint id handling does not crash.
+
+Observed Forge undo issue and fix:
+
+- Initial `state_test_house` undo restored the block count but allowed attached
+  door and torch states to drop items during rollback.
+- Forge undo now restores snapshot block states with drop suppression.
+- Forge Alpha still does not refund materials; that remains a NeoForge full
+  Connector feature.
 
 ## 2. Build The Mod
 
@@ -37,7 +335,7 @@ Copy the generated jar into the test instance `mods` folder.
 Example:
 
 ```text
-.minecraft/mods/blockforge_connector-0.4.1.jar
+.minecraft/mods/blockforge-connector-neoforge-1.2.1-alpha.1.jar
 ```
 
 ## 4. Install Example Blueprints

@@ -5,6 +5,103 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
+## v1.2.1 Fabric / Forge GUI Selector Parity
+
+BlockForge v1.2.1-alpha.1 adds Fabric and Forge GUI Selector Alpha parity.
+NeoForge is still the most complete connector for now. Fabric and Forge now
+support selecting a blueprint and rotation from `/blockforge gui` or the
+default `B` key, then building with the Builder Wand.
+
+Expected release jars:
+
+- `blockforge-connector-neoforge-1.2.1-alpha.1.jar`
+- `blockforge-connector-fabric-1.2.1-alpha.1.jar`
+- `blockforge-connector-forge-1.2.1-alpha.1.jar`
+
+## Loader Feature Matrix
+
+| Feature | NeoForge | Fabric Alpha | Forge Alpha |
+|---|---|---|---|
+| Blueprint v1/v2 loading | yes | yes | yes |
+| Examples install | yes | yes | yes |
+| Reload/list/info/dryrun | yes | yes | yes |
+| Build command | yes | yes | yes |
+| Rotation | yes | yes | yes |
+| Undo blocks | yes | yes | yes |
+| GUI Selector | yes | yes, Alpha | yes, Alpha |
+| Builder Wand | yes | yes, Alpha | yes, Alpha |
+| Ghost Preview | yes | no | no |
+| Survival material cost | yes | no | no |
+| Material refund undo | yes | no | no |
+| BlockEntity NBT undo | yes, best effort | no | no |
+
+Fabric and Forge GUI Selector and Builder Wand support are Alpha. The GUI only
+selects a blueprint and rotation; Fabric and Forge still intentionally do not
+include Ghost Preview, survival material cost, material refund undo, or
+BlockEntity NBT undo.
+
+Fabric / Forge GUI + Builder Wand Alpha flow:
+
+```mcfunction
+/blockforge examples install
+/blockforge reload
+/blockforge list
+/blockforge gui
+/blockforge wand
+```
+
+You can also press the default `B` key to open the selector. Choose a blueprint
+and rotation, click Select, hold the Builder Wand, right-click a block, then run
+`/blockforge undo` to restore the placed blocks.
+
+## v1.1.1 Fabric Connector Alpha
+
+BlockForge v1.1.1 adds `mod/fabric-connector`, a Fabric 1.21.1 command-only
+Connector Alpha. It can install example blueprints, reload and list Blueprint
+JSON files, dry-run a build plan, place blueprints in the world, and undo the
+latest Fabric build per player.
+
+Fabric Alpha reuses `mod/common` for blueprint parsing, rotation, and build
+planning data. As of v1.2.1, Fabric includes GUI Selector and Builder Wand
+Alpha placement. It still does not include Ghost Preview, survival material costs, inventory
+consumption, material refunds, or BlockEntity NBT undo yet. NeoForge remains
+the most complete and stable Connector target.
+
+See [Fabric Connector README](./mod/fabric-connector/README.md) for commands,
+installation notes, and current limitations.
+
+## v1.1.2 Forge Connector Alpha
+
+BlockForge v1.1.2 adds `mod/forge-connector`, a Forge 1.21.1 command-only
+Connector Alpha. It matches the Fabric Alpha command loop: install examples,
+reload and list Blueprint JSON files, dry-run a build plan, place blueprints in
+the world, and undo the latest Forge build per player.
+
+Forge Alpha reuses `mod/common` for blueprint parsing, rotation, and build
+planning data. As of v1.2.1, Forge includes GUI Selector and Builder Wand
+Alpha placement. It still does not include Ghost Preview, survival material costs, inventory
+consumption, material refunds, or BlockEntity NBT undo yet. NeoForge remains
+the most complete and stable Connector target.
+
+See [Forge Connector README](./mod/forge-connector/README.md) for commands,
+installation notes, and current limitations.
+
+## v1.1.0 Multi-loader Architecture
+
+BlockForge v1.1.0 starts the multi-loader architecture work. NeoForge 1.21.1
+remains the current stable Connector target, while Fabric 1.21.1 and Forge
+1.21.1 support are planned for later alpha releases.
+
+This release adds `mod/common`, a loader-neutral Java core for blueprint
+parsing, rotation, build planning, material data, undo records, platform
+adapter interfaces, and utility types. The NeoForge Connector now reuses this
+common core where it is safe to do so, while command registration, item
+registration, GUI, networking, Ghost Preview rendering, config registration,
+world placement, and inventory access remain NeoForge-specific.
+
+See [Multi-loader Plan](./docs/MULTILOADER_PLAN.md) for the architecture plan
+and version roadmap.
+
 ## v1.0.1 Bug Fixes
 
 - Fixed survival material over-consumption when a build only places part of a blueprint because some target blocks are protected, non-replaceable, out of world, or otherwise skipped.
@@ -32,6 +129,8 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 - Creative-mode material bypass
 - NeoForge common config for Connector safety and material settings
 - CI jobs for Web and NeoForge Connector builds
+- CI job for Fabric Connector Alpha builds
+- CI job for Forge Connector Alpha builds
 - Connector example blueprints and manual testing guide
 - Minecraft `.mcfunction` export
 - Minecraft Java 1.21.1 Data Pack ZIP export
@@ -145,6 +244,73 @@ Then it places blueprints in-game with:
 
 See [BlockForge Connector README](./mod/neoforge-connector/README.md) for setup
 and command details.
+
+## Fabric Connector Alpha
+
+The repository also includes a Fabric 1.21.1 alpha at
+`mod/fabric-connector`.
+
+Build it with:
+
+```powershell
+cd mod/fabric-connector
+gradlew.bat build
+```
+
+The Fabric jar is generated in:
+
+```text
+mod/fabric-connector/build/libs/
+```
+
+Fast command loop:
+
+```mcfunction
+/blockforge examples install
+/blockforge reload
+/blockforge list
+/blockforge dryrun tiny_platform
+/blockforge build tiny_platform
+/blockforge undo
+```
+
+Fabric manual command-loop testing passed for example installation, reload,
+list, dryrun, build, undo, rotated `state_test_house`, and invalid blueprint id
+handling.
+
+## Forge Connector Alpha
+
+The repository also includes a Forge 1.21.1 alpha at
+`mod/forge-connector`.
+
+Build it with:
+
+```powershell
+cd mod/forge-connector
+gradlew.bat build
+```
+
+The Forge jar is generated in:
+
+```text
+mod/forge-connector/build/libs/
+```
+
+Fast command loop:
+
+```mcfunction
+/blockforge examples install
+/blockforge reload
+/blockforge list
+/blockforge dryrun tiny_platform
+/blockforge build tiny_platform
+/blockforge undo
+```
+
+Forge manual command-loop testing passed for example installation, reload, list,
+dryrun, build, undo, rotated `state_test_house`, and invalid blueprint id
+handling. A Forge undo edge case that dropped doors/torches during rollback was
+fixed by suppressing drops during snapshot restoration.
 
 For real Minecraft testing, start with:
 
@@ -272,7 +438,10 @@ src/
 ├─ test/                Vitest test files
 └─ types/               Shared TypeScript types
 mod/
-└─ neoforge-connector/  NeoForge 1.21.1 Mod Connector MVP
+├─ common/              Loader-neutral Java core for future multi-loader support
+├─ fabric-connector/    Fabric 1.21.1 Connector Alpha
+├─ forge-connector/     Forge 1.21.1 Connector Alpha
+└─ neoforge-connector/  NeoForge 1.21.1 Mod Connector
 examples/
 └─ blueprints/          Blueprint v1 files for Connector testing
 ```
@@ -287,6 +456,7 @@ examples/
 - Add special material cost rules for doors, fluids, torches, and multi-block placements.
 - Improve release artifact publishing.
 - Blueprint v1/v2 schema validation tooling.
+- Fabric and Forge Connector parity work after command Alpha validation.
 - `.schem` export.
 - Block texture rendering.
 - InstancedMesh performance optimization for larger voxel models.

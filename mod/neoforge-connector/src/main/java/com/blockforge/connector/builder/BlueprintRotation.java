@@ -3,60 +3,51 @@ package com.blockforge.connector.builder;
 import com.blockforge.connector.blueprint.Blueprint;
 import com.blockforge.connector.blueprint.BlueprintBlock;
 
-import java.util.List;
-
 public enum BlueprintRotation {
-    NONE(0),
-    CLOCKWISE_90(90),
-    CLOCKWISE_180(180),
-    COUNTERCLOCKWISE_90(270);
+    NONE(com.blockforge.common.rotation.BlueprintRotation.NONE),
+    CLOCKWISE_90(com.blockforge.common.rotation.BlueprintRotation.CLOCKWISE_90),
+    CLOCKWISE_180(com.blockforge.common.rotation.BlueprintRotation.CLOCKWISE_180),
+    COUNTERCLOCKWISE_90(com.blockforge.common.rotation.BlueprintRotation.COUNTERCLOCKWISE_90);
 
-    private static final List<String> HORIZONTAL_FACING = List.of("north", "east", "south", "west");
+    private final com.blockforge.common.rotation.BlueprintRotation commonRotation;
 
-    private final int degrees;
-
-    BlueprintRotation(int degrees) {
-        this.degrees = degrees;
+    BlueprintRotation(com.blockforge.common.rotation.BlueprintRotation commonRotation) {
+        this.commonRotation = commonRotation;
     }
 
     public int degrees() {
-        return degrees;
+        return commonRotation.degrees();
+    }
+
+    public com.blockforge.common.rotation.BlueprintRotation toCommon() {
+        return commonRotation;
     }
 
     public static BlueprintRotation fromDegrees(String value) {
-        return switch (value) {
-            case "0" -> NONE;
-            case "90" -> CLOCKWISE_90;
-            case "180" -> CLOCKWISE_180;
-            case "270" -> COUNTERCLOCKWISE_90;
-            default -> throw new IllegalArgumentException("Unsupported rotation: " + value);
+        return switch (com.blockforge.common.rotation.BlueprintRotation.fromDegrees(value)) {
+            case NONE -> NONE;
+            case CLOCKWISE_90 -> CLOCKWISE_90;
+            case CLOCKWISE_180 -> CLOCKWISE_180;
+            case COUNTERCLOCKWISE_90 -> COUNTERCLOCKWISE_90;
         };
     }
 
     public RotatedPosition rotate(BlueprintBlock block, Blueprint.BlueprintSize size) {
-        return switch (this) {
-            case NONE -> new RotatedPosition(block.getX(), block.getZ());
-            case CLOCKWISE_90 -> new RotatedPosition(size.depth() - 1 - block.getZ(), block.getX());
-            case CLOCKWISE_180 -> new RotatedPosition(size.width() - 1 - block.getX(), size.depth() - 1 - block.getZ());
-            case COUNTERCLOCKWISE_90 -> new RotatedPosition(block.getZ(), size.width() - 1 - block.getX());
-        };
+        com.blockforge.common.rotation.BlueprintRotation.RotatedPosition rotated =
+                commonRotation.rotate(
+                        block,
+                        new com.blockforge.common.blueprint.BlueprintSize(
+                                size.width(),
+                                size.height(),
+                                size.depth()
+                        )
+                );
+
+        return new RotatedPosition(rotated.x(), rotated.z());
     }
 
     public String rotateFacing(String facing) {
-        int currentIndex = HORIZONTAL_FACING.indexOf(facing);
-
-        if (currentIndex < 0) {
-            return facing;
-        }
-
-        int steps = switch (this) {
-            case NONE -> 0;
-            case CLOCKWISE_90 -> 1;
-            case CLOCKWISE_180 -> 2;
-            case COUNTERCLOCKWISE_90 -> 3;
-        };
-
-        return HORIZONTAL_FACING.get((currentIndex + steps) % HORIZONTAL_FACING.size());
+        return commonRotation.rotateFacing(facing);
     }
 
     public record RotatedPosition(int x, int z) {

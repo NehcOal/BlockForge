@@ -2,6 +2,10 @@
 
 ## Near Term
 
+- Stabilize the v1.2.1 Fabric / Forge GUI Selector and Builder Wand Alpha.
+- Keep NeoForge 1.21.1 as the recommended complete Connector target.
+- Keep Fabric and Forge 1.21.1 as Alpha connectors until preview and material parity work starts.
+- Validate Fabric and Forge GUI Selector and Builder Wand placement in real Minecraft instances.
 - Stabilize BlockForge Blueprint v1 as the Web and Mod shared protocol.
 - Add schema validation tooling for exported blueprint files.
 - Add Ghost Preview collision and replacement scans.
@@ -29,3 +33,15 @@
 - Improve block visual materials.
 - Add optional Minecraft-like textures.
 - Use `InstancedMesh` when model size grows beyond the current preset scale.
+
+## Multi-loader Plan
+
+- v1.1.0: common core for blueprint, rotation, material data, build planning, undo records, and platform adapter interfaces.
+- v1.1.1: Fabric Connector command Alpha.
+- v1.1.2: Forge Connector command Alpha.
+- v1.1.3: multi-loader Alpha stabilization, feature matrix, CI artifact naming, and release packaging.
+- v1.2.0: Fabric and Forge Builder Wand Alpha parity.
+- v1.2.1: Fabric and Forge GUI Selector Alpha parity.
+- v1.2.2+: Fabric and Forge parity planning after GUI and wand Alpha feedback.
+
+See [Multi-loader Plan](./MULTILOADER_PLAN.md) for details.

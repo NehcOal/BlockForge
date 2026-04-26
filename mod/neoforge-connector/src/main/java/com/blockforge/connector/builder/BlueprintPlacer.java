@@ -1,5 +1,8 @@
 package com.blockforge.connector.builder;
 
+import com.blockforge.common.build.BuildPlan;
+import com.blockforge.common.build.PlannedBlock;
+import com.blockforge.common.util.BlockPosition;
 import com.blockforge.connector.blueprint.Blueprint;
 import com.blockforge.connector.blueprint.BlueprintBlock;
 import com.blockforge.connector.blueprint.BlueprintPaletteEntry;
@@ -83,6 +86,7 @@ public class BlueprintPlacer {
         int invalidProperties = 0;
         List<BlockSnapshotEntry> snapshotEntries = new ArrayList<>();
         List<BlueprintBlock> acceptedBlocks = new ArrayList<>();
+        List<PlannedBlock> plannedBlocks = new ArrayList<>();
 
         for (BlueprintBlock blueprintBlock : blueprint.getBlocks()) {
             String stateKey = blueprintBlock.getState();
@@ -147,10 +151,23 @@ public class BlueprintPlacer {
             }
 
             acceptedBlocks.add(blueprintBlock);
+            plannedBlocks.add(new PlannedBlock(
+                    new BlockPosition(target.getX(), target.getY(), target.getZ()),
+                    paletteEntry.name(),
+                    stateKey,
+                    paletteEntry.properties()
+            ));
             placed++;
         }
 
         PlacementSnapshot snapshot = createSnapshot(level, player, blueprint, placed, snapshotEntries);
+        BuildPlan buildPlan = new BuildPlan(
+                blueprint.getId(),
+                new BlockPosition(basePos.getX(), basePos.getY(), basePos.getZ()),
+                rotation.toCommon(),
+                plannedBlocks,
+                blueprint.getBlockCount()
+        );
 
         return new PlacementResult(
                 false,
@@ -166,7 +183,8 @@ public class BlueprintPlacer {
                 appliedProperties,
                 maxBlocks,
                 snapshot,
-                acceptedBlocks
+                acceptedBlocks,
+                buildPlan
         );
     }
 
@@ -252,18 +270,19 @@ public class BlueprintPlacer {
             int appliedProperties,
             int maxBlocks,
             PlacementSnapshot snapshot,
-            List<BlueprintBlock> acceptedBlocks
+            List<BlueprintBlock> acceptedBlocks,
+            BuildPlan buildPlan
     ) {
         public PlacementResult {
             acceptedBlocks = acceptedBlocks == null ? List.of() : List.copyOf(acceptedBlocks);
         }
 
         public static PlacementResult tooLarge(int totalBlocks, int maxBlocks) {
-            return new PlacementResult(true, false, totalBlocks, 0, 0, 0, 0, 0, 0, 0, 0, maxBlocks, null, List.of());
+            return new PlacementResult(true, false, totalBlocks, 0, 0, 0, 0, 0, 0, 0, 0, maxBlocks, null, List.of(), null);
         }
 
         public static PlacementResult empty(int maxBlocks) {
-            return new PlacementResult(false, true, 0, 0, 0, 0, 0, 0, 0, 0, 0, maxBlocks, null, List.of());
+            return new PlacementResult(false, true, 0, 0, 0, 0, 0, 0, 0, 0, 0, maxBlocks, null, List.of(), null);
         }
 
         public PlacementResult withSnapshot(PlacementSnapshot updatedSnapshot) {
@@ -281,7 +300,8 @@ public class BlueprintPlacer {
                     appliedProperties,
                     maxBlocks,
                     updatedSnapshot,
-                    acceptedBlocks
+                    acceptedBlocks,
+                    buildPlan
             );
         }
     }

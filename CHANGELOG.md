@@ -2,6 +2,151 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [1.2.1] - Unreleased
+
+### Added
+
+- Added common GUI DTOs for blueprint list summaries and server-validated selection requests.
+- Added Fabric Blueprint Selector GUI Alpha, opened with `/blockforge gui` or the default `B` key.
+- Added Forge Blueprint Selector GUI Alpha, opened with `/blockforge gui` or the default `B` key.
+- Added Fabric and Forge GUI networking payloads for blueprint list sync, selection requests, and selection results.
+- Added English and Chinese GUI/keybinding translations for Fabric and Forge.
+
+### Changed
+
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.2.1-alpha.1`.
+- Updated Fabric and Forge `/blockforge selected` to clear stale selections after blueprint reload removes the selected id.
+- Updated the Loader Feature Matrix to mark Fabric and Forge GUI Selector support as Alpha.
+- Updated Fabric and Forge docs with the GUI + Builder Wand Alpha flow.
+
+### Notes
+
+- Fabric and Forge GUI Selector only chooses blueprint id and rotation; it does not add Ghost Preview, survival material cost, material refund undo, thumbnails, editor workflows, or Web sync.
+- Fabric / Forge GUI manual Minecraft testing is pending.
+- Fabric / Forge Builder Wand manual Minecraft testing from v1.2.0 is still pending unless tested in game.
+
+## [1.2.0] - Unreleased
+
+### Added
+
+- Added common player selection data models for loader-neutral blueprint id, rotation, and wand cooldown state.
+- Added Fabric Builder Wand Alpha item registration, item model, and English/Chinese translations.
+- Added Forge Builder Wand Alpha item registration, item model, and English/Chinese translations.
+- Added Fabric commands for `/blockforge select`, `/blockforge selected`, `/blockforge rotate`, and `/blockforge wand`.
+- Added Forge commands for `/blockforge select`, `/blockforge selected`, `/blockforge rotate`, and `/blockforge wand`.
+- Added in-memory Fabric and Forge player selection managers with a 2 second Builder Wand cooldown.
+
+### Changed
+
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.2.0-alpha.1`.
+- Fabric and Forge Builder Wand placement reuses the existing loader-specific placer and undo snapshot flow.
+- Updated the Loader Feature Matrix to mark Fabric and Forge Builder Wand support as Alpha.
+- Updated Fabric and Forge docs with the Builder Wand Alpha flow.
+
+### Notes
+
+- Fabric and Forge still do not include GUI, Ghost Preview, survival material cost, material refund undo, or BlockEntity NBT undo.
+- Command builds are not throttled by the Builder Wand cooldown.
+- Fabric / Forge Builder Wand manual Minecraft testing is pending.
+
+## [1.1.3] - Unreleased
+
+### Added
+
+- Added a loader feature matrix to the English and Chinese READMEs.
+- Added `docs/RELEASE_NOTES_TEMPLATE.md` for GitHub alpha releases.
+- Added `docs/PUBLISHING.md` with multi-loader GitHub, Modrinth, and CurseForge publishing guidance.
+
+### Changed
+
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.1.3-alpha.1`.
+- Standardized release jar names:
+  - `blockforge-connector-neoforge-1.1.3-alpha.1.jar`
+  - `blockforge-connector-fabric-1.1.3-alpha.1.jar`
+  - `blockforge-connector-forge-1.1.3-alpha.1.jar`
+- Updated CI to build Web, NeoForge, Fabric, and Forge without silently skipping existing loader modules.
+- Updated CI artifact names to `blockforge-neoforge-jar`, `blockforge-fabric-jar`, and `blockforge-forge-jar`.
+- Updated install, testing, roadmap, and multi-loader docs to clarify that NeoForge is the most complete Connector while Fabric and Forge remain command-only Alpha connectors.
+
+### Notes
+
+- v1.1.3 does not add GUI, Ghost Preview, Builder Wand, material costs, or material refunds to Fabric or Forge.
+- Fabric and Forge command-loop manual Minecraft testing passed before this stabilization pass.
+- NeoForge remains the recommended full-experience Connector for the Alpha release.
+
+## [1.1.2] - Unreleased
+
+### Added
+
+- Added `mod/forge-connector`, a Forge 1.21.1 command-only Connector Alpha.
+- Added Forge commands for `folder`, `examples list`, `examples install`, `reload`, `list`, `info`, `dryrun`, `build`, rotated build, coordinate build, and `undo`.
+- Added Forge example blueprint resources for `tiny_platform`, `small_test_house`, `state_test_house`, and `medieval_tower`.
+- Added Forge placement and per-player latest-build undo snapshots.
+- Added a Forge CI job that runs only when `mod/forge-connector` exists and uploads Forge jars.
+- Added `mod/forge-connector/README.md`.
+
+### Changed
+
+- Forge Connector reuses `mod/common` through an additional Java source root for blueprint parsing, rotation, and `BuildPlan` data.
+- Forge and Fabric Alpha undo restoration now suppresses drops during block-state rollback so attached blocks such as doors and torches do not drop as items during undo.
+- Updated Web/package metadata toward `1.1.2-alpha.1`.
+- Updated multi-loader docs to mark Forge as command-only Alpha while NeoForge remains the complete Connector.
+
+### Notes
+
+- Forge Alpha does not include GUI, Ghost Preview, Builder Wand, survival materials, inventory consumption, material refunds, or BlockEntity NBT undo.
+- Fabric Alpha command-loop manual testing passed before this Forge branch.
+- Manual Minecraft Forge command-loop testing passed for example install, reload, list, dryrun, build, rotated `state_test_house`, undo, and invalid blueprint id handling.
+- Initial Forge undo testing exposed attached-block item drops for doors/torches; the Alpha undo path now suppresses drops during restoration.
+
+## [1.1.1] - Unreleased
+
+### Added
+
+- Added `mod/fabric-connector`, a Fabric 1.21.1 command-only Connector Alpha.
+- Added Fabric commands for `folder`, `examples list`, `examples install`, `reload`, `list`, `info`, `dryrun`, `build`, rotated build, coordinate build, and `undo`.
+- Added Fabric example blueprint resources for `tiny_platform`, `small_test_house`, `state_test_house`, and `medieval_tower`.
+- Added Fabric placement and per-player latest-build undo snapshots.
+- Added a Fabric CI job that runs only when `mod/fabric-connector` exists and uploads Fabric jars.
+- Added `mod/fabric-connector/README.md`.
+
+### Changed
+
+- Fabric Connector reuses `mod/common` through an additional Java source root for blueprint parsing, rotation, and `BuildPlan` data.
+- Updated Web/package metadata toward `1.1.1-alpha.1`.
+- Updated multi-loader docs to mark Fabric as command-only Alpha while NeoForge remains the complete Connector.
+
+### Notes
+
+- Fabric Alpha does not include GUI, Ghost Preview, Builder Wand, survival materials, inventory consumption, material refunds, or BlockEntity NBT undo.
+- NeoForge remains the stable and most complete in-game target.
+- Manual Minecraft Fabric command-loop testing passed for example install, reload, list, dryrun, build, rotated `state_test_house`, undo, and invalid blueprint id handling.
+
+## [1.1.0] - Unreleased
+
+### Added
+
+- Added `mod/common` as the first multi-loader common core for future Fabric and Forge connectors.
+- Added loader-neutral blueprint, rotation, build planning, material, undo, platform, and utility packages under `com.blockforge.common`.
+- Added `BuildPlan` and `PlannedBlock` data structures for describing planned placements without touching a Minecraft world.
+- Added `docs/MULTILOADER_PLAN.md` with the v1.1 multi-loader architecture plan.
+
+### Changed
+
+- NeoForge Connector now compiles `mod/common/src/main/java` as a shared Java source root.
+- NeoForge blueprint parsing delegates to the common parser while preserving the existing NeoForge-facing model classes.
+- NeoForge rotation logic delegates to the common rotation enum.
+- NeoForge material counting delegates to the common material counter while registry and inventory access remain NeoForge-specific.
+- NeoForge placement preflight now exposes a common `BuildPlan` alongside the existing placement result.
+- Updated Web and Connector versions to `1.1.0`.
+
+### Notes
+
+- NeoForge 1.21.1 remains the only stable in-game target in v1.1.0.
+- Fabric and Forge connectors are planned but not implemented in this release.
+- Fabric / Forge CI jobs are intentionally not enabled until their modules exist.
+- Manual Minecraft regression testing is pending.
+
 ## [1.0.1] - Unreleased
 
 ### Fixed

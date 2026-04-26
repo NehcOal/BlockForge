@@ -1,0 +1,79 @@
+package com.blockforge.fabric.client.gui;
+
+import com.blockforge.common.gui.BlueprintListView;
+import com.blockforge.common.gui.BlueprintSummary;
+
+import java.util.List;
+import java.util.Optional;
+
+public final class FabricBlueprintClientCache {
+    private static List<BlueprintSummary> blueprints = List.of();
+    private static String selectedBlueprintId = "";
+    private static int rotationDegrees;
+    private static boolean loading;
+    private static String message = "";
+
+    private FabricBlueprintClientCache() {
+    }
+
+    public static void beginLoading() {
+        loading = true;
+        message = "";
+    }
+
+    public static void apply(BlueprintListView view) {
+        blueprints = view.blueprints();
+        selectedBlueprintId = view.selectedBlueprintId();
+        rotationDegrees = view.rotationDegrees();
+        loading = false;
+
+        if (selectedBlueprintId.isBlank() && !blueprints.isEmpty()) {
+            selectedBlueprintId = blueprints.getFirst().id();
+        }
+    }
+
+    public static List<BlueprintSummary> blueprints() {
+        return blueprints;
+    }
+
+    public static boolean loading() {
+        return loading;
+    }
+
+    public static String message() {
+        return message;
+    }
+
+    public static void setMessage(String newMessage) {
+        loading = false;
+        message = newMessage == null ? "" : newMessage;
+    }
+
+    public static String selectedBlueprintId() {
+        return selectedBlueprintId;
+    }
+
+    public static int rotationDegrees() {
+        return rotationDegrees;
+    }
+
+    public static void selectLocally(String blueprintId) {
+        selectedBlueprintId = blueprintId == null ? "" : blueprintId;
+    }
+
+    public static void setRotationDegrees(int degrees) {
+        rotationDegrees = degrees;
+    }
+
+    public static void setSelected(String blueprintId, int degrees) {
+        selectedBlueprintId = blueprintId == null ? "" : blueprintId;
+        rotationDegrees = degrees;
+        loading = false;
+    }
+
+    public static Optional<BlueprintSummary> selectedBlueprint() {
+        return blueprints.stream()
+                .filter(summary -> summary.id().equals(selectedBlueprintId))
+                .findFirst();
+    }
+}

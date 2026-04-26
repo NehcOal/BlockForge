@@ -25,12 +25,18 @@ sourceSets.main.resources {
     exclude("src/generated/**/.cache") // datagen cache files
 }
 
+sourceSets.main.java {
+    // v1.1.0 multi-loader preparation: keep common as a plain Java source root
+    // so the existing NeoForge build remains stable before Fabric/Forge modules exist.
+    srcDir('../common/src/main/java')
+}
+
 repositories {
     // Add here additional repositories if required by some of the dependencies below.
 }
 
 base {
-    archivesName = mod_id
+    archivesName = 'blockforge-connector-neoforge'
 }
 
 // Mojang ships Java 21 to end users in 1.21.1, so mods should target Java 21.
