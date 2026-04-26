@@ -10,6 +10,177 @@ Builder Wand, Ghost Preview, Survival Material Cost, and Material Refund Undo
 Alpha support. Fabric and Forge still intentionally do not cover BlockEntity
 NBT undo.
 
+## v1.2.5 Multiloader Regression Test
+
+Release version:
+
+```text
+1.2.5-alpha.1
+```
+
+Expected release jars:
+
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.5-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.5-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.2.5-alpha.1.jar
+```
+
+Run this checklist separately for NeoForge, Fabric, and Forge. NeoForge is the
+recommended complete connector. Fabric and Forge are Alpha parity connectors.
+
+### Basic Commands
+
+```mcfunction
+/blockforge folder
+/blockforge examples list
+/blockforge examples install
+/blockforge reload
+/blockforge list
+/blockforge info tiny_platform
+/blockforge dryrun tiny_platform
+/blockforge info not_exist
+/blockforge build not_exist
+```
+
+Expected result:
+
+- Built-in examples install without overwriting existing files.
+- Reload loads `tiny_platform`, `small_test_house`, `state_test_house`, and
+  `medieval_tower`.
+- `info` and `dryrun` print blueprint metadata and skipped/warning counts.
+- Invalid blueprint ids are rejected without crashing.
+
+### GUI Selector
+
+```mcfunction
+/blockforge gui
+```
+
+Also press the default `B` key.
+
+Manual checks:
+
+1. Open the GUI with the command.
+2. Open the GUI with the `B` key.
+3. Select `tiny_platform`.
+4. Select rotation `90`.
+5. Click Select.
+6. Run `/blockforge selected`.
+
+Expected result:
+
+- The GUI opens on the client.
+- The selected blueprint and rotation are server-validated.
+- `/blockforge selected` matches the GUI selection.
+
+### Builder Wand
+
+```mcfunction
+/blockforge wand
+```
+
+Hold the Builder Wand, right-click a block, then run:
+
+```mcfunction
+/blockforge undo
+```
+
+Expected result:
+
+- The wand places `tiny_platform` at clicked block plus clicked side.
+- Placement output includes placed/skipped counts.
+- Undo restores the placed blocks.
+
+### Ghost Preview
+
+Manual checks:
+
+1. Hold the Builder Wand and look at a block.
+2. Confirm the preview outline appears.
+3. Run `/blockforge rotate 180`.
+4. Confirm the preview updates.
+5. Run `/blockforge select state_test_house`.
+6. Confirm the preview dimensions update.
+
+Expected result:
+
+- The preview is visible only while holding the Builder Wand with a valid
+  selection.
+- Preview base position matches Builder Wand placement.
+- Fabric and Forge render a bounding box and footprint only.
+
+### Survival Material Cost
+
+```mcfunction
+/gamemode survival
+/clear
+/blockforge materials selected
+```
+
+Expected result:
+
+- Materials are reported as missing.
+- Builder Wand build is rejected.
+
+Then run:
+
+```mcfunction
+/give @s minecraft:stone_bricks 9
+/blockforge materials selected
+```
+
+Expected result:
+
+- Materials are reported as enough for `tiny_platform`.
+- Builder Wand build succeeds.
+- Required materials are consumed.
+
+### Undo Material Refund
+
+```mcfunction
+/blockforge undo
+```
+
+Expected result:
+
+- Blocks are restored.
+- Survival materials are refunded.
+- If the inventory is full, overflow refund items drop near the player.
+- Creative builds report that no materials were consumed.
+
+### Repeated Undo History
+
+```mcfunction
+/blockforge select tiny_platform
+/blockforge wand
+```
+
+Build `tiny_platform` twice in different locations, then run:
+
+```mcfunction
+/blockforge undo
+/blockforge undo
+```
+
+Expected result:
+
+- NeoForge, Fabric, and Forge should undo both placements in reverse order.
+- Fabric and Forge currently keep an in-memory 20-entry per-player Alpha undo
+  history stack.
+- Undo history is not persisted across disconnects or server restarts.
+
+### Known Issue Status
+
+- Forge Ghost Preview skewed/slanted line-box rendering: fixed in v1.2.3 by
+  rendering the line box camera-relative like Fabric.
+- Fabric / Forge single-snapshot undo limitation: fixed in v1.2.3; both now
+  keep a 20-entry per-player undo history.
+- Fabric / Forge Material Refund Undo: implemented in v1.2.4; manual Minecraft
+  regression is pending for this v1.2.5 batch.
+- Dedicated server smoke test: pending. Do not mark dedicated server support as
+  passed until tested.
+
 ## v1.2.4 Fabric / Forge Material Refund Undo Alpha Checklist
 
 Release version:
@@ -524,7 +695,7 @@ Copy the generated jar into the test instance `mods` folder.
 Example:
 
 ```text
-.minecraft/mods/blockforge-connector-neoforge-1.2.4-alpha.1.jar
+.minecraft/mods/blockforge-connector-neoforge-1.2.5-alpha.1.jar
 ```
 
 ## 4. Install Example Blueprints

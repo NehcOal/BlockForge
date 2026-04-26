@@ -1,9 +1,9 @@
-# BlockForge Release Notes Template
+# BlockForge v1.2.5-alpha.1 - Multiloader Parity Alpha
 
 ## Release Type
 
-- Version: `1.2.4-alpha.1`
-- Type: Fabric / Forge GUI Selector + Builder Wand + Ghost Preview + Survival Material Cost + Material Refund Undo Alpha parity
+- Version: `1.2.5-alpha.1`
+- Type: Multiloader Parity Alpha release candidate
 - Stability: Alpha for Fabric and Forge, recommended full experience on NeoForge
 
 ## Supported Minecraft Version
@@ -19,26 +19,27 @@
 
 ## Download Files
 
-- `blockforge-connector-neoforge-1.2.4-alpha.1.jar`
-- `blockforge-connector-fabric-1.2.4-alpha.1.jar`
-- `blockforge-connector-forge-1.2.4-alpha.1.jar`
+- `blockforge-connector-neoforge-1.2.5-alpha.1.jar`
+- `blockforge-connector-fabric-1.2.5-alpha.1.jar`
+- `blockforge-connector-forge-1.2.5-alpha.1.jar`
 
 ## Feature Matrix
 
-| Feature | NeoForge | Fabric Alpha | Forge Alpha |
+| Feature | NeoForge | Fabric | Forge |
 |---|---|---|---|
-| Blueprint v1/v2 loading | yes | yes | yes |
-| Examples install | yes | yes | yes |
-| Reload/list/info/dryrun | yes | yes | yes |
-| Build command | yes | yes | yes |
-| Rotation | yes | yes | yes |
-| Undo blocks | yes | yes | yes |
-| GUI Selector | yes | yes, Alpha | yes, Alpha |
-| Builder Wand | yes | yes, Alpha | yes, Alpha |
-| Ghost Preview | yes | yes, Alpha | yes, Alpha |
-| Survival material cost | yes | yes, Alpha | yes, Alpha |
-| Material refund undo | yes | yes, Alpha | yes, Alpha |
-| BlockEntity NBT undo | yes, best effort | no | no |
+| Blueprint v1/v2 loading | ✅ | ✅ Alpha | ✅ Alpha |
+| Examples install | ✅ | ✅ Alpha | ✅ Alpha |
+| Reload/list/info/dryrun | ✅ | ✅ Alpha | ✅ Alpha |
+| Build command | ✅ | ✅ Alpha | ✅ Alpha |
+| Rotation | ✅ | ✅ Alpha | ✅ Alpha |
+| Undo blocks | ✅ | ✅ Alpha | ✅ Alpha |
+| Builder Wand | ✅ | ✅ Alpha | ✅ Alpha |
+| GUI Selector | ✅ | ✅ Alpha | ✅ Alpha |
+| Ghost Preview | ✅ | ✅ Alpha | ✅ Alpha |
+| Survival material cost | ✅ | ✅ Alpha | ✅ Alpha |
+| Material refund undo | ✅ | ✅ Alpha | ✅ Alpha |
+| BlockEntity NBT undo | ✅ best effort | ❌ | ❌ |
+| Nearby chest sourcing | ❌ | ❌ | ❌ |
 
 NeoForge is the most complete connector for now. Fabric and Forge include GUI
 Selector, Builder Wand, Ghost Preview, Survival Material Cost, and Material
@@ -58,7 +59,7 @@ Manual Minecraft status:
 - NeoForge: full Connector flows previously verified.
 - Fabric: command-loop Alpha verified; GUI, Builder Wand, Ghost Preview, survival material cost, and material refund undo manual testing pending.
 - Forge: command-loop Alpha verified; GUI, Builder Wand, Ghost Preview, survival material cost, and material refund undo manual testing pending.
-- v1.2.3: Survival Material Cost Alpha build validation passed.
+- v1.2.5 batched multiloader regression: pending.
 
 ## Known Limitations
 
@@ -72,6 +73,7 @@ Manual Minecraft status:
 - Fabric and Forge Builder Wand support is Alpha and has a 2 second per-player cooldown.
 - Fabric and Forge undo snapshots are in-memory and capped at 20 snapshots per player.
 - Fabric and Forge do not persist undo history across disconnects or restarts.
+- Dedicated server smoke testing is pending for this release candidate.
 - No automatic publishing to Modrinth or CurseForge is performed by this release
   template.
 

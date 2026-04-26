@@ -2,6 +2,28 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [1.2.5] - Unreleased
+
+### Changed
+
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.2.5-alpha.1`.
+- Refreshed the English and Chinese Loader Feature Matrix for multiloader
+  parity release-candidate documentation.
+- Added a v1.2.5 multiloader regression checklist covering NeoForge, Fabric,
+  and Forge command, GUI, Builder Wand, Ghost Preview, survival material, refund
+  undo, and repeated undo history flows.
+- Updated publishing and release notes documentation for the
+  `v1.2.5-alpha.1` multiloader parity Alpha release.
+
+### Notes
+
+- This release candidate does not add new gameplay features.
+- Forge Ghost Preview skewed line-box rendering is documented as fixed.
+- Fabric and Forge undo history is documented as a 20-entry per-player Alpha
+  history stack.
+- Fabric / Forge material refund undo remains pending for the planned batched
+  in-game regression pass.
+
 ## [1.2.4] - Unreleased
 
 ### Added

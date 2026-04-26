@@ -84,7 +84,9 @@ be added after the three connector modules settle.
 - `v1.2.2`: Fabric and Forge Ghost Preview Alpha parity.
 - `v1.2.3`: Fabric and Forge Survival Material Cost Alpha parity.
 - `v1.2.4`: Fabric and Forge Material Refund Undo Alpha parity.
-- `v1.2.5+`: deeper material UX, GUI material summaries, and follow-up
+- `v1.2.5`: Multiloader Parity Alpha regression and release-candidate
+  documentation.
+- `v1.2.6+`: deeper material UX, GUI material summaries, and follow-up
   stabilization.
 
 ## Current Risks
@@ -201,3 +203,20 @@ be added after the three connector modules settle.
 - Fabric and Forge still do not include nearby chest sourcing, recipe
   substitutions, GUI material icons, or BlockEntity NBT undo.
 - Fabric / Forge Material Refund Undo manual Minecraft testing is pending.
+
+## v1.2.5 Status
+
+- v1.2.5 is a release-candidate documentation and regression preparation pass;
+  it does not add new gameplay features.
+- NeoForge remains the recommended complete connector.
+- Fabric and Forge are documented as Alpha parity connectors across command
+  builds, GUI Selector, Builder Wand, Ghost Preview, survival material cost, and
+  material refund undo.
+- The Loader Feature Matrix now includes nearby chest sourcing as unsupported
+  across all loaders.
+- The v1.2.5 regression checklist batches Fabric / Forge v1.2.0 through v1.2.4
+  manual testing into one multiloader pass.
+- Forge Ghost Preview skewed line-box rendering is documented as fixed.
+- Fabric and Forge undo history is documented as a 20-entry per-player in-memory
+  Alpha history stack.
+- Dedicated server smoke testing remains pending.

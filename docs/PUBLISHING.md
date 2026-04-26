@@ -2,7 +2,7 @@
 
 ## Scope
 
-This guide prepares the `1.2.4-alpha.1` multi-loader Alpha release. It does not
+This guide prepares the `1.2.5-alpha.1` multi-loader Alpha release. It does not
 publish automatically to GitHub, Modrinth, or CurseForge.
 
 NeoForge is the recommended full-experience Connector. Fabric and Forge are
@@ -34,25 +34,29 @@ gradlew.bat build
 Expected jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.4-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.4-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.2.4-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.5-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.5-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.2.5-alpha.1.jar
 ```
 
 ## GitHub Alpha Release
 
-1. Create a GitHub release for `v1.2.4-alpha.1`.
+1. Create a GitHub release for `v1.2.5-alpha.1`.
 2. Use `docs/RELEASE_NOTES_TEMPLATE.md` as the release body starting point.
 3. Upload the three loader jars.
-4. Label Fabric and Forge clearly as GUI Selector + Builder Wand + Ghost
+4. Confirm every jar file name includes the loader name.
+5. Explain loader differences in the release notes.
+6. Recommend NeoForge for the most complete experience.
+7. Label Fabric and Forge clearly as GUI Selector + Builder Wand + Ghost
    Preview + Survival Material Cost + Material Refund Undo Alpha.
-5. Do not claim Fabric or Forge BlockEntity NBT undo, nearby chest sourcing,
+8. Do not claim Fabric or Forge BlockEntity NBT undo, nearby chest sourcing,
    collision-aware preview, full block preview support, or GUI material summary.
 
 ## Modrinth Preparation
 
 If publishing to Modrinth:
 
+- A non-draft Modrinth version must include at least one file.
 - Use game version `1.21.1`.
 - Mark each file with its correct loader:
   - NeoForge jar: `neoforge`
@@ -60,6 +64,7 @@ If publishing to Modrinth:
   - Forge jar: `forge`
 - Mark Fabric API as required for the Fabric file.
 - Use clear file display names that include the loader and version.
+- State clearly that Fabric and Forge are Alpha parity connectors.
 - NeoForge, Fabric, and Forge can be published as separate files under one
   project version if the metadata stays clear, or as separate version entries if
   that is easier to maintain.
@@ -75,6 +80,9 @@ If publishing to CurseForge:
 - Set Minecraft version `1.21.1`.
 - Mark Fabric API as a dependency for the Fabric file.
 - Keep release notes explicit about current loader differences.
+- New projects and new files may require moderation before appearing publicly.
+- Use Alpha files for early testing; prefer Beta or Release only after broader
+  in-game regression passes.
 - Do not bundle all three loader jars into one zip for normal mod-manager
   installs.
 

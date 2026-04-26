@@ -2,10 +2,10 @@
 
 ## Near Term
 
-- Stabilize the v1.2.4 Fabric / Forge GUI Selector, Builder Wand, Ghost Preview, Survival Material Cost, and Material Refund Undo Alpha.
+- Complete the v1.2.5 multiloader regression pass for NeoForge, Fabric, and Forge.
 - Keep NeoForge 1.21.1 as the recommended complete Connector target.
 - Keep Fabric and Forge 1.21.1 as Alpha connectors while refund undo and material UX mature.
-- Validate Fabric and Forge material refund undo in real Minecraft instances.
+- Validate Fabric and Forge GUI Selector, Builder Wand, Ghost Preview, survival material cost, material refund undo, and repeated undo history in real Minecraft instances.
 - Stabilize BlockForge Blueprint v1 as the Web and Mod shared protocol.
 - Add schema validation tooling for exported blueprint files.
 - Add Ghost Preview collision and replacement scans.
@@ -46,6 +46,7 @@
 - v1.2.2: Fabric and Forge Ghost Preview Alpha parity.
 - v1.2.3: Fabric and Forge Survival Material Cost Alpha parity.
 - v1.2.4: Fabric and Forge Material Refund Undo Alpha parity.
-- v1.2.5+: Fabric and Forge material UX refinement.
+- v1.2.5: Multiloader Parity Alpha regression and release-candidate documentation.
+- v1.2.6+: Fabric and Forge material UX refinement.
 
 See [Multi-loader Plan](./MULTILOADER_PLAN.md) for details.
