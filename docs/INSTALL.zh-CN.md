@@ -5,7 +5,7 @@ Connector jar 的安装方式。
 
 ## 版本
 
-- BlockForge Web：`1.2.1-alpha.1`
+- BlockForge Web：`1.2.2-alpha.1`
 - Minecraft Java Edition：`1.21.1`
 - Java：`21`
 - NeoForge：`21.1.227`
@@ -15,14 +15,14 @@ Connector jar 的安装方式。
 
 ## 选择 Loader
 
-NeoForge 是当前推荐的完整游戏内体验。Fabric 和 Forge 是带 GUI Selector Alpha
-和 Builder Wand Alpha 的轻量 Alpha。
+NeoForge 是当前推荐的完整游戏内体验。Fabric 和 Forge 是带 GUI Selector Alpha、
+Builder Wand Alpha 和 Ghost Preview Alpha 轮廓预览的轻量 Alpha。
 
 | Connector | 适合场景 | 当前状态 |
 |---|---|---|
 | NeoForge | GUI Selector、Builder Wand、Ghost Preview、生存材料、Undo 材料返还 | 功能最完整 |
-| Fabric Alpha | 命令 reload/list/dryrun/build/undo、GUI Selector Alpha 与 Builder Wand Alpha 验证 | Alpha |
-| Forge Alpha | 命令 reload/list/dryrun/build/undo、GUI Selector Alpha 与 Builder Wand Alpha 验证 | Alpha |
+| Fabric Alpha | 命令 reload/list/dryrun/build/undo、GUI Selector Alpha、Builder Wand Alpha 与 Ghost Preview Alpha 验证 | Alpha |
+| Forge Alpha | 命令 reload/list/dryrun/build/undo、GUI Selector Alpha、Builder Wand Alpha 与 Ghost Preview Alpha 验证 | Alpha |
 
 不要把多个 BlockForge connector jar 同时放进同一个 Minecraft 实例。请选择与当前
 loader 匹配的 jar。
@@ -70,9 +70,9 @@ Windows 用户在对应目录执行 `gradlew.bat build`。
 预期 release jar 名称：
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.1-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.1-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.2.1-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.2-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.2-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.2.2-alpha.1.jar
 ```
 
 把对应 loader 的 jar 放入 Minecraft 实例的 `mods` 文件夹。
@@ -139,7 +139,7 @@ NeoForge、Fabric Alpha、Forge Alpha 都支持这组命令：
 生存模式下，NeoForge 会检查所需材料。Undo 会恢复方块，并返还该次建造事务记录的
 生存模式材料。
 
-## Fabric / Forge GUI + Wand Alpha
+## Fabric / Forge GUI + Wand + Ghost Preview Alpha
 
 Fabric 和 Forge 可以通过以下命令打开 Blueprint Selector：
 
@@ -150,20 +150,22 @@ Fabric 和 Forge 可以通过以下命令打开 Blueprint Selector：
 也可以按默认 `B` 键打开。Alpha GUI 会从服务端同步蓝图列表，让玩家选择蓝图和
 旋转角度，并更新 Builder Wand 使用的同一份选择状态。
 
+手持 Builder Wand 看向方块时会显示 Ghost Preview Alpha 轮廓。它只渲染包围盒和
+地面 footprint，不会修改世界。
+
 ## Fabric / Forge Alpha 限制
 
 Fabric 和 Forge Alpha 支持命令 build、Builder Wand Alpha 放置和方块 undo。
-它们暂不支持 Ghost Preview、生存材料成本、Undo 材料返还或
-BlockEntity NBT undo。
+它们暂不支持生存材料成本、Undo 材料返还或 BlockEntity NBT undo。
 
 ## Release Artifacts
 
-BlockForge v1.2.1-alpha.1 release 应包含：
+BlockForge v1.2.2-alpha.1 release 应包含：
 
 - GitHub tag 提供的 Web source release。
-- `blockforge-connector-neoforge-1.2.1-alpha.1.jar`
-- `blockforge-connector-fabric-1.2.1-alpha.1.jar`
-- `blockforge-connector-forge-1.2.1-alpha.1.jar`
+- `blockforge-connector-neoforge-1.2.2-alpha.1.jar`
+- `blockforge-connector-fabric-1.2.2-alpha.1.jar`
+- `blockforge-connector-forge-1.2.2-alpha.1.jar`
 - `examples/blueprints/`
 - `docs/BLUEPRINT_PROTOCOL.md`
 - `docs/MOD_CONNECTOR_TESTING.md`

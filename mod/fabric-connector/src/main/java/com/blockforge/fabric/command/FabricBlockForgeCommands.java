@@ -102,6 +102,7 @@ public final class FabricBlockForgeCommands {
         }
 
         PlayerSelection selection = selectionManager.select(player.getUuid(), blueprint.getId());
+        FabricBlueprintGuiNetworking.syncPreviewSelection(player, blueprint, selection.rotationDegrees());
         context.getSource().sendFeedback(
                 () -> Text.literal("Selected BlockForge Fabric blueprint: "
                         + blueprint.getId()
@@ -130,15 +131,18 @@ public final class FabricBlockForgeCommands {
 
         if (registry.get(selection.selectedBlueprintId()).isEmpty()) {
             selectionManager.clear(player.getUuid());
+            FabricBlueprintGuiNetworking.clearPreview(player, "Selected BlockForge Fabric blueprint no longer exists.");
             context.getSource().sendError(Text.literal("Selected BlockForge Fabric blueprint no longer exists. Use /blockforge select <id> again."));
             return 0;
         }
 
+        FabricBlueprintGuiNetworking.syncPreviewSelection(player);
         context.getSource().sendFeedback(
                 () -> Text.literal("Selected BlockForge Fabric blueprint: "
                         + selection.selectedBlueprintId()
                         + " | rotation="
-                        + selection.rotationDegrees()),
+                        + selection.rotationDegrees()
+                        + ". Hold Builder Wand and look at a block to see Ghost Preview."),
                 false
         );
         return 1;
@@ -174,6 +178,7 @@ public final class FabricBlockForgeCommands {
             return 0;
         }
 
+        FabricBlueprintGuiNetworking.syncPreviewSelection(player);
         context.getSource().sendFeedback(
                 () -> Text.literal("BlockForge Fabric rotation set to " + selection.rotationDegrees() + "."),
                 false
@@ -269,6 +274,12 @@ public final class FabricBlockForgeCommands {
             FabricBlueprintRegistry registry
     ) {
         FabricBlueprintRegistry.LoadSummary summary = registry.reload();
+        try {
+            ServerPlayerEntity player = context.getSource().getPlayer();
+            FabricBlueprintGuiNetworking.syncPreviewSelection(player);
+        } catch (Exception ignored) {
+            // Console reloads have no client preview to update.
+        }
         context.getSource().sendFeedback(
                 () -> Text.literal("Loaded " + summary.loadedCount() + " BlockForge Fabric blueprint(s)."),
                 true

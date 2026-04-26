@@ -2,6 +2,28 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [1.2.2] - Unreleased
+
+### Added
+
+- Added common preview DTOs for loader-neutral preview state, bounds, and target data.
+- Added Fabric Ghost Preview Alpha for Builder Wand selections.
+- Added Forge Ghost Preview Alpha for Builder Wand selections.
+- Added Fabric and Forge preview selection sync payloads so clients receive server-confirmed blueprint size and rotation.
+- Added Fabric and Forge preview clearing payloads for invalid or missing selections.
+
+### Changed
+
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.2.2-alpha.1`.
+- Fabric and Forge `/blockforge selected` now includes a Ghost Preview hint and refreshes client preview state.
+- Updated the Loader Feature Matrix to mark Fabric and Forge Ghost Preview support as Alpha.
+
+### Notes
+
+- Fabric and Forge Ghost Preview only renders a rotation-aware bounding box and ground footprint.
+- Fabric and Forge Ghost Preview does not modify the world, scan collisions, show material status, render individual blocks, or preview textures.
+- Fabric / Forge Ghost Preview manual Minecraft testing is pending.
+
 ## [1.2.1] - Unreleased
 
 ### Added

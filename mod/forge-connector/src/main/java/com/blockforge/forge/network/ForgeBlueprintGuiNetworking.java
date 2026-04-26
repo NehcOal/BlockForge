@@ -54,6 +54,16 @@ public final class ForgeBlueprintGuiNetworking {
                 .decoder(SelectionResultPayload::read)
                 .consumerMainThread(ForgeBlueprintGuiNetworking::handleClientSelectionResult)
                 .add();
+        CHANNEL.messageBuilder(PreviewSelectionPayload.class)
+                .encoder(PreviewSelectionPayload::write)
+                .decoder(PreviewSelectionPayload::read)
+                .consumerMainThread(ForgeBlueprintGuiNetworking::handleClientPreviewSelection)
+                .add();
+        CHANNEL.messageBuilder(ClearPreviewPayload.class)
+                .encoder(ClearPreviewPayload::write)
+                .decoder(ClearPreviewPayload::read)
+                .consumerMainThread(ForgeBlueprintGuiNetworking::handleClientClearPreview)
+                .add();
         CHANNEL.build();
     }
 
@@ -70,6 +80,39 @@ public final class ForgeBlueprintGuiNetworking {
                 createListView(BlockForgeForge.BLUEPRINTS, BlockForgeForge.SELECTIONS, player),
                 openScreen
         ), PacketDistributor.PLAYER.with(player));
+        syncPreviewSelection(player);
+    }
+
+    public static void syncPreviewSelection(ServerPlayer player) {
+        PlayerSelection selection = BlockForgeForge.SELECTIONS.get(player.getUUID()).orElse(null);
+        if (selection == null) {
+            clearPreview(player, "No BlockForge Forge blueprint selected.");
+            return;
+        }
+
+        Blueprint blueprint = BlockForgeForge.BLUEPRINTS.get(selection.selectedBlueprintId()).orElse(null);
+        if (blueprint == null) {
+            BlockForgeForge.SELECTIONS.clear(player.getUUID());
+            clearPreview(player, "Selected BlockForge Forge blueprint no longer exists.");
+            return;
+        }
+
+        syncPreviewSelection(player, blueprint, selection.rotationDegrees());
+    }
+
+    public static void syncPreviewSelection(ServerPlayer player, Blueprint blueprint, int rotationDegrees) {
+        CHANNEL.send(new PreviewSelectionPayload(
+                blueprint.getId(),
+                blueprint.getName(),
+                blueprint.getSize().width(),
+                blueprint.getSize().height(),
+                blueprint.getSize().depth(),
+                rotationDegrees
+        ), PacketDistributor.PLAYER.with(player));
+    }
+
+    public static void clearPreview(ServerPlayer player, String reason) {
+        CHANNEL.send(new ClearPreviewPayload(reason == null ? "" : reason), PacketDistributor.PLAYER.with(player));
     }
 
     private static void handleListRequest(BlueprintListRequestPayload payload, CustomPayloadEvent.Context context) {
@@ -89,12 +132,14 @@ public final class ForgeBlueprintGuiNetworking {
         try {
             request = new SelectionRequest(payload.blueprintId(), payload.rotationDegrees());
         } catch (IllegalArgumentException error) {
+            clearPreview(player, error.getMessage());
             sendSelectionResult(player, false, error.getMessage(), "", 0);
             return;
         }
 
         Blueprint blueprint = BlockForgeForge.BLUEPRINTS.get(request.blueprintId()).orElse(null);
         if (blueprint == null) {
+            clearPreview(player, "Unknown BlockForge Forge blueprint id: " + request.blueprintId());
             sendSelectionResult(player, false, "Unknown BlockForge Forge blueprint id: " + request.blueprintId(), "", 0);
             return;
         }
@@ -106,6 +151,7 @@ public final class ForgeBlueprintGuiNetworking {
                 + " | rotation="
                 + request.rotationDegrees()
                 + "."));
+        syncPreviewSelection(player, blueprint, request.rotationDegrees());
         sendSelectionResult(player, true, "Selected " + blueprint.getId(), blueprint.getId(), request.rotationDegrees());
     }
 
@@ -164,6 +210,14 @@ public final class ForgeBlueprintGuiNetworking {
 
     private static void handleClientSelectionResult(SelectionResultPayload payload, CustomPayloadEvent.Context context) {
         invokeClient("handleSelectionResult", new Class<?>[]{SelectionResultPayload.class}, payload);
+    }
+
+    private static void handleClientPreviewSelection(PreviewSelectionPayload payload, CustomPayloadEvent.Context context) {
+        invokeClient("handlePreviewSelection", new Class<?>[]{PreviewSelectionPayload.class}, payload);
+    }
+
+    private static void handleClientClearPreview(ClearPreviewPayload payload, CustomPayloadEvent.Context context) {
+        invokeClient("handleClearPreview", new Class<?>[]{ClearPreviewPayload.class}, payload);
     }
 
     private static void invokeClient(String methodName, Class<?>[] parameterTypes, Object... arguments) {
@@ -247,6 +301,45 @@ public final class ForgeBlueprintGuiNetworking {
             buffer.writeUtf(payload.message());
             buffer.writeUtf(payload.selectedBlueprintId());
             buffer.writeVarInt(payload.rotationDegrees());
+        }
+    }
+
+    public record PreviewSelectionPayload(
+            String blueprintId,
+            String blueprintName,
+            int width,
+            int height,
+            int depth,
+            int rotationDegrees
+    ) {
+        private static PreviewSelectionPayload read(FriendlyByteBuf buffer) {
+            return new PreviewSelectionPayload(
+                    buffer.readUtf(),
+                    buffer.readUtf(),
+                    buffer.readVarInt(),
+                    buffer.readVarInt(),
+                    buffer.readVarInt(),
+                    buffer.readVarInt()
+            );
+        }
+
+        private static void write(PreviewSelectionPayload payload, FriendlyByteBuf buffer) {
+            buffer.writeUtf(payload.blueprintId());
+            buffer.writeUtf(payload.blueprintName());
+            buffer.writeVarInt(payload.width());
+            buffer.writeVarInt(payload.height());
+            buffer.writeVarInt(payload.depth());
+            buffer.writeVarInt(payload.rotationDegrees());
+        }
+    }
+
+    public record ClearPreviewPayload(String reason) {
+        private static ClearPreviewPayload read(FriendlyByteBuf buffer) {
+            return new ClearPreviewPayload(buffer.readUtf());
+        }
+
+        private static void write(ClearPreviewPayload payload, FriendlyByteBuf buffer) {
+            buffer.writeUtf(payload.reason());
         }
     }
 

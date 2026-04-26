@@ -6,8 +6,51 @@ testing.
 
 Fabric and Forge Alpha are also covered here as separate checklists. NeoForge
 remains the full-featured Connector; Fabric and Forge now include GUI Selector
-and Builder Wand Alpha support but still intentionally do not cover Ghost
-Preview, survival material cost, material refunds, or BlockEntity NBT undo.
+Builder Wand, and Ghost Preview Alpha support but still intentionally do not
+cover survival material cost, material refunds, or BlockEntity NBT undo.
+
+## v1.2.2 Fabric / Forge Ghost Preview Alpha Checklist
+
+Release version:
+
+```text
+1.2.2-alpha.1
+```
+
+Expected release jars:
+
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.2-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.2-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.2.2-alpha.1.jar
+```
+
+Recommended Fabric and Forge preview test flow:
+
+```mcfunction
+/blockforge examples install
+/blockforge reload
+/blockforge gui
+/blockforge selected
+/blockforge wand
+```
+
+Select a blueprint and rotation in the GUI, hold the Builder Wand, and look at a
+block.
+
+Expected result:
+
+- A Ghost Preview outline appears only while holding the Builder Wand with a
+  selected blueprint.
+- The preview base position is the looked-at block plus the clicked side.
+- The bounding box uses the selected blueprint size and current rotation.
+- The footprint appears on the ground plane of the preview volume.
+- Valid previews render cyan/green; height-invalid previews render red.
+- Looking away from blocks hides the preview.
+- Right-click build still goes through the server Builder Wand placement path.
+- `/blockforge undo` restores the latest placement after building.
+- No world blocks are modified by the preview itself.
+- Fabric / Forge Ghost Preview manual Minecraft testing is pending.
 
 ## v1.2.1 Fabric / Forge GUI Selector Alpha Checklist
 
@@ -335,7 +378,7 @@ Copy the generated jar into the test instance `mods` folder.
 Example:
 
 ```text
-.minecraft/mods/blockforge-connector-neoforge-1.2.1-alpha.1.jar
+.minecraft/mods/blockforge-connector-neoforge-1.2.2-alpha.1.jar
 ```
 
 ## 4. Install Example Blueprints

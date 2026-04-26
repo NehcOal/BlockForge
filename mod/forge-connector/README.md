@@ -3,8 +3,8 @@
 BlockForge Connector Forge is the Forge alpha for BlockForge
 Blueprint JSON placement. It proves the minimum Forge loop for loading,
 listing, dry-running, building, Builder Wand placement, and undoing blueprints
-with an Alpha GUI Selector for blueprint and rotation selection. It does not
-port the NeoForge Ghost Preview or survival material system yet.
+with an Alpha GUI Selector and Ghost Preview outline. It does not port the
+NeoForge survival material system yet.
 
 ## Target
 
@@ -13,7 +13,7 @@ port the NeoForge Ghost Preview or survival material system yet.
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector Forge`
-- Mod Version: `1.2.1-alpha.1`
+- Mod Version: `1.2.2-alpha.1`
 
 ## Build
 
@@ -32,7 +32,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge-connector-forge-1.2.1-alpha.1.jar
+build/libs/blockforge-connector-forge-1.2.2-alpha.1.jar
 ```
 
 ## Blueprint Folder
@@ -112,11 +112,12 @@ Permissions:
 - Selects a blueprint and rotation for Builder Wand placement.
 - Opens an Alpha Blueprint Selector GUI with `/blockforge gui` or the default `B` key.
 - Gives `blockforge_connector:builder_wand` through `/blockforge wand`.
+- Shows a Ghost Preview Alpha bounding box and ground footprint while holding the Builder Wand.
 - Places the selected blueprint with the Builder Wand by right-clicking a block.
 - Records the latest per-player block-state snapshot.
 - Restores the latest Forge build with `/blockforge undo`.
 
-## GUI + Builder Wand Alpha Flow
+## GUI + Builder Wand + Ghost Preview Alpha Flow
 
 ```mcfunction
 /blockforge examples install
@@ -128,14 +129,16 @@ Permissions:
 
 You can also press the default `B` key to open the selector. Pick a blueprint,
 choose `0°`, `90°`, `180°`, or `270°`, then click Select. Hold the Builder Wand
-and right-click a block. Forge places the selected
-blueprint at `clickedPos.relative(clickedFace)`. The wand has a 2 second
+and look at a block to see the Ghost Preview outline. Right-click to build.
+Forge places the selected blueprint at `clickedPos.relative(clickedFace)`. The wand has a 2 second
 cooldown per player. Command builds are not throttled by the wand cooldown. Run
 `/blockforge undo` to restore the latest wand or command placement.
 
 ## Current Limits
 
-- No Ghost Preview.
+- Ghost Preview only renders a bounding box and ground footprint.
+- No collision scan, material status, per-block transparent preview, or texture preview.
+- Failed or invalid selection requests clear the client preview and show the server error message.
 - No material requirements, inventory consumption, or refunds.
 - No BlockEntity NBT snapshot or restore.
 - No persistence for undo snapshots.
@@ -143,14 +146,13 @@ cooldown per player. Command builds are not throttled by the wand cooldown. Run
 - If the default `B` key conflicts, change it in Minecraft Controls.
 - No protected block entity checks in the Alpha placer.
 - Command-loop manual Minecraft testing has passed for the Alpha command flow.
-- GUI Selector and Builder Wand parity manual Minecraft testing is pending.
+- GUI Selector, Builder Wand, and Ghost Preview parity manual Minecraft testing is pending.
 
 ## Difference From NeoForge And Fabric
 
-NeoForge remains the most complete Connector. It currently owns Ghost Preview,
-common config, survival materials,
-inventory transactions, and undo material refunds.
+NeoForge remains the most complete Connector. It currently owns common config,
+survival materials, inventory transactions, and undo material refunds.
 
 Fabric and Forge Alpha are intentionally smaller and parallel in scope: they
 prove each loader can reuse `mod/common` for blueprint parsing, rotation, build
-planning, selection state, and basic GUI networking before deeper parity work begins.
+planning, selection state, basic GUI networking, and preview state before deeper parity work begins.

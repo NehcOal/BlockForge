@@ -81,7 +81,8 @@ be added after the three connector modules settle.
   artifacts, and release packaging.
 - `v1.2.0`: Fabric and Forge Builder Wand Alpha parity.
 - `v1.2.1`: Fabric and Forge GUI Selector Alpha parity.
-- `v1.2.2+`: continue Fabric and Forge parity work after GUI and wand testing.
+- `v1.2.2`: Fabric and Forge Ghost Preview Alpha parity.
+- `v1.2.3+`: continue Fabric and Forge parity work after GUI, wand, and preview testing.
 
 ## Current Risks
 
@@ -89,9 +90,9 @@ be added after the three connector modules settle.
   adapter code.
 - Forge and NeoForge are related but not API-identical, so Forge cannot be
   treated as a drop-in copy.
-- Ghost Preview will need loader-specific implementations. Fabric and Forge now
-  have GUI Selector Alpha screens, but they are intentionally narrower than the
-  NeoForge selector.
+- Ghost Preview needs loader-specific rendering. Fabric and Forge now have
+  Ghost Preview Alpha renderers, but they intentionally render only an outline
+  and footprint.
 - Registry lookup, inventory mutation, and world placement must remain in each
   loader adapter to avoid leaking Minecraft runtime types into common core.
 
@@ -140,3 +141,20 @@ be added after the three connector modules settle.
 - Fabric and Forge still do not include Ghost Preview, survival material cost,
   material refund undo, advanced thumbnails, blueprint editing, or Web sync.
 - Fabric / Forge GUI and Builder Wand manual Minecraft testing is pending.
+
+## v1.2.2 Status
+
+- Fabric and Forge add Ghost Preview Alpha support for Builder Wand selections.
+- Preview selection state is server-confirmed: the server sends blueprint id,
+  name, size, and rotation through loader-specific payloads.
+- The client computes `base position = clicked block + clicked side`, matching
+  the Builder Wand placement path.
+- The preview renders a rotation-aware bounding box and ground footprint only.
+- Failed or invalid selection requests clear the client preview and surface the
+  server error message.
+- MVP validity checks cover holding the Builder Wand, having a selection,
+  looking at a block, and world height bounds.
+- Fabric and Forge still do not include collision scanning, material status,
+  per-block transparent previews, texture previews, survival material cost,
+  material refund undo, blueprint editing, or Web sync.
+- Fabric / Forge Ghost Preview manual Minecraft testing is pending.

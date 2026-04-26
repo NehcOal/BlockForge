@@ -103,6 +103,7 @@ public final class ForgeBlockForgeCommands {
         }
 
         PlayerSelection selection = selectionManager.select(player.getUUID(), blueprint.getId());
+        ForgeBlueprintGuiNetworking.syncPreviewSelection(player, blueprint, selection.rotationDegrees());
         context.getSource().sendSuccess(
                 () -> Component.literal("Selected BlockForge Forge blueprint: "
                         + blueprint.getId()
@@ -131,15 +132,18 @@ public final class ForgeBlockForgeCommands {
 
         if (registry.get(selection.selectedBlueprintId()).isEmpty()) {
             selectionManager.clear(player.getUUID());
+            ForgeBlueprintGuiNetworking.clearPreview(player, "Selected BlockForge Forge blueprint no longer exists.");
             context.getSource().sendFailure(Component.literal("Selected BlockForge Forge blueprint no longer exists. Use /blockforge select <id> again."));
             return 0;
         }
 
+        ForgeBlueprintGuiNetworking.syncPreviewSelection(player);
         context.getSource().sendSuccess(
                 () -> Component.literal("Selected BlockForge Forge blueprint: "
                         + selection.selectedBlueprintId()
                         + " | rotation="
-                        + selection.rotationDegrees()),
+                        + selection.rotationDegrees()
+                        + ". Hold Builder Wand and look at a block to see Ghost Preview."),
                 false
         );
         return 1;
@@ -175,6 +179,7 @@ public final class ForgeBlockForgeCommands {
             return 0;
         }
 
+        ForgeBlueprintGuiNetworking.syncPreviewSelection(player);
         context.getSource().sendSuccess(
                 () -> Component.literal("BlockForge Forge rotation set to " + selection.rotationDegrees() + "."),
                 false
@@ -270,6 +275,11 @@ public final class ForgeBlockForgeCommands {
             ForgeBlueprintRegistry registry
     ) {
         ForgeBlueprintRegistry.LoadSummary summary = registry.reload();
+        try {
+            ForgeBlueprintGuiNetworking.syncPreviewSelection(context.getSource().getPlayerOrException());
+        } catch (Exception ignored) {
+            // Console reloads have no client preview to update.
+        }
         context.getSource().sendSuccess(
                 () -> Component.literal("Loaded " + summary.loadedCount() + " BlockForge Forge blueprint(s)."),
                 true
