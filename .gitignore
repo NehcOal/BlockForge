@@ -9,7 +9,9 @@ out/
 
 # production
 dist/
-build/
+/build/
+mod/*/build/
+!mod/common/src/main/java/com/blockforge/common/build/
 
 # testing
 coverage/
