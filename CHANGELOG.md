@@ -2,6 +2,29 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [1.1.1] - Unreleased
+
+### Added
+
+- Added `mod/fabric-connector`, a Fabric 1.21.1 command-only Connector Alpha.
+- Added Fabric commands for `folder`, `examples list`, `examples install`, `reload`, `list`, `info`, `dryrun`, `build`, rotated build, coordinate build, and `undo`.
+- Added Fabric example blueprint resources for `tiny_platform`, `small_test_house`, `state_test_house`, and `medieval_tower`.
+- Added Fabric placement and per-player latest-build undo snapshots.
+- Added a Fabric CI job that runs only when `mod/fabric-connector` exists and uploads Fabric jars.
+- Added `mod/fabric-connector/README.md`.
+
+### Changed
+
+- Fabric Connector reuses `mod/common` through an additional Java source root for blueprint parsing, rotation, and `BuildPlan` data.
+- Updated Web/package metadata toward `1.1.1-alpha.1`.
+- Updated multi-loader docs to mark Fabric as command-only Alpha while NeoForge remains the complete Connector.
+
+### Notes
+
+- Fabric Alpha does not include GUI, Ghost Preview, Builder Wand, survival materials, inventory consumption, material refunds, or BlockEntity NBT undo.
+- NeoForge remains the stable and most complete in-game target.
+- Manual Minecraft Fabric regression testing is pending.
+
 ## [1.1.0] - Unreleased
 
 ### Added

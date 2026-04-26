@@ -19,8 +19,9 @@ Web integration yet.
 
 ## Multi-loader Architecture Status
 
-BlockForge v1.1.0 introduces `mod/common` as a loader-neutral common core for
-future Fabric and Forge connectors. NeoForge remains the current stable target.
+BlockForge v1.1.0 introduced `mod/common` as a loader-neutral common core for
+future Fabric and Forge connectors. NeoForge remains the current stable and most
+complete target.
 
 The NeoForge Connector now reuses common blueprint parsing, rotation, material
 counting, and build planning data where the contracts are stable. NeoForge still
@@ -28,8 +29,11 @@ owns command registration, item registration, GUI screens, payload networking,
 Ghost Preview rendering, common config registration, real `setBlock` placement,
 inventory checks, and material consumption/refund integration.
 
-Fabric and Forge connectors are planned, but they are not implemented or usable
-in v1.1.0.
+Fabric Connector Alpha now exists under `mod/fabric-connector` in v1.1.1. It is
+command-only and reuses common blueprint parsing, rotation, and build planning
+data. It does not include the NeoForge GUI, Ghost Preview, Builder Wand,
+survival material cost, inventory consumption, material refunds, or BlockEntity
+NBT undo yet. Forge is still planned.
 
 ## Blueprint Protocol Support
 
@@ -316,13 +320,14 @@ Undo flow:
 2. Refund consumed survival materials from the material transaction.
 3. Drop refunded items near the player when the inventory is full.
 
-Known v1.1.0 limits:
+Known v1.1.x limits:
 
 - Undo refunds BlockForge material transactions, but does not restore XP, currency, or external economy state.
 - No nearby chest or warehouse support.
 - No special cost table for doors, fluids, torches, or multi-block placements.
 - No material icons in the GUI yet.
-- Fabric and Forge connectors are planned but not implemented.
+- Fabric exists as command-only Alpha and is not feature-parity yet.
+- Forge connector is planned but not implemented.
 
 Manual Minecraft testing before v1.0.0-rc.1 verified survival undo refunds and
 full-inventory refund drops. The v1.0 RC also passed a smoke test for client

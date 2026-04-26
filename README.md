@@ -5,6 +5,22 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
+## v1.1.1 Fabric Connector Alpha
+
+BlockForge v1.1.1 adds `mod/fabric-connector`, a Fabric 1.21.1 command-only
+Connector Alpha. It can install example blueprints, reload and list Blueprint
+JSON files, dry-run a build plan, place blueprints in the world, and undo the
+latest Fabric build per player.
+
+Fabric Alpha reuses `mod/common` for blueprint parsing, rotation, and build
+planning data. It intentionally does not include GUI, Ghost Preview, Builder
+Wand, survival material costs, inventory consumption, material refunds, or
+BlockEntity NBT undo yet. NeoForge remains the most complete and stable
+Connector target.
+
+See [Fabric Connector README](./mod/fabric-connector/README.md) for commands,
+installation notes, and current limitations.
+
 ## v1.1.0 Multi-loader Architecture
 
 BlockForge v1.1.0 starts the multi-loader architecture work. NeoForge 1.21.1
@@ -48,6 +64,7 @@ and version roadmap.
 - Creative-mode material bypass
 - NeoForge common config for Connector safety and material settings
 - CI jobs for Web and NeoForge Connector builds
+- CI job for Fabric Connector Alpha builds
 - Connector example blueprints and manual testing guide
 - Minecraft `.mcfunction` export
 - Minecraft Java 1.21.1 Data Pack ZIP export
@@ -161,6 +178,37 @@ Then it places blueprints in-game with:
 
 See [BlockForge Connector README](./mod/neoforge-connector/README.md) for setup
 and command details.
+
+## Fabric Connector Alpha
+
+The repository also includes a Fabric 1.21.1 command-only alpha at
+`mod/fabric-connector`.
+
+Build it with:
+
+```powershell
+cd mod/fabric-connector
+gradlew.bat build
+```
+
+The Fabric jar is generated in:
+
+```text
+mod/fabric-connector/build/libs/
+```
+
+Fast command loop:
+
+```mcfunction
+/blockforge examples install
+/blockforge reload
+/blockforge list
+/blockforge dryrun tiny_platform
+/blockforge build tiny_platform
+/blockforge undo
+```
+
+Manual Minecraft Fabric testing is pending.
 
 For real Minecraft testing, start with:
 
@@ -289,6 +337,7 @@ src/
 └─ types/               Shared TypeScript types
 mod/
 ├─ common/              Loader-neutral Java core for future multi-loader support
+├─ fabric-connector/    Fabric 1.21.1 command-only Connector Alpha
 └─ neoforge-connector/  NeoForge 1.21.1 Mod Connector
 examples/
 └─ blueprints/          Blueprint v1 files for Connector testing
@@ -304,7 +353,7 @@ examples/
 - Add special material cost rules for doors, fluids, torches, and multi-block placements.
 - Improve release artifact publishing.
 - Blueprint v1/v2 schema validation tooling.
-- Fabric 1.21.1 Connector alpha.
+- Fabric 1.21.1 Connector parity work after command Alpha validation.
 - Forge 1.21.1 Connector alpha.
 - `.schem` export.
 - Block texture rendering.

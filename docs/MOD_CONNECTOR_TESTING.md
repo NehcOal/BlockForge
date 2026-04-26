@@ -4,11 +4,84 @@ This checklist prepares the NeoForge Connector for real Minecraft validation.
 Passing `gradlew build` confirms compilation only; it does not replace in-game
 testing.
 
+Fabric Alpha is also covered here as a separate command-only checklist. NeoForge
+remains the full-featured Connector; Fabric v1.1.1 intentionally does not cover
+GUI, Ghost Preview, Builder Wand, or survival material flows yet.
+
 ## 1. Environment Requirements
 
 - Minecraft Java Edition `1.21.1`
 - NeoForge `21.1.227`
 - Java `21`
+
+Fabric Alpha requirements:
+
+- Minecraft Java Edition `1.21.1`
+- Fabric Loader `0.19.2`
+- Fabric API `0.116.11+1.21.1`
+- Java `21`
+
+## Fabric Alpha Build And Smoke Checklist
+
+From `mod/fabric-connector`:
+
+```bash
+./gradlew build
+```
+
+On Windows:
+
+```powershell
+gradlew.bat build
+```
+
+The jar is generated in:
+
+```text
+mod/fabric-connector/build/libs/
+```
+
+Recommended first Fabric in-game test:
+
+```mcfunction
+/blockforge folder
+/blockforge examples list
+/blockforge examples install
+/blockforge reload
+/blockforge list
+/blockforge info tiny_platform
+/blockforge dryrun tiny_platform
+/blockforge build tiny_platform
+/blockforge undo
+```
+
+Also test coordinate and rotation builds:
+
+```mcfunction
+/blockforge build tiny_platform 0 80 0
+/blockforge build state_test_house rotate 90
+```
+
+Expected Fabric Alpha result:
+
+- Commands register under `/blockforge`.
+- Example blueprints install without overwriting existing files.
+- Reload reads `*.blueprint.json` and `*.json` from `.minecraft/config/blockforge/blueprints/`.
+- `dryrun` reports schema version, size, block count, palette count, build plan validity, and skipped counts.
+- `build` places valid blocks and skips invalid/out-of-world entries.
+- `undo` restores the latest Fabric build for the current player.
+
+Known Fabric Alpha limits:
+
+- No GUI.
+- No Ghost Preview.
+- No Builder Wand.
+- No survival material cost or inventory mutation.
+- No material refund.
+- No BlockEntity NBT snapshot or restore.
+- Undo is in-memory and only stores the latest Fabric build per player.
+
+Fabric v1.1.1 manual Minecraft test status: pending.
 
 ## 2. Build The Mod
 

@@ -1,0 +1,763 @@
+{
+  "schemaVersion": 2,
+  "id": "state_test_house",
+  "name": "State Test House",
+  "description": "A small Blueprint v2 house for testing door and wall torch block state properties.",
+  "minecraftVersion": "1.21.1",
+  "generator": "BlockForge",
+  "size": {
+    "width": 6,
+    "height": 5,
+    "depth": 5
+  },
+  "origin": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "palette": {
+    "floor": {
+      "name": "minecraft:stone_bricks"
+    },
+    "wall": {
+      "name": "minecraft:oak_planks"
+    },
+    "roof": {
+      "name": "minecraft:oak_planks"
+    },
+    "front_window": {
+      "name": "minecraft:glass"
+    },
+    "side_window": {
+      "name": "minecraft:glass"
+    },
+    "door_lower": {
+      "name": "minecraft:oak_door",
+      "properties": {
+        "facing": "south",
+        "half": "lower",
+        "hinge": "left",
+        "open": "false"
+      }
+    },
+    "door_upper": {
+      "name": "minecraft:oak_door",
+      "properties": {
+        "facing": "south",
+        "half": "upper",
+        "hinge": "left",
+        "open": "false"
+      }
+    },
+    "torch_east": {
+      "name": "minecraft:wall_torch",
+      "properties": {
+        "facing": "east"
+      }
+    },
+    "torch_west": {
+      "name": "minecraft:wall_torch",
+      "properties": {
+        "facing": "west"
+      }
+    }
+  },
+  "blocks": [
+    {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "state": "floor"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 0,
+      "state": "floor"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 0,
+      "state": "floor"
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "z": 0,
+      "state": "floor"
+    },
+    {
+      "x": 4,
+      "y": 0,
+      "z": 0,
+      "state": "floor"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "z": 0,
+      "state": "floor"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 1,
+      "state": "floor"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 1,
+      "state": "floor"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 1,
+      "state": "floor"
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "z": 1,
+      "state": "floor"
+    },
+    {
+      "x": 4,
+      "y": 0,
+      "z": 1,
+      "state": "floor"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "z": 1,
+      "state": "floor"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 2,
+      "state": "floor"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 2,
+      "state": "floor"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 2,
+      "state": "floor"
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "z": 2,
+      "state": "floor"
+    },
+    {
+      "x": 4,
+      "y": 0,
+      "z": 2,
+      "state": "floor"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "z": 2,
+      "state": "floor"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 3,
+      "state": "floor"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 3,
+      "state": "floor"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 3,
+      "state": "floor"
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "z": 3,
+      "state": "floor"
+    },
+    {
+      "x": 4,
+      "y": 0,
+      "z": 3,
+      "state": "floor"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "z": 3,
+      "state": "floor"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 4,
+      "state": "floor"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 4,
+      "state": "floor"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 4,
+      "state": "floor"
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "z": 4,
+      "state": "floor"
+    },
+    {
+      "x": 4,
+      "y": 0,
+      "z": 4,
+      "state": "floor"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "z": 4,
+      "state": "floor"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 0,
+      "state": "wall"
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "z": 0,
+      "state": "wall"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "z": 0,
+      "state": "door_lower"
+    },
+    {
+      "x": 3,
+      "y": 1,
+      "z": 0,
+      "state": "wall"
+    },
+    {
+      "x": 4,
+      "y": 1,
+      "z": 0,
+      "state": "wall"
+    },
+    {
+      "x": 5,
+      "y": 1,
+      "z": 0,
+      "state": "wall"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 1,
+      "state": "wall"
+    },
+    {
+      "x": 5,
+      "y": 1,
+      "z": 1,
+      "state": "wall"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 2,
+      "state": "wall"
+    },
+    {
+      "x": 5,
+      "y": 1,
+      "z": 2,
+      "state": "wall"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 3,
+      "state": "wall"
+    },
+    {
+      "x": 5,
+      "y": 1,
+      "z": 3,
+      "state": "wall"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 4,
+      "state": "wall"
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "z": 4,
+      "state": "wall"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "z": 4,
+      "state": "wall"
+    },
+    {
+      "x": 3,
+      "y": 1,
+      "z": 4,
+      "state": "wall"
+    },
+    {
+      "x": 4,
+      "y": 1,
+      "z": 4,
+      "state": "wall"
+    },
+    {
+      "x": 5,
+      "y": 1,
+      "z": 4,
+      "state": "wall"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 0,
+      "state": "wall"
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "z": 0,
+      "state": "front_window"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "z": 0,
+      "state": "door_upper"
+    },
+    {
+      "x": 3,
+      "y": 2,
+      "z": 0,
+      "state": "wall"
+    },
+    {
+      "x": 4,
+      "y": 2,
+      "z": 0,
+      "state": "front_window"
+    },
+    {
+      "x": 5,
+      "y": 2,
+      "z": 0,
+      "state": "wall"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 1,
+      "state": "wall"
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "z": 1,
+      "state": "torch_east"
+    },
+    {
+      "x": 4,
+      "y": 2,
+      "z": 1,
+      "state": "torch_west"
+    },
+    {
+      "x": 5,
+      "y": 2,
+      "z": 1,
+      "state": "wall"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 2,
+      "state": "side_window"
+    },
+    {
+      "x": 5,
+      "y": 2,
+      "z": 2,
+      "state": "side_window"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 3,
+      "state": "wall"
+    },
+    {
+      "x": 5,
+      "y": 2,
+      "z": 3,
+      "state": "wall"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 4,
+      "state": "wall"
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "z": 4,
+      "state": "wall"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "z": 4,
+      "state": "wall"
+    },
+    {
+      "x": 3,
+      "y": 2,
+      "z": 4,
+      "state": "wall"
+    },
+    {
+      "x": 4,
+      "y": 2,
+      "z": 4,
+      "state": "wall"
+    },
+    {
+      "x": 5,
+      "y": 2,
+      "z": 4,
+      "state": "wall"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 0,
+      "state": "wall"
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "z": 0,
+      "state": "wall"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "z": 0,
+      "state": "wall"
+    },
+    {
+      "x": 3,
+      "y": 3,
+      "z": 0,
+      "state": "wall"
+    },
+    {
+      "x": 4,
+      "y": 3,
+      "z": 0,
+      "state": "wall"
+    },
+    {
+      "x": 5,
+      "y": 3,
+      "z": 0,
+      "state": "wall"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 1,
+      "state": "wall"
+    },
+    {
+      "x": 5,
+      "y": 3,
+      "z": 1,
+      "state": "wall"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 2,
+      "state": "wall"
+    },
+    {
+      "x": 5,
+      "y": 3,
+      "z": 2,
+      "state": "wall"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 3,
+      "state": "wall"
+    },
+    {
+      "x": 5,
+      "y": 3,
+      "z": 3,
+      "state": "wall"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 4,
+      "state": "wall"
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "z": 4,
+      "state": "wall"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "z": 4,
+      "state": "wall"
+    },
+    {
+      "x": 3,
+      "y": 3,
+      "z": 4,
+      "state": "wall"
+    },
+    {
+      "x": 4,
+      "y": 3,
+      "z": 4,
+      "state": "wall"
+    },
+    {
+      "x": 5,
+      "y": 3,
+      "z": 4,
+      "state": "wall"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 0,
+      "state": "roof"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 0,
+      "state": "roof"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 0,
+      "state": "roof"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "z": 0,
+      "state": "roof"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "z": 0,
+      "state": "roof"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "z": 0,
+      "state": "roof"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 1,
+      "state": "roof"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 1,
+      "state": "roof"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 1,
+      "state": "roof"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "z": 1,
+      "state": "roof"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "z": 1,
+      "state": "roof"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "z": 1,
+      "state": "roof"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 2,
+      "state": "roof"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 2,
+      "state": "roof"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 2,
+      "state": "roof"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "z": 2,
+      "state": "roof"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "z": 2,
+      "state": "roof"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "z": 2,
+      "state": "roof"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 3,
+      "state": "roof"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 3,
+      "state": "roof"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 3,
+      "state": "roof"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "z": 3,
+      "state": "roof"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "z": 3,
+      "state": "roof"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "z": 3,
+      "state": "roof"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 4,
+      "state": "roof"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 4,
+      "state": "roof"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 4,
+      "state": "roof"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "z": 4,
+      "state": "roof"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "z": 4,
+      "state": "roof"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "z": 4,
+      "state": "roof"
+    }
+  ]
+}

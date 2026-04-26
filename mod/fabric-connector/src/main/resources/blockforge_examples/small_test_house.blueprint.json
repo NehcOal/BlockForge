@@ -1,0 +1,998 @@
+{
+  "schemaVersion": 1,
+  "id": "small_test_house",
+  "name": "Small Test House",
+  "description": "A compact complete-block house using stone bricks, oak planks, oak logs, and glass.",
+  "minecraftVersion": "1.21.1",
+  "generator": "BlockForge",
+  "size": {
+    "width": 7,
+    "height": 5,
+    "depth": 6
+  },
+  "origin": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "palette": {
+    "stone_bricks": "minecraft:stone_bricks",
+    "oak_planks": "minecraft:oak_planks",
+    "oak_log": "minecraft:oak_log",
+    "glass": "minecraft:glass"
+  },
+  "blocks": [
+    {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 1,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 1,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 2,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 2,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 3,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 3,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 4,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 4,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "z": 5,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 0,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 1,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 1,
+      "block": "oak_planks"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 2,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 2,
+      "block": "oak_planks"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 3,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 3,
+      "block": "oak_planks"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 4,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 4,
+      "block": "oak_planks"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 5,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 0,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 1,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 1,
+      "block": "oak_planks"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 2,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 2,
+      "block": "oak_planks"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 3,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 3,
+      "block": "oak_planks"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 4,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 4,
+      "block": "oak_planks"
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 5,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "z": 0,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "z": 1,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "z": 1,
+      "block": "oak_planks"
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "z": 2,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "z": 2,
+      "block": "oak_planks"
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "z": 3,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "z": 3,
+      "block": "oak_planks"
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "z": 4,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "z": 4,
+      "block": "oak_planks"
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "z": 5,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 4,
+      "y": 0,
+      "z": 0,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 4,
+      "y": 0,
+      "z": 1,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "z": 1,
+      "block": "oak_planks"
+    },
+    {
+      "x": 4,
+      "y": 0,
+      "z": 2,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "z": 2,
+      "block": "oak_planks"
+    },
+    {
+      "x": 4,
+      "y": 0,
+      "z": 3,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "z": 3,
+      "block": "oak_planks"
+    },
+    {
+      "x": 4,
+      "y": 0,
+      "z": 4,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "z": 4,
+      "block": "oak_planks"
+    },
+    {
+      "x": 4,
+      "y": 0,
+      "z": 5,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "z": 0,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "z": 1,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "z": 1,
+      "block": "oak_planks"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "z": 2,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "z": 2,
+      "block": "oak_planks"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "z": 3,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "z": 3,
+      "block": "oak_planks"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "z": 4,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "z": 4,
+      "block": "oak_planks"
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "z": 5,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 0,
+      "z": 0,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 4,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 0,
+      "z": 1,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 4,
+      "z": 1,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 0,
+      "z": 2,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 4,
+      "z": 2,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 0,
+      "z": 3,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 4,
+      "z": 3,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 0,
+      "z": 4,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 4,
+      "z": 4,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 0,
+      "z": 5,
+      "block": "stone_bricks"
+    },
+    {
+      "x": 6,
+      "y": 4,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 3,
+      "y": 1,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 3,
+      "y": 1,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 4,
+      "y": 1,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 4,
+      "y": 1,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 5,
+      "y": 1,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 5,
+      "y": 1,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 1,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 1,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 1,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 1,
+      "z": 1,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 2,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 1,
+      "z": 2,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 3,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 1,
+      "z": 3,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 4,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 1,
+      "z": 4,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 0,
+      "block": "oak_log"
+    },
+    {
+      "x": 6,
+      "y": 1,
+      "z": 0,
+      "block": "oak_log"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 5,
+      "block": "oak_log"
+    },
+    {
+      "x": 6,
+      "y": 1,
+      "z": 5,
+      "block": "oak_log"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "z": 0,
+      "block": "glass"
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "z": 5,
+      "block": "glass"
+    },
+    {
+      "x": 3,
+      "y": 2,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 3,
+      "y": 2,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 4,
+      "y": 2,
+      "z": 0,
+      "block": "glass"
+    },
+    {
+      "x": 4,
+      "y": 2,
+      "z": 5,
+      "block": "glass"
+    },
+    {
+      "x": 5,
+      "y": 2,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 5,
+      "y": 2,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 2,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 2,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 1,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 2,
+      "z": 1,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 2,
+      "block": "glass"
+    },
+    {
+      "x": 6,
+      "y": 2,
+      "z": 2,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 3,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 2,
+      "z": 3,
+      "block": "glass"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 4,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 2,
+      "z": 4,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 0,
+      "block": "oak_log"
+    },
+    {
+      "x": 6,
+      "y": 2,
+      "z": 0,
+      "block": "oak_log"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 5,
+      "block": "oak_log"
+    },
+    {
+      "x": 6,
+      "y": 2,
+      "z": 5,
+      "block": "oak_log"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 3,
+      "y": 3,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 3,
+      "y": 3,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 4,
+      "y": 3,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 4,
+      "y": 3,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 5,
+      "y": 3,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 5,
+      "y": 3,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 3,
+      "z": 0,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 3,
+      "z": 5,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 1,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 3,
+      "z": 1,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 2,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 3,
+      "z": 2,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 3,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 3,
+      "z": 3,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 4,
+      "block": "oak_planks"
+    },
+    {
+      "x": 6,
+      "y": 3,
+      "z": 4,
+      "block": "oak_planks"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 0,
+      "block": "oak_log"
+    },
+    {
+      "x": 6,
+      "y": 3,
+      "z": 0,
+      "block": "oak_log"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 5,
+      "block": "oak_log"
+    },
+    {
+      "x": 6,
+      "y": 3,
+      "z": 5,
+      "block": "oak_log"
+    }
+  ]
+}

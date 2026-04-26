@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "blockforge_connector",
+  "version": "${version}",
+  "name": "BlockForge Connector Fabric",
+  "description": "Fabric connector for BlockForge blueprint building.",
+  "authors": [
+    "NehcOal and contributors"
+  ],
+  "contact": {
+    "homepage": "https://github.com/NehcOal/BlockForge",
+    "issues": "https://github.com/NehcOal/BlockForge/issues"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.blockforge.fabric.BlockForgeFabric"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.2",
+    "fabric-api": "*",
+    "minecraft": "1.21.1",
+    "java": ">=21"
+  }
+}

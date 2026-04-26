@@ -72,5 +72,50 @@ jobs:
           if-no-files-found: error
 
       # Multi-loader roadmap:
-      # Fabric and Forge CI jobs are planned for v1.1.1 / v1.1.2 after their
-      # connector modules exist. Keep this job NeoForge-only in v1.1.0.
+      # Forge CI is planned for v1.1.2 after the Forge connector module exists.
+
+  fabric:
+    name: Fabric Connector
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check Fabric connector presence
+        id: fabric
+        run: |
+          if [ -f mod/fabric-connector/build.gradle ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Java 21
+        if: steps.fabric.outputs.present == 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Gradle
+        if: steps.fabric.outputs.present == 'true'
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make Gradle wrapper executable
+        if: steps.fabric.outputs.present == 'true'
+        run: chmod +x ./gradlew
+        working-directory: mod/fabric-connector
+
+      - name: Build Fabric Mod
+        if: steps.fabric.outputs.present == 'true'
+        run: ./gradlew build
+        working-directory: mod/fabric-connector
+
+      - name: Upload Fabric jar
+        if: steps.fabric.outputs.present == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: blockforge-fabric-connector-jar
+          path: mod/fabric-connector/build/libs/*.jar
+          if-no-files-found: error
