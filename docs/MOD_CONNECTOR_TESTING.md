@@ -23,32 +23,67 @@ build validation only:
 - Forge Gradle build
 
 Manual Minecraft testing is deferred until the v1.3.5 multiloader regression
-pass. Do not mark nearby container sourcing as passed until loader adapters
-exist and real in-game tests are run.
+pass. Do not mark NeoForge nearby container sourcing as passed until the v1.3.5
+real in-game regression is run. Fabric and Forge nearby container sourcing
+remain planned.
 
-## v1.3.0 Nearby Material Source Common Core Checklist
+## v1.3.1 NeoForge Nearby Container Source Build Checklist
 
 Release version:
 
 ```text
-1.3.0-alpha.1
+1.3.1-alpha.1
 ```
 
 Expected release jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.3.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.3.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.3.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.3.1-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.3.1-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.3.1-alpha.1.jar
 ```
 
 Expected result:
 
 - Common material source DTOs compile in all three loader modules.
 - Existing player-inventory material transactions remain compatible.
-- No loader scans nearby containers yet.
-- No Builder Wand, GUI, placement, or undo behavior changes are expected.
+- NeoForge compiles with nearby container scanner, source report, source-aware
+  consumption, and source-aware undo refund.
+- Fabric and Forge compile with version/docs only; no nearby container adapter
+  is expected yet.
 - Manual Minecraft testing is deferred until v1.3.5.
+
+### v1.3.5 Pending NeoForge Nearby Container Manual Test
+
+```mcfunction
+/blockforge examples install
+/blockforge reload
+/blockforge select tiny_platform
+/gamemode survival
+/clear
+/blockforge sources scan
+/blockforge sources selected
+```
+
+Manual checks:
+
+1. Set `enableNearbyContainers=true` in the NeoForge common config.
+2. Place a chest or barrel near the build position.
+3. Put the required `minecraft:stone_bricks` into the container.
+4. Run `/blockforge sources scan` and confirm the container is listed.
+5. Run `/blockforge sources selected` and confirm container availability is
+   counted.
+6. Build with Builder Wand.
+7. Confirm materials are consumed from the nearby container.
+8. Run `/blockforge undo`.
+9. Confirm blocks are restored and materials return to the original container
+   when possible, otherwise player inventory or player-near drops.
+
+Expected v1.3.1 documentation status:
+
+- Build validation only.
+- NeoForge nearby container manual testing pending until v1.3.5.
+- Fabric / Forge nearby container manual testing not applicable yet.
 
 ## v1.2.5 Multiloader Regression Test
 

@@ -7,15 +7,22 @@ import com.blockforge.connector.blueprint.ExampleBlueprintInstaller;
 import com.blockforge.connector.blueprint.BlueprintRegistry;
 import com.blockforge.connector.builder.BlueprintPlacer;
 import com.blockforge.connector.builder.BlueprintRotation;
+import com.blockforge.connector.config.BlockForgeConfig;
 import com.blockforge.connector.material.MaterialBuildGate;
 import com.blockforge.connector.material.MaterialRefundResult;
 import com.blockforge.connector.material.MaterialReport;
 import com.blockforge.connector.material.MaterialRequirement;
+import com.blockforge.connector.material.source.NeoForgeMaterialSourceAdapter;
+import com.blockforge.connector.material.source.NeoForgeMaterialSourceScanner;
 import com.blockforge.connector.network.BlockForgeNetwork;
 import com.blockforge.connector.player.PlayerBlueprintSelection;
 import com.blockforge.connector.registry.ModItems;
 import com.blockforge.connector.undo.PlacementSnapshot;
 import com.blockforge.connector.undo.UndoManager;
+import com.blockforge.common.material.source.MaterialSourceItemEntry;
+import com.blockforge.common.material.source.MaterialSourceReport;
+import com.blockforge.common.material.source.MaterialSourceScanResult;
+import com.blockforge.common.material.source.MaterialSourceType;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -35,6 +42,8 @@ public final class BlockForgeCommands {
     private static final ExampleBlueprintInstaller EXAMPLES = new ExampleBlueprintInstaller();
     private static final MaterialBuildGate MATERIALS = new MaterialBuildGate();
     private static final BuildService BUILDS = new BuildService(BlockForgeConnector.UNDO);
+    private static final NeoForgeMaterialSourceScanner SOURCE_SCANNER = new NeoForgeMaterialSourceScanner();
+    private static final NeoForgeMaterialSourceAdapter SOURCE_ADAPTER = new NeoForgeMaterialSourceAdapter();
 
     private BlockForgeCommands() {
     }
@@ -86,6 +95,11 @@ public final class BlockForgeCommands {
                                 .executes(context -> materialsSelected(context, registry)))
                         .then(blueprintIdArgument(registry)
                                 .executes(context -> materials(context, registry))))
+                .then(Commands.literal("sources")
+                        .then(Commands.literal("scan")
+                                .executes(BlockForgeCommands::sourcesScan))
+                        .then(Commands.literal("selected")
+                                .executes(context -> sourcesSelected(context, registry))))
                 .then(Commands.literal("build")
                         .requires(source -> source.hasPermission(2))
                         .then(blueprintIdArgument(registry)
@@ -478,6 +492,10 @@ public final class BlockForgeCommands {
 
         MaterialReport report = MATERIALS.report(blueprint, getPlayerOrNull(context));
         sendMaterialReport(context.getSource(), report);
+        ServerPlayer player = getPlayerOrNull(context);
+        if (player != null && BlockForgeConfig.enableNearbyContainers()) {
+            sendMaterialSourceReport(context.getSource(), materialSourceReport(blueprint, player, report));
+        }
         return report.totalRequiredItems();
     }
 
@@ -504,7 +522,82 @@ public final class BlockForgeCommands {
 
         MaterialReport report = MATERIALS.report(blueprint, player);
         sendMaterialReport(context.getSource(), report);
+        if (BlockForgeConfig.enableNearbyContainers()) {
+            sendMaterialSourceReport(context.getSource(), materialSourceReport(blueprint, player, report));
+        }
         return report.totalRequiredItems();
+    }
+
+    private static int sourcesScan(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        NeoForgeMaterialSourceScanner.Scan scan = SOURCE_SCANNER.scan(
+                player,
+                context.getSource().getLevel(),
+                player.blockPosition(),
+                BlockForgeConfig.materialSourceConfig()
+        );
+        MaterialSourceScanResult result = scan.result();
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge material sources scan: enabled="
+                        + BlockForgeConfig.enableNearbyContainers()
+                        + " | radius="
+                        + BlockForgeConfig.nearbyContainerSearchRadius()
+                        + " | foundContainers="
+                        + result.foundContainers()
+                        + " | scannedBlocks="
+                        + result.scannedBlocks()),
+                false
+        );
+
+        result.sources()
+                .stream()
+                .limit(12)
+                .forEach(source -> context.getSource().sendSuccess(
+                        () -> Component.literal("- "
+                                + source.displayName()
+                                + " @ "
+                                + source.x()
+                                + ","
+                                + source.y()
+                                + ","
+                                + source.z()),
+                        false
+                ));
+        for (String warning : result.warnings()) {
+            context.getSource().sendFailure(Component.literal("Warning: " + warning));
+        }
+        return result.foundContainers();
+    }
+
+    private static int sourcesSelected(
+            CommandContext<CommandSourceStack> context,
+            BlueprintRegistry registry
+    ) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        PlayerBlueprintSelection selection = BlockForgeConnector.SELECTIONS.getOrCreate(player.getUUID());
+        if (!selection.hasSelection()) {
+            context.getSource().sendFailure(Component.literal("No BlockForge blueprint selected. Run /blockforge select <id> first."));
+            return 0;
+        }
+
+        Blueprint blueprint = registry.get(selection.getSelectedBlueprintId()).orElse(null);
+        if (blueprint == null) {
+            context.getSource().sendFailure(Component.literal("Selected BlockForge blueprint is not loaded: " + selection.getSelectedBlueprintId()));
+            return 0;
+        }
+
+        MaterialReport report = MATERIALS.report(blueprint, player);
+        MaterialSourceReport sourceReport = materialSourceReport(blueprint, player, report);
+        sendMaterialSourceReport(context.getSource(), sourceReport);
+        return sourceReport.totalRequiredItems();
     }
 
     private static int buildAtPlayer(
@@ -583,14 +676,36 @@ public final class BlockForgeCommands {
                 context.getSource().sendFailure(Component.literal("BlockForge build rejected: " + buildResult.message()));
             }
 
-            if (buildResult.materialReport() != null) {
-                sendMaterialReport(context.getSource(), buildResult.materialReport());
-            }
-            return 0;
+        if (buildResult.materialReport() != null) {
+            sendMaterialReport(context.getSource(), buildResult.materialReport());
         }
+        if (buildResult.materialSourceReport() != null) {
+            sendMaterialSourceReport(context.getSource(), buildResult.materialSourceReport());
+        }
+        return 0;
+    }
 
         sendPlacementResult(context.getSource(), "Build complete", buildResult);
         return buildResult.placementResult().placedBlocks();
+    }
+
+    private static MaterialSourceReport materialSourceReport(
+            Blueprint blueprint,
+            ServerPlayer player,
+            MaterialReport report
+    ) {
+        NeoForgeMaterialSourceScanner.Scan scan = SOURCE_SCANNER.scan(
+                player,
+                player.serverLevel(),
+                player.blockPosition(),
+                BlockForgeConfig.materialSourceConfig()
+        );
+        return SOURCE_ADAPTER.report(
+                report,
+                player,
+                scan.containers(),
+                BlockForgeConfig.materialSourceConfig()
+        );
     }
 
     private static ServerPlayer getPlayerOrNull(CommandContext<CommandSourceStack> context) {
@@ -675,6 +790,16 @@ public final class BlockForgeCommands {
             return ". Creative mode: no materials consumed";
         }
 
+        if (buildResult.consumedFromNearbyContainers() > 0) {
+            return ". consumedItems="
+                    + buildResult.consumedItems()
+                    + " (player="
+                    + buildResult.consumedFromPlayerInventory()
+                    + ", nearbyContainers="
+                    + buildResult.consumedFromNearbyContainers()
+                    + ")";
+        }
+
         return ". consumedItems=" + buildResult.consumedItems();
     }
 
@@ -701,7 +826,11 @@ public final class BlockForgeCommands {
                     + result.restoredBlocks()
                     + " blocks and refunded "
                     + refund.refundedItems()
-                    + " items, dropped "
+                    + " items (containers="
+                    + refund.refundedToContainers()
+                    + ", player="
+                    + refund.refundedToPlayer()
+                    + "), dropped "
                     + refund.droppedItems()
                     + " items near player.";
         }
@@ -710,7 +839,11 @@ public final class BlockForgeCommands {
                 + result.restoredBlocks()
                 + " blocks and refunded "
                 + refund.refundedItems()
-                + " items from blueprint "
+                + " items (containers="
+                + refund.refundedToContainers()
+                + ", player="
+                + refund.refundedToPlayer()
+                + ") from blueprint "
                 + result.blueprintId()
                 + ".";
     }
@@ -792,6 +925,69 @@ public final class BlockForgeCommands {
             );
             shown++;
         }
+    }
+
+    private static void sendMaterialSourceReport(CommandSourceStack source, MaterialSourceReport report) {
+        source.sendSuccess(
+                () -> Component.literal("BlockForge material sources: "
+                        + report.blueprintId()
+                        + " | enabled="
+                        + BlockForgeConfig.enableNearbyContainers()
+                        + " | priority="
+                        + BlockForgeConfig.materialSourcePriority()
+                        + " | radius="
+                        + BlockForgeConfig.nearbyContainerSearchRadius()
+                        + " | requiredItems="
+                        + report.totalRequiredItems()
+                        + " | availableItems="
+                        + report.totalAvailableItems()
+                        + " | missingItems="
+                        + report.totalMissingItems()
+                        + " | enoughMaterials="
+                        + report.enoughMaterials()
+                        + " | playerReserved="
+                        + reservedFrom(report, MaterialSourceType.PLAYER_INVENTORY)
+                        + " | containerReserved="
+                        + reservedFrom(report, MaterialSourceType.NEARBY_CONTAINER)),
+                false
+        );
+
+        int shown = 0;
+        for (MaterialSourceItemEntry entry : report.entries()) {
+            if (shown >= 8) {
+                source.sendSuccess(() -> Component.literal("... more material source entries omitted."), false);
+                break;
+            }
+
+            if (entry.reserved() <= 0 && entry.available() <= 0) {
+                continue;
+            }
+
+            source.sendSuccess(
+                    () -> Component.literal("- "
+                            + entry.itemId()
+                            + " source="
+                            + (entry.source() == null ? "unknown" : entry.source().displayName())
+                            + " available="
+                            + entry.available()
+                            + ", reserved="
+                            + entry.reserved()),
+                    false
+            );
+            shown++;
+        }
+
+        for (String warning : report.warnings()) {
+            source.sendFailure(Component.literal("Warning: " + warning));
+        }
+    }
+
+    private static int reservedFrom(MaterialSourceReport report, MaterialSourceType sourceType) {
+        return report.entries()
+                .stream()
+                .filter(entry -> entry.source() != null && entry.source().type() == sourceType)
+                .mapToInt(MaterialSourceItemEntry::reserved)
+                .sum();
     }
 
     private static String describe(Blueprint blueprint) {

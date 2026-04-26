@@ -130,6 +130,16 @@ public class BuilderWandItem extends Item {
             return ". Creative mode: no materials consumed";
         }
 
+        if (buildResult.consumedFromNearbyContainers() > 0) {
+            return ". consumedItems="
+                    + buildResult.consumedItems()
+                    + " (player="
+                    + buildResult.consumedFromPlayerInventory()
+                    + ", nearbyContainers="
+                    + buildResult.consumedFromNearbyContainers()
+                    + ")";
+        }
+
         return ". consumedItems=" + buildResult.consumedItems();
     }
 

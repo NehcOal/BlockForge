@@ -5,20 +5,20 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v1.3.0 Nearby Material Source Common Core
+## v1.3.1 NeoForge Nearby Material Source Alpha
 
-BlockForge v1.3.0-alpha.1 starts the common-core design for nearby material
-sources. It adds loader-neutral models for player inventory, future nearby
-containers, scan plans, material source reports, and source-aware material
-transactions. NeoForge is still the recommended complete connector. Fabric and
-Forge remain Alpha parity connectors. No loader scans or consumes nearby
-container materials yet.
+BlockForge v1.3.1-alpha.1 adds the NeoForge reference implementation for
+nearby container material sourcing. When the NeoForge common config enables it,
+survival builds can combine player inventory materials with loaded nearby
+container inventories, then undo can refund materials back to the original
+container when possible. Fabric and Forge keep their v1.2 Alpha parity feature
+set; nearby container sourcing is still planned for those loaders.
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-1.3.0-alpha.1.jar`
-- `blockforge-connector-fabric-1.3.0-alpha.1.jar`
-- `blockforge-connector-forge-1.3.0-alpha.1.jar`
+- `blockforge-connector-neoforge-1.3.1-alpha.1.jar`
+- `blockforge-connector-fabric-1.3.1-alpha.1.jar`
+- `blockforge-connector-forge-1.3.1-alpha.1.jar`
 
 ## Loader Feature Matrix
 
@@ -36,14 +36,15 @@ Expected release jars:
 | Survival material cost | ✅ | ✅ Alpha | ✅ Alpha |
 | Material refund undo | ✅ | ✅ Alpha | ✅ Alpha |
 | BlockEntity NBT undo | ✅ best effort | ❌ | ❌ |
-| Nearby chest material sourcing | planned | planned | planned |
+| Nearby chest material sourcing | ✅ Alpha | planned | planned |
 
 Fabric and Forge GUI Selector, Builder Wand, Ghost Preview, Survival Material
 Cost, and Material Refund Undo support are Alpha. Ghost Preview only renders a
 rotation-aware bounding box and ground footprint. Fabric and Forge undo now
 restores blocks and refunds consumed survival materials, but still does not
-restore BlockEntity NBT. Nearby chest material sourcing is planned for future
-loader adapters and is not active in v1.3.0.
+restore BlockEntity NBT. NeoForge nearby chest material sourcing is Alpha,
+disabled by default, scans only loaded chunks, and is scheduled for manual
+Minecraft regression in v1.3.5.
 
 See [Material Sources](./docs/MATERIAL_SOURCES.md) for the v1.3 design notes.
 

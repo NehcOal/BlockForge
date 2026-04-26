@@ -4,7 +4,8 @@ BlockForge Connector Fabric is the Fabric alpha for BlockForge
 Blueprint JSON placement. It proves the minimum Fabric loop for loading,
 listing, dry-running, building, Builder Wand placement, and undoing blueprints
 with an Alpha GUI Selector, Ghost Preview outline, Survival Material Cost, and
-Material Refund Undo. v1.3.0 adds nearby material source common-core models only; this connector does not scan or consume nearby containers yet.
+Material Refund Undo. v1.3.1 adds NeoForge nearby container sourcing, but this
+Fabric connector does not scan or consume nearby containers yet.
 
 ## Target
 
@@ -14,7 +15,7 @@ Material Refund Undo. v1.3.0 adds nearby material source common-core models only
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector Fabric`
-- Mod Version: `1.3.0-alpha.1`
+- Mod Version: `1.3.1-alpha.1`
 
 ## Build
 
@@ -33,7 +34,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge-connector-fabric-1.3.0-alpha.1.jar
+build/libs/blockforge-connector-fabric-1.3.1-alpha.1.jar
 ```
 
 ## Blueprint Folder

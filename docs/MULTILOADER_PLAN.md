@@ -87,6 +87,8 @@ be added after the three connector modules settle.
 - `v1.2.5`: Multiloader Parity Alpha regression and release-candidate
   documentation.
 - `v1.3.0`: Nearby Material Source common core.
+- `v1.3.1`: NeoForge nearby container material sourcing reference
+  implementation.
 - `v1.3.5`: batched multiloader in-game regression for v1.3 material source
   groundwork and adapter work.
 - `v1.3.6+`: deeper material UX, GUI material summaries, and follow-up
@@ -105,6 +107,7 @@ be added after the three connector modules settle.
   loader adapter to avoid leaking Minecraft runtime types into common core.
 - Fabric and Forge Material Refund Undo is Alpha as of v1.2.4. Refunded items
   that do not fit in the player inventory drop near the player.
+- NeoForge nearby chest sourcing is Alpha and disabled by default.
 - Fabric and Forge still do not support nearby chest sourcing, GUI material
   icons, collision-aware preview, or BlockEntity NBT undo.
 
@@ -224,18 +227,20 @@ be added after the three connector modules settle.
   Alpha history stack.
 - Dedicated server smoke testing remains pending.
 
-## v1.3.0 Status
+## v1.3.1 Status
 
-- v1.3.0 adds common-core material source models only.
+- v1.3.1 adds the NeoForge nearby container material sourcing reference
+  implementation on top of the v1.3.0 common-core models.
 - `MaterialSourceConfig` keeps nearby containers disabled by default with radius
   `8` and max scanned containers `64`.
-- `MaterialSourceScanPlan` and `MaterialSourceScanResult` describe future loader
-  scans without referencing Minecraft world types.
-- `MaterialSourcePlanner` can prepare loader-neutral source reports and leaves
-  real inventory/container details to loader adapters.
-- `ConsumedMaterialEntry` and `MaterialTransaction` now carry optional source
-  metadata while remaining compatible with player-inventory-only transactions.
-- NeoForge, Fabric, and Forge nearby container adapters are planned but not
-  implemented.
+- NeoForge scans only loaded chunks in the current dimension and queries block
+  entity `IItemHandler` capability instead of assuming specific container
+  classes.
+- NeoForge source reports merge player inventory and nearby containers using
+  `PLAYER_FIRST`, `CONTAINER_FIRST`, `PLAYER_ONLY`, or `CONTAINER_ONLY`.
+- NeoForge material transactions now record source metadata for container
+  consumption so undo can prefer refunding to original containers.
+- Fabric and Forge nearby container adapters remain planned and are not
+  implemented in v1.3.1.
 - Manual Minecraft testing is deferred until the v1.3.5 multiloader regression
   pass.

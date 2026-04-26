@@ -15,7 +15,7 @@ Web integration yet.
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector NeoForge`
-- Mod Version: `1.3.0-alpha.1`
+- Mod Version: `1.3.1-alpha.1`
 
 ## Multi-loader Architecture Status
 
@@ -36,8 +36,11 @@ They now include Builder Wand, GUI Selector, Ghost Preview, survival material
 cost, and material refund undo as Alpha features. They do not include
 BlockEntity NBT undo or active nearby chest material sourcing yet.
 
-v1.3.0 adds nearby material source common-core models only. NeoForge does not
-scan or consume from nearby containers in this release.
+v1.3.1 adds NeoForge nearby container material sourcing Alpha. It is disabled
+by default in common config. When enabled, NeoForge scans loaded nearby
+containers through item handler capability, consumes materials by configured
+source priority, and tries to refund materials to their original containers on
+undo.
 
 ## Blueprint Protocol Support
 
@@ -64,7 +67,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge-connector-neoforge-1.3.0-alpha.1.jar
+build/libs/blockforge-connector-neoforge-1.3.1-alpha.1.jar
 ```
 
 ## Blueprint Folder
@@ -132,6 +135,8 @@ registry:
 /blockforge gui
 /blockforge materials <id>
 /blockforge materials selected
+/blockforge sources scan
+/blockforge sources selected
 /blockforge undo
 /blockforge undo list
 /blockforge undo clear
@@ -152,6 +157,7 @@ Permissions:
 - `folder`, `list`, `info`, and `dryrun` are available to regular players.
 - `gui` is available to regular players.
 - `materials` is available to regular players.
+- `sources scan` and `sources selected` are available to regular players.
 
 ## Builder Wand MVP
 
@@ -216,8 +222,14 @@ Default settings:
 - `creativeModeBypassesMaterials`: `true`
 - `allowBuildInAdventureMode`: `false`
 - `allowBuildInSpectatorMode`: `false`
+- `enableNearbyContainers`: `false`
+- `nearbyContainerSearchRadius`: `8`
+- `nearbyContainerMaxScanned`: `64`
+- `materialSourcePriority`: `PLAYER_FIRST`
+- `returnRefundsToOriginalSource`: `true`
+- `allowPartialFromContainers`: `true`
 
-Defaults match the behavior validated before the v1.0 release candidate.
+Defaults keep nearby container sourcing off unless explicitly enabled.
 
 ## Ghost Preview MVP Candidate
 
@@ -311,24 +323,31 @@ Build flow:
 
 1. Generate a material report from the selected blueprint.
 2. Check the player's inventory.
-3. Refuse the build if materials are missing.
-4. Consume materials through a material transaction if enough are available.
-5. Place the blueprint through `BlueprintPlacer`.
-6. Record both the block snapshot and material transaction for undo.
+3. If nearby containers are enabled, scan loaded nearby containers through
+   `IItemHandler` capability.
+4. Refuse the build if materials are missing across the configured sources.
+5. Consume materials through a source-aware material transaction if enough are
+   available.
+6. Place the blueprint through `BlueprintPlacer`.
+7. Record both the block snapshot and material transaction for undo.
 
 Undo flow:
 
 1. Restore previous world blocks from the placement snapshot.
 2. Refund consumed survival materials from the material transaction.
-3. Drop refunded items near the player when the inventory is full.
+3. If the transaction came from nearby containers and
+   `returnRefundsToOriginalSource=true`, try the original container first.
+4. Fall back to player inventory, then drop overflow near the player.
 
-Known v1.1.x limits:
+Known limits:
 
 - Undo refunds BlockForge material transactions, but does not restore XP, currency, or external economy state.
-- No nearby chest or warehouse support.
+- Nearby container material sourcing is Alpha, disabled by default, and pending
+  v1.3.5 manual Minecraft regression.
 - No special cost table for doors, fluids, torches, or multi-block placements.
 - No material icons in the GUI yet.
-- Fabric and Forge include Builder Wand Alpha support and are not feature-parity yet.
+- Fabric and Forge have Alpha parity for core builder flows, but nearby
+  container sourcing is not implemented there yet.
 
 Manual Minecraft testing before v1.0.0-rc.1 verified survival undo refunds and
 full-inventory refund drops. The v1.0 RC also passed a smoke test for client
@@ -390,6 +409,8 @@ Recommended first in-game test:
 - Ghost Preview is a client-side candidate and still needs in-game validation.
 - Blueprint Selector GUI is an MVP and still needs in-game validation.
 - Undo refunds recorded survival materials, but the history is still in-memory only.
+- Nearby container sourcing does not load chunks, does not cross dimensions, and
+  only uses inventories exposed through item handler capability.
 - No air clearing.
 - Invalid palette entries are skipped.
 - Invalid Minecraft block ids are skipped.

@@ -6,9 +6,10 @@ BlockForge v1.3 starts the common-core design for nearby material sourcing. The
 goal is to let future loader adapters build with materials from the player
 inventory, nearby containers, or a mix of both.
 
-v1.3.0 only adds loader-neutral data models and planning types. It does not
-scan Minecraft worlds, read container inventories, consume items from
-containers, refund items to containers, or change Builder Wand placement.
+v1.3.0 added loader-neutral data models and planning types. v1.3.1 adds the
+NeoForge reference adapter that scans loaded nearby containers, consumes from
+their item capabilities, and refunds to original containers during undo when
+possible. Fabric and Forge adapters are still planned.
 
 ## Why Material Sources
 
@@ -63,8 +64,9 @@ active source until a loader adapter explicitly enables nearby containers.
 - found container count
 - warnings
 
-The plan and result do not touch Minecraft world APIs. Fabric, Forge, and
-NeoForge will each implement their own scanner later.
+The plan and result do not touch Minecraft world APIs. NeoForge v1.3.1 adapts
+them to a real scanner; Fabric and Forge will each implement their own scanner
+later.
 
 ## Reports, Reservations, And Transactions
 
@@ -73,7 +75,8 @@ from `MaterialSourceItemEntry` rows and can report total required, available,
 missing, and whether the material plan is enough.
 
 `MaterialReservation` is a future-safe record for reserved materials before
-placement. v1.3.0 does not persist or enforce reservations.
+placement. v1.3.1 does not persist reservations across ticks; NeoForge consumes
+from the generated source report immediately before placement.
 
 `ConsumedMaterialEntry` and `MaterialTransaction` now include optional source
 metadata while preserving the existing player-inventory-only constructors.
@@ -93,10 +96,30 @@ v1.3.x uses a batched testing strategy:
 ## Current Status
 
 - `v1.3.0`: common core only.
-- NeoForge adapter: planned.
+- `v1.3.1`: NeoForge nearby container sourcing reference implementation.
+- NeoForge adapter: Alpha, disabled by default.
 - Fabric adapter: planned.
 - Forge adapter: planned.
 - GUI material source display: planned.
+
+## NeoForge v1.3.1 Adapter
+
+NeoForge uses its common config to keep nearby containers disabled by default.
+When enabled, it scans around the build origin with radius `8` by default and
+stops after `64` container sources. The scanner only checks loaded chunks in the
+current dimension and queries `IItemHandler` capability from block entities.
+
+The source priority controls reservation order:
+
+- `PLAYER_FIRST`: use player inventory first, then nearby containers.
+- `CONTAINER_FIRST`: use nearby containers first, then player inventory.
+- `PLAYER_ONLY`: ignore containers even if scanning is enabled.
+- `CONTAINER_ONLY`: ignore player inventory for material sourcing.
+
+Undo records source-aware material transactions. If
+`returnRefundsToOriginalSource=true`, NeoForge tries to insert refunded items
+back into the original nearby container; overflow falls back to player inventory
+and then drops near the player.
 
 ## Safety Limits
 

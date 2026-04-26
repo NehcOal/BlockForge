@@ -2,10 +2,14 @@
 
 All notable changes to BlockForge will be documented in this file.
 
-## [1.3.0] - Unreleased
+## [1.3.1] - Unreleased
 
 ### Added
 
+- Added NeoForge nearby container material sourcing Alpha.
+- Added NeoForge source scanner for loaded block entities with item handler
+  capability.
+- Added NeoForge `/blockforge sources scan` and `/blockforge sources selected`.
 - Added common material source data models for player inventory, nearby
   containers, and mixed sources.
 - Added `MaterialSourceConfig` with safe defaults for future nearby container
@@ -16,16 +20,20 @@ All notable changes to BlockForge will be documented in this file.
 
 ### Changed
 
-- Aligned Web, NeoForge, Fabric, and Forge versions to `1.3.0-alpha.1`.
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.3.1-alpha.1`.
 - Extended `ConsumedMaterialEntry` and `MaterialTransaction` with optional
   source metadata while keeping existing player-inventory constructors.
+- Updated NeoForge survival material flow to optionally combine player
+  inventory and nearby containers by configured source priority.
+- Updated NeoForge undo material refund to prefer original nearby containers,
+  then player inventory, then player-near drops.
 - Updated the Loader Feature Matrix to mark nearby chest material sourcing as
-  planned for NeoForge, Fabric, and Forge.
+  NeoForge Alpha and Fabric / Forge planned.
 
 ### Notes
 
-- No loader-specific nearby chest sourcing is implemented yet.
-- No Builder Wand, GUI, or placement behavior changes are included in v1.3.0.
+- NeoForge nearby container sourcing is disabled by default.
+- Fabric and Forge nearby chest sourcing are still planned.
 - Manual Minecraft testing is deferred until the v1.3.5 multiloader regression
   pass.
 
