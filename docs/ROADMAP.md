@@ -2,10 +2,10 @@
 
 ## Near Term
 
-- Stabilize the v1.1.3 multi-loader Alpha release package.
+- Stabilize the v1.2.0 Fabric / Forge Builder Wand Alpha.
 - Keep NeoForge 1.21.1 as the recommended complete Connector target.
-- Keep Fabric and Forge 1.21.1 as command-only Alpha connectors until parity work starts.
-- Start Fabric and Forge parity work from the proven command reload/list/dryrun/build/undo base.
+- Keep Fabric and Forge 1.21.1 as Alpha connectors until GUI, preview, and material parity work starts.
+- Validate Fabric and Forge Builder Wand placement in real Minecraft instances.
 - Stabilize BlockForge Blueprint v1 as the Web and Mod shared protocol.
 - Add schema validation tooling for exported blueprint files.
 - Add Ghost Preview collision and replacement scans.
@@ -40,6 +40,7 @@
 - v1.1.1: Fabric Connector command Alpha.
 - v1.1.2: Forge Connector command Alpha.
 - v1.1.3: multi-loader Alpha stabilization, feature matrix, CI artifact naming, and release packaging.
-- v1.1.4+: Fabric and Forge parity planning after Alpha release feedback.
+- v1.2.0: Fabric and Forge Builder Wand Alpha parity.
+- v1.2.1+: Fabric and Forge parity planning after wand Alpha feedback.
 
 See [Multi-loader Plan](./MULTILOADER_PLAN.md) for details.

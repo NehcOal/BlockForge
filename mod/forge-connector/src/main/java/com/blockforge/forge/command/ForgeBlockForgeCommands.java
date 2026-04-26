@@ -2,9 +2,12 @@ package com.blockforge.forge.command;
 
 import com.blockforge.common.blueprint.Blueprint;
 import com.blockforge.common.rotation.BlueprintRotation;
+import com.blockforge.common.selection.PlayerSelection;
 import com.blockforge.forge.blueprint.ForgeBlueprintRegistry;
 import com.blockforge.forge.blueprint.ForgeExampleBlueprintInstaller;
 import com.blockforge.forge.builder.ForgeBlueprintPlacer;
+import com.blockforge.forge.player.ForgePlayerSelectionManager;
+import com.blockforge.forge.registry.ForgeModItems;
 import com.blockforge.forge.undo.ForgeUndoManager;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -17,6 +20,7 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
@@ -30,7 +34,8 @@ public final class ForgeBlockForgeCommands {
     public static void register(
             CommandDispatcher<CommandSourceStack> dispatcher,
             ForgeBlueprintRegistry registry,
-            ForgeUndoManager undoManager
+            ForgeUndoManager undoManager,
+            ForgePlayerSelectionManager selectionManager
     ) {
         dispatcher.register(Commands.literal("blockforge")
                 .then(Commands.literal("folder")
@@ -46,6 +51,17 @@ public final class ForgeBlockForgeCommands {
                         .executes(context -> reload(context, registry)))
                 .then(Commands.literal("list")
                         .executes(context -> list(context, registry)))
+                .then(Commands.literal("select")
+                        .then(blueprintIdArgument(registry)
+                                .executes(context -> select(context, registry, selectionManager))))
+                .then(Commands.literal("selected")
+                        .executes(context -> selected(context, selectionManager)))
+                .then(Commands.literal("rotate")
+                        .then(rotationArgument()
+                                .executes(context -> rotate(context, selectionManager))))
+                .then(Commands.literal("wand")
+                        .requires(source -> source.hasPermission(2))
+                        .executes(ForgeBlockForgeCommands::giveWand))
                 .then(Commands.literal("info")
                         .then(blueprintIdArgument(registry)
                                 .executes(context -> info(context, registry))))
@@ -66,6 +82,103 @@ public final class ForgeBlockForgeCommands {
                 .then(Commands.literal("undo")
                         .requires(source -> source.hasPermission(2))
                         .executes(context -> undo(context, undoManager))));
+    }
+
+    private static int select(
+            CommandContext<CommandSourceStack> context,
+            ForgeBlueprintRegistry registry,
+            ForgePlayerSelectionManager selectionManager
+    ) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        Blueprint blueprint = findBlueprint(context, registry);
+        if (blueprint == null) {
+            return 0;
+        }
+
+        PlayerSelection selection = selectionManager.select(player.getUUID(), blueprint.getId());
+        context.getSource().sendSuccess(
+                () -> Component.literal("Selected BlockForge Forge blueprint: "
+                        + blueprint.getId()
+                        + " | rotation="
+                        + selection.rotationDegrees()),
+                false
+        );
+        return 1;
+    }
+
+    private static int selected(
+            CommandContext<CommandSourceStack> context,
+            ForgePlayerSelectionManager selectionManager
+    ) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        PlayerSelection selection = selectionManager.get(player.getUUID()).orElse(null);
+        if (selection == null) {
+            context.getSource().sendFailure(Component.literal("No BlockForge Forge blueprint selected. Use /blockforge select <id> first."));
+            return 0;
+        }
+
+        context.getSource().sendSuccess(
+                () -> Component.literal("Selected BlockForge Forge blueprint: "
+                        + selection.selectedBlueprintId()
+                        + " | rotation="
+                        + selection.rotationDegrees()),
+                false
+        );
+        return 1;
+    }
+
+    private static int rotate(
+            CommandContext<CommandSourceStack> context,
+            ForgePlayerSelectionManager selectionManager
+    ) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        Integer degrees = getRotationDegrees(context);
+        if (degrees == null) {
+            return 0;
+        }
+
+        PlayerSelection selection = selectionManager.rotate(player.getUUID(), degrees).orElse(null);
+        if (selection == null) {
+            context.getSource().sendFailure(Component.literal("No BlockForge Forge blueprint selected. Use /blockforge select <id> first."));
+            return 0;
+        }
+
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge Forge rotation set to " + selection.rotationDegrees() + "."),
+                false
+        );
+        return 1;
+    }
+
+    private static int giveWand(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        ItemStack stack = new ItemStack(ForgeModItems.BUILDER_WAND.get());
+        boolean inserted = player.addItem(stack);
+        if (!inserted) {
+            player.drop(stack, false);
+        }
+
+        context.getSource().sendSuccess(
+                () -> Component.literal("Gave BlockForge Forge Builder Wand."),
+                true
+        );
+        return 1;
     }
 
     private static RequiredArgumentBuilder<CommandSourceStack, String> blueprintIdArgument(
@@ -390,6 +503,17 @@ public final class ForgeBlockForgeCommands {
     private static BlueprintRotation getRotation(CommandContext<CommandSourceStack> context) {
         try {
             return BlueprintRotation.fromDegrees(StringArgumentType.getString(context, "rotation"));
+        } catch (IllegalArgumentException error) {
+            context.getSource().sendFailure(Component.literal(error.getMessage()));
+            return null;
+        }
+    }
+
+    private static Integer getRotationDegrees(CommandContext<CommandSourceStack> context) {
+        try {
+            String value = StringArgumentType.getString(context, "rotation");
+            BlueprintRotation.fromDegrees(value);
+            return Integer.parseInt(value);
         } catch (IllegalArgumentException error) {
             context.getSource().sendFailure(Component.literal(error.getMessage()));
             return null;

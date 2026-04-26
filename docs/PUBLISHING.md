@@ -2,11 +2,11 @@
 
 ## Scope
 
-This guide prepares the `1.1.3-alpha.1` multi-loader Alpha release. It does not
+This guide prepares the `1.2.0-alpha.1` multi-loader Alpha release. It does not
 publish automatically to GitHub, Modrinth, or CurseForge.
 
 NeoForge is the recommended full-experience Connector. Fabric and Forge are
-command-only Alpha connectors.
+Alpha connectors with command builds and Builder Wand Alpha placement.
 
 ## Build Before Publishing
 
@@ -32,19 +32,19 @@ gradlew.bat build
 Expected jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.1.3-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.1.3-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.1.3-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.2.0-alpha.1.jar
 ```
 
 ## GitHub Alpha Release
 
-1. Create a GitHub release for `v1.1.3-alpha.1`.
+1. Create a GitHub release for `v1.2.0-alpha.1`.
 2. Use `docs/RELEASE_NOTES_TEMPLATE.md` as the release body starting point.
 3. Upload the three loader jars.
-4. Label Fabric and Forge clearly as command-only Alpha.
-5. Do not claim Fabric or Forge GUI, Ghost Preview, Builder Wand, material
-   costs, material refunds, or BlockEntity NBT undo support.
+4. Label Fabric and Forge clearly as Builder Wand Alpha.
+5. Do not claim Fabric or Forge GUI, Ghost Preview, material costs, material
+   refunds, or BlockEntity NBT undo support.
 
 ## Modrinth Preparation
 
@@ -80,10 +80,10 @@ If publishing to CurseForge:
 Use this wording consistently:
 
 - NeoForge: recommended complete Connector.
-- Fabric Alpha: command-loop Connector for examples, reload, list, info, dryrun,
-  build, rotation, and undo.
-- Forge Alpha: command-loop Connector for examples, reload, list, info, dryrun,
-  build, rotation, and undo.
+- Fabric Alpha: Connector for examples, reload, list, info, dryrun, build,
+  selection, rotation, Builder Wand placement, and undo.
+- Forge Alpha: Connector for examples, reload, list, info, dryrun, build,
+  selection, rotation, Builder Wand placement, and undo.
 
 ## CI Artifacts
 

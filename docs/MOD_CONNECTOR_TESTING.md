@@ -4,10 +4,55 @@ This checklist prepares the NeoForge Connector for real Minecraft validation.
 Passing `gradlew build` confirms compilation only; it does not replace in-game
 testing.
 
-Fabric and Forge Alpha are also covered here as separate command-only
-checklists. NeoForge remains the full-featured Connector; Fabric v1.1.1 and
-Forge v1.1.2 intentionally do not cover GUI, Ghost Preview, Builder Wand, or
-survival material flows yet.
+Fabric and Forge Alpha are also covered here as separate checklists. NeoForge
+remains the full-featured Connector; Fabric and Forge now include Builder Wand
+Alpha support but still intentionally do not cover GUI, Ghost Preview, survival
+material cost, material refunds, or BlockEntity NBT undo.
+
+## v1.2.0 Fabric / Forge Builder Wand Alpha Checklist
+
+Release version:
+
+```text
+1.2.0-alpha.1
+```
+
+Expected release jars:
+
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.2.0-alpha.1.jar
+```
+
+Recommended Fabric and Forge wand test flow:
+
+```mcfunction
+/blockforge examples install
+/blockforge reload
+/blockforge list
+/blockforge select tiny_platform
+/blockforge selected
+/blockforge rotate 90
+/blockforge wand
+```
+
+Then hold the Builder Wand, right-click a block, and run:
+
+```mcfunction
+/blockforge undo
+```
+
+Expected result:
+
+- `/blockforge wand` gives `blockforge_connector:builder_wand`.
+- Right-click placement uses the selected blueprint and rotation.
+- Placement happens at the clicked block plus clicked side.
+- Output includes the same placed/skipped statistics as command builds.
+- `/blockforge undo` restores the latest wand placement.
+- Repeated right-clicks within 2 seconds are blocked by the wand cooldown.
+- Command builds are not throttled by the wand cooldown.
+- Fabric / Forge Builder Wand manual Minecraft testing is pending.
 
 ## v1.1.3 Multi-loader Alpha Checklist
 
@@ -120,7 +165,6 @@ Known Fabric Alpha limits:
 
 - No GUI.
 - No Ghost Preview.
-- No Builder Wand.
 - No survival material cost or inventory mutation.
 - No material refund.
 - No BlockEntity NBT snapshot or restore.
@@ -194,7 +238,6 @@ Known Forge Alpha limits:
 
 - No GUI.
 - No Ghost Preview.
-- No Builder Wand.
 - No survival material cost or inventory mutation.
 - No material refund.
 - No BlockEntity NBT snapshot or restore.
@@ -249,7 +292,7 @@ Copy the generated jar into the test instance `mods` folder.
 Example:
 
 ```text
-.minecraft/mods/blockforge-connector-neoforge-1.1.3-alpha.1.jar
+.minecraft/mods/blockforge-connector-neoforge-1.2.0-alpha.1.jar
 ```
 
 ## 4. Install Example Blueprints

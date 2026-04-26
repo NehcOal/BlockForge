@@ -2,9 +2,12 @@ package com.blockforge.fabric.command;
 
 import com.blockforge.common.blueprint.Blueprint;
 import com.blockforge.common.rotation.BlueprintRotation;
+import com.blockforge.common.selection.PlayerSelection;
 import com.blockforge.fabric.blueprint.FabricBlueprintRegistry;
 import com.blockforge.fabric.blueprint.FabricExampleBlueprintInstaller;
 import com.blockforge.fabric.builder.FabricBlueprintPlacer;
+import com.blockforge.fabric.player.FabricPlayerSelectionManager;
+import com.blockforge.fabric.registry.FabricModItems;
 import com.blockforge.fabric.undo.FabricUndoManager;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -12,6 +15,7 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.CommandSource;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -27,7 +31,11 @@ public final class FabricBlockForgeCommands {
     private FabricBlockForgeCommands() {
     }
 
-    public static void register(FabricBlueprintRegistry registry, FabricUndoManager undoManager) {
+    public static void register(
+            FabricBlueprintRegistry registry,
+            FabricUndoManager undoManager,
+            FabricPlayerSelectionManager selectionManager
+    ) {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(CommandManager.literal("blockforge")
                 .then(CommandManager.literal("folder")
                         .executes(context -> showFolder(context, registry)))
@@ -42,6 +50,17 @@ public final class FabricBlockForgeCommands {
                         .executes(context -> reload(context, registry)))
                 .then(CommandManager.literal("list")
                         .executes(context -> list(context, registry)))
+                .then(CommandManager.literal("select")
+                        .then(blueprintIdArgument(registry)
+                                .executes(context -> select(context, registry, selectionManager))))
+                .then(CommandManager.literal("selected")
+                        .executes(context -> selected(context, selectionManager)))
+                .then(CommandManager.literal("rotate")
+                        .then(rotationArgument()
+                                .executes(context -> rotate(context, selectionManager))))
+                .then(CommandManager.literal("wand")
+                        .requires(source -> source.hasPermissionLevel(2))
+                        .executes(FabricBlockForgeCommands::giveWand))
                 .then(CommandManager.literal("info")
                         .then(blueprintIdArgument(registry)
                                 .executes(context -> info(context, registry))))
@@ -62,6 +81,103 @@ public final class FabricBlockForgeCommands {
                 .then(CommandManager.literal("undo")
                         .requires(source -> source.hasPermissionLevel(2))
                         .executes(context -> undo(context, undoManager)))));
+    }
+
+    private static int select(
+            CommandContext<ServerCommandSource> context,
+            FabricBlueprintRegistry registry,
+            FabricPlayerSelectionManager selectionManager
+    ) {
+        ServerPlayerEntity player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        Blueprint blueprint = findBlueprint(context, registry);
+        if (blueprint == null) {
+            return 0;
+        }
+
+        PlayerSelection selection = selectionManager.select(player.getUuid(), blueprint.getId());
+        context.getSource().sendFeedback(
+                () -> Text.literal("Selected BlockForge Fabric blueprint: "
+                        + blueprint.getId()
+                        + " | rotation="
+                        + selection.rotationDegrees()),
+                false
+        );
+        return 1;
+    }
+
+    private static int selected(
+            CommandContext<ServerCommandSource> context,
+            FabricPlayerSelectionManager selectionManager
+    ) {
+        ServerPlayerEntity player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        PlayerSelection selection = selectionManager.get(player.getUuid()).orElse(null);
+        if (selection == null) {
+            context.getSource().sendError(Text.literal("No BlockForge Fabric blueprint selected. Use /blockforge select <id> first."));
+            return 0;
+        }
+
+        context.getSource().sendFeedback(
+                () -> Text.literal("Selected BlockForge Fabric blueprint: "
+                        + selection.selectedBlueprintId()
+                        + " | rotation="
+                        + selection.rotationDegrees()),
+                false
+        );
+        return 1;
+    }
+
+    private static int rotate(
+            CommandContext<ServerCommandSource> context,
+            FabricPlayerSelectionManager selectionManager
+    ) {
+        ServerPlayerEntity player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        Integer degrees = getRotationDegrees(context);
+        if (degrees == null) {
+            return 0;
+        }
+
+        PlayerSelection selection = selectionManager.rotate(player.getUuid(), degrees).orElse(null);
+        if (selection == null) {
+            context.getSource().sendError(Text.literal("No BlockForge Fabric blueprint selected. Use /blockforge select <id> first."));
+            return 0;
+        }
+
+        context.getSource().sendFeedback(
+                () -> Text.literal("BlockForge Fabric rotation set to " + selection.rotationDegrees() + "."),
+                false
+        );
+        return 1;
+    }
+
+    private static int giveWand(CommandContext<ServerCommandSource> context) {
+        ServerPlayerEntity player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        ItemStack stack = new ItemStack(FabricModItems.BUILDER_WAND);
+        boolean inserted = player.giveItemStack(stack);
+        if (!inserted) {
+            player.dropItem(stack, false);
+        }
+
+        context.getSource().sendFeedback(
+                () -> Text.literal("Gave BlockForge Fabric Builder Wand."),
+                true
+        );
+        return 1;
     }
 
     private static RequiredArgumentBuilder<ServerCommandSource, String> blueprintIdArgument(
@@ -387,6 +503,17 @@ public final class FabricBlockForgeCommands {
     private static BlueprintRotation getRotation(CommandContext<ServerCommandSource> context) {
         try {
             return BlueprintRotation.fromDegrees(StringArgumentType.getString(context, "rotation"));
+        } catch (IllegalArgumentException error) {
+            context.getSource().sendError(Text.literal(error.getMessage()));
+            return null;
+        }
+    }
+
+    private static Integer getRotationDegrees(CommandContext<ServerCommandSource> context) {
+        try {
+            String value = StringArgumentType.getString(context, "rotation");
+            BlueprintRotation.fromDegrees(value);
+            return Integer.parseInt(value);
         } catch (IllegalArgumentException error) {
             context.getSource().sendError(Text.literal(error.getMessage()));
             return null;

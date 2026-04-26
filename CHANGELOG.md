@@ -2,6 +2,30 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [1.2.0] - Unreleased
+
+### Added
+
+- Added common player selection data models for loader-neutral blueprint id, rotation, and wand cooldown state.
+- Added Fabric Builder Wand Alpha item registration, item model, and English/Chinese translations.
+- Added Forge Builder Wand Alpha item registration, item model, and English/Chinese translations.
+- Added Fabric commands for `/blockforge select`, `/blockforge selected`, `/blockforge rotate`, and `/blockforge wand`.
+- Added Forge commands for `/blockforge select`, `/blockforge selected`, `/blockforge rotate`, and `/blockforge wand`.
+- Added in-memory Fabric and Forge player selection managers with a 2 second Builder Wand cooldown.
+
+### Changed
+
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.2.0-alpha.1`.
+- Fabric and Forge Builder Wand placement reuses the existing loader-specific placer and undo snapshot flow.
+- Updated the Loader Feature Matrix to mark Fabric and Forge Builder Wand support as Alpha.
+- Updated Fabric and Forge docs with the Builder Wand Alpha flow.
+
+### Notes
+
+- Fabric and Forge still do not include GUI, Ghost Preview, survival material cost, material refund undo, or BlockEntity NBT undo.
+- Command builds are not throttled by the Builder Wand cooldown.
+- Fabric / Forge Builder Wand manual Minecraft testing is pending.
+
 ## [1.1.3] - Unreleased
 
 ### Added

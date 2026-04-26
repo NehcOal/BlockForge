@@ -15,7 +15,7 @@ Web integration yet.
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector NeoForge`
-- Mod Version: `1.1.3-alpha.1`
+- Mod Version: `1.2.0-alpha.1`
 
 ## Multi-loader Architecture Status
 
@@ -30,11 +30,11 @@ Ghost Preview rendering, common config registration, real `setBlock` placement,
 inventory checks, and material consumption/refund integration.
 
 Fabric Connector Alpha exists under `mod/fabric-connector`, and Forge
-Connector Alpha exists under `mod/forge-connector`. Both are
-command-only and reuse common blueprint parsing, rotation, and build planning
-data. They do not include the NeoForge GUI, Ghost Preview, Builder Wand,
-survival material cost, inventory consumption, material refunds, or BlockEntity
-NBT undo yet.
+Connector Alpha exists under `mod/forge-connector`. Both reuse common blueprint
+parsing, rotation, and build planning data and now include Builder Wand Alpha
+placement. They do not include the NeoForge GUI, Ghost Preview, survival
+material cost, inventory consumption, material refunds, or BlockEntity NBT undo
+yet.
 
 ## Blueprint Protocol Support
 
@@ -61,7 +61,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge-connector-neoforge-1.1.3-alpha.1.jar
+build/libs/blockforge-connector-neoforge-1.2.0-alpha.1.jar
 ```
 
 ## Blueprint Folder
@@ -325,13 +325,13 @@ Known v1.1.x limits:
 - No nearby chest or warehouse support.
 - No special cost table for doors, fluids, torches, or multi-block placements.
 - No material icons in the GUI yet.
-- Fabric and Forge exist as command-only Alpha connectors and are not feature-parity yet.
+- Fabric and Forge include Builder Wand Alpha support and are not feature-parity yet.
 
 Manual Minecraft testing before v1.0.0-rc.1 verified survival undo refunds and
 full-inventory refund drops. The v1.0 RC also passed a smoke test for client
 launch and the core Connector flow after common config registration. v1.1.x
-keeps NeoForge as the most complete Connector while Fabric and Forge remain
-command-only Alpha connectors.
+keeps NeoForge as the most complete Connector while Fabric and Forge continue
+as Alpha connectors.
 
 ## Usage Example
 

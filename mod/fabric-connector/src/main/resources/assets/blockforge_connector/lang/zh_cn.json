@@ -1,3 +1,4 @@
 {
-  "modmenu.nameTranslation.blockforge_connector": "BlockForge Fabric 连接器"
+  "modmenu.nameTranslation.blockforge_connector": "BlockForge Fabric 连接器",
+  "item.blockforge_connector.builder_wand": "BlockForge 建筑法杖"
 }

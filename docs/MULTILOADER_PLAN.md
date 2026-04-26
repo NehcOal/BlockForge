@@ -79,7 +79,8 @@ be added after the three connector modules settle.
 - `v1.1.2`: Forge Connector command Alpha.
 - `v1.1.3`: multi-loader Alpha stabilization, documentation alignment, CI
   artifacts, and release packaging.
-- `v1.1.4+`: parity work after Alpha packaging is stable.
+- `v1.2.0`: Fabric and Forge Builder Wand Alpha parity.
+- `v1.2.1+`: continue Fabric and Forge parity work after wand testing.
 
 ## Current Risks
 
@@ -107,3 +108,16 @@ be added after the three connector modules settle.
 - Forge and Fabric Alpha undo restoration suppresses drops during block-state rollback.
 - v1.1.3 aligns versions to `1.1.3-alpha.1`, uses loader-specific jar names,
   and publishes CI artifacts for NeoForge, Fabric, and Forge.
+
+## v1.2.0 Status
+
+- Fabric and Forge add Builder Wand Alpha support without GUI, Ghost Preview,
+  survival material cost, material refund undo, or client networking.
+- Fabric and Forge players can use `/blockforge select`, `/blockforge selected`,
+  `/blockforge rotate`, and `/blockforge wand`.
+- Fabric and Forge wand placement reuses the existing loader-specific placer and
+  latest-placement undo snapshot flow.
+- Player selection state is in-memory and can be lost when a player disconnects
+  or the server restarts.
+- Wand placement has a 2 second per-player cooldown. Command builds are not
+  throttled by this cooldown.
