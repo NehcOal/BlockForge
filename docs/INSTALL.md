@@ -1,15 +1,31 @@
 # BlockForge Install Guide
 
-This guide covers the BlockForge web app and the NeoForge Connector release
-candidate.
+This guide covers the BlockForge web app and the Minecraft Java Connector jars
+for NeoForge, Fabric, and Forge.
 
 ## Versions
 
-- BlockForge Web: `1.0.0-rc.1`
-- BlockForge Connector: `1.0.0-rc.1`
+- BlockForge Web: `1.1.3-alpha.1`
 - Minecraft Java Edition: `1.21.1`
-- NeoForge: `21.1.227`
 - Java: `21`
+- NeoForge: `21.1.227`
+- Fabric Loader: `0.19.2`
+- Fabric API: `0.116.11+1.21.1`
+- Forge: `52.1.14`
+
+## Choose A Loader
+
+NeoForge is the recommended complete in-game experience. Fabric and Forge are
+command-only Alpha connectors.
+
+| Connector | Best For | Current Status |
+|---|---|---|
+| NeoForge | GUI Selector, Builder Wand, Ghost Preview, survival materials, material refund undo | Most complete |
+| Fabric Alpha | Command reload/list/dryrun/build/undo validation | Alpha |
+| Forge Alpha | Command reload/list/dryrun/build/undo validation | Alpha |
+
+Do not install multiple BlockForge connector jars into the same Minecraft
+instance at once. Pick the jar that matches the loader for that instance.
 
 ## Run The Web App Locally
 
@@ -27,42 +43,44 @@ http://localhost:3000
 Choose a preset, preview it in 3D, then export `Blueprint JSON v2` for the
 Connector.
 
-## Install NeoForge 1.21.1
+## Build Connector Jars
 
-1. Install Minecraft Java Edition `1.21.1`.
-2. Install Java `21`.
-3. Install NeoForge for Minecraft `1.21.1`.
-4. Create or open a NeoForge `1.21.1` test instance.
+NeoForge:
 
-BlockForge Connector has been tested against NeoForge `21.1.227`.
+```bash
+cd mod/neoforge-connector
+./gradlew build
+```
 
-## Install The BlockForge Connector Jar
+Fabric:
 
-1. Build the mod:
+```bash
+cd mod/fabric-connector
+./gradlew build
+```
 
-   ```bash
-   cd mod/neoforge-connector
-   ./gradlew build
-   ```
+Forge:
 
-   On Windows:
+```bash
+cd mod/forge-connector
+./gradlew build
+```
 
-   ```powershell
-   cd mod/neoforge-connector
-   .\gradlew.bat build
-   ```
+Windows users can run `gradlew.bat build` in the same directories.
 
-2. Copy the generated jar from:
+Expected release jar names:
 
-   ```text
-   mod/neoforge-connector/build/libs/
-   ```
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.1.3-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.1.3-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.1.3-alpha.1.jar
+```
 
-3. Place the jar in your Minecraft instance `mods` folder.
+Copy the matching jar into the Minecraft instance `mods` folder.
 
 ## Blueprint Folder
 
-BlockForge Connector reads blueprint files from:
+All three connectors read blueprint files from:
 
 ```text
 .minecraft/config/blockforge/blueprints/
@@ -81,7 +99,25 @@ In game, run:
 /blockforge list
 ```
 
-## Use The GUI
+## Command Alpha Flow
+
+This command flow is supported on NeoForge, Fabric Alpha, and Forge Alpha:
+
+```mcfunction
+/blockforge folder
+/blockforge examples list
+/blockforge examples install
+/blockforge reload
+/blockforge list
+/blockforge info tiny_platform
+/blockforge dryrun tiny_platform
+/blockforge build tiny_platform
+/blockforge undo
+/blockforge build state_test_house rotate 90
+/blockforge undo
+```
+
+## NeoForge Full Experience
 
 Open the Blueprint Selector:
 
@@ -90,10 +126,6 @@ Open the Blueprint Selector:
 ```
 
 You can also press the default `B` keybind.
-
-Select a blueprint, choose a rotation, then press `Select`.
-
-## Use The Builder Wand
 
 Give yourself the Builder Wand:
 
@@ -104,50 +136,26 @@ Give yourself the Builder Wand:
 Hold the wand, look at a block, and right-click. Ghost Preview shows the target
 placement area before you build.
 
-## Survival Materials
+In survival mode, NeoForge checks required materials before building. Undo
+restores blocks and refunds recorded survival materials.
 
-In survival mode, BlockForge checks the required materials before building. If
-materials are missing, the build is rejected. If materials are available, they
-are consumed when the build starts.
+## Fabric / Forge Alpha Limits
 
-Creative mode bypasses material checks and consumes nothing.
-
-## Undo
-
-Undo the most recent BlockForge placement:
-
-```mcfunction
-/blockforge undo
-```
-
-Undo restores the previous blocks and refunds survival materials recorded by
-the build transaction. If the player inventory is full, refunded items are
-dropped near the player.
-
-## Common Config
-
-The Connector writes a NeoForge common config file:
-
-```text
-.minecraft/config/blockforge_connector-common.toml
-```
-
-It contains safety and material options such as max blocks per build, Builder
-Wand cooldown, undo history size, replacement rules, block entity protection,
-and survival material requirements.
-
-Defaults match the behavior validated before the v1.0 release candidate.
-The v1.0 RC has also passed a Minecraft smoke test for client launch and the
-core Connector flow after common config registration.
+Fabric and Forge Alpha support command builds and block undo only. They do not
+support GUI Selector, Builder Wand, Ghost Preview, survival material costs,
+material refund undo, or BlockEntity NBT undo yet.
 
 ## Release Artifacts
 
-A BlockForge release should include:
+A BlockForge v1.1.3-alpha.1 release should include:
 
 - Web source release from the GitHub tag.
-- Mod jar from `mod/neoforge-connector/build/libs/*.jar`.
-- `examples/blueprints/`.
-- `docs/BLUEPRINT_PROTOCOL.md`.
-- `docs/MOD_CONNECTOR_TESTING.md`.
+- `blockforge-connector-neoforge-1.1.3-alpha.1.jar`
+- `blockforge-connector-fabric-1.1.3-alpha.1.jar`
+- `blockforge-connector-forge-1.1.3-alpha.1.jar`
+- `examples/blueprints/`
+- `docs/BLUEPRINT_PROTOCOL.md`
+- `docs/MOD_CONNECTOR_TESTING.md`
+- `docs/RELEASE_NOTES_TEMPLATE.md`
 
-GitHub Actions uploads the Connector jar as a CI artifact.
+GitHub Actions uploads the three Connector jars as separate CI artifacts.

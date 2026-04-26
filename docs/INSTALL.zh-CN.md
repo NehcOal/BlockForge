@@ -1,14 +1,30 @@
 # BlockForge 安装指南
 
-本文档说明 BlockForge Web 端和 NeoForge Connector 候选版本的安装方式。
+本文档说明 BlockForge Web 端，以及 NeoForge、Fabric、Forge 三端 Minecraft Java
+Connector jar 的安装方式。
 
 ## 版本
 
-- BlockForge Web：`1.0.0-rc.1`
-- BlockForge Connector：`1.0.0-rc.1`
+- BlockForge Web：`1.1.3-alpha.1`
 - Minecraft Java Edition：`1.21.1`
-- NeoForge：`21.1.227`
 - Java：`21`
+- NeoForge：`21.1.227`
+- Fabric Loader：`0.19.2`
+- Fabric API：`0.116.11+1.21.1`
+- Forge：`52.1.14`
+
+## 选择 Loader
+
+NeoForge 是当前推荐的完整游戏内体验。Fabric 和 Forge 是命令版 Alpha。
+
+| Connector | 适合场景 | 当前状态 |
+|---|---|---|
+| NeoForge | GUI Selector、Builder Wand、Ghost Preview、生存材料、Undo 材料返还 | 功能最完整 |
+| Fabric Alpha | 命令 reload/list/dryrun/build/undo 验证 | Alpha |
+| Forge Alpha | 命令 reload/list/dryrun/build/undo 验证 | Alpha |
+
+不要把多个 BlockForge connector jar 同时放进同一个 Minecraft 实例。请选择与当前
+loader 匹配的 jar。
 
 ## 本地运行 Web 端
 
@@ -25,42 +41,44 @@ http://localhost:3000
 
 选择 preset，在浏览器中 3D 预览，然后导出 `Blueprint JSON v2` 给 Connector 使用。
 
-## 安装 NeoForge 1.21.1
+## 构建 Connector Jar
 
-1. 安装 Minecraft Java Edition `1.21.1`。
-2. 安装 Java `21`。
-3. 安装 Minecraft `1.21.1` 对应的 NeoForge。
-4. 创建或打开一个 NeoForge `1.21.1` 测试实例。
+NeoForge：
 
-BlockForge Connector 已按 NeoForge `21.1.227` 验证。
+```bash
+cd mod/neoforge-connector
+./gradlew build
+```
 
-## 安装 BlockForge Connector jar
+Fabric：
 
-1. 构建 Mod：
+```bash
+cd mod/fabric-connector
+./gradlew build
+```
 
-   ```bash
-   cd mod/neoforge-connector
-   ./gradlew build
-   ```
+Forge：
 
-   Windows：
+```bash
+cd mod/forge-connector
+./gradlew build
+```
 
-   ```powershell
-   cd mod/neoforge-connector
-   .\gradlew.bat build
-   ```
+Windows 用户在对应目录执行 `gradlew.bat build`。
 
-2. 从下面目录找到生成的 jar：
+预期 release jar 名称：
 
-   ```text
-   mod/neoforge-connector/build/libs/
-   ```
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.1.3-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.1.3-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.1.3-alpha.1.jar
+```
 
-3. 把 jar 放入 Minecraft 实例的 `mods` 文件夹。
+把对应 loader 的 jar 放入 Minecraft 实例的 `mods` 文件夹。
 
 ## 蓝图目录
 
-BlockForge Connector 会读取：
+三端 connector 都读取：
 
 ```text
 .minecraft/config/blockforge/blueprints/
@@ -78,7 +96,25 @@ Mod 启动或执行 reload 时会自动创建该目录。
 /blockforge list
 ```
 
-## 使用 GUI
+## 命令版 Alpha 流程
+
+NeoForge、Fabric Alpha、Forge Alpha 都支持这组命令：
+
+```mcfunction
+/blockforge folder
+/blockforge examples list
+/blockforge examples install
+/blockforge reload
+/blockforge list
+/blockforge info tiny_platform
+/blockforge dryrun tiny_platform
+/blockforge build tiny_platform
+/blockforge undo
+/blockforge build state_test_house rotate 90
+/blockforge undo
+```
+
+## NeoForge 完整体验
 
 打开 Blueprint Selector：
 
@@ -88,10 +124,6 @@ Mod 启动或执行 reload 时会自动创建该目录。
 
 也可以按默认快捷键 `B`。
 
-选择蓝图、选择旋转角度，然后点击 `Select`。
-
-## 使用 Builder Wand
-
 获取 Builder Wand：
 
 ```mcfunction
@@ -100,46 +132,25 @@ Mod 启动或执行 reload 时会自动创建该目录。
 
 手持法杖，看向一个方块并右键。Ghost Preview 会显示将要放置的位置和范围。
 
-## 生存模式材料
+生存模式下，NeoForge 会检查所需材料。Undo 会恢复方块，并返还该次建造事务记录的
+生存模式材料。
 
-生存模式下，BlockForge 会在建造前检查材料。材料不足时拒绝建造；材料足够时，
-建造开始后会扣除材料。
+## Fabric / Forge Alpha 限制
 
-创造模式会跳过材料检查，不消耗材料。
-
-## Undo
-
-撤销最近一次 BlockForge 放置：
-
-```mcfunction
-/blockforge undo
-```
-
-Undo 会恢复原方块，并返还该次建造事务记录的生存模式材料。如果背包已满，
-返还材料会掉落在玩家附近。
-
-## Common Config
-
-Connector 会生成 NeoForge common config：
-
-```text
-.minecraft/config/blockforge_connector-common.toml
-```
-
-里面包含最大建造方块数、Builder Wand 冷却、Undo 历史数量、是否允许覆盖非空气方块、
-是否保护 BlockEntity、是否启用生存模式材料需求等配置。
-
-默认值保持 v1.0 release candidate 前已验证的行为。v1.0 RC 已通过 Minecraft
-客户端启动和 common config 注册后的 Connector 核心流程烟测。
+Fabric 和 Forge Alpha 只支持命令 build 和方块 undo。它们暂不支持 GUI Selector、
+Builder Wand、Ghost Preview、生存材料成本、Undo 材料返还或 BlockEntity NBT undo。
 
 ## Release Artifacts
 
-BlockForge release 应包含：
+BlockForge v1.1.3-alpha.1 release 应包含：
 
 - GitHub tag 提供的 Web source release。
-- `mod/neoforge-connector/build/libs/*.jar` 中的 Mod jar。
-- `examples/blueprints/`。
-- `docs/BLUEPRINT_PROTOCOL.md`。
-- `docs/MOD_CONNECTOR_TESTING.md`。
+- `blockforge-connector-neoforge-1.1.3-alpha.1.jar`
+- `blockforge-connector-fabric-1.1.3-alpha.1.jar`
+- `blockforge-connector-forge-1.1.3-alpha.1.jar`
+- `examples/blueprints/`
+- `docs/BLUEPRINT_PROTOCOL.md`
+- `docs/MOD_CONNECTOR_TESTING.md`
+- `docs/RELEASE_NOTES_TEMPLATE.md`
 
-GitHub Actions 会把 Connector jar 上传为 CI artifact。
+GitHub Actions 会把三个 Connector jar 分别上传为 CI artifact。

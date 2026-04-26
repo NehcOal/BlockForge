@@ -5,6 +5,39 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
+## v1.1.3 Multiloader Alpha Stabilization
+
+BlockForge v1.1.3-alpha.1 aligns the NeoForge, Fabric, and Forge Connector
+Alpha release shape. NeoForge is still the most complete connector for now.
+Fabric and Forge are command-only Alpha connectors intended to prove loader
+support before feature parity work.
+
+Expected release jars:
+
+- `blockforge-connector-neoforge-1.1.3-alpha.1.jar`
+- `blockforge-connector-fabric-1.1.3-alpha.1.jar`
+- `blockforge-connector-forge-1.1.3-alpha.1.jar`
+
+## Loader Feature Matrix
+
+| Feature | NeoForge | Fabric Alpha | Forge Alpha |
+|---|---|---|---|
+| Blueprint v1/v2 loading | yes | yes | yes |
+| Examples install | yes | yes | yes |
+| Reload/list/info/dryrun | yes | yes | yes |
+| Build command | yes | yes | yes |
+| Rotation | yes | yes | yes |
+| Undo blocks | yes | yes | yes |
+| GUI Selector | yes | no | no |
+| Builder Wand | yes | no | no |
+| Ghost Preview | yes | no | no |
+| Survival material cost | yes | no | no |
+| Material refund undo | yes | no | no |
+| BlockEntity NBT undo | yes, best effort | no | no |
+
+Fabric and Forge Alpha intentionally do not include GUI, Ghost Preview, Builder
+Wand, survival material cost, material refund undo, or BlockEntity NBT undo.
+
 ## v1.1.1 Fabric Connector Alpha
 
 BlockForge v1.1.1 adds `mod/fabric-connector`, a Fabric 1.21.1 command-only

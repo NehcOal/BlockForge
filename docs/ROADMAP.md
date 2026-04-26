@@ -2,10 +2,10 @@
 
 ## Near Term
 
-- Continue v1.1 multi-loader architecture work around `mod/common`.
-- Keep NeoForge 1.21.1 as the current stable Connector target.
-- Validate the Forge 1.21.1 command-only Connector Alpha in a real Minecraft instance.
-- Start Fabric and Forge parity work only after command reload/list/dryrun/build/undo are proven in-game on both loaders.
+- Stabilize the v1.1.3 multi-loader Alpha release package.
+- Keep NeoForge 1.21.1 as the recommended complete Connector target.
+- Keep Fabric and Forge 1.21.1 as command-only Alpha connectors until parity work starts.
+- Start Fabric and Forge parity work from the proven command reload/list/dryrun/build/undo base.
 - Stabilize BlockForge Blueprint v1 as the Web and Mod shared protocol.
 - Add schema validation tooling for exported blueprint files.
 - Add Ghost Preview collision and replacement scans.
@@ -39,6 +39,7 @@
 - v1.1.0: common core for blueprint, rotation, material data, build planning, undo records, and platform adapter interfaces.
 - v1.1.1: Fabric Connector command Alpha.
 - v1.1.2: Forge Connector command Alpha.
-- v1.1.3: parity pass across NeoForge, Fabric, and Forge.
+- v1.1.3: multi-loader Alpha stabilization, feature matrix, CI artifact naming, and release packaging.
+- v1.1.4+: Fabric and Forge parity planning after Alpha release feedback.
 
 See [Multi-loader Plan](./MULTILOADER_PLAN.md) for details.

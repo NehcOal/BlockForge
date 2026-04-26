@@ -12,7 +12,7 @@ NeoForge GUI, Ghost Preview, Builder Wand, or survival material system yet.
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector Forge`
-- Mod Version: `1.1.2-alpha.1`
+- Mod Version: `1.1.3-alpha.1`
 
 ## Build
 
@@ -31,7 +31,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge_connector_forge-1.1.2-alpha.1.jar
+build/libs/blockforge-connector-forge-1.1.3-alpha.1.jar
 ```
 
 ## Blueprint Folder
@@ -116,7 +116,7 @@ Permissions:
 - No persistence for undo snapshots.
 - No Forge networking or client renderer yet.
 - No protected block entity checks in the Alpha placer.
-- No manual Minecraft Forge regression test has been run yet.
+- Command-loop manual Minecraft testing has passed for the Alpha command flow.
 
 ## Difference From NeoForge And Fabric
 

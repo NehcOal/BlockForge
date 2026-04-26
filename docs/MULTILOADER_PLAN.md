@@ -77,7 +77,9 @@ be added after the three connector modules settle.
 - `v1.1.0`: common core and NeoForge adapter integration.
 - `v1.1.1`: Fabric Connector command Alpha.
 - `v1.1.2`: Forge Connector command Alpha.
-- `v1.1.3`: parity pass across NeoForge, Fabric, and Forge.
+- `v1.1.3`: multi-loader Alpha stabilization, documentation alignment, CI
+  artifacts, and release packaging.
+- `v1.1.4+`: parity work after Alpha packaging is stable.
 
 ## Current Risks
 
@@ -89,13 +91,19 @@ be added after the three connector modules settle.
 - Registry lookup, inventory mutation, and world placement must remain in each
   loader adapter to avoid leaking Minecraft runtime types into common core.
 
-## v1.1.2 Status
+## v1.1.3 Status
 
-- NeoForge remains the complete and stable in-game target.
+- All three connector modules exist: `mod/neoforge-connector`,
+  `mod/fabric-connector`, and `mod/forge-connector`.
+- NeoForge remains the recommended and most complete in-game target.
 - Fabric has a command-only Alpha under `mod/fabric-connector`.
 - Fabric Alpha command-loop manual testing passed for example install, reload, list, dryrun, build, rotated `state_test_house`, undo, and invalid blueprint id handling.
-- Forge now has a command-only Alpha under `mod/forge-connector`.
+- Forge has a command-only Alpha under `mod/forge-connector`.
+- Forge Alpha command-loop manual testing passed for example install, reload,
+  list, dryrun, build, rotated `state_test_house`, undo, and invalid blueprint
+  id handling.
 - Fabric and Forge Alpha both reuse common blueprint parsing, rotation, and build planning data.
 - Fabric and Forge Alpha do not include GUI, Ghost Preview, Builder Wand, survival material costs, inventory transactions, material refunds, or BlockEntity NBT undo.
-- Forge Alpha command-loop manual testing passed for example install, reload, list, dryrun, build, rotated `state_test_house`, undo, and invalid blueprint id handling.
 - Forge and Fabric Alpha undo restoration suppresses drops during block-state rollback.
+- v1.1.3 aligns versions to `1.1.3-alpha.1`, uses loader-specific jar names,
+  and publishes CI artifacts for NeoForge, Fabric, and Forge.

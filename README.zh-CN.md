@@ -8,6 +8,38 @@ Fabric / Forge Connector Alpha 命令闭环。
 
 [English README](./README.md) | [使用手册](./docs/USER_MANUAL.zh-CN.md)
 
+## v1.1.3 Multiloader Alpha 稳定整理
+
+BlockForge v1.1.3-alpha.1 对齐 NeoForge、Fabric 和 Forge Connector Alpha 的
+发布形态。NeoForge 仍然是当前功能最完整的 connector。Fabric 和 Forge 是命令版
+Alpha，用于验证多 loader 支持，后续再做功能 parity。
+
+预期发布 jar：
+
+- `blockforge-connector-neoforge-1.1.3-alpha.1.jar`
+- `blockforge-connector-fabric-1.1.3-alpha.1.jar`
+- `blockforge-connector-forge-1.1.3-alpha.1.jar`
+
+## Loader 功能矩阵
+
+| 功能 | NeoForge | Fabric Alpha | Forge Alpha |
+|---|---|---|---|
+| Blueprint v1/v2 加载 | 支持 | 支持 | 支持 |
+| 安装示例蓝图 | 支持 | 支持 | 支持 |
+| Reload/list/info/dryrun | 支持 | 支持 | 支持 |
+| Build 命令 | 支持 | 支持 | 支持 |
+| 旋转 | 支持 | 支持 | 支持 |
+| Undo 方块 | 支持 | 支持 | 支持 |
+| GUI Selector | 支持 | 不支持 | 不支持 |
+| Builder Wand | 支持 | 不支持 | 不支持 |
+| Ghost Preview | 支持 | 不支持 | 不支持 |
+| 生存模式材料成本 | 支持 | 不支持 | 不支持 |
+| Undo 材料返还 | 支持 | 不支持 | 不支持 |
+| BlockEntity NBT undo | best effort 支持 | 不支持 | 不支持 |
+
+Fabric 和 Forge Alpha 目前不包含 GUI、Ghost Preview、Builder Wand、生存材料成本、
+Undo 材料返还或 BlockEntity NBT undo。
+
 ## v1.1.1 Fabric Connector Alpha
 
 BlockForge v1.1.1 新增 `mod/fabric-connector`，这是 Fabric 1.21.1 的命令版

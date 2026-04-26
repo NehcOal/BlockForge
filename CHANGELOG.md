@@ -2,6 +2,31 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [1.1.3] - Unreleased
+
+### Added
+
+- Added a loader feature matrix to the English and Chinese READMEs.
+- Added `docs/RELEASE_NOTES_TEMPLATE.md` for GitHub alpha releases.
+- Added `docs/PUBLISHING.md` with multi-loader GitHub, Modrinth, and CurseForge publishing guidance.
+
+### Changed
+
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.1.3-alpha.1`.
+- Standardized release jar names:
+  - `blockforge-connector-neoforge-1.1.3-alpha.1.jar`
+  - `blockforge-connector-fabric-1.1.3-alpha.1.jar`
+  - `blockforge-connector-forge-1.1.3-alpha.1.jar`
+- Updated CI to build Web, NeoForge, Fabric, and Forge without silently skipping existing loader modules.
+- Updated CI artifact names to `blockforge-neoforge-jar`, `blockforge-fabric-jar`, and `blockforge-forge-jar`.
+- Updated install, testing, roadmap, and multi-loader docs to clarify that NeoForge is the most complete Connector while Fabric and Forge remain command-only Alpha connectors.
+
+### Notes
+
+- v1.1.3 does not add GUI, Ghost Preview, Builder Wand, material costs, or material refunds to Fabric or Forge.
+- Fabric and Forge command-loop manual Minecraft testing passed before this stabilization pass.
+- NeoForge remains the recommended full-experience Connector for the Alpha release.
+
 ## [1.1.2] - Unreleased
 
 ### Added

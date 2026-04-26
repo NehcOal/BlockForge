@@ -9,6 +9,44 @@ checklists. NeoForge remains the full-featured Connector; Fabric v1.1.1 and
 Forge v1.1.2 intentionally do not cover GUI, Ghost Preview, Builder Wand, or
 survival material flows yet.
 
+## v1.1.3 Multi-loader Alpha Checklist
+
+Release version:
+
+```text
+1.1.3-alpha.1
+```
+
+Expected release jars:
+
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.1.3-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.1.3-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.1.3-alpha.1.jar
+```
+
+Required build checks:
+
+```powershell
+pnpm lint
+pnpm test
+pnpm build
+cd mod/neoforge-connector
+gradlew.bat build
+cd ..\fabric-connector
+gradlew.bat build
+cd ..\forge-connector
+gradlew.bat build
+```
+
+Manual testing status for v1.1.3:
+
+- NeoForge remains the recommended full-experience Connector.
+- Fabric Alpha command-loop testing passed in v1.1.1.
+- Forge Alpha command-loop testing passed in v1.1.2.
+- v1.1.3 is a stabilization and packaging pass; it does not add new gameplay
+  features to Fabric or Forge.
+
 ## 1. Environment Requirements
 
 - Minecraft Java Edition `1.21.1`
@@ -211,7 +249,7 @@ Copy the generated jar into the test instance `mods` folder.
 Example:
 
 ```text
-.minecraft/mods/blockforge_connector-0.4.1.jar
+.minecraft/mods/blockforge-connector-neoforge-1.1.3-alpha.1.jar
 ```
 
 ## 4. Install Example Blueprints

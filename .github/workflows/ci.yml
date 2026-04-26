@@ -39,7 +39,7 @@ jobs:
       - name: Build
         run: pnpm build
 
-  mod:
+  neoforge:
     name: NeoForge Connector
     runs-on: ubuntu-latest
 
@@ -64,10 +64,10 @@ jobs:
         run: ./gradlew build
         working-directory: mod/neoforge-connector
 
-      - name: Upload Mod jar
+      - name: Upload NeoForge jar
         uses: actions/upload-artifact@v4
         with:
-          name: blockforge-connector-jar
+          name: blockforge-neoforge-jar
           path: mod/neoforge-connector/build/libs/*.jar
           if-no-files-found: error
 
@@ -79,41 +79,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check Fabric connector presence
-        id: fabric
-        run: |
-          if [ -f mod/fabric-connector/build.gradle ]; then
-            echo "present=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "present=false" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Setup Java 21
-        if: steps.fabric.outputs.present == 'true'
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
 
       - name: Setup Gradle
-        if: steps.fabric.outputs.present == 'true'
         uses: gradle/actions/setup-gradle@v4
 
       - name: Make Gradle wrapper executable
-        if: steps.fabric.outputs.present == 'true'
         run: chmod +x ./gradlew
         working-directory: mod/fabric-connector
 
       - name: Build Fabric Mod
-        if: steps.fabric.outputs.present == 'true'
         run: ./gradlew build
         working-directory: mod/fabric-connector
 
       - name: Upload Fabric jar
-        if: steps.fabric.outputs.present == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: blockforge-fabric-connector-jar
+          name: blockforge-fabric-jar
           path: mod/fabric-connector/build/libs/*.jar
           if-no-files-found: error
 
@@ -125,40 +111,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check Forge connector presence
-        id: forge
-        run: |
-          if [ -f mod/forge-connector/build.gradle ]; then
-            echo "present=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "present=false" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Setup Java 21
-        if: steps.forge.outputs.present == 'true'
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
 
       - name: Setup Gradle
-        if: steps.forge.outputs.present == 'true'
         uses: gradle/actions/setup-gradle@v4
 
       - name: Make Gradle wrapper executable
-        if: steps.forge.outputs.present == 'true'
         run: chmod +x ./gradlew
         working-directory: mod/forge-connector
 
       - name: Build Forge Mod
-        if: steps.forge.outputs.present == 'true'
         run: ./gradlew build
         working-directory: mod/forge-connector
 
       - name: Upload Forge jar
-        if: steps.forge.outputs.present == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: blockforge-forge-connector-jar
+          name: blockforge-forge-jar
           path: mod/forge-connector/build/libs/*.jar
           if-no-files-found: error
