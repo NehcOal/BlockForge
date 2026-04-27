@@ -5,9 +5,47 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v1.8.0 Web Polish + In-game GUI Alpha
+## v2.0.0 AI Generation Alpha
 
-BlockForge v1.8.0-alpha.1 polishes the Web import, validation, and Local
+BlockForge v2.0.0-alpha.1 adds an optional AI generation pipeline while keeping
+the Local Rule Generator as the default fallback.
+
+AI Generation highlights:
+
+- Local Rule Generator remains available without any API key.
+- Optional OpenAI provider runs through server-side API routes only.
+- Browser client code never reads or bundles `OPENAI_API_KEY`.
+- External AI returns an AI Structure Plan v1, not trusted final blocks.
+- Structure Plans are validated before conversion to VoxelModel and Blueprint
+  v2.
+- AI-generated blueprints can use the existing 3D preview and multi-format
+  export flow.
+- External AI requests may send prompts to the selected provider and may incur
+  API cost.
+
+See [AI Generation](./docs/AI_GENERATION.md) for setup, privacy notes, and
+known Alpha limits.
+
+Expected release jars:
+
+- `blockforge-connector-neoforge-2.0.0-alpha.1.jar`
+- `blockforge-connector-fabric-2.0.0-alpha.1.jar`
+- `blockforge-connector-forge-2.0.0-alpha.1.jar`
+
+Current validation status:
+
+| Area | Status |
+|---|---|
+| Web lint/test/build | passing |
+| AI provider tests with mocks | passing |
+| NeoForge/Fabric/Forge Gradle builds | passing |
+| External AI manual API-key smoke test | not run |
+| Manual Minecraft regression | pending |
+| Browser visual QA | pending |
+
+## v1.9.0 Web Polish + In-game GUI Alpha
+
+BlockForge v1.9.0-alpha.1 polishes the Web import, validation, and Local
 Prompt Rule Generator workbench, then adds query-based in-game GUI search,
 pagination, source filtering, warning filtering, sorting, source tags, and
 warning badges for NeoForge, Fabric, and Forge.
@@ -37,13 +75,14 @@ In-game GUI highlights:
 
 See [Web Workbench](./docs/WEB_WORKBENCH.md) for usage notes and current
 limits. See [GUI Search And Filters](./docs/GUI_SEARCH_AND_FILTERS.md) for the
-Connector GUI query model. External AI API adapter work is planned for v2.0.
+Connector GUI query model. External AI Generation Alpha is documented in
+[AI Generation](./docs/AI_GENERATION.md).
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-1.8.0-alpha.1.jar`
-- `blockforge-connector-fabric-1.8.0-alpha.1.jar`
-- `blockforge-connector-forge-1.8.0-alpha.1.jar`
+- `blockforge-connector-neoforge-1.9.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.9.0-alpha.1.jar`
+- `blockforge-connector-forge-1.9.0-alpha.1.jar`
 
 Current validation status:
 
@@ -54,6 +93,35 @@ Current validation status:
 | Web Workbench unit coverage | passing |
 | Manual Minecraft regression | pending |
 | Browser visual QA | pending |
+
+## v1.9.0 Rendering Performance + Screenshot Export Alpha
+
+BlockForge v1.9.0-alpha.1 adds a Web rendering performance pass for larger
+voxel previews. The 3D preview now supports `Auto`, `Mesh`, and `Instanced`
+render modes. Auto keeps the existing mesh path for small models and switches
+to InstancedMesh rendering at 300 blocks or more, grouped by block type.
+
+Web rendering highlights:
+
+- Instanced rendering for larger voxel models.
+- Rendering stats for block count, unique block types, render mode, and draw
+  groups.
+- Minecraft-inspired procedural material styles without bundling Minecraft
+  vanilla texture files.
+- Better camera fit helpers for large and small models.
+- Export Preview PNG for README, release notes, and gallery screenshots.
+
+### Generate a README screenshot
+
+1. Open the Web app and choose or generate a model.
+2. Adjust the 3D preview camera to the desired angle.
+3. Click `Export Preview PNG`.
+4. Place the image at `public/screenshots/blockforge-hero.png` when you want to
+   use it in the README, release notes, or a Modrinth gallery.
+
+The screenshot export uses the current preview canvas and does not upload data.
+The material style is procedural; Minecraft vanilla texture files are not
+included.
 
 ## v1.6.0 Schematic Interop Alpha
 
@@ -130,6 +198,12 @@ Expected release jars:
 | Web Workbench | ✅ Alpha |
 | Blueprint validation report | ✅ Alpha |
 | Local Rule Generator | ✅ Alpha |
+| External AI Generation | ✅ Alpha |
+| AI Structure Plan validation | ✅ Alpha |
+| Web 3D instanced rendering | ✅ Alpha |
+| Preview PNG export | ✅ Alpha |
+| Minecraft-inspired procedural materials | ✅ Alpha |
+| Vanilla Minecraft texture pack | ❌ Not bundled |
 
 ## Schematic Interop Matrix
 

@@ -1,9 +1,9 @@
-# BlockForge v1.8.0-alpha.1 - Web Polish + GUI Search Alpha
+# BlockForge v2.0.0-alpha.1 - AI Generation Alpha
 
 ## Release Type
 
-- Version: `1.8.0-alpha.1`
-- Type: Web Import / Validation / Local Generation Workbench Alpha candidate
+- Version: `2.0.0-alpha.1`
+- Type: AI Generation Alpha candidate
 - Stability: Alpha for Fabric and Forge, recommended full experience on NeoForge
 
 ## Supported Minecraft Version
@@ -19,9 +19,9 @@
 
 ## Download Files
 
-- `blockforge-connector-neoforge-1.8.0-alpha.1.jar`
-- `blockforge-connector-fabric-1.8.0-alpha.1.jar`
-- `blockforge-connector-forge-1.8.0-alpha.1.jar`
+- `blockforge-connector-neoforge-2.0.0-alpha.1.jar`
+- `blockforge-connector-fabric-2.0.0-alpha.1.jar`
+- `blockforge-connector-forge-2.0.0-alpha.1.jar`
 
 ## Feature Matrix
 
@@ -57,6 +57,14 @@ schematic export is Alpha. Mod-side schematic export is planned.
 
 ## Web Workbench Highlights
 
+- Local Rule Generator fallback remains available without API keys.
+- Optional OpenAI provider is available through server-side API routes.
+- AI Structure Plan v1 defines high-level structure elements before block
+  conversion.
+- Structured validation pipeline blocks invalid AI output before preview/export.
+- Prompt privacy and API cost notices are shown in the Web UI.
+- AI-generated blueprints can use the normal 3D preview and multi-format export
+  flow.
 - Import Blueprint JSON v1/v2.
 - Import Sponge `.schem` v3.
 - Import `.blockforgepack.zip`.
@@ -64,6 +72,16 @@ schematic export is Alpha. Mod-side schematic export is planned.
 - Generate deterministic local prompt-rule models without external AI API use.
 - Export JSON, Blueprint v1/v2, Blueprint Pack, `.schem`, `.mcfunction`, and
   Data Pack ZIP.
+
+Known limitations:
+
+- No guaranteed architectural quality.
+- No material-aware AI generation yet.
+- No multiplayer AI generation queue.
+- No persistent cloud generation history.
+- External provider requires server runtime and API key.
+- Browser visual QA is pending.
+- Minecraft manual regression is pending.
 
 ## Verified Tests
 
@@ -86,8 +104,8 @@ Manual Minecraft status:
   v1.3.5 focused nearby container smoke test passed: player-sourced materials
   refund to player inventory, and chest-sourced materials refund to the
   original chest.
-- v1.8.0 build validation: pending before release.
-- Full NeoForge / Fabric / Forge v1.8.0 Minecraft regression testing
+- v1.9.0 build validation: pending before release.
+- Full NeoForge / Fabric / Forge v1.9.0 Minecraft regression testing
   is still pending.
 - Browser visual QA is pending.
 
@@ -98,6 +116,13 @@ Manual Minecraft status:
 - Rows show source tags and best-effort warning badges.
 - Selection, Builder Wand, and Ghost Preview remain linked through the
   server-validated selection request.
+
+## Rendering Highlights
+
+- Web preview uses InstancedMesh for larger voxel models in Auto render mode.
+- Preview PNG export can create README, release notes, and gallery screenshots.
+- Material styling is procedural and Minecraft-inspired; no Minecraft vanilla
+  texture files are bundled.
 
 ## Known Limitations
 
@@ -117,8 +142,8 @@ Manual Minecraft status:
 - Dedicated server smoke testing is pending for this release candidate.
 - Web pack import currently displays an import summary and does not persist an
   imported pack library.
-- Web Local Prompt Rule Generator is deterministic and local-only; external AI
-  API adapter work is planned for v2.0.
+- Web Local Prompt Rule Generator is deterministic and local-only. Optional
+  External AI Generation Alpha requires a server runtime and API key.
 - Blueprint Pack zips are loaded from `config/blockforge/packs/`; there is no
   remote download or server-client pack sync.
 - No automatic publishing to Modrinth or CurseForge is performed by this release
