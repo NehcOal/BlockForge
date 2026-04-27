@@ -239,3 +239,12 @@ Forge now loads `config/blockforge/protection-regions.json` and runs BlockForge
 permission/protection preflight before build commands, Builder Wand placement,
 material consumption, and nearby-container material use. External permission and
 claim integration is planned; the Alpha falls back to vanilla permission levels.
+# v1.8.0-alpha.1 GUI Search Notes
+
+- `/blockforge gui` and the default `B` key open the Alpha selector with
+  search, pagination, source filtering, warning filtering, sorting, source tags,
+  warning badges, and rotation controls.
+- GUI results are queried on the server with `BlueprintGuiQueryService`.
+- Selection remains server-validated and continues to update Builder Wand and
+  Ghost Preview state.
+- Minecraft manual regression is pending.

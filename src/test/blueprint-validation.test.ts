@@ -26,15 +26,16 @@ describe("blueprint validation", () => {
       expect.arrayContaining([
         expect.objectContaining({
           field: "blocks[1]",
-          message: "Duplicate blueprint block coordinate: 0,0,0."
+          severity: "warning",
+          message: "duplicate block coordinate 0,0,0; later block wins"
         }),
         expect.objectContaining({
           field: "blocks[1].state",
-          message: "Blueprint block references missing palette entry: missing."
+          message: "blocks[1] references missing palette key \"missing\""
         }),
         expect.objectContaining({
           field: "blocks[2]",
-          message: "Blueprint block coordinate is outside declared size."
+          message: `block at x=${blueprint.size.width} is outside width=${blueprint.size.width}`
         })
       ])
     );
@@ -51,8 +52,10 @@ describe("blueprint validation", () => {
     expect(report.issues).toEqual([
       {
         severity: "warning",
+        section: "Origin",
         field: "origin",
-        message: "Blueprint origin is missing; connectors assume 0,0,0."
+        message: "Blueprint origin is missing; connectors assume 0,0,0.",
+        suggestion: undefined
       }
     ]);
   });

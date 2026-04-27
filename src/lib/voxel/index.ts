@@ -36,6 +36,7 @@ export {
   createImportedPackAsset,
   createImportedSchematicAsset
 } from "@/lib/voxel/blueprintImport";
+export { queryBlueprintSummaries } from "@/lib/voxel/blueprintGuiQuery";
 export {
   formatValidationSummary,
   validateBlueprintJson
@@ -93,6 +94,13 @@ export type {
   ImportedBlueprintSourceType,
   ImportedBlueprintSummary
 } from "@/lib/voxel/blueprintImport";
+export type {
+  BlueprintGuiQuery,
+  BlueprintGuiSummary,
+  BlueprintSortMode,
+  BlueprintSourceFilter,
+  BlueprintWarningFilter
+} from "@/lib/voxel/blueprintGuiQuery";
 export type {
   BlueprintValidationIssue,
   BlueprintValidationReport,

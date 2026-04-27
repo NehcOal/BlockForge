@@ -17,6 +17,8 @@
 - Run the v1.4.0 Blueprint Pack regression in real Minecraft clients.
 - Run the v1.6.0 Schematic Interop regression in real Minecraft clients.
 - Stabilize the v1.7 Web Import / Validation / Local Generation Workbench.
+- Stabilize the v1.8 in-game GUI search, pagination, filtering, sorting,
+  source tags, and warning badges across NeoForge, Fabric, and Forge.
 - Keep external AI API adapter work planned for v2.0.
 - Add special material cost rules for non-cube blocks.
 - Improve release artifact publishing beyond CI artifact upload.
@@ -67,6 +69,8 @@
 - v1.6.0: Sponge `.schem` v3 export/import on Web and schematic loading on
   NeoForge, Fabric, and Forge.
 - v1.7.0: Web Import / Validation / Local Generation Workbench.
+- v1.8.0: Web Polish + in-game GUI search, pagination, filtering, sorting,
+  source tags, and warning badges.
 - v2.0.0: External AI API adapter exploration after local workbench stabilizes.
 
 See [Multi-loader Plan](./MULTILOADER_PLAN.md) for details.

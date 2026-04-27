@@ -2,7 +2,7 @@
 
 All notable changes to BlockForge will be documented in this file.
 
-## [1.7.0-alpha.1] - Unreleased
+## [1.8.0-alpha.1] - Unreleased
 
 ### Added
 
@@ -16,12 +16,20 @@ All notable changes to BlockForge will be documented in this file.
 - Added additional schematic, Blueprint import, validation, and local generator
   tests.
 - Added `docs/WEB_WORKBENCH.md`.
+- Added query-based in-game GUI search, pagination, source filtering, warning
+  filtering, sorting, source tags, and warning badges for NeoForge, Fabric,
+  and Forge.
+- Added common `BlueprintGuiQuery`, filter/sort DTOs, `PagedBlueprintResult`,
+  and `BlueprintGuiQueryService`.
+- Added `docs/WEB_VISUAL_QA.md` and `docs/GUI_SEARCH_AND_FILTERS.md`.
 
 ### Changed
 
 - Web app now behaves more like a local import, validation, and generation
   workbench while keeping the existing preview and multi-format export flow.
-- Aligned Web, NeoForge, Fabric, and Forge versions to `1.7.0-alpha.1`.
+- Web import summaries and validation reports are clearer and collapsible, with
+  user-readable import errors and expandable developer details.
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.8.0-alpha.1`.
 
 ### Notes
 

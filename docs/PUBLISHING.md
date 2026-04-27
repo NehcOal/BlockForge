@@ -135,3 +135,12 @@ download file names match the expected jar names above.
   Claims integrations are planned, not bundled.
 - Manual Minecraft regression testing must remain pending until explicitly
   tested.
+# v1.8.0-alpha.1 Release Checklist
+
+- Confirm Web `pnpm lint`, `pnpm test`, and `pnpm build`.
+- Confirm NeoForge, Fabric, and Forge Gradle builds produce
+  `1.8.0-alpha.1` jars.
+- Keep release notes clear that Minecraft manual regression and Browser visual
+  QA are pending until manually checked.
+- Include `docs/WEB_VISUAL_QA.md` and `docs/GUI_SEARCH_AND_FILTERS.md` in the
+  release notes.

@@ -13,6 +13,12 @@ public final class BlueprintClientCache {
     private static boolean loading;
     private static String error = "";
     private static MaterialReportPayload materialReport;
+    private static int page;
+    private static int pageSize = 8;
+    private static int totalItems;
+    private static int totalPages;
+    private static boolean hasPrevious;
+    private static boolean hasNext;
 
     private BlueprintClientCache() {
     }
@@ -22,12 +28,31 @@ public final class BlueprintClientCache {
         error = "";
     }
 
-    public static void setBlueprints(List<BlueprintSummary> summaries) {
+    public static void setBlueprints(
+            List<BlueprintSummary> summaries,
+            int page,
+            int pageSize,
+            int totalItems,
+            int totalPages,
+            boolean hasPrevious,
+            boolean hasNext,
+            String serverSelectedBlueprintId,
+            int serverRotation
+    ) {
         blueprints = List.copyOf(summaries);
+        BlueprintClientCache.page = page;
+        BlueprintClientCache.pageSize = pageSize;
+        BlueprintClientCache.totalItems = totalItems;
+        BlueprintClientCache.totalPages = totalPages;
+        BlueprintClientCache.hasPrevious = hasPrevious;
+        BlueprintClientCache.hasNext = hasNext;
         loading = false;
         error = "";
 
-        if ((selectedBlueprintId == null || find(selectedBlueprintId).isEmpty()) && !blueprints.isEmpty()) {
+        if (serverSelectedBlueprintId != null && !serverSelectedBlueprintId.isBlank()) {
+            selectedBlueprintId = serverSelectedBlueprintId;
+            rotation = serverRotation;
+        } else if ((selectedBlueprintId == null || find(selectedBlueprintId).isEmpty()) && !blueprints.isEmpty()) {
             selectedBlueprintId = blueprints.getFirst().id();
         }
     }
@@ -89,6 +114,30 @@ public final class BlueprintClientCache {
         }
 
         return find(selectedBlueprintId);
+    }
+
+    public static int page() {
+        return page;
+    }
+
+    public static int pageSize() {
+        return pageSize;
+    }
+
+    public static int totalItems() {
+        return totalItems;
+    }
+
+    public static int totalPages() {
+        return totalPages;
+    }
+
+    public static boolean hasPrevious() {
+        return hasPrevious;
+    }
+
+    public static boolean hasNext() {
+        return hasNext;
     }
 
     private static Optional<BlueprintSummary> find(String id) {

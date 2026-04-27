@@ -26,7 +26,17 @@ public final class ClientPayloadHandler {
     }
 
     public static void handleBlueprintList(BlueprintListPayload payload) {
-        BlueprintClientCache.setBlueprints(payload.blueprints());
+        BlueprintClientCache.setBlueprints(
+                payload.blueprints(),
+                payload.page(),
+                payload.pageSize(),
+                payload.totalItems(),
+                payload.totalPages(),
+                payload.hasPrevious(),
+                payload.hasNext(),
+                payload.selectedBlueprintId(),
+                payload.selectedRotation()
+        );
         BlueprintSelectorScreen.refreshOpenScreen();
 
         if (payload.openScreen()) {

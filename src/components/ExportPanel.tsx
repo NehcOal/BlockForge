@@ -32,7 +32,7 @@ export function ExportPanel({ copy, model }: ExportPanelProps) {
   const schematicInputRef = useRef<HTMLInputElement>(null);
   const blueprintInputRef = useRef<HTMLInputElement>(null);
   const [importedAsset, setImportedAsset] = useState<ImportedBlueprintAsset | null>(null);
-  const [importError, setImportError] = useState("");
+  const [importError, setImportError] = useState<{ reason: string; details: string } | null>(null);
 
   function downloadFile(content: string, type: string, fileName: string) {
     const blob = new Blob([content], { type });
@@ -124,11 +124,11 @@ export function ExportPanel({ copy, model }: ExportPanelProps) {
 
     try {
       const imported = await importBlueprintPackZip(file);
-      setImportedAsset(createImportedPackAsset(imported));
-      setImportError("");
+      setImportedAsset({ ...createImportedPackAsset(imported), sourceFileName: file.name });
+      setImportError(null);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      setImportError(`${copy.importError}: ${message}`);
+      setImportError(createImportError(copy.importError, message));
     } finally {
       if (inputRef.current) {
         inputRef.current.value = "";
@@ -143,11 +143,11 @@ export function ExportPanel({ copy, model }: ExportPanelProps) {
 
     try {
       const imported = await importSpongeSchematicBlob(file);
-      setImportedAsset(createImportedSchematicAsset(imported));
-      setImportError("");
+      setImportedAsset({ ...createImportedSchematicAsset(imported), sourceFileName: file.name });
+      setImportError(null);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      setImportError(`${copy.schematicImportError}: ${message}`);
+      setImportError(createImportError(copy.schematicImportError, message));
     } finally {
       if (schematicInputRef.current) {
         schematicInputRef.current.value = "";
@@ -162,11 +162,11 @@ export function ExportPanel({ copy, model }: ExportPanelProps) {
 
     try {
       const blueprint = JSON.parse(await file.text());
-      setImportedAsset(createImportedBlueprintAsset(blueprint, file.name.replace(/\.json$/i, "")));
-      setImportError("");
+      setImportedAsset({ ...createImportedBlueprintAsset(blueprint, file.name.replace(/\.json$/i, "")), sourceFileName: file.name });
+      setImportError(null);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      setImportError(`${copy.importError}: ${message}`);
+      setImportError(createImportError(copy.importError, message));
     } finally {
       if (blueprintInputRef.current) {
         blueprintInputRef.current.value = "";
@@ -310,9 +310,10 @@ export function ExportPanel({ copy, model }: ExportPanelProps) {
           />
         ) : null}
         {importError ? (
-          <p className="rounded border border-red-500/40 bg-red-950/20 px-3 py-2 text-xs leading-5 text-red-100">
-            {importError}
-          </p>
+          <details className="rounded border border-red-500/40 bg-red-950/20 px-3 py-2 text-xs leading-5 text-red-100">
+            <summary className="cursor-pointer font-bold">{importError.reason}</summary>
+            <p className="mt-2 text-red-100/85">{importError.details}</p>
+          </details>
         ) : null}
         <p className="text-xs leading-5 text-stone-500">
           {copy.datapackHint}
@@ -320,6 +321,18 @@ export function ExportPanel({ copy, model }: ExportPanelProps) {
       </div>
     </section>
   );
+}
+
+function createImportError(prefix: string, details: string): { reason: string; details: string } {
+  const reason = details.toLowerCase().includes("json")
+    ? "The selected file is not valid Blueprint JSON."
+    : details.toLowerCase().includes("schem")
+      ? "The selected schematic could not be parsed."
+      : "The selected file could not be imported.";
+  return {
+    reason: `${prefix}: ${reason}`,
+    details
+  };
 }
 
 function PanelGroupTitle({ label }: { label: string }) {
@@ -340,10 +353,13 @@ function ImportSummaryCard({
   const firstBlueprint = asset.blueprints[0];
   const issueCounts = countImportSummaryIssues(asset);
   return (
-    <div className="rounded border border-forge/30 bg-black/20 px-3 py-3 text-xs text-stone-300">
+    <details className="rounded border border-forge/30 bg-black/20 px-3 py-3 text-xs text-stone-300" open>
+      <summary className="cursor-pointer font-bold text-stone-100">{asset.name}</summary>
       <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-        <p className="font-bold text-stone-100">{asset.name}</p>
         <p className="uppercase tracking-[0.16em] text-forge">{asset.sourceType}</p>
+        <p className={issueCounts.errors > 0 ? "text-red-200" : issueCounts.warnings > 0 ? "text-amber-200" : "text-emerald-200"}>
+          {issueCounts.errors > 0 ? "error" : issueCounts.warnings > 0 ? "warning" : "success"}
+        </p>
       </div>
       <div className="mt-3 grid gap-2 sm:grid-cols-4">
         <SummaryMetric label="Blueprints" value={asset.summary.blueprintCount.toString()} />
@@ -352,11 +368,37 @@ function ImportSummaryCard({
         <SummaryMetric label={copy.warningsLabel} value={issueCounts.warnings.toString()} tone={issueCounts.warnings > 0 ? "warning" : "default"} />
       </div>
       {firstBlueprint ? (
-        <p className="mt-3 leading-5 text-stone-400">
-          {firstBlueprint.id} | {firstBlueprint.size.width}x{firstBlueprint.size.height}x{firstBlueprint.size.depth} | palette={firstBlueprint.paletteCount} | blocks={firstBlueprint.blockCount}
-        </p>
+        <div className="mt-3 leading-5 text-stone-400">
+          <p>{firstBlueprint.id} | {firstBlueprint.size.width}x{firstBlueprint.size.height}x{firstBlueprint.size.depth} | palette={firstBlueprint.paletteCount} | blocks={firstBlueprint.blockCount}</p>
+          {asset.sourceFileName ? <p>source file: {asset.sourceFileName}</p> : null}
+          <ValidationReport issues={firstBlueprint.validation.issues} />
+        </div>
       ) : null}
-    </div>
+    </details>
+  );
+}
+
+function ValidationReport({ issues }: { issues: ImportedBlueprintAsset["blueprints"][number]["validation"]["issues"] }) {
+  if (issues.length === 0) {
+    return <p className="mt-2 text-emerald-200">Validation report: no issues.</p>;
+  }
+  const sections = Array.from(new Set(issues.map((issue) => issue.section)));
+  return (
+    <details className="mt-2 rounded border border-forge/10 bg-black/20 p-2">
+      <summary className="cursor-pointer text-stone-200">Validation report</summary>
+      <div className="mt-2 grid gap-2">
+        {sections.map((section) => (
+          <div key={section}>
+            <p className="font-bold text-stone-200">{section}</p>
+            {issues.filter((issue) => issue.section === section).map((issue) => (
+              <p className={issue.severity === "error" ? "text-red-200" : issue.severity === "warning" ? "text-amber-200" : "text-stone-400"} key={`${issue.field}-${issue.message}`}>
+                {issue.severity}: {issue.field} - {issue.message}{issue.suggestion ? ` Suggestion: ${issue.suggestion}` : ""}
+              </p>
+            ))}
+          </div>
+        ))}
+      </div>
+    </details>
   );
 }
 
