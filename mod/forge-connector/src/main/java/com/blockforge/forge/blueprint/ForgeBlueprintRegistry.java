@@ -4,6 +4,7 @@ import com.blockforge.common.blueprint.Blueprint;
 import com.blockforge.common.pack.LoadedBlueprintPack;
 import com.blockforge.forge.pack.ForgeBlueprintPackLoader;
 import com.blockforge.forge.pack.ForgeBlueprintPackRegistry;
+import com.blockforge.forge.schematic.ForgeSchematicRegistry;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class ForgeBlueprintRegistry {
     private final ForgeBlueprintLoader loader = new ForgeBlueprintLoader();
     private final Path directory;
     private final ForgeBlueprintPackRegistry packRegistry;
+    private final ForgeSchematicRegistry schematicRegistry;
     private final Map<String, Blueprint> blueprints = new LinkedHashMap<>();
     private Set<String> looseBlueprintIds = Set.of();
     private List<String> lastWarnings = List.of();
@@ -25,6 +27,7 @@ public class ForgeBlueprintRegistry {
     public ForgeBlueprintRegistry(Path directory) {
         this.directory = directory;
         this.packRegistry = new ForgeBlueprintPackRegistry(ForgeBlueprintPackLoader.defaultPackDirectory());
+        this.schematicRegistry = new ForgeSchematicRegistry(ForgeSchematicRegistry.defaultDirectory());
     }
 
     public LoadSummary reload() {
@@ -40,6 +43,11 @@ public class ForgeBlueprintRegistry {
         ForgeBlueprintPackRegistry.LoadResult packResult = packRegistry.reload(looseBlueprintIds);
         blueprints.putAll(packResult.blueprints());
         warnings.addAll(packResult.warnings());
+
+        Set<String> reservedIds = Set.copyOf(blueprints.keySet());
+        ForgeSchematicRegistry.LoadResult schematicResult = schematicRegistry.reload(reservedIds);
+        blueprints.putAll(schematicResult.blueprints());
+        warnings.addAll(schematicResult.warnings());
 
         lastWarnings = List.copyOf(warnings);
         return new LoadSummary(blueprints.size(), packRegistry.getPacks().size(), lastWarnings);
@@ -71,6 +79,18 @@ public class ForgeBlueprintRegistry {
 
     public List<LoadedBlueprintPack> getPacks() {
         return packRegistry.getPacks();
+    }
+
+    public Path getSchematicDirectory() {
+        return schematicRegistry.getDirectory();
+    }
+
+    public List<com.blockforge.common.schematic.SpongeSchematicImportResult> getSchematics() {
+        return schematicRegistry.getResults();
+    }
+
+    public ForgeSchematicRegistry.LoadResult validateSchematics() {
+        return schematicRegistry.validate(Set.copyOf(blueprints.keySet()));
     }
 
     public ForgeBlueprintPackRegistry.LoadResult validatePacks() {

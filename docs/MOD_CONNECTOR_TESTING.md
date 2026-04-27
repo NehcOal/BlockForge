@@ -4,6 +4,58 @@ This checklist prepares the NeoForge Connector for real Minecraft validation.
 Passing `gradlew build` confirms compilation only; it does not replace in-game
 testing.
 
+## v1.6.0 Schematic Interop Regression
+
+Release version:
+
+```text
+1.6.0-alpha.1
+```
+
+Expected release jars:
+
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.6.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.6.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.6.0-alpha.1.jar
+```
+
+Web checks:
+
+1. Select `tiny_platform`.
+2. Export `.schem`.
+3. Import the exported `.schem`.
+4. Confirm size, palette count, and block count match.
+5. Confirm invalid GZip and unsupported schematic versions show friendly
+   errors.
+
+Run this section separately for NeoForge, Fabric, and Forge:
+
+1. Put the Web-exported `.schem` in `config/blockforge/schematics/`.
+2. Run `/blockforge schematics validate`.
+3. Run `/blockforge schematics reload`.
+4. Run `/blockforge schematics list`.
+5. Run `/blockforge schematics info schem/tiny_platform`.
+6. Run `/blockforge info schem/tiny_platform`.
+7. Run `/blockforge select schem/tiny_platform`.
+8. Open `/blockforge gui` and confirm the schematic blueprint appears.
+9. Run `/blockforge wand`.
+10. Build with Builder Wand.
+11. Run `/blockforge undo`.
+
+Error cases:
+
+- Invalid GZip is reported as a warning.
+- Invalid NBT is reported as a warning.
+- Unsupported `Version` is skipped.
+- Volume above 1,000,000 blocks is skipped.
+- Decompressed GZip NBT above 10 MB is rejected.
+- `Blocks.Data` references to missing `Blocks.Palette` indexes are rejected.
+- Unknown block ids are skipped during build through existing invalid-block
+  handling.
+
+Status: v1.6.0 manual Minecraft regression testing is pending.
+
 ## v1.4.0 Blueprint Pack Regression
 
 Release version:

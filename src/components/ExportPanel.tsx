@@ -5,7 +5,11 @@ import {
   createSafeFileName,
   getFunctionName,
   importBlueprintPackZip,
+  importSpongeSchematicBlob,
+  exportSpongeSchematicBlob,
+  schematicFileName,
   voxelModelToBlueprintV2Json,
+  voxelModelToBlueprintV2,
   voxelModelToBlueprintJson,
   voxelModelToMcFunction,
   voxelModelsToBlueprintPackZip,
@@ -21,7 +25,9 @@ type ExportPanelProps = {
 
 export function ExportPanel({ copy, model }: ExportPanelProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const schematicInputRef = useRef<HTMLInputElement>(null);
   const [packImportStatus, setPackImportStatus] = useState("");
+  const [schematicImportStatus, setSchematicImportStatus] = useState("");
 
   function downloadFile(content: string, type: string, fileName: string) {
     const blob = new Blob([content], { type });
@@ -97,6 +103,15 @@ export function ExportPanel({ copy, model }: ExportPanelProps) {
     downloadBlob(blob, `blockforge-${getFunctionName(model)}.blockforgepack.zip`);
   }
 
+  async function handleSchematicExport() {
+    const blueprint = voxelModelToBlueprintV2(model);
+    const blob = await exportSpongeSchematicBlob(blueprint, {
+      name: model.name,
+      author: "BlockForge"
+    });
+    downloadBlob(blob, schematicFileName(blueprint.id));
+  }
+
   async function handleBlueprintPackImport(file: File | undefined) {
     if (!file) {
       return;
@@ -113,6 +128,26 @@ export function ExportPanel({ copy, model }: ExportPanelProps) {
     } finally {
       if (inputRef.current) {
         inputRef.current.value = "";
+      }
+    }
+  }
+
+  async function handleSchematicImport(file: File | undefined) {
+    if (!file) {
+      return;
+    }
+
+    try {
+      const imported = await importSpongeSchematicBlob(file);
+      setSchematicImportStatus(
+        `${copy.schematicImportSuccess}: ${imported.blueprint.name} | ${imported.blueprint.size.width}x${imported.blueprint.size.height}x${imported.blueprint.size.depth} | palette=${Object.keys(imported.blueprint.palette).length} | blocks=${imported.blueprint.blocks.length}${imported.warnings.length ? ` | warnings=${imported.warnings.join("; ")}` : ""}`
+      );
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      setSchematicImportStatus(`${copy.schematicImportError}: ${message}`);
+    } finally {
+      if (schematicInputRef.current) {
+        schematicInputRef.current.value = "";
       }
     }
   }
@@ -162,11 +197,25 @@ export function ExportPanel({ copy, model }: ExportPanelProps) {
             >
               {copy.blueprintPack}
             </button>
+            <button
+              className="forge-primary-button px-4 py-3 text-sm"
+              onClick={() => void handleSchematicExport()}
+              type="button"
+            >
+              {copy.spongeSchematic}
+            </button>
             <input
               accept=".blockforgepack.zip,.zip,application/zip"
               className="hidden"
               onChange={(event) => void handleBlueprintPackImport(event.target.files?.[0])}
               ref={inputRef}
+              type="file"
+            />
+            <input
+              accept=".schem,application/octet-stream"
+              className="hidden"
+              onChange={(event) => void handleSchematicImport(event.target.files?.[0])}
+              ref={schematicInputRef}
               type="file"
             />
             <button
@@ -175,6 +224,13 @@ export function ExportPanel({ copy, model }: ExportPanelProps) {
               type="button"
             >
               {copy.importBlueprintPack}
+            </button>
+            <button
+              className="forge-secondary-button px-4 py-3 text-sm"
+              onClick={() => schematicInputRef.current?.click()}
+              type="button"
+            >
+              {copy.importSpongeSchematic}
             </button>
           </div>
           <div className="grid gap-2">
@@ -209,9 +265,17 @@ export function ExportPanel({ copy, model }: ExportPanelProps) {
         <p className="text-xs leading-5 text-stone-500">
           {copy.blueprintPackHint}
         </p>
+        <p className="text-xs leading-5 text-stone-500">
+          {copy.schematicHint}
+        </p>
         {packImportStatus ? (
           <p className="rounded border border-forge/30 bg-black/20 px-3 py-2 text-xs leading-5 text-stone-300">
             {packImportStatus}
+          </p>
+        ) : null}
+        {schematicImportStatus ? (
+          <p className="rounded border border-forge/30 bg-black/20 px-3 py-2 text-xs leading-5 text-stone-300">
+            {schematicImportStatus}
           </p>
         ) : null}
         <p className="text-xs leading-5 text-stone-500">

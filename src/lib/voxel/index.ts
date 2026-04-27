@@ -31,6 +31,9 @@ export {
 } from "@/lib/voxel/blueprintPack";
 export { voxelModelsToBlueprintPackZip } from "@/lib/voxel/blueprintPackExport";
 export { importBlueprintPackZip } from "@/lib/voxel/blueprintPackImport";
+export { exportSpongeSchematicBlob, blueprintV2ToSpongeSchematic } from "@/lib/voxel/schematic/spongeSchematicExport";
+export { importSpongeSchematicBlob, spongeSchematicToBlueprintV2 } from "@/lib/voxel/schematic/spongeSchematicImport";
+export { schematicFileName } from "@/lib/voxel/schematic/schematicValidation";
 export {
   createSafeFileName,
   createSafeResourcePath
@@ -70,3 +73,8 @@ export type {
   BlockForgeBlueprintBlockV2,
   BlockForgeBlueprintV2
 } from "@/lib/voxel/blueprintProtocolV2";
+export type {
+  ImportedSpongeSchematic,
+  SpongeSchematicExportOptions,
+  SpongeSchematicV3
+} from "@/lib/voxel/schematic/spongeSchematic";

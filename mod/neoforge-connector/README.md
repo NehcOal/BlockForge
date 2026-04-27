@@ -15,7 +15,7 @@ Web integration yet.
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector NeoForge`
-- Mod Version: `1.5.0-alpha.1`
+- Mod Version: `1.6.0-alpha.1`
 
 ## Multi-loader Architecture Status
 
@@ -44,6 +44,8 @@ source priority, and tries to refund materials to their original containers on
 undo.
 
 v1.4.0 adds Blueprint Pack loading Alpha from `config/blockforge/packs/`.
+v1.6.0 adds Sponge `.schem` v3 import Alpha from
+`config/blockforge/schematics/`.
 
 ## Blueprint Protocol Support
 
@@ -70,7 +72,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge-connector-neoforge-1.5.0-alpha.1.jar
+build/libs/blockforge-connector-neoforge-1.6.0-alpha.1.jar
 ```
 
 ## Blueprint Folder
@@ -94,6 +96,16 @@ NeoForge also reads Blueprint Pack zip files from:
 
 Pack blueprint ids use `packId/blueprintId`, for example
 `starter_buildings/tiny_platform`.
+
+## Schematic Folder
+
+NeoForge also reads Sponge `.schem` v3 files from:
+
+```text
+.minecraft/config/blockforge/schematics/
+```
+
+Schematic blueprint ids use `schem/<file>`, for example `schem/tiny_platform`.
 
 Supported file names:
 
@@ -147,6 +159,11 @@ registry:
 /blockforge packs info <packId>
 /blockforge packs blueprints <packId>
 /blockforge packs validate
+/blockforge schematics folder
+/blockforge schematics reload
+/blockforge schematics list
+/blockforge schematics info <id>
+/blockforge schematics validate
 /blockforge list
 /blockforge select <id>
 /blockforge selected

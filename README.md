@@ -5,6 +5,21 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
+## v1.6.0 Schematic Interop Alpha
+
+BlockForge v1.6.0-alpha.1 adds Sponge `.schem` v3 interoperability. The Web
+app can export and import GZip NBT Sponge schematics, while NeoForge, Fabric,
+and Forge can scan `config/blockforge/schematics/` and load `.schem` files into
+the normal blueprint registry as `schem/<file>`.
+
+Expected release jars:
+
+- `blockforge-connector-neoforge-1.6.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.6.0-alpha.1.jar`
+- `blockforge-connector-forge-1.6.0-alpha.1.jar`
+
+Manual Minecraft regression testing is pending.
+
 ## v1.5.0 Server Permissions & Protection Layer Alpha
 
 BlockForge v1.5.0-alpha.1 adds a server-side permissions and protection layer
@@ -41,6 +56,18 @@ Expected release jars:
 | Protection regions | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 | Build preflight | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 | Container protection checks | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Sponge `.schem` import | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Sponge `.schem` export | planned | planned | planned |
+| Litematica `.litematic` | planned | planned | planned |
+
+## Schematic Interop Matrix
+
+| Feature | Web | NeoForge | Fabric | Forge |
+|---|---|---|---|---|
+| Export Sponge `.schem` v3 | ✅ Alpha | planned | planned | planned |
+| Import Sponge `.schem` v3 | ✅ Alpha | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Schematic registry id | N/A | `schem/<file>` | `schem/<file>` | `schem/<file>` |
+| Litematica `.litematic` | planned | planned | planned | planned |
 
 ## Blueprint Pack Matrix
 
@@ -65,6 +92,8 @@ See [Material Sources](./docs/MATERIAL_SOURCES.md) for the v1.3 design notes.
 See [Blueprint Packs](./docs/BLUEPRINT_PACKS.md) for the v1.4 pack format.
 See [Permissions and Protection](./docs/PERMISSIONS_AND_PROTECTION.md) for the
 v1.5 server safety model.
+See [Schematic Interop](./docs/SCHEMATIC_INTEROP.md) for the v1.6 Sponge
+schematic import/export notes.
 
 Fabric / Forge GUI + Builder Wand + Ghost Preview + Survival Materials Alpha flow:
 

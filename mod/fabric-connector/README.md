@@ -6,6 +6,8 @@ listing, dry-running, building, Builder Wand placement, and undoing blueprints
 with an Alpha GUI Selector, Ghost Preview outline, Survival Material Cost, and
 Material Refund Undo. v1.3.5 adds Fabric nearby container sourcing Alpha.
 v1.4.0 adds Blueprint Pack loading Alpha from `config/blockforge/packs/`.
+v1.6.0 adds Sponge `.schem` v3 import Alpha from
+`config/blockforge/schematics/`.
 
 ## Target
 
@@ -15,7 +17,7 @@ v1.4.0 adds Blueprint Pack loading Alpha from `config/blockforge/packs/`.
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector Fabric`
-- Mod Version: `1.5.0-alpha.1`
+- Mod Version: `1.6.0-alpha.1`
 
 ## Build
 
@@ -34,7 +36,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge-connector-fabric-1.5.0-alpha.1.jar
+build/libs/blockforge-connector-fabric-1.6.0-alpha.1.jar
 ```
 
 ## Blueprint Folder
@@ -57,6 +59,16 @@ Fabric also reads pack zips from:
 
 Pack blueprint ids use `packId/blueprintId`, for example
 `starter_buildings/tiny_platform`.
+
+## Schematic Folder
+
+Fabric also reads Sponge `.schem` v3 files from:
+
+```text
+.minecraft/config/blockforge/schematics/
+```
+
+Schematic blueprint ids use `schem/<file>`, for example `schem/tiny_platform`.
 
 Supported file names:
 
@@ -100,6 +112,11 @@ Existing files are skipped and not overwritten.
 /blockforge packs info <packId>
 /blockforge packs blueprints <packId>
 /blockforge packs validate
+/blockforge schematics folder
+/blockforge schematics reload
+/blockforge schematics list
+/blockforge schematics info <id>
+/blockforge schematics validate
 /blockforge list
 /blockforge select <id>
 /blockforge selected

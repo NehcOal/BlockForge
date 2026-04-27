@@ -54,6 +54,8 @@ export type AppCopy = {
     blueprintV2Json: string;
     blueprintPack: string;
     importBlueprintPack: string;
+    spongeSchematic: string;
+    importSpongeSchematic: string;
     mcfunction: string;
     datapack: string;
     hint: string;
@@ -62,6 +64,9 @@ export type AppCopy = {
     blueprintPackHint: string;
     importSuccess: string;
     importError: string;
+    schematicImportSuccess: string;
+    schematicImportError: string;
+    schematicHint: string;
     datapackHint: string;
   };
   footer: {
@@ -145,6 +150,8 @@ export const appCopy: Record<Locale, AppCopy> = {
       blueprintV2Json: "Export Blueprint JSON v2",
       blueprintPack: "Export Blueprint Pack",
       importBlueprintPack: "Import Blueprint Pack",
+      spongeSchematic: "Export .schem",
+      importSpongeSchematic: "Import .schem",
       mcfunction: "Export .mcfunction",
       datapack: "Export Data Pack ZIP",
       hint:
@@ -156,6 +163,9 @@ export const appCopy: Record<Locale, AppCopy> = {
         "Share multiple Blueprint JSON v2 files as a .blockforgepack.zip.",
       importSuccess: "Imported pack",
       importError: "Pack import failed",
+      schematicImportSuccess: "Imported schematic",
+      schematicImportError: "Schematic import failed",
+      schematicHint: "Sponge .schem v3 interop for WorldEdit / FAWE workflows.",
       datapackHint:
         "Download a Minecraft Java 1.21.1 data pack for the datapacks folder."
     },
@@ -232,6 +242,8 @@ export const appCopy: Record<Locale, AppCopy> = {
       blueprintV2Json: "导出 Blueprint JSON v2",
       blueprintPack: "导出蓝图包",
       importBlueprintPack: "导入蓝图包",
+      spongeSchematic: "导出 .schem",
+      importSpongeSchematic: "导入 .schem",
       mcfunction: "导出 .mcfunction",
       datapack: "导出 Data Pack ZIP",
       hint: "导出为 Minecraft Java Edition datapack 工作流可用的 function 命令。",
@@ -242,6 +254,9 @@ export const appCopy: Record<Locale, AppCopy> = {
         "把多个 Blueprint JSON v2 打包成可分享的 .blockforgepack.zip。",
       importSuccess: "已导入蓝图包",
       importError: "蓝图包导入失败",
+      schematicImportSuccess: "已导入 schematic",
+      schematicImportError: "schematic 导入失败",
+      schematicHint: "Sponge .schem v3 互通，用于 WorldEdit / FAWE 工作流。",
       datapackHint:
         "下载可放入 Minecraft Java 1.21.1 datapacks 文件夹的数据包。"
     },

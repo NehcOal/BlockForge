@@ -86,6 +86,19 @@ public final class FabricBlockForgeCommands {
                                         .executes(context -> packsBlueprints(context, registry))))
                         .then(CommandManager.literal("validate")
                                 .executes(context -> packsValidate(context, registry))))
+                .then(CommandManager.literal("schematics")
+                        .then(CommandManager.literal("folder")
+                                .executes(context -> schematicsFolder(context, registry)))
+                        .then(CommandManager.literal("reload")
+                                .requires(source -> source.hasPermissionLevel(2))
+                                .executes(context -> reload(context, registry)))
+                        .then(CommandManager.literal("list")
+                                .executes(context -> schematicsList(context, registry)))
+                        .then(CommandManager.literal("info")
+                                .then(blueprintIdArgument(registry)
+                                        .executes(context -> schematicsInfo(context, registry))))
+                        .then(CommandManager.literal("validate")
+                                .executes(context -> schematicsValidate(context, registry))))
                 .then(CommandManager.literal("list")
                         .executes(context -> list(context, registry)))
                 .then(CommandManager.literal("select")
@@ -503,6 +516,57 @@ public final class FabricBlockForgeCommands {
             context.getSource().sendError(Text.literal("Warning: " + warning));
         }
         return result.packs().size();
+    }
+
+    private static int schematicsFolder(CommandContext<ServerCommandSource> context, FabricBlueprintRegistry registry) {
+        context.getSource().sendFeedback(
+                () -> Text.literal("BlockForge Fabric schematics folder: " + registry.getSchematicDirectory()),
+                false
+        );
+        return 1;
+    }
+
+    private static int schematicsList(CommandContext<ServerCommandSource> context, FabricBlueprintRegistry registry) {
+        var schematics = registry.getSchematics();
+        context.getSource().sendFeedback(
+                () -> Text.literal("Loaded BlockForge Fabric schematics: " + schematics.size()),
+                false
+        );
+        schematics.stream().limit(20).forEach(result -> context.getSource().sendFeedback(
+                () -> Text.literal("- " + result.blueprint().getId()
+                        + " | size=" + result.blueprint().getSize().format()
+                        + " | palette=" + result.blueprint().getPalette().size()
+                        + " | warnings=" + result.warnings().size()),
+                false
+        ));
+        return schematics.size();
+    }
+
+    private static int schematicsInfo(CommandContext<ServerCommandSource> context, FabricBlueprintRegistry registry) {
+        Blueprint blueprint = findBlueprint(context, registry);
+        if (blueprint == null || !blueprint.getId().startsWith("schem/")) {
+            context.getSource().sendError(Text.literal("Unknown BlockForge Fabric schematic id."));
+            return 0;
+        }
+        context.getSource().sendFeedback(
+                () -> Text.literal("BlockForge Fabric schematic: " + describe(blueprint)
+                        + " | palette=" + blueprint.getPalette().size()),
+                false
+        );
+        return 1;
+    }
+
+    private static int schematicsValidate(CommandContext<ServerCommandSource> context, FabricBlueprintRegistry registry) {
+        var result = registry.validateSchematics();
+        context.getSource().sendFeedback(
+                () -> Text.literal("Validated BlockForge Fabric schematics: loaded="
+                        + result.schematics().size()
+                        + ", warnings="
+                        + result.warnings().size()),
+                false
+        );
+        result.warnings().forEach(warning -> context.getSource().sendError(Text.literal("Warning: " + warning)));
+        return result.schematics().size();
     }
 
     private static int list(

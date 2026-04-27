@@ -33,6 +33,11 @@ LICENSE.txt
 The connectors read pack zip entries directly. They do not extract pack files
 to disk.
 
+Blueprint Pack v1 still recommends `blueprints/*.blueprint.json` as the pack
+payload. Sponge `.schem` files should be placed in
+`config/blockforge/schematics/` for v1.6.0. Pack-embedded `.schem` files are
+planned for a later v1.6.x release.
+
 ## Manifest
 
 `blockforge-pack.json` uses schema version `1`:

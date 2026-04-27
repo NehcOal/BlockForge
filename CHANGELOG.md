@@ -2,6 +2,57 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [1.6.0] - Unreleased
+
+### Added
+
+- Added Web Sponge `.schem` v3 export using GZip NBT and Sponge
+  `Blocks.Palette` / `Blocks.Data`.
+- Added Web Sponge `.schem` import that converts schematic blocks into
+  Blueprint JSON v2 data.
+- Added Web NBT reader/writer, gzip helpers, and VarInt codec for schematic
+  interoperability.
+- Added common Java schematic DTOs, blockstate string codec, VarInt codec, and
+  Sponge schematic reader.
+- Added NeoForge, Fabric, and Forge schematic registries for
+  `config/blockforge/schematics/*.schem`.
+- Added `/blockforge schematics folder|reload|list|info|validate` on all three
+  connectors.
+- Added Sponge schematic Vitest coverage for blockstate strings, VarInts,
+  export, and import.
+- Added `docs/SCHEMATIC_INTEROP.md`.
+
+### Changed
+
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.6.0-alpha.1`.
+- `/blockforge reload` now scans loose blueprints, Blueprint Packs, and
+  schematics.
+- Imported schematics use registry ids in the form `schem/<file_name>`.
+- Web and Java schematic import now enforce a 10 MB decompressed GZip NBT
+  limit before parsing.
+
+### Fixed
+
+- Fixed schematic import safety so small compressed files cannot expand into
+  unbounded NBT data during Web import or connector reload/validate.
+- Fixed Web and Java schematic import so `Blocks.Data` references to missing
+  `Blocks.Palette` indexes are rejected instead of silently dropping blocks.
+
+### Review Follow-up Fixes
+
+- Addressed v1.6.0 schematic review findings for bounded GZip decompression
+  and strict palette index validation.
+- Added Vitest coverage for bounded gzip output and missing schematic palette
+  indexes.
+
+### Notes
+
+- Sponge `.schem` support is Alpha and targets Sponge Schematic v3.
+- Web export is implemented; mod-side schematic export remains planned.
+- Entities, biomes, and full BlockEntity NBT fidelity are not implemented in
+  this Alpha.
+- v1.6.0 manual Minecraft regression testing is pending.
+
 ## [1.5.0] - Unreleased
 
 ### Added
