@@ -1,7 +1,8 @@
 import { blocksFromStore, setBlock } from "@/lib/voxel/utils";
 import type { PresetId, VoxelBlock, VoxelModel, VoxelSize } from "@/types/blueprint";
 
-type PresetFactory = () => VoxelModel;
+type PresetModel = VoxelModel & { id: PresetId };
+type PresetFactory = () => PresetModel;
 
 function buildModel(
   id: PresetId,
@@ -9,7 +10,7 @@ function buildModel(
   description: string,
   size: VoxelSize,
   build: (blocks: Map<string, VoxelBlock>) => void
-): VoxelModel {
+): PresetModel {
   const store = new Map<string, VoxelBlock>();
   build(store);
 
@@ -22,7 +23,7 @@ function buildModel(
   };
 }
 
-export function createMedievalTower(): VoxelModel {
+export function createMedievalTower(): PresetModel {
   return buildModel(
     "medieval-tower",
     "Medieval Tower",
@@ -81,7 +82,7 @@ export function createMedievalTower(): VoxelModel {
   );
 }
 
-export function createSmallCottage(): VoxelModel {
+export function createSmallCottage(): PresetModel {
   return buildModel(
     "small-cottage",
     "Small Cottage",
@@ -144,7 +145,7 @@ export function createSmallCottage(): VoxelModel {
   );
 }
 
-export function createDungeonEntrance(): VoxelModel {
+export function createDungeonEntrance(): PresetModel {
   return buildModel(
     "dungeon-entrance",
     "Dungeon Entrance",
@@ -202,7 +203,7 @@ export function createDungeonEntrance(): VoxelModel {
   );
 }
 
-export function createStoneBridge(): VoxelModel {
+export function createStoneBridge(): PresetModel {
   return buildModel(
     "stone-bridge",
     "Stone Bridge",
@@ -244,7 +245,7 @@ export function createStoneBridge(): VoxelModel {
   );
 }
 
-export function createPixelStatue(): VoxelModel {
+export function createPixelStatue(): PresetModel {
   return buildModel(
     "pixel-statue",
     "Pixel Statue",

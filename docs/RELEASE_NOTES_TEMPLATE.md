@@ -1,9 +1,9 @@
-# BlockForge v1.5.0-alpha.1 - Blueprint Pack Import / Export Alpha
+# BlockForge v1.7.0-alpha.1 - Web Workbench Alpha
 
 ## Release Type
 
-- Version: `1.5.0-alpha.1`
-- Type: Blueprint Pack Import / Export Alpha regression candidate
+- Version: `1.7.0-alpha.1`
+- Type: Web Import / Validation / Local Generation Workbench Alpha candidate
 - Stability: Alpha for Fabric and Forge, recommended full experience on NeoForge
 
 ## Supported Minecraft Version
@@ -19,9 +19,9 @@
 
 ## Download Files
 
-- `blockforge-connector-neoforge-1.5.0-alpha.1.jar`
-- `blockforge-connector-fabric-1.5.0-alpha.1.jar`
-- `blockforge-connector-forge-1.5.0-alpha.1.jar`
+- `blockforge-connector-neoforge-1.7.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.7.0-alpha.1.jar`
+- `blockforge-connector-forge-1.7.0-alpha.1.jar`
 
 ## Feature Matrix
 
@@ -41,6 +41,10 @@
 | BlockEntity NBT undo | ✅ best effort | ❌ | ❌ |
 | Nearby chest material sourcing | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 | Blueprint Pack import | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Permission nodes | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Protection regions | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Sponge `.schem` import | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Sponge `.schem` export | planned | planned | planned |
 
 NeoForge is the most complete connector for now. Fabric and Forge include GUI
 Selector, Builder Wand, Ghost Preview, Survival Material Cost, and Material
@@ -48,6 +52,18 @@ Refund Undo Alpha support. Nearby chest material sourcing is implemented as a
 multiloader Alpha feature in v1.3.5 and disabled by default on every loader.
 Blueprint Pack import is Alpha on all three connectors; Web export/import is
 also Alpha.
+Sponge `.schem` v3 import is Alpha on Web and all three connectors. Web
+schematic export is Alpha. Mod-side schematic export is planned.
+
+## Web Workbench Highlights
+
+- Import Blueprint JSON v1/v2.
+- Import Sponge `.schem` v3.
+- Import `.blockforgepack.zip`.
+- Show field-level Blueprint validation reports.
+- Generate deterministic local prompt-rule models without external AI API use.
+- Export JSON, Blueprint v1/v2, Blueprint Pack, `.schem`, `.mcfunction`, and
+  Data Pack ZIP.
 
 ## Verified Tests
 
@@ -70,9 +86,10 @@ Manual Minecraft status:
   v1.3.5 focused nearby container smoke test passed: player-sourced materials
   refund to player inventory, and chest-sourced materials refund to the
   original chest.
-- v1.4.0 build validation: pending before release.
-- Full NeoForge / Fabric / Forge v1.4.0 Blueprint Pack regression testing is
-  still pending.
+- v1.7.0 build validation: pending before release.
+- Full NeoForge / Fabric / Forge v1.7.0 Minecraft regression testing
+  is still pending.
+- Browser visual QA is pending.
 
 ## Known Limitations
 
@@ -92,10 +109,14 @@ Manual Minecraft status:
 - Dedicated server smoke testing is pending for this release candidate.
 - Web pack import currently displays an import summary and does not persist an
   imported pack library.
+- Web Local Prompt Rule Generator is deterministic and local-only; external AI
+  API adapter work is planned for v2.0.
 - Blueprint Pack zips are loaded from `config/blockforge/packs/`; there is no
   remote download or server-client pack sync.
 - No automatic publishing to Modrinth or CurseForge is performed by this release
   template.
+- Sponge `.schem` support ignores entities, biomes, and full BlockEntity NBT
+  fidelity in this Alpha.
 
 ## Upgrade Notes
 
@@ -104,6 +125,13 @@ Manual Minecraft status:
 - NeoForge users should prefer the NeoForge jar for the complete experience.
 - Fabric and Forge users should treat this as an Alpha GUI + command +
   material-cost + refund-undo workflow.
+## v1.6.0 Schematic Notes
+
+- Sponge `.schem` support targets v3 GZip NBT files.
+- Schematics are loaded from `config/blockforge/schematics/`.
+- Imported schematic ids use `schem/<file_name>`.
+- Litematica `.litematic` is planned.
+
 ## v1.5.0 Security Notes
 
 - Permissions/protection support is Alpha.

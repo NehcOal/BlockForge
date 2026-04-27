@@ -2,7 +2,7 @@
 
 ## Scope
 
-This guide prepares the `1.5.0-alpha.1` multi-loader Alpha release. It does not
+This guide prepares the `1.6.0-alpha.1` multi-loader Alpha release. It does not
 publish automatically to GitHub, Modrinth, or CurseForge.
 
 NeoForge is the recommended full-experience Connector. Fabric and Forge are
@@ -10,8 +10,9 @@ Alpha connectors with command builds, GUI Selector Alpha, Builder Wand Alpha
 placement, Ghost Preview Alpha outlines, Survival Material Cost Alpha, and
 Material Refund Undo Alpha. v1.3.1 adds NeoForge nearby container material
 sourcing Alpha; v1.3.5 extends nearby container sourcing to Fabric and Forge.
-v1.4.0 adds Blueprint Pack import/export and connector-side pack loading as an
-Alpha regression candidate.
+v1.4.0 adds Blueprint Pack import/export and connector-side pack loading.
+v1.6.0 adds Sponge `.schem` import/export and connector-side schematic loading
+as an Alpha regression candidate.
 
 ## Build Before Publishing
 
@@ -37,14 +38,14 @@ gradlew.bat build
 Expected jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.5.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.5.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.5.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.6.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.6.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.6.0-alpha.1.jar
 ```
 
 ## GitHub Alpha Release
 
-1. Create a GitHub release for `v1.5.0-alpha.1`.
+1. Create a GitHub release for `v1.6.0-alpha.1`.
 2. Use `docs/RELEASE_NOTES_TEMPLATE.md` as the release body starting point.
 3. Upload the three loader jars.
 4. Confirm every jar file name includes the loader name.
@@ -55,7 +56,9 @@ mod/forge-connector/build/libs/blockforge-connector-forge-1.5.0-alpha.1.jar
 8. Mention that nearby chest material sourcing is Alpha on all loaders.
 9. Mention that Blueprint Pack import/export is Alpha and uses
    `.blockforgepack.zip`.
-10. Do not claim Fabric or Forge BlockEntity NBT undo, collision-aware preview,
+10. Mention that Sponge `.schem` import/export is Alpha; Web export is
+   implemented and mod-side export is planned.
+11. Do not claim Fabric or Forge BlockEntity NBT undo, collision-aware preview,
    full block preview support, protected-container permission checks, or GUI
    material source details.
 

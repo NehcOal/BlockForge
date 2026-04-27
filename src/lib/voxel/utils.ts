@@ -6,6 +6,8 @@ import type {
   VoxelModel
 } from "@/types/blueprint";
 
+export type PresetVoxelModel = VoxelModel & { id: PresetId };
+
 export const blockTypes = [
   "stone_bricks",
   "cobblestone",
@@ -106,11 +108,11 @@ export function validateVoxelModel(model: VoxelModel) {
   return true;
 }
 
-export function getAllPresets() {
+export function getAllPresets(): PresetVoxelModel[] {
   return Object.values(presetFactories).map((createPreset) => createPreset());
 }
 
-export function getPresetById(id: PresetId) {
+export function getPresetById(id: PresetId): PresetVoxelModel {
   return presetFactories[id]();
 }
 

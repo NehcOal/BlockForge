@@ -93,7 +93,10 @@ be added after the three connector modules settle.
   multiloader in-game regression for v1.3 material source work.
 - `v1.4.0`: Blueprint Pack import/export on Web plus pack loading on NeoForge,
   Fabric, and Forge.
-- `v1.4.1+`: imported pack library UX, deeper material UX, and follow-up
+- `v1.5.0`: server permission nodes, protection regions, and build preflight.
+- `v1.6.0`: Sponge `.schem` v3 export/import on Web plus schematic loading on
+  NeoForge, Fabric, and Forge.
+- `v1.6.1+`: mod-side schematic export, Litematica research, and interop
   stabilization.
 
 ## Current Risks
@@ -112,6 +115,8 @@ be added after the three connector modules settle.
 - NeoForge nearby chest sourcing is Alpha and disabled by default.
 - Fabric and Forge still do not support nearby chest sourcing, GUI material
   icons, collision-aware preview, or BlockEntity NBT undo.
+- Sponge `.schem` support ignores entities, biomes, and full BlockEntity NBT
+  fidelity in v1.6.0 Alpha.
 
 ## v1.1.3 Status
 

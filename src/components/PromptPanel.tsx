@@ -3,6 +3,7 @@ import type { AppCopy } from "@/lib/i18n";
 type PromptPanelProps = {
   copy: AppCopy["prompt"];
   generatedPrompt: string;
+  generatedModelLabel?: string;
   prompt: string;
   selectedPresetLabel: string;
   onGenerate: () => void;
@@ -12,6 +13,7 @@ type PromptPanelProps = {
 export function PromptPanel({
   copy,
   generatedPrompt,
+  generatedModelLabel,
   prompt,
   selectedPresetLabel,
   onGenerate,
@@ -49,7 +51,12 @@ export function PromptPanel({
       </button>
 
       <div className="mt-4 rounded-md border border-forge/15 bg-black/25 px-4 py-3 text-sm text-stone-400">
-        {generatedPrompt ? (
+        {generatedModelLabel ? (
+          <span>
+            {copy.generatedModelPrefix}{" "}
+            <span className="text-stone-100">{generatedModelLabel}</span>
+          </span>
+        ) : generatedPrompt ? (
           <span>
             {copy.generatedPrefix}{" "}
             <span className="text-stone-100">{generatedPrompt}</span>
@@ -61,6 +68,7 @@ export function PromptPanel({
           </span>
         )}
       </div>
+      <p className="mt-3 text-xs leading-5 text-stone-500">{copy.generatorHint}</p>
     </section>
   );
 }

@@ -5,7 +5,7 @@ for NeoForge, Fabric, and Forge.
 
 ## Versions
 
-- BlockForge Web: `1.4.0-alpha.1`
+- BlockForge Web: `1.6.0-alpha.1`
 - Minecraft Java Edition: `1.21.1`
 - Java: `21`
 - NeoForge: `21.1.227`
@@ -21,8 +21,10 @@ placement, Ghost Preview Alpha outlines, Survival Material Cost Alpha, and
 Material Refund Undo Alpha. v1.3.1 adds nearby material source common-core
 models plus NeoForge nearby chest sourcing Alpha. v1.3.5 extends nearby chest
 sourcing Alpha to Fabric and Forge. v1.4.0 adds Blueprint Pack import/export
-Alpha and pack loading from `config/blockforge/packs/`. Manual Minecraft
-regression for v1.4.0 is pending.
+Alpha and pack loading from `config/blockforge/packs/`. v1.6.0 adds Sponge
+`.schem` import/export Alpha and schematic loading from
+`config/blockforge/schematics/`. Manual Minecraft regression for v1.6.0 is
+pending.
 
 | Connector | Best For | Current Status |
 |---|---|---|
@@ -77,9 +79,9 @@ Windows users can run `gradlew.bat build` in the same directories.
 Expected release jar names:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.4.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.4.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.4.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.6.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.6.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.6.0-alpha.1.jar
 ```
 
 Copy the matching jar into the Minecraft instance `mods` folder.
@@ -117,6 +119,23 @@ Run:
 /blockforge packs list
 /blockforge packs blueprints starter_buildings
 /blockforge reload
+```
+
+## Schematic Folder
+
+All three connectors also read Sponge `.schem` v3 files from:
+
+```text
+.minecraft/config/blockforge/schematics/
+```
+
+Run:
+
+```mcfunction
+/blockforge schematics validate
+/blockforge schematics reload
+/blockforge schematics list
+/blockforge select schem/tiny_platform
 ```
 
 Pack blueprint ids use `packId/blueprintId`, for example:

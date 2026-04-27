@@ -7,7 +7,8 @@ with an Alpha GUI Selector, Ghost Preview outline, Survival Material Cost, and
 Material Refund Undo. v1.3.5 adds Forge nearby container sourcing Alpha. A
 focused v1.3.5 Forge client smoke test passed for source-aware material
 consumption and undo refund. v1.4.0 adds Blueprint Pack loading Alpha from
-`config/blockforge/packs/`.
+`config/blockforge/packs/`. v1.6.0 adds Sponge `.schem` v3 import Alpha from
+`config/blockforge/schematics/`.
 
 ## Target
 
@@ -16,7 +17,7 @@ consumption and undo refund. v1.4.0 adds Blueprint Pack loading Alpha from
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector Forge`
-- Mod Version: `1.5.0-alpha.1`
+- Mod Version: `1.6.0-alpha.1`
 
 ## Build
 
@@ -35,7 +36,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge-connector-forge-1.5.0-alpha.1.jar
+build/libs/blockforge-connector-forge-1.6.0-alpha.1.jar
 ```
 
 ## Blueprint Folder
@@ -59,6 +60,16 @@ Forge also reads pack zips from:
 
 Pack blueprint ids use `packId/blueprintId`, for example
 `starter_buildings/tiny_platform`.
+
+## Schematic Folder
+
+Forge also reads Sponge `.schem` v3 files from:
+
+```text
+.minecraft/config/blockforge/schematics/
+```
+
+Schematic blueprint ids use `schem/<file>`, for example `schem/tiny_platform`.
 
 Supported file names:
 
@@ -102,6 +113,11 @@ Existing files are skipped and not overwritten.
 /blockforge packs info <packId>
 /blockforge packs blueprints <packId>
 /blockforge packs validate
+/blockforge schematics folder
+/blockforge schematics reload
+/blockforge schematics list
+/blockforge schematics info <id>
+/blockforge schematics validate
 /blockforge list
 /blockforge select <id>
 /blockforge selected

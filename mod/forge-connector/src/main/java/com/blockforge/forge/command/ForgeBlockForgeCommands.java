@@ -85,6 +85,19 @@ public final class ForgeBlockForgeCommands {
                                         .executes(context -> packsBlueprints(context, registry))))
                         .then(Commands.literal("validate")
                                 .executes(context -> packsValidate(context, registry))))
+                .then(Commands.literal("schematics")
+                        .then(Commands.literal("folder")
+                                .executes(context -> schematicsFolder(context, registry)))
+                        .then(Commands.literal("reload")
+                                .requires(source -> source.hasPermission(2))
+                                .executes(context -> reload(context, registry)))
+                        .then(Commands.literal("list")
+                                .executes(context -> schematicsList(context, registry)))
+                        .then(Commands.literal("info")
+                                .then(blueprintIdArgument(registry)
+                                        .executes(context -> schematicsInfo(context, registry))))
+                        .then(Commands.literal("validate")
+                                .executes(context -> schematicsValidate(context, registry))))
                 .then(Commands.literal("list")
                         .executes(context -> list(context, registry)))
                 .then(Commands.literal("select")
@@ -501,6 +514,57 @@ public final class ForgeBlockForgeCommands {
             context.getSource().sendFailure(Component.literal("Warning: " + warning));
         }
         return result.packs().size();
+    }
+
+    private static int schematicsFolder(CommandContext<CommandSourceStack> context, ForgeBlueprintRegistry registry) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge Forge schematics folder: " + registry.getSchematicDirectory()),
+                false
+        );
+        return 1;
+    }
+
+    private static int schematicsList(CommandContext<CommandSourceStack> context, ForgeBlueprintRegistry registry) {
+        var schematics = registry.getSchematics();
+        context.getSource().sendSuccess(
+                () -> Component.literal("Loaded BlockForge Forge schematics: " + schematics.size()),
+                false
+        );
+        schematics.stream().limit(20).forEach(result -> context.getSource().sendSuccess(
+                () -> Component.literal("- " + result.blueprint().getId()
+                        + " | size=" + result.blueprint().getSize().format()
+                        + " | palette=" + result.blueprint().getPalette().size()
+                        + " | warnings=" + result.warnings().size()),
+                false
+        ));
+        return schematics.size();
+    }
+
+    private static int schematicsInfo(CommandContext<CommandSourceStack> context, ForgeBlueprintRegistry registry) {
+        Blueprint blueprint = findBlueprint(context, registry);
+        if (blueprint == null || !blueprint.getId().startsWith("schem/")) {
+            context.getSource().sendFailure(Component.literal("Unknown BlockForge Forge schematic id."));
+            return 0;
+        }
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge Forge schematic: " + describe(blueprint)
+                        + " | palette=" + blueprint.getPalette().size()),
+                false
+        );
+        return 1;
+    }
+
+    private static int schematicsValidate(CommandContext<CommandSourceStack> context, ForgeBlueprintRegistry registry) {
+        var result = registry.validateSchematics();
+        context.getSource().sendSuccess(
+                () -> Component.literal("Validated BlockForge Forge schematics: loaded="
+                        + result.schematics().size()
+                        + ", warnings="
+                        + result.warnings().size()),
+                false
+        );
+        result.warnings().forEach(warning -> context.getSource().sendFailure(Component.literal("Warning: " + warning)));
+        return result.schematics().size();
     }
 
     private static int list(

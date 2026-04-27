@@ -5,6 +5,69 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
+## v1.7.0 Web Workbench Alpha
+
+BlockForge v1.7.0-alpha.1 turns the Web app into a local import, validation,
+and Local Prompt Rule Generator workbench. It can import Blueprint JSON,
+Sponge `.schem`, and `.blockforgepack.zip` files, show field-level validation
+reports, preview local rule-generated models in 3D, and export through the
+existing multi-format pipeline.
+
+Web Workbench highlights:
+
+- Import Blueprint JSON v1/v2.
+- Import Sponge `.schem` v3.
+- Import `.blockforgepack.zip`.
+- Show field-level validation reports for palette references, duplicate
+  coordinates, out-of-bounds blocks, and malformed fields.
+- Generate local rule-based prompt models without using an external AI API.
+- Export JSON, Blueprint v1/v2, Blueprint Pack, `.schem`, `.mcfunction`, and
+  Data Pack ZIP.
+
+See [Web Workbench](./docs/WEB_WORKBENCH.md) for usage notes and current
+limits. External AI API adapter work is planned for v2.0.
+
+Expected release jars:
+
+- `blockforge-connector-neoforge-1.7.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.7.0-alpha.1.jar`
+- `blockforge-connector-forge-1.7.0-alpha.1.jar`
+
+Current validation status:
+
+| Area | Status |
+|---|---|
+| Web lint/test/build | passing |
+| NeoForge/Fabric/Forge Gradle builds | passing |
+| Web Workbench unit coverage | passing |
+| Manual Minecraft regression | pending |
+| Browser visual QA | pending |
+
+## v1.6.0 Schematic Interop Alpha
+
+BlockForge v1.6.0-alpha.1 adds Sponge `.schem` v3 interoperability. The Web
+app can export and import GZip NBT Sponge schematics, while NeoForge, Fabric,
+and Forge can scan `config/blockforge/schematics/` and load `.schem` files into
+the normal blueprint registry as `schem/<file>`.
+
+Expected release jars:
+
+- `blockforge-connector-neoforge-1.6.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.6.0-alpha.1.jar`
+- `blockforge-connector-forge-1.6.0-alpha.1.jar`
+
+Current validation status:
+
+| Area | Status |
+|---|---|
+| Web lint/test/build | passing |
+| Web `.schem` export/import unit coverage | passing |
+| Java schematic reader unit coverage | passing |
+| NeoForge/Fabric/Forge Gradle builds | release gate |
+| Manual Minecraft schematic regression | pending |
+
+Manual Minecraft regression must still be run before marking v1.6.0 stable.
+
 ## v1.5.0 Server Permissions & Protection Layer Alpha
 
 BlockForge v1.5.0-alpha.1 adds a server-side permissions and protection layer
@@ -41,6 +104,18 @@ Expected release jars:
 | Protection regions | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 | Build preflight | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 | Container protection checks | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Sponge `.schem` import | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Sponge `.schem` export | planned | planned | planned |
+| Litematica `.litematic` | planned | planned | planned |
+
+## Schematic Interop Matrix
+
+| Feature | Web | NeoForge | Fabric | Forge |
+|---|---|---|---|---|
+| Export Sponge `.schem` v3 | ✅ Alpha | planned | planned | planned |
+| Import Sponge `.schem` v3 | ✅ Alpha | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Schematic registry id | N/A | `schem/<file>` | `schem/<file>` | `schem/<file>` |
+| Litematica `.litematic` | planned | planned | planned | planned |
 
 ## Blueprint Pack Matrix
 
@@ -65,6 +140,8 @@ See [Material Sources](./docs/MATERIAL_SOURCES.md) for the v1.3 design notes.
 See [Blueprint Packs](./docs/BLUEPRINT_PACKS.md) for the v1.4 pack format.
 See [Permissions and Protection](./docs/PERMISSIONS_AND_PROTECTION.md) for the
 v1.5 server safety model.
+See [Schematic Interop](./docs/SCHEMATIC_INTEROP.md) for the v1.6 Sponge
+schematic import/export notes.
 
 Fabric / Forge GUI + Builder Wand + Ghost Preview + Survival Materials Alpha flow:
 
@@ -491,7 +568,8 @@ examples/
 - Block texture rendering.
 - InstancedMesh performance optimization for larger voxel models.
 - Prompt-to-structure rule engine.
-- Real AI adapter for natural-language blueprint generation.
+- External AI API adapter for natural-language blueprint generation, planned
+  for v2.0.
 - Screenshot gallery for GitHub project presentation.
 
 ## Contributing
