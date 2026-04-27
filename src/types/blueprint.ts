@@ -35,7 +35,7 @@ export type VoxelSize = {
 };
 
 export type VoxelModel = {
-  id: PresetId;
+  id: string;
   name: string;
   description: string;
   size: VoxelSize;

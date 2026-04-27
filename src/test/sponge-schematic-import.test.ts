@@ -42,9 +42,64 @@ describe("Sponge schematic import", () => {
       "Blocks.Data references missing palette index: 1."
     );
   });
+
+  it("imports common blockstate properties and partial-content warnings", async () => {
+    const nbt = writeNamedNbt("Schematic", schematicNbt({
+      Palette: {
+        type: "compound",
+        value: {
+          "minecraft:air": { type: "int", value: 0 },
+          "minecraft:oak_door[facing=north,half=lower,hinge=left,open=false,powered=false]": { type: "int", value: 1 },
+          "minecraft:oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]": { type: "int", value: 2 }
+        }
+      },
+      Data: { type: "byteArray", value: encodeVarInts([1, 2]) },
+      BlockEntities: { type: "list", itemType: 10, value: [] }
+    }, {
+      Width: { type: "short", value: 2 },
+      Entities: { type: "list", itemType: 10, value: [] },
+      Biomes: { type: "byteArray", value: new Uint8Array([0, 0]) }
+    }));
+
+    const compressed = await gzip(nbt);
+    const arrayBuffer = compressed.buffer.slice(compressed.byteOffset, compressed.byteOffset + compressed.byteLength) as ArrayBuffer;
+    const file = new Blob([]);
+    Object.defineProperty(file, "arrayBuffer", {
+      value: async () => arrayBuffer
+    });
+
+    const imported = await importSpongeSchematicBlob(file);
+
+    expect(imported.blueprint.size).toEqual({ width: 2, height: 1, depth: 1 });
+    expect(imported.blueprint.blocks).toHaveLength(2);
+    expect(imported.blueprint.palette.s1).toEqual({
+      name: "minecraft:oak_door",
+      properties: {
+        facing: "north",
+        half: "lower",
+        hinge: "left",
+        open: "false",
+        powered: "false"
+      }
+    });
+    expect(imported.blueprint.palette.s2).toEqual({
+      name: "minecraft:oak_stairs",
+      properties: {
+        facing: "east",
+        half: "bottom",
+        shape: "straight",
+        waterlogged: "false"
+      }
+    });
+    expect(imported.warnings).toEqual([
+      "BlockEntities are ignored in Web schematic import Alpha.",
+      "Entities are ignored in Web schematic import Alpha.",
+      "Biomes are ignored in Web schematic import Alpha."
+    ]);
+  });
 });
 
-function schematicNbt(blocks: Record<string, NbtValue>): NbtValue {
+function schematicNbt(blocks: Record<string, NbtValue>, overrides: Record<string, NbtValue> = {}): NbtValue {
   return {
     type: "compound",
     value: {
@@ -58,7 +113,8 @@ function schematicNbt(blocks: Record<string, NbtValue>): NbtValue {
       Blocks: {
         type: "compound",
         value: blocks
-      }
+      },
+      ...overrides
     }
   };
 }

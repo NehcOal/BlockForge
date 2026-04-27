@@ -188,4 +188,16 @@ Error cases:
 - Unknown block id
 - Invalid blockstate property string
 
+Automated coverage:
+
+- Web export/import round trip from a built-in preset.
+- Web import of common blockstate properties such as doors, stairs, and wall
+  torches.
+- Web warnings for ignored BlockEntities, Entities, and Biomes.
+- Web and Java rejection of missing `Blocks.Palette` indexes referenced by
+  `Blocks.Data`.
+- Java schematic reader import of common blockstate properties and ignored
+  partial-content warnings.
+- Java rejection of unsupported schematic versions.
+
 Status: v1.6.0 manual Minecraft regression testing is pending.

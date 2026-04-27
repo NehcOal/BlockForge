@@ -2,6 +2,33 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [1.7.0-alpha.1] - Unreleased
+
+### Added
+
+- Added Web Blueprint JSON import with local parsing and validation summary.
+- Added field-level Blueprint validation reports for schema, size, origin,
+  palette references, duplicate coordinates, and out-of-bounds blocks.
+- Added a Local Prompt Rule Generator for deterministic, local-first prompt
+  driven voxel models.
+- Added improved ExportPanel grouping for Blueprint files, Minecraft install
+  exports, and interop imports.
+- Added additional schematic, Blueprint import, validation, and local generator
+  tests.
+- Added `docs/WEB_WORKBENCH.md`.
+
+### Changed
+
+- Web app now behaves more like a local import, validation, and generation
+  workbench while keeping the existing preview and multi-format export flow.
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.7.0-alpha.1`.
+
+### Notes
+
+- External AI API adapter is planned for v2.0.
+- Manual Minecraft regression is pending.
+- Browser visual QA is pending.
+
 ## [1.6.0] - Unreleased
 
 ### Added
@@ -20,6 +47,11 @@ All notable changes to BlockForge will be documented in this file.
   connectors.
 - Added Sponge schematic Vitest coverage for blockstate strings, VarInts,
   export, and import.
+- Added Web schematic regression coverage for common blockstate properties,
+  ignored partial-content warnings, and exported-imported round trips.
+- Added Java schematic reader unit coverage for common blockstate properties,
+  ignored partial-content warnings, unsupported versions, and missing palette
+  indexes.
 - Added `docs/SCHEMATIC_INTEROP.md`.
 
 ### Changed
@@ -51,6 +83,8 @@ All notable changes to BlockForge will be documented in this file.
 - Web export is implemented; mod-side schematic export remains planned.
 - Entities, biomes, and full BlockEntity NBT fidelity are not implemented in
   this Alpha.
+- Web lint/test/build and Java unit tests are the automated release gate;
+  real Minecraft validation is tracked in `docs/MOD_CONNECTOR_TESTING.md`.
 - v1.6.0 manual Minecraft regression testing is pending.
 
 ## [1.5.0] - Unreleased

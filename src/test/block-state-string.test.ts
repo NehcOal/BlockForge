@@ -29,4 +29,16 @@ describe("Sponge block state strings", () => {
       }
     });
   });
+
+  it("round trips common Minecraft blockstate samples", () => {
+    const samples = [
+      "minecraft:oak_door[facing=north,half=lower,hinge=left,open=false,powered=false]",
+      "minecraft:oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+      "minecraft:wall_torch[facing=south]"
+    ];
+
+    for (const sample of samples) {
+      expect(blockStateToSpongeString(spongeStringToBlockState(sample))).toBe(sample);
+    }
+  });
 });

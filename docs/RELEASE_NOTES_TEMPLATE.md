@@ -1,9 +1,9 @@
-# BlockForge v1.6.0-alpha.1 - Schematic Interop Alpha
+# BlockForge v1.7.0-alpha.1 - Web Workbench Alpha
 
 ## Release Type
 
-- Version: `1.6.0-alpha.1`
-- Type: Sponge `.schem` import/export Alpha regression candidate
+- Version: `1.7.0-alpha.1`
+- Type: Web Import / Validation / Local Generation Workbench Alpha candidate
 - Stability: Alpha for Fabric and Forge, recommended full experience on NeoForge
 
 ## Supported Minecraft Version
@@ -19,9 +19,9 @@
 
 ## Download Files
 
-- `blockforge-connector-neoforge-1.6.0-alpha.1.jar`
-- `blockforge-connector-fabric-1.6.0-alpha.1.jar`
-- `blockforge-connector-forge-1.6.0-alpha.1.jar`
+- `blockforge-connector-neoforge-1.7.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.7.0-alpha.1.jar`
+- `blockforge-connector-forge-1.7.0-alpha.1.jar`
 
 ## Feature Matrix
 
@@ -55,6 +55,16 @@ also Alpha.
 Sponge `.schem` v3 import is Alpha on Web and all three connectors. Web
 schematic export is Alpha. Mod-side schematic export is planned.
 
+## Web Workbench Highlights
+
+- Import Blueprint JSON v1/v2.
+- Import Sponge `.schem` v3.
+- Import `.blockforgepack.zip`.
+- Show field-level Blueprint validation reports.
+- Generate deterministic local prompt-rule models without external AI API use.
+- Export JSON, Blueprint v1/v2, Blueprint Pack, `.schem`, `.mcfunction`, and
+  Data Pack ZIP.
+
 ## Verified Tests
 
 - `pnpm lint`
@@ -76,9 +86,10 @@ Manual Minecraft status:
   v1.3.5 focused nearby container smoke test passed: player-sourced materials
   refund to player inventory, and chest-sourced materials refund to the
   original chest.
-- v1.6.0 build validation: pending before release.
-- Full NeoForge / Fabric / Forge v1.6.0 Schematic Interop regression testing
+- v1.7.0 build validation: pending before release.
+- Full NeoForge / Fabric / Forge v1.7.0 Minecraft regression testing
   is still pending.
+- Browser visual QA is pending.
 
 ## Known Limitations
 
@@ -98,6 +109,8 @@ Manual Minecraft status:
 - Dedicated server smoke testing is pending for this release candidate.
 - Web pack import currently displays an import summary and does not persist an
   imported pack library.
+- Web Local Prompt Rule Generator is deterministic and local-only; external AI
+  API adapter work is planned for v2.0.
 - Blueprint Pack zips are loaded from `config/blockforge/packs/`; there is no
   remote download or server-client pack sync.
 - No automatic publishing to Modrinth or CurseForge is performed by this release

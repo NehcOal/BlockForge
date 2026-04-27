@@ -8,8 +8,9 @@ import { PresetSelector } from "@/components/PresetSelector";
 import { PreviewPanel } from "@/components/PreviewPanel";
 import { PromptPanel } from "@/components/PromptPanel";
 import { appCopy, getPresetCopy, type Locale } from "@/lib/i18n";
-import { getAllPresets, getPresetById } from "@/lib/voxel";
+import { generateVoxelModelFromPrompt, getAllPresets, getPresetById } from "@/lib/voxel";
 import type { PresetId } from "@/types/blueprint";
+import type { VoxelModel } from "@/types/blueprint";
 
 const presets = getAllPresets();
 
@@ -17,16 +18,29 @@ export function BlockForgeApp() {
   const [locale, setLocale] = useState<Locale>("zh");
   const [prompt, setPrompt] = useState("");
   const [generatedPrompt, setGeneratedPrompt] = useState("");
+  const [generatedModel, setGeneratedModel] = useState<VoxelModel | null>(null);
   const [selectedPresetId, setSelectedPresetId] =
     useState<PresetId>("medieval-tower");
 
   const copy = appCopy[locale];
-  const selectedModel = getPresetById(selectedPresetId);
-  const selectedPresetCopy = getPresetCopy(locale, selectedModel.id);
+  const presetModel = getPresetById(selectedPresetId);
+  const selectedModel = generatedModel ?? presetModel;
+  const selectedPresetCopy = generatedModel
+    ? {
+        name: generatedModel.name,
+        description: generatedModel.description
+      }
+    : getPresetCopy(locale, selectedPresetId);
 
   function handleGenerate() {
     const nextPrompt = prompt.trim();
     setGeneratedPrompt(nextPrompt || selectedPresetCopy.name);
+    setGeneratedModel(generateVoxelModelFromPrompt(nextPrompt || selectedPresetCopy.name).model);
+  }
+
+  function handlePresetSelect(presetId: PresetId) {
+    setSelectedPresetId(presetId);
+    setGeneratedModel(null);
   }
 
   return (
@@ -48,6 +62,7 @@ export function BlockForgeApp() {
             <PromptPanel
               copy={copy.prompt}
               generatedPrompt={generatedPrompt}
+              generatedModelLabel={generatedModel?.name}
               prompt={prompt}
               selectedPresetLabel={selectedPresetCopy.name}
               onGenerate={handleGenerate}
@@ -57,8 +72,8 @@ export function BlockForgeApp() {
               copy={copy.presets}
               locale={locale}
               presets={presets}
-              selectedPresetId={selectedModel.id}
-              onSelect={setSelectedPresetId}
+              selectedPresetId={selectedPresetId}
+              onSelect={handlePresetSelect}
             />
             <ExportPanel copy={copy.export} model={selectedModel} />
           </aside>

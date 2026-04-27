@@ -1,10 +1,12 @@
 import { getPresetCopy, type AppCopy, type Locale } from "@/lib/i18n";
 import type { PresetId, VoxelModel } from "@/types/blueprint";
 
+type PresetModel = VoxelModel & { id: PresetId };
+
 type PresetSelectorProps = {
   copy: AppCopy["presets"];
   locale: Locale;
-  presets: VoxelModel[];
+  presets: PresetModel[];
   selectedPresetId: PresetId;
   onSelect: (presetId: PresetId) => void;
 };

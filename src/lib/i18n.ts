@@ -27,6 +27,8 @@ export type AppCopy = {
     button: string;
     generatedPrefix: string;
     emptyPrefix: string;
+    generatedModelPrefix: string;
+    generatorHint: string;
   };
   presets: {
     title: string;
@@ -56,8 +58,15 @@ export type AppCopy = {
     importBlueprintPack: string;
     spongeSchematic: string;
     importSpongeSchematic: string;
+    importBlueprintJson: string;
     mcfunction: string;
     datapack: string;
+    blueprintFilesGroup: string;
+    minecraftInstallGroup: string;
+    interopImportGroup: string;
+    validationLabel: string;
+    errorsLabel: string;
+    warningsLabel: string;
     hint: string;
     blueprintHint: string;
     blueprintV2Hint: string;
@@ -96,7 +105,9 @@ export const appCopy: Record<Locale, AppCopy> = {
       placeholder: 'Describe a building, e.g. "a medieval tower with glass windows"',
       button: "Generate Blueprint",
       generatedPrefix: "Blueprint generated from prompt:",
-      emptyPrefix: "No prompt generated yet. Current preset:"
+      emptyPrefix: "No prompt generated yet. Current preset:",
+      generatedModelPrefix: "Local model generated:",
+      generatorHint: "The v2.0 generator is deterministic and local-first."
     },
     presets: {
       title: "Preset Library",
@@ -152,8 +163,15 @@ export const appCopy: Record<Locale, AppCopy> = {
       importBlueprintPack: "Import Blueprint Pack",
       spongeSchematic: "Export .schem",
       importSpongeSchematic: "Import .schem",
+      importBlueprintJson: "Import Blueprint JSON",
       mcfunction: "Export .mcfunction",
       datapack: "Export Data Pack ZIP",
+      blueprintFilesGroup: "Blueprint files",
+      minecraftInstallGroup: "Minecraft install",
+      interopImportGroup: "Interop import",
+      validationLabel: "Validation",
+      errorsLabel: "Errors",
+      warningsLabel: "Warnings",
       hint:
         "Export as Minecraft function commands for Java Edition datapack workflows.",
       blueprintHint: "Stable blueprint file for BlockForge Mod Connector.",
@@ -171,7 +189,7 @@ export const appCopy: Record<Locale, AppCopy> = {
     },
     footer: {
       status: "Project status: v0.1 MVP ready for release polish.",
-      roadmap: "Roadmap: datapack ZIP -> .schem export -> prompt generation."
+      roadmap: "Roadmap: datapack ZIP -> .schem export -> Local Prompt Rule Generator."
     }
   },
   zh: {
@@ -193,7 +211,9 @@ export const appCopy: Record<Locale, AppCopy> = {
       placeholder: "描述一个建筑，例如：带玻璃窗的中世纪塔楼",
       button: "生成蓝图",
       generatedPrefix: "已根据提示词生成蓝图：",
-      emptyPrefix: "尚未生成提示词蓝图。当前模板："
+      emptyPrefix: "尚未生成提示词蓝图。当前模板：",
+      generatedModelPrefix: "已生成本地模型：",
+      generatorHint: "v2.0 生成器是确定性的本地规则生成，不调用外部 AI。"
     },
     presets: {
       title: "内置模板",
@@ -244,8 +264,15 @@ export const appCopy: Record<Locale, AppCopy> = {
       importBlueprintPack: "导入蓝图包",
       spongeSchematic: "导出 .schem",
       importSpongeSchematic: "导入 .schem",
+      importBlueprintJson: "导入 Blueprint JSON",
       mcfunction: "导出 .mcfunction",
       datapack: "导出 Data Pack ZIP",
+      blueprintFilesGroup: "蓝图文件",
+      minecraftInstallGroup: "Minecraft 安装",
+      interopImportGroup: "互通导入",
+      validationLabel: "校验",
+      errorsLabel: "错误",
+      warningsLabel: "警告",
       hint: "导出为 Minecraft Java Edition datapack 工作流可用的 function 命令。",
       blueprintHint: "用于 BlockForge Mod Connector 的稳定蓝图协议文件。",
       blueprintV2Hint:

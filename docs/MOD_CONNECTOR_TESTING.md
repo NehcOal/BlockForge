@@ -4,6 +4,35 @@ This checklist prepares the NeoForge Connector for real Minecraft validation.
 Passing `gradlew build` confirms compilation only; it does not replace in-game
 testing.
 
+## v1.7.0 Web Workbench Release Gate
+
+Release version:
+
+```text
+1.7.0-alpha.1
+```
+
+Expected release jars:
+
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.7.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.7.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.7.0-alpha.1.jar
+```
+
+Build validation:
+
+```text
+pnpm lint
+pnpm test
+pnpm build
+mod/neoforge-connector/gradlew.bat build
+mod/fabric-connector/gradlew.bat build
+mod/forge-connector/gradlew.bat build
+```
+
+Status: Minecraft manual regression pending. Browser visual QA pending.
+
 ## v1.6.0 Schematic Interop Regression
 
 Release version:
@@ -20,6 +49,17 @@ mod/fabric-connector/build/libs/blockforge-connector-fabric-1.6.0-alpha.1.jar
 mod/forge-connector/build/libs/blockforge-connector-forge-1.6.0-alpha.1.jar
 ```
 
+Automated gate:
+
+| Check | Command | Expected result |
+|---|---|---|
+| Web lint | `pnpm lint` | No ESLint errors |
+| Web tests | `pnpm test` | All Vitest files pass |
+| Web build | `pnpm build` | Next production build succeeds |
+| NeoForge build and Java tests | `mod/neoforge-connector/gradlew.bat build` | Jar is created and JUnit tests pass |
+| Fabric build | `mod/fabric-connector/gradlew.bat build` | Jar is created |
+| Forge build | `mod/forge-connector/gradlew.bat build` | Jar is created |
+
 Web checks:
 
 1. Select `tiny_platform`.
@@ -28,6 +68,14 @@ Web checks:
 4. Confirm size, palette count, and block count match.
 5. Confirm invalid GZip and unsupported schematic versions show friendly
    errors.
+
+Manual loader matrix:
+
+| Loader | Build jar | Schematic validate/reload/list | Build with wand | Undo | Status |
+|---|---|---|---|---|---|
+| NeoForge | pending | pending | pending | pending | pending |
+| Fabric | pending | pending | pending | pending | pending |
+| Forge | pending | pending | pending | pending | pending |
 
 Run this section separately for NeoForge, Fabric, and Forge:
 
@@ -53,6 +101,14 @@ Error cases:
 - `Blocks.Data` references to missing `Blocks.Palette` indexes are rejected.
 - Unknown block ids are skipped during build through existing invalid-block
   handling.
+
+Pass criteria:
+
+- A bad `.schem` file never prevents loose Blueprint JSON or Blueprint Pack
+  entries from loading.
+- `schem/<file>` ids appear in `/blockforge list` and the GUI selector.
+- Builder Wand placement and `/blockforge undo` work for the imported schematic.
+- Loader logs or chat output include a clear warning for each rejected schematic.
 
 Status: v1.6.0 manual Minecraft regression testing is pending.
 

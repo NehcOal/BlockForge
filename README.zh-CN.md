@@ -2,11 +2,45 @@
 
 从文本提示生成 Minecraft 风格 voxel 方块建筑蓝图。
 
-BlockForge 是一个本地优先的 Minecraft 风格方块建筑蓝图生成器。当前 v1.6.0
-包含 Web 蓝图生成、3D 预览、Blueprint Pack、三端 Connector 游戏内建造流程，以及
-Sponge `.schem` v3 导入 / 导出 Alpha。
+BlockForge 是一个本地优先的 Minecraft 风格方块建筑蓝图生成器。当前
+v1.7.0-alpha.1 包含 Web 导入工作台、字段级校验报告、本地规则生成器、3D
+预览、Blueprint Pack、Sponge `.schem` v3 互通，以及三端 Connector 构建流程。
 
 [English README](./README.md) | [使用手册](./docs/USER_MANUAL.zh-CN.md)
+
+## v1.7.0 Web Workbench Alpha
+
+BlockForge v1.7.0-alpha.1 将 Web 应用整理为本地导入、校验和本地规则生成工作台。
+它可以导入 Blueprint JSON、Sponge `.schem` 和 `.blockforgepack.zip`，显示字段级
+校验报告，预览本地规则生成的模型，并继续通过现有多格式导出流程输出文件。
+
+Web Workbench 重点能力：
+
+- 导入 Blueprint JSON v1/v2。
+- 导入 Sponge `.schem` v3。
+- 导入 `.blockforgepack.zip`。
+- 显示字段级校验报告，包括 palette 引用、重复坐标、越界方块和字段形状错误。
+- 使用本地规则生成器根据 prompt 生成模型，不调用外部 AI API。
+- 导出 JSON、Blueprint v1/v2、Blueprint Pack、`.schem`、`.mcfunction` 和
+  Data Pack ZIP。
+
+详见 [Web Workbench](./docs/WEB_WORKBENCH.md)。外部 AI API adapter 计划放到 v2.0。
+
+预期发布 jar：
+
+- `blockforge-connector-neoforge-1.7.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.7.0-alpha.1.jar`
+- `blockforge-connector-forge-1.7.0-alpha.1.jar`
+
+当前验证状态：
+
+| 范围 | 状态 |
+|---|---|
+| Web lint/test/build | 已通过 |
+| NeoForge/Fabric/Forge Gradle build | 已通过 |
+| Web Workbench 单测 | 已通过 |
+| Minecraft 实机回归 | 待执行 |
+| Browser visual QA | 待执行 |
 
 ## v1.6.0 Schematic Interop Alpha
 
@@ -21,7 +55,17 @@ GZip NBT Sponge schematic；NeoForge / Fabric / Forge 会扫描
 - `blockforge-connector-fabric-1.6.0-alpha.1.jar`
 - `blockforge-connector-forge-1.6.0-alpha.1.jar`
 
-Minecraft 实机回归测试待执行。
+当前验证状态：
+
+| 范围 | 状态 |
+|---|---|
+| Web lint/test/build | 已通过 |
+| Web `.schem` 导入 / 导出单测 | 已通过 |
+| Java schematic reader 单测 | 已通过 |
+| NeoForge/Fabric/Forge Gradle build | 发布门禁 |
+| Minecraft schematic 实机回归 | 待执行 |
+
+v1.6.0 要标记为稳定前，仍需完成 Minecraft 实机回归。
 
 ## v1.5.0 服务器权限与保护层 Alpha
 
@@ -503,7 +547,7 @@ pnpm lint
 - 方块贴图渲染。
 - 使用 `InstancedMesh` 优化大模型渲染性能。
 - prompt-to-structure 规则生成引擎。
-- 接入真实 AI adapter，实现自然语言蓝图生成。
+- 接入外部 AI API adapter，实现自然语言蓝图生成；该能力计划放到 v2.0。
 - 为 GitHub README 补充项目截图。
 
 ## 贡献
