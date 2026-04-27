@@ -15,7 +15,7 @@ Web integration yet.
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector NeoForge`
-- Mod Version: `1.4.0-alpha.1`
+- Mod Version: `1.5.0-alpha.1`
 
 ## Multi-loader Architecture Status
 
@@ -70,7 +70,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge-connector-neoforge-1.4.0-alpha.1.jar
+build/libs/blockforge-connector-neoforge-1.5.0-alpha.1.jar
 ```
 
 ## Blueprint Folder
@@ -447,3 +447,10 @@ Recommended first in-game test:
 - Block state support.
 - Configurable build limits.
 - Better in-game diagnostics.
+## v1.5.0 Security Alpha
+
+NeoForge now loads `config/blockforge/protection-regions.json` and runs
+BlockForge permission/protection preflight before build commands, Builder Wand
+placement, material consumption, and nearby-container material use. External
+claim/permission integrations are planned; current behavior falls back to
+vanilla permission levels when permission enforcement is enabled.

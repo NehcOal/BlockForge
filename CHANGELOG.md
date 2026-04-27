@@ -2,6 +2,62 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [1.5.0] - Unreleased
+
+### Added
+
+- Added common permission nodes and permission check result DTOs.
+- Added common protection region, build area, matcher, preflight, and
+  `protection-regions.json` schema.
+- Added NeoForge, Fabric, and Forge fallback permission services.
+- Added NeoForge, Fabric, and Forge protection region loaders for
+  `config/blockforge/protection-regions.json`.
+- Added `/blockforge protection folder|reload|list|info|check` and
+  `/blockforge permissions check <node>` on all three connectors.
+- Added build preflight before material consumption and block placement.
+- Added protected-container checks for nearby material sourcing and refunds.
+- Added `docs/PERMISSIONS_AND_PROTECTION.md`.
+
+### Changed
+
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.5.0-alpha.1`.
+- Builder Wand builds now use BlockForge permission/protection checks instead
+  of loader-specific hard-coded permission checks.
+
+### Notes
+
+- External provider integrations such as LuckPerms, Fabric Permissions API,
+  FTB Chunks, and Open Parties and Claims remain optional/planned.
+- v1.5.0 NeoForge and Fabric manual Minecraft regression testing is pending.
+
+### Manual Testing
+
+- Forge 1.21.1 development client smoke test passed on 2026-04-27.
+- Fixed Forge client join failure caused by an unsynchronized custom Brigadier
+  blueprint id argument type; Forge now uses a vanilla string argument with
+  registry suggestions.
+- Confirmed Forge protection regions can deny `/blockforge protection check`
+  when `allowedPermissions` is empty.
+- Confirmed Forge protected-area command build and Builder Wand build are
+  denied before material consumption and block placement.
+- Confirmed Forge build and undo still work outside the protected area.
+- Confirmed OP bypass is controlled by the region's `allowedPermissions`
+  field: an empty list denies everyone, while adding
+  `blockforge.build.bypass_protection` allows OP fallback bypass.
+
+### Review Follow-up Fixes
+
+- Confirmed the v1.3.5 nearby source review fixes remain present while adding
+  v1.5.0 security: Fabric and Forge nearby container sourcing use runtime
+  settings instead of compile-time-disabled constants, Fabric source refunds
+  validate the stored dimension id, Fabric container insertion/extraction now
+  respects inventory slot rules, and Fabric dryrun reports material source
+  status.
+- Confirmed the v1.4.0 Blueprint Pack review fixes remain present: pack export
+  writes each manifest entry from the matching model index, Web import strictly
+  rejects unsafe external pack and blueprint ids, and the published schema
+  rejects traversal, absolute, backslash, and Windows-drive blueprint paths.
+
 ## [1.4.0] - Unreleased
 
 ### Added
@@ -27,6 +83,17 @@ All notable changes to BlockForge will be documented in this file.
 - Pack blueprints use `packId/blueprintId` registry ids to avoid loose
   blueprint collisions.
 - GUI Selector details now label blueprints as `source=loose` or `source=pack`.
+
+### Fixed
+
+- Fixed Blueprint Pack export for packs containing multiple models with the
+  same display name by writing each manifest entry from the corresponding
+  source model index.
+- Fixed Web Blueprint Pack import so external manifests must already use safe
+  `packId` and blueprint ids; invalid ids are rejected instead of silently
+  normalized.
+- Tightened the public Blueprint Pack JSON schema so blueprint paths reject
+  path traversal, absolute paths, backslashes, and Windows drive prefixes.
 
 ### Notes
 
@@ -63,6 +130,17 @@ All notable changes to BlockForge will be documented in this file.
   player inventory, then player-near drops where supported.
 - Updated the Loader Feature Matrix to mark nearby chest material sourcing as
   Alpha on all three loaders.
+
+### Fixed
+
+- Fixed Fabric and Forge nearby container sourcing so Alpha testers can enable
+  the feature at runtime instead of shipping it permanently compiled off.
+- Fixed Fabric nearby source refunds so stored source dimension ids are checked
+  before resolving a container at the saved coordinates.
+- Fixed Fabric container material mutation to respect inventory slot validity
+  and sided inventory insert/extract rules.
+- Fixed Fabric dryrun output to include material source settings and source
+  availability so source behavior can be inspected before building.
 
 ### Notes
 

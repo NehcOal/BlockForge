@@ -224,3 +224,13 @@ A BlockForge v1.4.0-alpha.1 release should include:
 - `docs/RELEASE_NOTES_TEMPLATE.md`
 
 GitHub Actions uploads the three Connector jars as separate CI artifacts.
+## v1.5.0 Protection Regions
+
+Server owners can optionally edit:
+
+```text
+config/blockforge/protection-regions.json
+```
+
+The file is created automatically on first connector startup or protection
+reload. Builds denied by a region stop before materials are consumed.

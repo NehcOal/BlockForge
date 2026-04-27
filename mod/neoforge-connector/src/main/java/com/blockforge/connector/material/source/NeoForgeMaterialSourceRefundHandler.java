@@ -2,6 +2,8 @@ package com.blockforge.connector.material.source;
 
 import com.blockforge.common.material.source.MaterialSourceConfig;
 import com.blockforge.common.material.source.MaterialSourceType;
+import com.blockforge.common.security.protection.ProtectionAction;
+import com.blockforge.connector.BlockForgeConnector;
 import com.blockforge.connector.material.ConsumedMaterialEntry;
 import com.blockforge.connector.material.MaterialRefundResult;
 import com.blockforge.connector.material.MaterialTransaction;
@@ -45,7 +47,8 @@ public class NeoForgeMaterialSourceRefundHandler {
                     && entry.source() != null
                     && entry.source().type() == MaterialSourceType.NEARBY_CONTAINER) {
                 NeoForgeContainerMaterialSource container = scanner.sourceFor(player.serverLevel(), entry.source());
-                if (container != null) {
+                if (container != null
+                        && BlockForgeConnector.PROTECTION.canUseContainer(player, player.serverLevel(), container.pos(), ProtectionAction.REFUND_TO_CONTAINER)) {
                     int inserted = container.insertItem(entry.itemId(), remaining);
                     refundedToContainers += inserted;
                     remaining -= inserted;

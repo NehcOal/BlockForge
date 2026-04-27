@@ -5,6 +5,9 @@ import com.blockforge.common.material.MaterialReport;
 import com.blockforge.common.material.MaterialRefundResult;
 import com.blockforge.common.material.MaterialTransaction;
 import com.blockforge.common.material.source.MaterialSourceReport;
+import com.blockforge.common.security.protection.ProtectionAction;
+import com.blockforge.fabric.BlockForgeFabric;
+import com.blockforge.fabric.material.source.FabricContainerMaterialSource;
 import com.blockforge.fabric.material.source.FabricMaterialSourceConsumer;
 import com.blockforge.fabric.material.source.FabricMaterialSourceReportBuilder;
 import com.blockforge.fabric.material.source.FabricMaterialSourceScanner;
@@ -46,7 +49,11 @@ public class FabricMaterialBuildGate {
         MaterialSourceReport sourceReport = null;
         if (FabricMaterialSourceSettings.enableNearbyContainers()) {
             FabricMaterialSourceScanner.Scan scan = sourceScanner.scan(player, world, basePos, FabricMaterialSourceSettings.config());
-            sourceReport = sourceReportBuilder.report(report, player, scan.containers(), FabricMaterialSourceSettings.config());
+            var containers = scan.containers()
+                    .stream()
+                    .filter(container -> BlockForgeFabric.PROTECTION.canUseContainer(player, world, container.pos(), ProtectionAction.USE_CONTAINER_MATERIALS))
+                    .toList();
+            sourceReport = sourceReportBuilder.report(report, player, containers, FabricMaterialSourceSettings.config());
             if (!sourceReport.enoughMaterials()) {
                 return BuildMaterialResult.denied("Not enough materials.", report, sourceReport);
             }
@@ -55,7 +62,7 @@ public class FabricMaterialBuildGate {
                     player,
                     blueprint.getId(),
                     sourceReport,
-                    scan.containers(),
+                    containers,
                     FabricMaterialSourceSettings.config()
             );
             if (!consumeResult.success()) {
@@ -92,7 +99,11 @@ public class FabricMaterialBuildGate {
     public MaterialSourceReport sourceReport(Blueprint blueprint, ServerPlayerEntity player, ServerWorld world, BlockPos basePos) {
         MaterialReport report = checker.report(blueprint, player);
         FabricMaterialSourceScanner.Scan scan = sourceScanner.scan(player, world, basePos, FabricMaterialSourceSettings.config());
-        return sourceReportBuilder.report(report, player, scan.containers(), FabricMaterialSourceSettings.config());
+        var containers = scan.containers()
+                .stream()
+                .filter(container -> BlockForgeFabric.PROTECTION.canUseContainer(player, world, container.pos(), ProtectionAction.SCAN_CONTAINER))
+                .toList();
+        return sourceReportBuilder.report(report, player, containers, FabricMaterialSourceSettings.config());
     }
 
     public record BuildMaterialResult(

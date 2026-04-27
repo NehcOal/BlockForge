@@ -16,7 +16,7 @@ consumption and undo refund. v1.4.0 adds Blueprint Pack loading Alpha from
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector Forge`
-- Mod Version: `1.4.0-alpha.1`
+- Mod Version: `1.5.0-alpha.1`
 
 ## Build
 
@@ -35,7 +35,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge-connector-forge-1.4.0-alpha.1.jar
+build/libs/blockforge-connector-forge-1.5.0-alpha.1.jar
 ```
 
 ## Blueprint Folder
@@ -217,3 +217,9 @@ and deeper material behavior.
 Fabric and Forge Alpha are intentionally smaller and parallel in scope: they
 prove each loader can reuse `mod/common` for blueprint parsing, rotation, build
 planning, selection state, basic GUI networking, and preview state before deeper parity work begins.
+## v1.5.0 Security Alpha
+
+Forge now loads `config/blockforge/protection-regions.json` and runs BlockForge
+permission/protection preflight before build commands, Builder Wand placement,
+material consumption, and nearby-container material use. External permission and
+claim integration is planned; the Alpha falls back to vanilla permission levels.

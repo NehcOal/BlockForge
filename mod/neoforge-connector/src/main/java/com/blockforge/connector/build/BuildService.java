@@ -1,5 +1,9 @@
 package com.blockforge.connector.build;
 
+import com.blockforge.common.security.permission.BlockForgePermissionAction;
+import com.blockforge.common.security.protection.ProtectionAction;
+import com.blockforge.common.security.protection.ProtectionPreflightReport;
+import com.blockforge.connector.BlockForgeConnector;
 import com.blockforge.connector.blueprint.Blueprint;
 import com.blockforge.connector.builder.BlueprintPlacer;
 import com.blockforge.connector.builder.BlueprintRotation;
@@ -39,9 +43,34 @@ public class BuildService {
             Blueprint blueprint,
             BlueprintRotation rotation
     ) {
+        return build(level, player, basePos, blueprint, rotation, BlockForgePermissionAction.BUILD_COMMAND);
+    }
+
+    public BuildResult build(
+            ServerLevel level,
+            ServerPlayer player,
+            BlockPos basePos,
+            Blueprint blueprint,
+            BlueprintRotation rotation,
+            BlockForgePermissionAction action
+    ) {
         BlueprintPlacer.PlacementResult preflight = placer.dryRun(level, basePos, blueprint, rotation);
         if (preflight.tooLarge() || preflight.empty()) {
             return BuildResult.rejected(preflight, null, null, null, MaterialRefundResult.empty(), "");
+        }
+
+        if (player != null) {
+            ProtectionPreflightReport security = BlockForgeConnector.PROTECTION.preflight(
+                    player,
+                    level,
+                    basePos,
+                    blueprint,
+                    rotation,
+                    action
+            );
+            if (!security.allowed()) {
+                return BuildResult.rejected(null, null, null, null, MaterialRefundResult.empty(), security.reason());
+            }
         }
 
         MaterialReport report = null;
@@ -69,10 +98,19 @@ public class BuildService {
                         basePos,
                         BlockForgeConfig.materialSourceConfig()
                 );
+                var containers = scan.containers()
+                        .stream()
+                        .filter(container -> BlockForgeConnector.PROTECTION.canUseContainer(
+                                player,
+                                level,
+                                container.pos(),
+                                ProtectionAction.USE_CONTAINER_MATERIALS
+                        ))
+                        .toList();
                 sourceReport = sourceAdapter.report(
                         report,
                         player,
-                        scan.containers(),
+                        containers,
                         BlockForgeConfig.materialSourceConfig()
                 );
                 if (!sourceReport.enoughMaterials()) {
@@ -84,7 +122,7 @@ public class BuildService {
                         blueprint.getId(),
                         level.getGameTime(),
                         sourceReport,
-                        scan.containers(),
+                        containers,
                         BlockForgeConfig.materialSourceConfig()
                 );
                 transaction = consumeResult.transaction();
@@ -108,10 +146,19 @@ public class BuildService {
                             basePos,
                             BlockForgeConfig.materialSourceConfig()
                     );
+                    var containers = scan.containers()
+                            .stream()
+                            .filter(container -> BlockForgeConnector.PROTECTION.canUseContainer(
+                                    player,
+                                    level,
+                                    container.pos(),
+                                    ProtectionAction.USE_CONTAINER_MATERIALS
+                            ))
+                            .toList();
                     sourceReport = sourceAdapter.report(
                             report,
                             player,
-                            scan.containers(),
+                            containers,
                             BlockForgeConfig.materialSourceConfig()
                     );
                     consumeResult = sourceConsumer.consume(
@@ -119,7 +166,7 @@ public class BuildService {
                             blueprint.getId(),
                             level.getGameTime(),
                             sourceReport,
-                            scan.containers(),
+                            containers,
                             BlockForgeConfig.materialSourceConfig()
                     );
                 } else {

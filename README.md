@@ -5,20 +5,19 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v1.4.0 Blueprint Pack Import / Export Alpha
+## v1.5.0 Server Permissions & Protection Layer Alpha
 
-BlockForge v1.4.0-alpha.1 adds Blueprint Pack import/export. The Web app can
-export the current model as a `.blockforgepack.zip` using Blueprint JSON v2 and
-can import a pack zip with manifest and path validation. NeoForge, Fabric, and
-Forge now scan `config/blockforge/packs/`, merge pack blueprints into the
-existing registry, and let GUI Selector, Builder Wand, Ghost Preview,
-materials, build, and undo flows use ids like `starter_buildings/tiny_platform`.
+BlockForge v1.5.0-alpha.1 adds a server-side permissions and protection layer
+for NeoForge, Fabric, and Forge. Builds now run a security preflight before
+material checks or block placement, built-in protection regions can deny
+BlockForge builds, and nearby container material sourcing respects protected
+container positions.
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-1.4.0-alpha.1.jar`
-- `blockforge-connector-fabric-1.4.0-alpha.1.jar`
-- `blockforge-connector-forge-1.4.0-alpha.1.jar`
+- `blockforge-connector-neoforge-1.5.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.5.0-alpha.1.jar`
+- `blockforge-connector-forge-1.5.0-alpha.1.jar`
 
 ## Loader Feature Matrix
 
@@ -38,6 +37,10 @@ Expected release jars:
 | BlockEntity NBT undo | ✅ best effort | ❌ | ❌ |
 | Nearby chest material sourcing | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 | Blueprint Pack import | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Permission nodes | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Protection regions | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Build preflight | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Container protection checks | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 
 ## Blueprint Pack Matrix
 
@@ -60,6 +63,8 @@ chest-sourced materials returned to the original chest.
 
 See [Material Sources](./docs/MATERIAL_SOURCES.md) for the v1.3 design notes.
 See [Blueprint Packs](./docs/BLUEPRINT_PACKS.md) for the v1.4 pack format.
+See [Permissions and Protection](./docs/PERMISSIONS_AND_PROTECTION.md) for the
+v1.5 server safety model.
 
 Fabric / Forge GUI + Builder Wand + Ghost Preview + Survival Materials Alpha flow:
 

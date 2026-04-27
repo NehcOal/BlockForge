@@ -5,6 +5,8 @@ import com.blockforge.common.material.MaterialRefundResult;
 import com.blockforge.common.material.MaterialTransaction;
 import com.blockforge.common.material.source.MaterialSourceConfig;
 import com.blockforge.common.material.source.MaterialSourceType;
+import com.blockforge.common.security.protection.ProtectionAction;
+import com.blockforge.forge.BlockForgeForge;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -44,7 +46,8 @@ public class ForgeMaterialSourceRefundHandler {
                     && entry.sourceType() == MaterialSourceType.NEARBY_CONTAINER
                     && entry.source() != null) {
                 ForgeContainerMaterialSource container = scanner.sourceFor(player.serverLevel(), entry.source());
-                if (container != null) {
+                if (container != null
+                        && BlockForgeForge.PROTECTION.canUseContainer(player, player.serverLevel(), container.pos(), ProtectionAction.REFUND_TO_CONTAINER)) {
                     int inserted = container.insertItem(entry.itemId(), remaining);
                     refunded += inserted;
                     remaining -= inserted;

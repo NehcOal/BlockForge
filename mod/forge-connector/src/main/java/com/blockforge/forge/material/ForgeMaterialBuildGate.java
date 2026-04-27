@@ -5,6 +5,8 @@ import com.blockforge.common.material.MaterialReport;
 import com.blockforge.common.material.MaterialRefundResult;
 import com.blockforge.common.material.MaterialTransaction;
 import com.blockforge.common.material.source.MaterialSourceReport;
+import com.blockforge.common.security.protection.ProtectionAction;
+import com.blockforge.forge.BlockForgeForge;
 import com.blockforge.forge.material.source.ForgeMaterialSourceConsumer;
 import com.blockforge.forge.material.source.ForgeMaterialSourceReportBuilder;
 import com.blockforge.forge.material.source.ForgeMaterialSourceScanner;
@@ -46,7 +48,11 @@ public class ForgeMaterialBuildGate {
         MaterialSourceReport sourceReport = null;
         if (ForgeMaterialSourceSettings.enableNearbyContainers()) {
             ForgeMaterialSourceScanner.Scan scan = sourceScanner.scan(player, level, basePos, ForgeMaterialSourceSettings.config());
-            sourceReport = sourceReportBuilder.report(report, player, scan.containers(), ForgeMaterialSourceSettings.config());
+            var containers = scan.containers()
+                    .stream()
+                    .filter(container -> BlockForgeForge.PROTECTION.canUseContainer(player, level, container.pos(), ProtectionAction.USE_CONTAINER_MATERIALS))
+                    .toList();
+            sourceReport = sourceReportBuilder.report(report, player, containers, ForgeMaterialSourceSettings.config());
             if (!sourceReport.enoughMaterials()) {
                 return BuildMaterialResult.denied("Not enough materials.", report, sourceReport);
             }
@@ -55,7 +61,7 @@ public class ForgeMaterialBuildGate {
                     player,
                     blueprint.getId(),
                     sourceReport,
-                    scan.containers(),
+                    containers,
                     ForgeMaterialSourceSettings.config()
             );
             if (!consumeResult.success()) {
@@ -92,7 +98,11 @@ public class ForgeMaterialBuildGate {
     public MaterialSourceReport sourceReport(Blueprint blueprint, ServerPlayer player, ServerLevel level, BlockPos basePos) {
         MaterialReport report = checker.report(blueprint, player);
         ForgeMaterialSourceScanner.Scan scan = sourceScanner.scan(player, level, basePos, ForgeMaterialSourceSettings.config());
-        return sourceReportBuilder.report(report, player, scan.containers(), ForgeMaterialSourceSettings.config());
+        var containers = scan.containers()
+                .stream()
+                .filter(container -> BlockForgeForge.PROTECTION.canUseContainer(player, level, container.pos(), ProtectionAction.SCAN_CONTAINER))
+                .toList();
+        return sourceReportBuilder.report(report, player, containers, ForgeMaterialSourceSettings.config());
     }
 
     public record BuildMaterialResult(

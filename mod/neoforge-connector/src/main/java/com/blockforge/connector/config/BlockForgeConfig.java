@@ -23,6 +23,12 @@ public final class BlockForgeConfig {
     private static final ModConfigSpec.EnumValue<MaterialSourcePriority> MATERIAL_SOURCE_PRIORITY;
     private static final ModConfigSpec.BooleanValue RETURN_REFUNDS_TO_ORIGINAL_SOURCE;
     private static final ModConfigSpec.BooleanValue ALLOW_PARTIAL_FROM_CONTAINERS;
+    private static final ModConfigSpec.BooleanValue ENABLE_PROTECTION_REGIONS;
+    private static final ModConfigSpec.BooleanValue REQUIRE_PERMISSIONS;
+    private static final ModConfigSpec.IntValue PERMISSION_FALLBACK_BUILD_LEVEL;
+    private static final ModConfigSpec.IntValue PERMISSION_FALLBACK_ADMIN_LEVEL;
+    private static final ModConfigSpec.BooleanValue ENFORCE_PROTECTION_ON_UNDO;
+    private static final ModConfigSpec.BooleanValue HIDE_INACCESSIBLE_CONTAINERS_FROM_SOURCES_SCAN;
 
     static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -85,6 +91,27 @@ public final class BlockForgeConfig {
         ALLOW_PARTIAL_FROM_CONTAINERS = builder
                 .comment("Allow one material requirement to be split between player inventory and nearby containers.")
                 .define("allowPartialFromContainers", MaterialSourceConfig.DEFAULT_ALLOW_PARTIAL_FROM_CONTAINERS);
+        builder.pop();
+
+        builder.push("security");
+        ENABLE_PROTECTION_REGIONS = builder
+                .comment("Enable BlockForge built-in protection regions from config/blockforge/protection-regions.json.")
+                .define("enableProtectionRegions", true);
+        REQUIRE_PERMISSIONS = builder
+                .comment("When true, BlockForge permission checks require the configured permission provider or OP fallback.")
+                .define("requirePermissions", false);
+        PERMISSION_FALLBACK_BUILD_LEVEL = builder
+                .comment("Vanilla fallback permission level for build-related permission checks.")
+                .defineInRange("permissionFallbackBuildLevel", 0, 0, 4);
+        PERMISSION_FALLBACK_ADMIN_LEVEL = builder
+                .comment("Vanilla fallback permission level for admin permission checks.")
+                .defineInRange("permissionFallbackAdminLevel", 2, 0, 4);
+        ENFORCE_PROTECTION_ON_UNDO = builder
+                .comment("When true, undo restore also respects current protection regions.")
+                .define("enforceProtectionOnUndo", false);
+        HIDE_INACCESSIBLE_CONTAINERS_FROM_SOURCES_SCAN = builder
+                .comment("Hide containers denied by protection regions from sources scan output.")
+                .define("hideInaccessibleContainersFromSourcesScan", true);
         builder.pop();
 
         SPEC = builder.build();
@@ -170,5 +197,29 @@ public final class BlockForgeConfig {
                 returnRefundsToOriginalSource(),
                 nearbyContainerMaxScanned()
         );
+    }
+
+    public static boolean enableProtectionRegions() {
+        return ENABLE_PROTECTION_REGIONS.get();
+    }
+
+    public static boolean requirePermissions() {
+        return REQUIRE_PERMISSIONS.get();
+    }
+
+    public static int permissionFallbackBuildLevel() {
+        return PERMISSION_FALLBACK_BUILD_LEVEL.get();
+    }
+
+    public static int permissionFallbackAdminLevel() {
+        return PERMISSION_FALLBACK_ADMIN_LEVEL.get();
+    }
+
+    public static boolean enforceProtectionOnUndo() {
+        return ENFORCE_PROTECTION_ON_UNDO.get();
+    }
+
+    public static boolean hideInaccessibleContainersFromSourcesScan() {
+        return HIDE_INACCESSIBLE_CONTAINERS_FROM_SOURCES_SCAN.get();
     }
 }

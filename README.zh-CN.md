@@ -9,19 +9,18 @@ Fabric / Forge Connector Alpha GUI Selector + Builder Wand + Ghost Preview + 生
 
 [English README](./README.md) | [使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v1.4.0 Blueprint Pack 导入 / 导出 Alpha
+## v1.5.0 服务器权限与保护层 Alpha
 
-BlockForge v1.4.0-alpha.1 新增 Blueprint Pack 导入 / 导出。Web 端可以把当前
-模型导出为 `.blockforgepack.zip`，并在导入时校验 manifest、蓝图 JSON 和安全路径。
-NeoForge / Fabric / Forge 会扫描 `config/blockforge/packs/`，把 pack 内蓝图合并到
-现有 registry，GUI Selector、Builder Wand、Ghost Preview、materials、build、undo
-都可以使用 `starter_buildings/tiny_platform` 这类 pack 蓝图 id。
+BlockForge v1.5.0-alpha.1 新增服务器权限与保护兼容层。NeoForge / Fabric /
+Forge 在 build 命令和 Builder Wand 放置前会先执行安全 preflight，通过后才会检查
+和扣除材料；内置 protection region 可以拒绝 BlockForge 建造，附近容器材料来源也会
+尊重容器所在位置的保护状态。
 
 预期发布 jar：
 
-- `blockforge-connector-neoforge-1.4.0-alpha.1.jar`
-- `blockforge-connector-fabric-1.4.0-alpha.1.jar`
-- `blockforge-connector-forge-1.4.0-alpha.1.jar`
+- `blockforge-connector-neoforge-1.5.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.5.0-alpha.1.jar`
+- `blockforge-connector-forge-1.5.0-alpha.1.jar`
 
 ## Loader 功能矩阵
 
@@ -41,6 +40,10 @@ NeoForge / Fabric / Forge 会扫描 `config/blockforge/packs/`，把 pack 内蓝
 | BlockEntity NBT undo | ✅ best effort | ❌ | ❌ |
 | 附近箱子材料来源 | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 | Blueprint Pack 导入 | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Permission nodes | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Protection regions | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Build preflight | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Container protection checks | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 
 ## Blueprint Pack 矩阵
 
@@ -60,6 +63,7 @@ Fabric / Forge 现在会扣除生存模式材料，并在 `/blockforge undo` 时
 
 v1.3 设计说明见：[Material Sources](./docs/MATERIAL_SOURCES.md)。
 v1.4 蓝图包说明见：[Blueprint Packs](./docs/BLUEPRINT_PACKS.md)。
+v1.5 服务器安全说明见：[Permissions and Protection](./docs/PERMISSIONS_AND_PROTECTION.md)。
 
 Fabric / Forge GUI + Builder Wand + Ghost Preview + 生存材料 Alpha 流程：
 

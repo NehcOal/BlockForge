@@ -1,5 +1,7 @@
 package com.blockforge.connector.item;
 
+import com.blockforge.common.security.permission.BlockForgePermissionAction;
+import com.blockforge.common.security.protection.ProtectionPreflightReport;
 import com.blockforge.connector.BlockForgeConnector;
 import com.blockforge.connector.blueprint.Blueprint;
 import com.blockforge.connector.build.BuildService;
@@ -32,11 +34,6 @@ public class BuilderWandItem extends Item {
             return InteractionResult.PASS;
         }
 
-        if (!player.hasPermissions(2)) {
-            player.sendSystemMessage(Component.literal("BlockForge Builder Wand requires permission level 2."));
-            return InteractionResult.FAIL;
-        }
-
         PlayerBlueprintSelection selection = BlockForgeConnector.SELECTIONS.getOrCreate(player.getUUID());
 
         if (!selection.hasSelection()) {
@@ -64,12 +61,31 @@ public class BuilderWandItem extends Item {
         }
 
         BlockPos basePos = context.getClickedPos().relative(context.getClickedFace());
+        ProtectionPreflightReport security = BlockForgeConnector.PROTECTION.preflight(
+                player,
+                serverLevel,
+                basePos,
+                blueprint,
+                selection.getRotation(),
+                BlockForgePermissionAction.BUILD_WAND
+        );
+        if (!security.allowed()) {
+            player.sendSystemMessage(Component.literal(security.reason().isBlank()
+                    ? "BlockForge build denied by security preflight."
+                    : security.reason()));
+            for (String warning : security.warnings()) {
+                player.sendSystemMessage(Component.literal("Warning: " + warning));
+            }
+            return InteractionResult.FAIL;
+        }
+
         BuildService.BuildResult buildResult = BUILDS.build(
                 serverLevel,
                 player,
                 basePos,
                 blueprint,
-                selection.getRotation()
+                selection.getRotation(),
+                BlockForgePermissionAction.BUILD_WAND
         );
 
         if (!buildResult.allowed()) {

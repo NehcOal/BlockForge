@@ -12,7 +12,11 @@ import com.blockforge.common.material.source.MaterialSourceType;
 import com.blockforge.common.pack.BlueprintPackRegistryEntry;
 import com.blockforge.common.pack.LoadedBlueprintPack;
 import com.blockforge.common.rotation.BlueprintRotation;
+import com.blockforge.common.security.permission.BlockForgePermissionAction;
+import com.blockforge.common.security.protection.BlockForgeProtectionRegion;
+import com.blockforge.common.security.protection.ProtectionPreflightReport;
 import com.blockforge.common.selection.PlayerSelection;
+import com.blockforge.forge.BlockForgeForge;
 import com.blockforge.forge.blueprint.ForgeBlueprintRegistry;
 import com.blockforge.forge.blueprint.ForgeExampleBlueprintInstaller;
 import com.blockforge.forge.builder.ForgeBlueprintPlacer;
@@ -24,8 +28,6 @@ import com.blockforge.forge.player.ForgePlayerSelectionManager;
 import com.blockforge.forge.registry.ForgeModItems;
 import com.blockforge.forge.undo.ForgeUndoManager;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
@@ -143,7 +145,30 @@ public final class ForgeBlockForgeCommands {
                                                 .executes(context -> buildAtPlayer(context, registry, undoManager, getRotation(context)))))))
                 .then(Commands.literal("undo")
                         .requires(source -> source.hasPermission(2))
-                        .executes(context -> undo(context, undoManager))));
+                        .executes(context -> undo(context, undoManager)))
+                .then(Commands.literal("protection")
+                        .then(Commands.literal("folder")
+                                .executes(ForgeBlockForgeCommands::protectionFolder))
+                        .then(Commands.literal("reload")
+                                .requires(source -> source.hasPermission(2))
+                                .executes(ForgeBlockForgeCommands::protectionReload))
+                        .then(Commands.literal("list")
+                                .executes(ForgeBlockForgeCommands::protectionList))
+                        .then(Commands.literal("info")
+                                .then(Commands.argument("region", StringArgumentType.word())
+                                        .executes(ForgeBlockForgeCommands::protectionInfo)))
+                        .then(Commands.literal("check")
+                                .then(blueprintIdArgument(registry)
+                                        .executes(context -> protectionCheckAtPlayer(context, registry, selectionManager))
+                                        .then(Commands.literal("at")
+                                                .then(Commands.argument("x", IntegerArgumentType.integer())
+                                                        .then(Commands.argument("y", IntegerArgumentType.integer())
+                                                                .then(Commands.argument("z", IntegerArgumentType.integer())
+                                                                        .executes(context -> protectionCheckAtCoordinates(context, registry, selectionManager)))))))))
+                .then(Commands.literal("permissions")
+                        .then(Commands.literal("check")
+                                .then(Commands.argument("node", StringArgumentType.word())
+                                        .executes(ForgeBlockForgeCommands::permissionCheck)))));
     }
 
     private static int select(
@@ -268,7 +293,7 @@ public final class ForgeBlockForgeCommands {
     private static RequiredArgumentBuilder<CommandSourceStack, String> blueprintIdArgument(
             ForgeBlueprintRegistry registry
     ) {
-        return Commands.argument("id", BlueprintIdArgumentType.id())
+        return Commands.argument("id", StringArgumentType.string())
                 .suggests((context, builder) -> SharedSuggestionProvider.suggest(registry.getIds(), builder));
     }
 
@@ -748,6 +773,19 @@ public final class ForgeBlockForgeCommands {
             return 0;
         }
 
+        ProtectionPreflightReport security = BlockForgeForge.PROTECTION.preflight(
+                player,
+                context.getSource().getLevel(),
+                basePos,
+                blueprint,
+                rotation,
+                BlockForgePermissionAction.BUILD_COMMAND
+        );
+        if (!security.allowed()) {
+            sendSecurityDenied(context.getSource(), security);
+            return 0;
+        }
+
         ForgeMaterialBuildGate.BuildMaterialResult materialResult = MATERIALS.prepare(player, context.getSource().getLevel(), basePos, blueprint);
         if (!materialResult.allowed()) {
             context.getSource().sendFailure(Component.literal(materialResult.message()));
@@ -787,6 +825,136 @@ public final class ForgeBlockForgeCommands {
         sendPlacementResult(context.getSource(), result);
         sendMaterialResult(context.getSource(), materialResult);
         return result.placedBlocks();
+    }
+
+    private static int protectionFolder(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge Forge protection file: " + BlockForgeForge.PROTECTION.file()),
+                false
+        );
+        return 1;
+    }
+
+    private static int protectionReload(CommandContext<CommandSourceStack> context) {
+        var config = BlockForgeForge.PROTECTION.reload();
+        context.getSource().sendSuccess(
+                () -> Component.literal("Loaded " + config.regions().size() + " BlockForge Forge protection region(s)."),
+                true
+        );
+        for (String warning : config.warnings()) {
+            context.getSource().sendFailure(Component.literal("Warning: " + warning));
+        }
+        return config.regions().size();
+    }
+
+    private static int protectionList(CommandContext<CommandSourceStack> context) {
+        if (BlockForgeForge.PROTECTION.regions().isEmpty()) {
+            context.getSource().sendSuccess(() -> Component.literal("No BlockForge Forge protection regions loaded."), false);
+            return 0;
+        }
+        for (BlockForgeProtectionRegion region : BlockForgeForge.PROTECTION.regions()) {
+            context.getSource().sendSuccess(() -> Component.literal("- " + describeRegion(region)), false);
+        }
+        return BlockForgeForge.PROTECTION.regions().size();
+    }
+
+    private static int protectionInfo(CommandContext<CommandSourceStack> context) {
+        String id = StringArgumentType.getString(context, "region");
+        BlockForgeProtectionRegion region = BlockForgeForge.PROTECTION.find(id).orElse(null);
+        if (region == null) {
+            context.getSource().sendFailure(Component.literal("Unknown BlockForge Forge protection region: " + id));
+            return 0;
+        }
+        context.getSource().sendSuccess(
+                () -> Component.literal(describeRegion(region)
+                        + " | allowedPlayers=" + region.allowedPlayers().size()
+                        + " | allowedPermissions=" + region.allowedPermissions()),
+                false
+        );
+        return 1;
+    }
+
+    private static int protectionCheckAtPlayer(
+            CommandContext<CommandSourceStack> context,
+            ForgeBlueprintRegistry registry,
+            ForgePlayerSelectionManager selectionManager
+    ) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        PlayerSelection selection = selectionManager.get(player.getUUID()).orElse(null);
+        BlueprintRotation rotation = selection == null ? BlueprintRotation.NONE : selection.rotation();
+        return protectionCheck(context, registry, player, player.blockPosition(), rotation);
+    }
+
+    private static int protectionCheckAtCoordinates(
+            CommandContext<CommandSourceStack> context,
+            ForgeBlueprintRegistry registry,
+            ForgePlayerSelectionManager selectionManager
+    ) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        PlayerSelection selection = selectionManager.get(player.getUUID()).orElse(null);
+        BlueprintRotation rotation = selection == null ? BlueprintRotation.NONE : selection.rotation();
+        BlockPos basePos = new BlockPos(
+                IntegerArgumentType.getInteger(context, "x"),
+                IntegerArgumentType.getInteger(context, "y"),
+                IntegerArgumentType.getInteger(context, "z")
+        );
+        return protectionCheck(context, registry, player, basePos, rotation);
+    }
+
+    private static int protectionCheck(
+            CommandContext<CommandSourceStack> context,
+            ForgeBlueprintRegistry registry,
+            ServerPlayer player,
+            BlockPos basePos,
+            BlueprintRotation rotation
+    ) {
+        Blueprint blueprint = findBlueprint(context, registry);
+        if (blueprint == null) {
+            return 0;
+        }
+        ProtectionPreflightReport report = BlockForgeForge.PROTECTION.preflight(
+                player,
+                context.getSource().getLevel(),
+                basePos,
+                blueprint,
+                rotation,
+                BlockForgePermissionAction.BUILD_WAND
+        );
+        if (!report.allowed()) {
+            sendSecurityDenied(context.getSource(), report);
+            return 0;
+        }
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge Forge protection check allowed for "
+                        + blueprint.getId()
+                        + " | checkedBlocks="
+                        + report.checkedBlocks()),
+                false
+        );
+        return 1;
+    }
+
+    private static int permissionCheck(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        String node = StringArgumentType.getString(context, "node");
+        var result = BlockForgeForge.PROTECTION.permissions().check(player, node, 2);
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge Forge permission " + node + ": " + (result.allowed() ? "allowed" : "denied")),
+                false
+        );
+        if (!result.allowed()) {
+            context.getSource().sendFailure(Component.literal(result.reason()));
+        }
+        return result.allowed() ? 1 : 0;
     }
 
     private static int undo(
@@ -845,6 +1013,36 @@ public final class ForgeBlockForgeCommands {
                         + ". Use /blockforge undo to restore blocks and refund materials."),
                 true
         );
+    }
+
+    private static void sendSecurityDenied(CommandSourceStack source, ProtectionPreflightReport report) {
+        source.sendFailure(Component.literal(report.reason().isBlank()
+                ? "BlockForge Forge build denied by security preflight."
+                : report.reason()));
+        for (String warning : report.warnings()) {
+            source.sendFailure(Component.literal("Warning: " + warning));
+        }
+    }
+
+    private static String describeRegion(BlockForgeProtectionRegion region) {
+        return region.id()
+                + " | "
+                + region.mode()
+                + " | "
+                + region.dimensionId()
+                + " | ["
+                + region.minX()
+                + ","
+                + region.minY()
+                + ","
+                + region.minZ()
+                + "] -> ["
+                + region.maxX()
+                + ","
+                + region.maxY()
+                + ","
+                + region.maxZ()
+                + "]";
     }
 
     private static void sendUndoResult(
@@ -1142,18 +1340,4 @@ public final class ForgeBlockForgeCommands {
                 + blueprint.getBlockCount();
     }
 
-    private static final class BlueprintIdArgumentType implements ArgumentType<String> {
-        private static BlueprintIdArgumentType id() {
-            return new BlueprintIdArgumentType();
-        }
-
-        @Override
-        public String parse(StringReader reader) {
-            int start = reader.getCursor();
-            while (reader.canRead() && reader.peek() != ' ') {
-                reader.skip();
-            }
-            return reader.getString().substring(start, reader.getCursor());
-        }
-    }
 }

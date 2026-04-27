@@ -62,3 +62,9 @@
 - v1.4.1+: Imported pack library management and pack UX polish.
 
 See [Multi-loader Plan](./MULTILOADER_PLAN.md) for details.
+## v1.5.0 Security Layer
+
+- Server permission nodes, built-in protection regions, build preflight, and
+  protected nearby-container material sourcing checks for NeoForge, Fabric, and
+  Forge.
+- Manual Minecraft regression testing remains pending.

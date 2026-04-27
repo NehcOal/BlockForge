@@ -212,3 +212,13 @@ BlockForge v1.4.0-alpha.1 release 应包含：
 - `docs/RELEASE_NOTES_TEMPLATE.md`
 
 GitHub Actions 会把三个 Connector jar 分别上传为 CI artifact。
+## v1.5.0 保护区域
+
+服务器管理员可以按需编辑：
+
+```text
+config/blockforge/protection-regions.json
+```
+
+该文件会在 connector 首次启动或执行 protection reload 时自动创建。被保护区域拒绝的
+build 会在材料检查和扣除前停止。

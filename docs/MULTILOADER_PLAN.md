@@ -258,3 +258,9 @@ be added after the three connector modules settle.
 - Pack blueprints flow through the existing registry, GUI Selector, Builder
   Wand, Ghost Preview, material, build, and undo paths.
 - Manual Minecraft testing is pending for v1.4.0.
+## v1.5.0 Security Layer
+
+v1.5.0 adds common permission/protection abstractions and Alpha adapters for
+NeoForge, Fabric, and Forge. Protection preflight runs before material
+consumption and placement. External permission/claim mods remain optional and
+planned rather than hard dependencies.

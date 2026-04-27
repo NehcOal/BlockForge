@@ -5,6 +5,8 @@ import com.blockforge.common.material.MaterialRefundResult;
 import com.blockforge.common.material.MaterialTransaction;
 import com.blockforge.common.material.source.MaterialSourceConfig;
 import com.blockforge.common.material.source.MaterialSourceType;
+import com.blockforge.common.security.protection.ProtectionAction;
+import com.blockforge.fabric.BlockForgeFabric;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -44,7 +46,8 @@ public class FabricMaterialSourceRefundHandler {
                     && entry.sourceType() == MaterialSourceType.NEARBY_CONTAINER
                     && entry.source() != null) {
                 FabricContainerMaterialSource container = scanner.sourceFor(player.getServerWorld(), entry.source());
-                if (container != null) {
+                if (container != null
+                        && BlockForgeFabric.PROTECTION.canUseContainer(player, player.getServerWorld(), container.pos(), ProtectionAction.REFUND_TO_CONTAINER)) {
                     int inserted = container.insertItem(entry.itemId(), remaining);
                     refunded += inserted;
                     remaining -= inserted;

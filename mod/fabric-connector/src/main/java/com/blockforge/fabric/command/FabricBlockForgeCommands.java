@@ -12,7 +12,11 @@ import com.blockforge.common.material.source.MaterialSourceType;
 import com.blockforge.common.pack.BlueprintPackRegistryEntry;
 import com.blockforge.common.pack.LoadedBlueprintPack;
 import com.blockforge.common.rotation.BlueprintRotation;
+import com.blockforge.common.security.permission.BlockForgePermissionAction;
+import com.blockforge.common.security.protection.BlockForgeProtectionRegion;
+import com.blockforge.common.security.protection.ProtectionPreflightReport;
 import com.blockforge.common.selection.PlayerSelection;
+import com.blockforge.fabric.BlockForgeFabric;
 import com.blockforge.fabric.blueprint.FabricBlueprintRegistry;
 import com.blockforge.fabric.blueprint.FabricExampleBlueprintInstaller;
 import com.blockforge.fabric.builder.FabricBlueprintPlacer;
@@ -142,7 +146,30 @@ public final class FabricBlockForgeCommands {
                                                 .executes(context -> buildAtPlayer(context, registry, undoManager, getRotation(context)))))))
                 .then(CommandManager.literal("undo")
                         .requires(source -> source.hasPermissionLevel(2))
-                        .executes(context -> undo(context, undoManager)))));
+                        .executes(context -> undo(context, undoManager)))
+                .then(CommandManager.literal("protection")
+                        .then(CommandManager.literal("folder")
+                                .executes(FabricBlockForgeCommands::protectionFolder))
+                        .then(CommandManager.literal("reload")
+                                .requires(source -> source.hasPermissionLevel(2))
+                                .executes(FabricBlockForgeCommands::protectionReload))
+                        .then(CommandManager.literal("list")
+                                .executes(FabricBlockForgeCommands::protectionList))
+                        .then(CommandManager.literal("info")
+                                .then(CommandManager.argument("region", StringArgumentType.word())
+                                        .executes(FabricBlockForgeCommands::protectionInfo)))
+                        .then(CommandManager.literal("check")
+                                .then(blueprintIdArgument(registry)
+                                        .executes(context -> protectionCheckAtPlayer(context, registry, selectionManager))
+                                        .then(CommandManager.literal("at")
+                                                .then(CommandManager.argument("x", IntegerArgumentType.integer())
+                                                        .then(CommandManager.argument("y", IntegerArgumentType.integer())
+                                                                .then(CommandManager.argument("z", IntegerArgumentType.integer())
+                                                                        .executes(context -> protectionCheckAtCoordinates(context, registry, selectionManager)))))))))
+                .then(CommandManager.literal("permissions")
+                        .then(CommandManager.literal("check")
+                                .then(CommandManager.argument("node", StringArgumentType.word())
+                                        .executes(FabricBlockForgeCommands::permissionCheck))))));
     }
 
     private static int select(
@@ -749,6 +776,19 @@ public final class FabricBlockForgeCommands {
             return 0;
         }
 
+        ProtectionPreflightReport security = BlockForgeFabric.PROTECTION.preflight(
+                player,
+                context.getSource().getWorld(),
+                basePos,
+                blueprint,
+                rotation,
+                BlockForgePermissionAction.BUILD_COMMAND
+        );
+        if (!security.allowed()) {
+            sendSecurityDenied(context.getSource(), security);
+            return 0;
+        }
+
         FabricMaterialBuildGate.BuildMaterialResult materialResult = MATERIALS.prepare(player, context.getSource().getWorld(), basePos, blueprint);
         if (!materialResult.allowed()) {
             context.getSource().sendError(Text.literal(materialResult.message()));
@@ -788,6 +828,136 @@ public final class FabricBlockForgeCommands {
         sendPlacementResult(context.getSource(), result);
         sendMaterialResult(context.getSource(), materialResult);
         return result.placedBlocks();
+    }
+
+    private static int protectionFolder(CommandContext<ServerCommandSource> context) {
+        context.getSource().sendFeedback(
+                () -> Text.literal("BlockForge Fabric protection file: " + BlockForgeFabric.PROTECTION.file()),
+                false
+        );
+        return 1;
+    }
+
+    private static int protectionReload(CommandContext<ServerCommandSource> context) {
+        var config = BlockForgeFabric.PROTECTION.reload();
+        context.getSource().sendFeedback(
+                () -> Text.literal("Loaded " + config.regions().size() + " BlockForge Fabric protection region(s)."),
+                true
+        );
+        for (String warning : config.warnings()) {
+            context.getSource().sendError(Text.literal("Warning: " + warning));
+        }
+        return config.regions().size();
+    }
+
+    private static int protectionList(CommandContext<ServerCommandSource> context) {
+        if (BlockForgeFabric.PROTECTION.regions().isEmpty()) {
+            context.getSource().sendFeedback(() -> Text.literal("No BlockForge Fabric protection regions loaded."), false);
+            return 0;
+        }
+        for (BlockForgeProtectionRegion region : BlockForgeFabric.PROTECTION.regions()) {
+            context.getSource().sendFeedback(() -> Text.literal("- " + describeRegion(region)), false);
+        }
+        return BlockForgeFabric.PROTECTION.regions().size();
+    }
+
+    private static int protectionInfo(CommandContext<ServerCommandSource> context) {
+        String id = StringArgumentType.getString(context, "region");
+        BlockForgeProtectionRegion region = BlockForgeFabric.PROTECTION.find(id).orElse(null);
+        if (region == null) {
+            context.getSource().sendError(Text.literal("Unknown BlockForge Fabric protection region: " + id));
+            return 0;
+        }
+        context.getSource().sendFeedback(
+                () -> Text.literal(describeRegion(region)
+                        + " | allowedPlayers=" + region.allowedPlayers().size()
+                        + " | allowedPermissions=" + region.allowedPermissions()),
+                false
+        );
+        return 1;
+    }
+
+    private static int protectionCheckAtPlayer(
+            CommandContext<ServerCommandSource> context,
+            FabricBlueprintRegistry registry,
+            FabricPlayerSelectionManager selectionManager
+    ) {
+        ServerPlayerEntity player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        PlayerSelection selection = selectionManager.get(player.getUuid()).orElse(null);
+        BlueprintRotation rotation = selection == null ? BlueprintRotation.NONE : selection.rotation();
+        return protectionCheck(context, registry, player, player.getBlockPos(), rotation);
+    }
+
+    private static int protectionCheckAtCoordinates(
+            CommandContext<ServerCommandSource> context,
+            FabricBlueprintRegistry registry,
+            FabricPlayerSelectionManager selectionManager
+    ) {
+        ServerPlayerEntity player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        PlayerSelection selection = selectionManager.get(player.getUuid()).orElse(null);
+        BlueprintRotation rotation = selection == null ? BlueprintRotation.NONE : selection.rotation();
+        BlockPos basePos = new BlockPos(
+                IntegerArgumentType.getInteger(context, "x"),
+                IntegerArgumentType.getInteger(context, "y"),
+                IntegerArgumentType.getInteger(context, "z")
+        );
+        return protectionCheck(context, registry, player, basePos, rotation);
+    }
+
+    private static int protectionCheck(
+            CommandContext<ServerCommandSource> context,
+            FabricBlueprintRegistry registry,
+            ServerPlayerEntity player,
+            BlockPos basePos,
+            BlueprintRotation rotation
+    ) {
+        Blueprint blueprint = findBlueprint(context, registry);
+        if (blueprint == null) {
+            return 0;
+        }
+        ProtectionPreflightReport report = BlockForgeFabric.PROTECTION.preflight(
+                player,
+                context.getSource().getWorld(),
+                basePos,
+                blueprint,
+                rotation,
+                BlockForgePermissionAction.BUILD_WAND
+        );
+        if (!report.allowed()) {
+            sendSecurityDenied(context.getSource(), report);
+            return 0;
+        }
+        context.getSource().sendFeedback(
+                () -> Text.literal("BlockForge Fabric protection check allowed for "
+                        + blueprint.getId()
+                        + " | checkedBlocks="
+                        + report.checkedBlocks()),
+                false
+        );
+        return 1;
+    }
+
+    private static int permissionCheck(CommandContext<ServerCommandSource> context) {
+        ServerPlayerEntity player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        String node = StringArgumentType.getString(context, "node");
+        var result = BlockForgeFabric.PROTECTION.permissions().check(player, node, 2);
+        context.getSource().sendFeedback(
+                () -> Text.literal("BlockForge Fabric permission " + node + ": " + (result.allowed() ? "allowed" : "denied")),
+                false
+        );
+        if (!result.allowed()) {
+            context.getSource().sendError(Text.literal(result.reason()));
+        }
+        return result.allowed() ? 1 : 0;
     }
 
     private static int undo(
@@ -846,6 +1016,36 @@ public final class FabricBlockForgeCommands {
                         + ". Use /blockforge undo to restore blocks and refund materials."),
                 true
         );
+    }
+
+    private static void sendSecurityDenied(ServerCommandSource source, ProtectionPreflightReport report) {
+        source.sendError(Text.literal(report.reason().isBlank()
+                ? "BlockForge Fabric build denied by security preflight."
+                : report.reason()));
+        for (String warning : report.warnings()) {
+            source.sendError(Text.literal("Warning: " + warning));
+        }
+    }
+
+    private static String describeRegion(BlockForgeProtectionRegion region) {
+        return region.id()
+                + " | "
+                + region.mode()
+                + " | "
+                + region.dimensionId()
+                + " | ["
+                + region.minX()
+                + ","
+                + region.minY()
+                + ","
+                + region.minZ()
+                + "] -> ["
+                + region.maxX()
+                + ","
+                + region.maxY()
+                + ","
+                + region.maxZ()
+                + "]";
     }
 
     private static void sendUndoResult(

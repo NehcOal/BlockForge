@@ -15,7 +15,7 @@ v1.4.0 adds Blueprint Pack loading Alpha from `config/blockforge/packs/`.
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector Fabric`
-- Mod Version: `1.4.0-alpha.1`
+- Mod Version: `1.5.0-alpha.1`
 
 ## Build
 
@@ -34,7 +34,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge-connector-fabric-1.4.0-alpha.1.jar
+build/libs/blockforge-connector-fabric-1.5.0-alpha.1.jar
 ```
 
 ## Blueprint Folder
@@ -211,3 +211,10 @@ NeoForge remains the most complete Connector. It currently owns common config
 and deeper material behavior. Fabric and Forge Alpha are
 intentionally smaller so each loader adapter can stabilize before deeper parity
 work begins.
+## v1.5.0 Security Alpha
+
+Fabric now loads `config/blockforge/protection-regions.json` and runs
+BlockForge permission/protection preflight before build commands, Builder Wand
+placement, material consumption, and nearby-container material use. Fabric
+Permissions API / LuckPerms integration is planned; the Alpha falls back to
+vanilla permission levels.

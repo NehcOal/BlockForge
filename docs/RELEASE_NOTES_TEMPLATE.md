@@ -1,8 +1,8 @@
-# BlockForge v1.4.0-alpha.1 - Blueprint Pack Import / Export Alpha
+# BlockForge v1.5.0-alpha.1 - Blueprint Pack Import / Export Alpha
 
 ## Release Type
 
-- Version: `1.4.0-alpha.1`
+- Version: `1.5.0-alpha.1`
 - Type: Blueprint Pack Import / Export Alpha regression candidate
 - Stability: Alpha for Fabric and Forge, recommended full experience on NeoForge
 
@@ -19,9 +19,9 @@
 
 ## Download Files
 
-- `blockforge-connector-neoforge-1.4.0-alpha.1.jar`
-- `blockforge-connector-fabric-1.4.0-alpha.1.jar`
-- `blockforge-connector-forge-1.4.0-alpha.1.jar`
+- `blockforge-connector-neoforge-1.5.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.5.0-alpha.1.jar`
+- `blockforge-connector-forge-1.5.0-alpha.1.jar`
 
 ## Feature Matrix
 
@@ -104,3 +104,9 @@ Manual Minecraft status:
 - NeoForge users should prefer the NeoForge jar for the complete experience.
 - Fabric and Forge users should treat this as an Alpha GUI + command +
   material-cost + refund-undo workflow.
+## v1.5.0 Security Notes
+
+- Permissions/protection support is Alpha.
+- Supported loaders: NeoForge, Fabric, Forge.
+- Manual Minecraft regression testing pending unless explicitly verified.
+- External permission and claim integrations are planned optional adapters.

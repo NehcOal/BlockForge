@@ -2,7 +2,7 @@
 
 ## Scope
 
-This guide prepares the `1.4.0-alpha.1` multi-loader Alpha release. It does not
+This guide prepares the `1.5.0-alpha.1` multi-loader Alpha release. It does not
 publish automatically to GitHub, Modrinth, or CurseForge.
 
 NeoForge is the recommended full-experience Connector. Fabric and Forge are
@@ -37,14 +37,14 @@ gradlew.bat build
 Expected jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.4.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.4.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.4.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.5.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.5.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.5.0-alpha.1.jar
 ```
 
 ## GitHub Alpha Release
 
-1. Create a GitHub release for `v1.4.0-alpha.1`.
+1. Create a GitHub release for `v1.5.0-alpha.1`.
 2. Use `docs/RELEASE_NOTES_TEMPLATE.md` as the release body starting point.
 3. Upload the three loader jars.
 4. Confirm every jar file name includes the loader name.
@@ -125,3 +125,10 @@ GitHub Actions uploads:
 
 These artifacts are validation outputs. Before public release, verify the final
 download file names match the expected jar names above.
+## v1.5.0 Security Publishing Notes
+
+- Release notes must mention that permission/protection support is Alpha.
+- External LuckPerms, Fabric Permissions API, FTB Chunks, and Open Parties and
+  Claims integrations are planned, not bundled.
+- Manual Minecraft regression testing must remain pending until explicitly
+  tested.

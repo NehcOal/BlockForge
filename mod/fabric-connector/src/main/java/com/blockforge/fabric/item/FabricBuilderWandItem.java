@@ -1,6 +1,8 @@
 package com.blockforge.fabric.item;
 
 import com.blockforge.common.blueprint.Blueprint;
+import com.blockforge.common.security.permission.BlockForgePermissionAction;
+import com.blockforge.common.security.protection.ProtectionPreflightReport;
 import com.blockforge.common.selection.PlayerSelection;
 import com.blockforge.fabric.BlockForgeFabric;
 import com.blockforge.fabric.builder.FabricBlueprintPlacer;
@@ -59,6 +61,19 @@ public class FabricBuilderWandItem extends Item {
         FabricBlueprintPlacer.PlacementResult dryRun = PLACER.dryRun(world, basePos, blueprint, selection.rotation());
         if (dryRun.tooLarge() || dryRun.empty() || dryRun.placedBlocks() == 0) {
             sendPlacementResult(player, dryRun);
+            return ActionResult.FAIL;
+        }
+
+        ProtectionPreflightReport security = BlockForgeFabric.PROTECTION.preflight(
+                player,
+                world,
+                basePos,
+                blueprint,
+                selection.rotation(),
+                BlockForgePermissionAction.BUILD_WAND
+        );
+        if (!security.allowed()) {
+            sendSecurityDenied(player, security);
             return ActionResult.FAIL;
         }
 
@@ -139,6 +154,15 @@ public class FabricBuilderWandItem extends Item {
                 + ". totalBlocks="
                 + result.totalBlocks()
                 + ". Use /blockforge undo to restore blocks and refund materials."), false);
+    }
+
+    private static void sendSecurityDenied(ServerPlayerEntity player, ProtectionPreflightReport report) {
+        player.sendMessage(Text.literal(report.reason().isBlank()
+                ? "BlockForge Fabric build denied by security preflight."
+                : report.reason()), false);
+        for (String warning : report.warnings()) {
+            player.sendMessage(Text.literal("Warning: " + warning), false);
+        }
     }
 
     private static void sendMaterialResult(

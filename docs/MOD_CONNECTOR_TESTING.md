@@ -60,6 +60,16 @@ Pack error cases:
 - Duplicate manifest blueprint ids are rejected.
 - Invalid blueprint JSON is reported as a warning.
 
+Review follow-up checks:
+
+- Export a pack containing two models with the same display name and confirm
+  each zip entry contains the matching model, not the first same-name model.
+- Import a pack manifest with `packId: "Starter Buildings"` and confirm Web
+  import rejects it instead of silently rewriting it to `starter_buildings`.
+- Validate `schemas/blockforge-pack-v1.schema.json` against
+  `blueprints/../evil.json`, `/blueprints/tiny_platform.json`,
+  `C:/blueprints/tiny_platform.json`, and backslash paths; all must fail.
+
 Status: v1.4.0 manual Minecraft regression testing is pending.
 
 Fabric and Forge Alpha are also covered here as separate checklists. NeoForge
@@ -126,6 +136,18 @@ Forge v1.3.5 focused smoke result:
   `/blockforge undo`.
 - Result summary: source-aware refund works for player and chest sources in
   the Forge development client.
+
+Review follow-up checks:
+
+- Fabric and Forge nearby sourcing must be enabled through runtime settings
+  such as `/blockforge sources enable`; it must not depend on a
+  `public static final false` guard.
+- Fabric source-aware undo should refuse to resolve an original container if
+  the stored source dimension does not match the player's current dimension.
+- Fabric container source extraction/insertion should respect
+  `Inventory.isValid` and `SidedInventory` slot exposure rules.
+- Fabric `/blockforge dryrun <id>` should display material source enabled
+  state, priority, search radius, availability, and enough-materials status.
 
 Run this section separately for NeoForge, Fabric, and Forge.
 
@@ -1896,3 +1918,44 @@ common config registration.
 - Release Candidate 的打包、metadata、CI 文档和 common config 改动没有破坏核心 Connector 流程。
 
 本轮是 v1.0 RC 发布前烟测，范围小于前面版本的完整实机测试，重点验证发布整理改动没有引入启动或核心流程问题。
+
+## 30. v1.5.0 Security Regression
+
+Status: Forge 1.21.1 development client smoke test passed on 2026-04-27.
+NeoForge and Fabric manual Minecraft regression testing remains pending.
+
+Run on NeoForge, Fabric, and Forge:
+
+1. Create `config/blockforge/protection-regions.json` with a `DENY` region around spawn.
+2. Run `/blockforge protection reload`.
+3. Run `/blockforge protection list`.
+4. Run `/blockforge select tiny_platform`.
+5. In the protected area, run `/blockforge protection check tiny_platform`.
+6. In the protected area, try Builder Wand build.
+   - Expected: denied.
+   - Expected: no materials consumed.
+   - Expected: no blocks placed.
+7. Outside the protected area, build should be allowed.
+8. Test OP fallback or bypass permission behavior.
+9. Run `/blockforge permissions check blockforge.build.wand`.
+10. Put a material chest inside a protected region and run `/blockforge sources scan`.
+11. Confirm protected container materials are not used by a build without bypass.
+12. Confirm `/blockforge undo` restores the build and refunds materials; if container refund is protected, refund falls back to player inventory or drops.
+
+Manual result must not be marked passed until tested in Minecraft.
+
+Forge smoke result:
+
+- Forge client can join a newly created singleplayer world without
+  `Invalid player data`.
+- `/blockforge protection reload`, `/blockforge protection info`, and
+  `/blockforge protection check tiny_platform` work.
+- A DENY region with `allowedPermissions: []` denies protection checks for
+  `tiny_platform`.
+- Protected-area `/blockforge build tiny_platform` and Builder Wand build are
+  denied before materials are consumed or blocks are placed.
+- Outside the protected region, build and `/blockforge undo` still work.
+- OP bypass behavior is controlled by the region configuration:
+  `allowedPermissions: []` denies OP as well, while
+  `allowedPermissions: ["blockforge.build.bypass_protection"]` allows OP
+  fallback bypass.
