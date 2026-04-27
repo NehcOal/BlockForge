@@ -6,6 +6,7 @@ import com.blockforge.connector.network.payload.MaterialReportRequestPayload;
 import com.blockforge.connector.network.payload.MaterialRequirementSummary;
 import com.blockforge.connector.network.payload.RequestBlueprintListPayload;
 import com.blockforge.connector.network.payload.SelectBlueprintRequestPayload;
+import com.blockforge.connector.config.BlockForgeConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -177,19 +178,45 @@ public class BlueprintSelectorScreen extends Screen {
 
         graphics.drawString(font, summary.name(), x, y + 28, 0xFFFFFFFF, false);
         graphics.drawString(font, summary.id(), x, y + 40, 0xFF9AA8B5, false);
-        graphics.drawString(font, Component.translatable("screen.blockforge_connector.size", summary.sizeLabel()), x, y + 56, 0xFFC9D7E2, false);
-        graphics.drawString(font, Component.translatable("screen.blockforge_connector.blocks", summary.blockCount()), x, y + 68, 0xFFC9D7E2, false);
-        graphics.drawString(font, "schemaVersion=" + summary.schemaVersion(), x, y + 80, 0xFFC9D7E2, false);
+        graphics.drawString(font, Component.literal(sourceLabel(summary.id())), x, y + 52, 0xFFB6C7D4, false);
+        graphics.drawString(font, Component.translatable("screen.blockforge_connector.size", summary.sizeLabel()), x, y + 64, 0xFFC9D7E2, false);
+        graphics.drawString(font, Component.translatable("screen.blockforge_connector.blocks", summary.blockCount()), x, y + 76, 0xFFC9D7E2, false);
+        graphics.drawString(font, "schemaVersion=" + summary.schemaVersion(), x, y + 88, 0xFFC9D7E2, false);
         graphics.drawString(
                 font,
                 Component.translatable("screen.blockforge_connector.block_states", summary.hasBlockStates()),
                 x,
-                y + 92,
+                y + 100,
                 summary.hasBlockStates() ? 0xFF8EF0B4 : 0xFFB6C7D4,
                 false
         );
-        graphics.drawString(font, Component.translatable("screen.blockforge_connector.rotation"), x, y + 72 + 32, 0xFFE7F7FF, false);
-        renderMaterialReport(graphics, x, y + 132);
+        graphics.drawString(font, Component.translatable("screen.blockforge_connector.rotation"), x, y + 112, 0xFFE7F7FF, false);
+        graphics.drawString(
+                font,
+                Component.literal("Material sources: "
+                        + (BlockForgeConfig.enableNearbyContainers()
+                        ? "Nearby containers enabled"
+                        : "Player inventory only")),
+                x,
+                y + 116,
+                0xFFC9D7E2,
+                false
+        );
+        graphics.drawString(
+                font,
+                Component.literal("Source priority=" + BlockForgeConfig.materialSourcePriority()
+                        + " | radius=" + BlockForgeConfig.nearbyContainerSearchRadius()),
+                x,
+                y + 128,
+                0xFFB6C7D4,
+                false
+        );
+        renderMaterialReport(graphics, x, y + 152);
+    }
+
+    private String sourceLabel(String id) {
+        int separator = id.indexOf('/');
+        return separator > 0 ? "source=pack | pack=" + id.substring(0, separator) : "source=loose";
     }
 
     private void renderMaterialReport(GuiGraphics graphics, int x, int y) {

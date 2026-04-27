@@ -1,5 +1,6 @@
 package com.blockforge.fabric.undo;
 
+import com.blockforge.common.material.MaterialTransaction;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -68,10 +69,34 @@ public class FabricUndoManager {
             String blueprintId,
             long createdAtGameTime,
             int placedBlocks,
-            List<BlockSnapshotEntry> entries
+            List<BlockSnapshotEntry> entries,
+            MaterialTransaction materialTransaction
     ) {
+        public PlacementSnapshot(
+                UUID playerId,
+                String playerName,
+                String blueprintId,
+                long createdAtGameTime,
+                int placedBlocks,
+                List<BlockSnapshotEntry> entries
+        ) {
+            this(playerId, playerName, blueprintId, createdAtGameTime, placedBlocks, entries, null);
+        }
+
         public PlacementSnapshot {
             entries = entries == null ? List.of() : List.copyOf(entries);
+        }
+
+        public PlacementSnapshot withMaterialTransaction(MaterialTransaction transaction) {
+            return new PlacementSnapshot(
+                    playerId,
+                    playerName,
+                    blueprintId,
+                    createdAtGameTime,
+                    placedBlocks,
+                    entries,
+                    transaction
+            );
         }
     }
 

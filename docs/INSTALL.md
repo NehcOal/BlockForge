@@ -5,7 +5,7 @@ for NeoForge, Fabric, and Forge.
 
 ## Versions
 
-- BlockForge Web: `1.2.3-alpha.1`
+- BlockForge Web: `1.4.0-alpha.1`
 - Minecraft Java Edition: `1.21.1`
 - Java: `21`
 - NeoForge: `21.1.227`
@@ -17,13 +17,18 @@ for NeoForge, Fabric, and Forge.
 
 NeoForge is the recommended complete in-game experience. Fabric and Forge are
 Alpha connectors with command builds, GUI Selector Alpha, Builder Wand Alpha
-placement, Ghost Preview Alpha outlines, and Survival Material Cost Alpha.
+placement, Ghost Preview Alpha outlines, Survival Material Cost Alpha, and
+Material Refund Undo Alpha. v1.3.1 adds nearby material source common-core
+models plus NeoForge nearby chest sourcing Alpha. v1.3.5 extends nearby chest
+sourcing Alpha to Fabric and Forge. v1.4.0 adds Blueprint Pack import/export
+Alpha and pack loading from `config/blockforge/packs/`. Manual Minecraft
+regression for v1.4.0 is pending.
 
 | Connector | Best For | Current Status |
 |---|---|---|
-| NeoForge | GUI Selector, Builder Wand, Ghost Preview, survival materials, material refund undo | Most complete |
-| Fabric Alpha | Command reload/list/dryrun/build/undo, GUI Selector Alpha, Builder Wand Alpha, Ghost Preview Alpha, and survival material cost validation | Alpha |
-| Forge Alpha | Command reload/list/dryrun/build/undo, GUI Selector Alpha, Builder Wand Alpha, Ghost Preview Alpha, and survival material cost validation | Alpha |
+| NeoForge | GUI Selector, Builder Wand, Ghost Preview, survival materials, material refund undo, nearby chest sourcing Alpha | Most complete |
+| Fabric Alpha | Command reload/list/dryrun/build/undo, GUI Selector Alpha, Builder Wand Alpha, Ghost Preview Alpha, survival material cost validation, refund undo, nearby chest sourcing Alpha | Alpha |
+| Forge Alpha | Command reload/list/dryrun/build/undo, GUI Selector Alpha, Builder Wand Alpha, Ghost Preview Alpha, survival material cost validation, refund undo, nearby chest sourcing Alpha | Alpha |
 
 Do not install multiple BlockForge connector jars into the same Minecraft
 instance at once. Pick the jar that matches the loader for that instance.
@@ -72,9 +77,9 @@ Windows users can run `gradlew.bat build` in the same directories.
 Expected release jar names:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.3-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.3-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.2.3-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.4.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.4.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.4.0-alpha.1.jar
 ```
 
 Copy the matching jar into the Minecraft instance `mods` folder.
@@ -89,6 +94,36 @@ All three connectors read blueprint files from:
 
 The folder is created automatically when the mod starts or when blueprints are
 reloaded.
+
+## Blueprint Pack Folder
+
+All three connectors also read Blueprint Pack zip files from:
+
+```text
+.minecraft/config/blockforge/packs/
+```
+
+Supported pack files:
+
+```text
+*.blockforgepack.zip
+*.zip
+```
+
+Run:
+
+```mcfunction
+/blockforge packs validate
+/blockforge packs list
+/blockforge packs blueprints starter_buildings
+/blockforge reload
+```
+
+Pack blueprint ids use `packId/blueprintId`, for example:
+
+```mcfunction
+/blockforge select starter_buildings/tiny_platform
+```
 
 ## Install Example Blueprints
 
@@ -163,26 +198,39 @@ not modify the world.
 
 In survival mode, Fabric and Forge check required blueprint materials before
 command or Builder Wand builds. Missing materials reject the build; enough
-materials are consumed before placement. Creative mode consumes nothing.
+materials are consumed before placement. Creative mode consumes nothing. Undo
+restores blocks and refunds recorded survival materials; inventory overflow
+drops near the player.
 
 ## Fabric / Forge Alpha Limits
 
 Fabric and Forge Alpha support command builds, Builder Wand Alpha placement, and
-block undo. They do not support material refund undo or BlockEntity NBT undo yet.
-Use `/blockforge materials <id>` or `/blockforge materials selected` for material
+block undo with material refund Alpha. They do not support BlockEntity NBT undo,
+nearby chest sourcing, recipe substitutions, or GUI material icons yet. Use
+`/blockforge materials <id>` or `/blockforge materials selected` for material
 reports; GUI material summary is planned later.
 
 ## Release Artifacts
 
-A BlockForge v1.2.3-alpha.1 release should include:
+A BlockForge v1.4.0-alpha.1 release should include:
 
 - Web source release from the GitHub tag.
-- `blockforge-connector-neoforge-1.2.3-alpha.1.jar`
-- `blockforge-connector-fabric-1.2.3-alpha.1.jar`
-- `blockforge-connector-forge-1.2.3-alpha.1.jar`
+- `blockforge-connector-neoforge-1.4.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.4.0-alpha.1.jar`
+- `blockforge-connector-forge-1.4.0-alpha.1.jar`
 - `examples/blueprints/`
 - `docs/BLUEPRINT_PROTOCOL.md`
 - `docs/MOD_CONNECTOR_TESTING.md`
 - `docs/RELEASE_NOTES_TEMPLATE.md`
 
 GitHub Actions uploads the three Connector jars as separate CI artifacts.
+## v1.5.0 Protection Regions
+
+Server owners can optionally edit:
+
+```text
+config/blockforge/protection-regions.json
+```
+
+The file is created automatically on first connector startup or protection
+reload. Builds denied by a region stop before materials are consumed.

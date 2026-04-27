@@ -1,6 +1,7 @@
 package com.blockforge.forge.client.gui;
 
 import com.blockforge.common.gui.BlueprintSummary;
+import com.blockforge.forge.material.source.ForgeMaterialSourceSettings;
 import com.blockforge.forge.network.ForgeBlueprintGuiNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -69,7 +70,7 @@ public class ForgeBlueprintSelectorScreen extends Screen {
             row++;
         }
 
-        int rotationY = top + 96;
+        int rotationY = top + 140;
         for (int index = 0; index < ROTATIONS.length; index++) {
             int degrees = ROTATIONS[index];
             Button button = Button.builder(Component.literal(degrees + "\u00b0"), ignored -> {
@@ -85,13 +86,13 @@ public class ForgeBlueprintSelectorScreen extends Screen {
         }
 
         Button selectButton = Button.builder(Component.translatable("screen.blockforge_connector.select"), ignored -> submitSelection())
-                .bounds(detailsLeft, top + 132, 82, 20)
+                .bounds(detailsLeft, top + 166, 82, 20)
                 .build();
         selectButton.active = ForgeBlueprintClientCache.selectedBlueprint().isPresent();
         addRenderableWidget(selectButton);
 
         addRenderableWidget(Button.builder(Component.translatable("screen.blockforge_connector.close"), ignored -> onClose())
-                .bounds(detailsLeft + 90, top + 132, 82, 20)
+                .bounds(detailsLeft + 90, top + 166, 82, 20)
                 .build());
     }
 
@@ -158,18 +159,44 @@ public class ForgeBlueprintSelectorScreen extends Screen {
 
         graphics.drawString(font, summary.name(), x, y + 28, 0xFFFFFFFF, false);
         graphics.drawString(font, summary.id(), x, y + 40, 0xFF9AA8B5, false);
-        graphics.drawString(font, Component.translatable("screen.blockforge_connector.size", summary.sizeLabel()), x, y + 56, 0xFFC9D7E2, false);
-        graphics.drawString(font, Component.translatable("screen.blockforge_connector.blocks", summary.blockCount()), x, y + 68, 0xFFC9D7E2, false);
-        graphics.drawString(font, "schemaVersion=" + summary.schemaVersion(), x, y + 80, 0xFFC9D7E2, false);
+        graphics.drawString(font, Component.literal(sourceLabel(summary.id())), x, y + 52, 0xFFB6C7D4, false);
+        graphics.drawString(font, Component.translatable("screen.blockforge_connector.size", summary.sizeLabel()), x, y + 64, 0xFFC9D7E2, false);
+        graphics.drawString(font, Component.translatable("screen.blockforge_connector.blocks", summary.blockCount()), x, y + 76, 0xFFC9D7E2, false);
+        graphics.drawString(font, "schemaVersion=" + summary.schemaVersion(), x, y + 88, 0xFFC9D7E2, false);
         graphics.drawString(
                 font,
                 Component.translatable("screen.blockforge_connector.block_states", summary.hasBlockStates()),
                 x,
-                y + 92,
+                y + 100,
                 summary.hasBlockStates() ? 0xFF8EF0B4 : 0xFFB6C7D4,
                 false
         );
-        graphics.drawString(font, Component.translatable("screen.blockforge_connector.rotation"), x, y + 116, 0xFFE7F7FF, false);
+        graphics.drawString(
+                font,
+                Component.literal("Material sources: "
+                        + (ForgeMaterialSourceSettings.enableNearbyContainers()
+                        ? "Nearby containers enabled"
+                        : "Player inventory only")),
+                x,
+                y + 106,
+                0xFFC9D7E2,
+                false
+        );
+        graphics.drawString(
+                font,
+                Component.literal("Source priority=" + ForgeMaterialSourceSettings.materialSourcePriority()
+                        + " | radius=" + ForgeMaterialSourceSettings.nearbyContainerSearchRadius()),
+                x,
+                y + 118,
+                0xFFB6C7D4,
+                false
+        );
+        graphics.drawString(font, Component.translatable("screen.blockforge_connector.rotation"), x, y + 130, 0xFFE7F7FF, false);
+    }
+
+    private String sourceLabel(String id) {
+        int separator = id.indexOf('/');
+        return separator > 0 ? "source=pack | pack=" + id.substring(0, separator) : "source=loose";
     }
 
     @Override

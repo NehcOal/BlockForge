@@ -83,7 +83,18 @@ be added after the three connector modules settle.
 - `v1.2.1`: Fabric and Forge GUI Selector Alpha parity.
 - `v1.2.2`: Fabric and Forge Ghost Preview Alpha parity.
 - `v1.2.3`: Fabric and Forge Survival Material Cost Alpha parity.
-- `v1.2.4+`: Fabric and Forge material refund undo and deeper material UX.
+- `v1.2.4`: Fabric and Forge Material Refund Undo Alpha parity.
+- `v1.2.5`: Multiloader Parity Alpha regression and release-candidate
+  documentation.
+- `v1.3.0`: Nearby Material Source common core.
+- `v1.3.1`: NeoForge nearby container material sourcing reference
+  implementation.
+- `v1.3.5`: Fabric and Forge nearby container adapters plus batched
+  multiloader in-game regression for v1.3 material source work.
+- `v1.4.0`: Blueprint Pack import/export on Web plus pack loading on NeoForge,
+  Fabric, and Forge.
+- `v1.4.1+`: imported pack library UX, deeper material UX, and follow-up
+  stabilization.
 
 ## Current Risks
 
@@ -96,8 +107,11 @@ be added after the three connector modules settle.
   and footprint.
 - Registry lookup, inventory mutation, and world placement must remain in each
   loader adapter to avoid leaking Minecraft runtime types into common core.
-- Fabric and Forge material refund undo is not implemented yet, so consumed
-  materials are not restored by `/blockforge undo` in v1.2.3.
+- Fabric and Forge Material Refund Undo is Alpha as of v1.2.4. Refunded items
+  that do not fit in the player inventory drop near the player.
+- NeoForge nearby chest sourcing is Alpha and disabled by default.
+- Fabric and Forge still do not support nearby chest sourcing, GUI material
+  icons, collision-aware preview, or BlockEntity NBT undo.
 
 ## v1.1.3 Status
 
@@ -176,6 +190,77 @@ be added after the three connector modules settle.
   material gate.
 - Fabric and Forge run a dry-run placement precheck before consuming materials.
 - `/blockforge undo` restores blocks only and does not refund materials yet.
-- GUI material summary is planned for v1.2.4; v1.2.3 exposes material reports
+- GUI material summary is planned for a later release; v1.2.3 exposes material reports
   through commands.
 - Fabric / Forge Survival Material Cost manual Minecraft testing is pending.
+
+## v1.2.4 Status
+
+- Fabric and Forge add Material Refund Undo Alpha support for command builds
+  and Builder Wand builds.
+- Common core provides `MaterialRefundResult` alongside existing
+  `ConsumedMaterialEntry` and `MaterialTransaction` DTOs.
+- Fabric and Forge undo snapshots now attach the material transaction recorded
+  during survival builds.
+- `/blockforge undo` restores blocks first, then refunds consumed survival
+  materials. If the inventory is full, overflow items drop near the player.
+- Creative builds create a creative-bypass transaction with no consumed items,
+  so undo reports that no materials were consumed.
+- If material consumption succeeds but placement does not produce an undo
+  snapshot, Fabric and Forge roll back the consumed materials.
+- Fabric and Forge still do not include nearby chest sourcing, recipe
+  substitutions, GUI material icons, or BlockEntity NBT undo.
+- Fabric / Forge Material Refund Undo manual Minecraft testing is pending.
+
+## v1.2.5 Status
+
+- v1.2.5 is a release-candidate documentation and regression preparation pass;
+  it does not add new gameplay features.
+- NeoForge remains the recommended complete connector.
+- Fabric and Forge are documented as Alpha parity connectors across command
+  builds, GUI Selector, Builder Wand, Ghost Preview, survival material cost, and
+  material refund undo.
+- The Loader Feature Matrix now includes nearby chest sourcing as unsupported
+  across all loaders.
+- The v1.2.5 regression checklist batches Fabric / Forge v1.2.0 through v1.2.4
+  manual testing into one multiloader pass.
+- Forge Ghost Preview skewed line-box rendering is documented as fixed.
+- Fabric and Forge undo history is documented as a 20-entry per-player in-memory
+  Alpha history stack.
+- Dedicated server smoke testing remains pending.
+
+## v1.3.5 Status
+
+- v1.3.5 extends nearby container material sourcing to NeoForge, Fabric, and
+  Forge as a multiloader Alpha regression candidate.
+- `MaterialSourceConfig` keeps nearby containers disabled by default with radius
+  `8` and max scanned containers `64`.
+- NeoForge and Forge scan only loaded chunks in the current dimension and query
+  item handler capability instead of assuming specific container classes.
+- Fabric scans loaded vanilla inventories in the current dimension for this
+  Alpha.
+- Source reports merge player inventory and nearby containers using
+  `PLAYER_FIRST`, `CONTAINER_FIRST`, `PLAYER_ONLY`, or `CONTAINER_ONLY`.
+- Material transactions now record source metadata for container consumption so
+  undo can prefer refunding to original containers.
+- Manual Minecraft testing is deferred until the v1.3.5 multiloader regression
+  pass.
+
+## v1.4.0 Status
+
+- v1.4.0 introduces Blueprint Pack v1 as a shareable
+  `.blockforgepack.zip` format.
+- Web exports Blueprint JSON v2 into pack zips and imports pack zips with
+  manifest, blueprint JSON, and path traversal validation.
+- NeoForge, Fabric, and Forge scan `config/blockforge/packs/` during reload.
+- Loose blueprint ids stay unchanged; pack blueprints use
+  `packId/blueprintId`.
+- Pack blueprints flow through the existing registry, GUI Selector, Builder
+  Wand, Ghost Preview, material, build, and undo paths.
+- Manual Minecraft testing is pending for v1.4.0.
+## v1.5.0 Security Layer
+
+v1.5.0 adds common permission/protection abstractions and Alpha adapters for
+NeoForge, Fabric, and Forge. Protection preflight runs before material
+consumption and placement. External permission/claim mods remain optional and
+planned rather than hard dependencies.

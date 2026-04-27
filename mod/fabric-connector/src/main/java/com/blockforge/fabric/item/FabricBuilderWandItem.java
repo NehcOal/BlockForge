@@ -1,6 +1,8 @@
 package com.blockforge.fabric.item;
 
 import com.blockforge.common.blueprint.Blueprint;
+import com.blockforge.common.security.permission.BlockForgePermissionAction;
+import com.blockforge.common.security.protection.ProtectionPreflightReport;
 import com.blockforge.common.selection.PlayerSelection;
 import com.blockforge.fabric.BlockForgeFabric;
 import com.blockforge.fabric.builder.FabricBlueprintPlacer;
@@ -62,7 +64,20 @@ public class FabricBuilderWandItem extends Item {
             return ActionResult.FAIL;
         }
 
-        FabricMaterialBuildGate.BuildMaterialResult materialResult = MATERIALS.prepare(player, blueprint);
+        ProtectionPreflightReport security = BlockForgeFabric.PROTECTION.preflight(
+                player,
+                world,
+                basePos,
+                blueprint,
+                selection.rotation(),
+                BlockForgePermissionAction.BUILD_WAND
+        );
+        if (!security.allowed()) {
+            sendSecurityDenied(player, security);
+            return ActionResult.FAIL;
+        }
+
+        FabricMaterialBuildGate.BuildMaterialResult materialResult = MATERIALS.prepare(player, world, basePos, blueprint);
         if (!materialResult.allowed()) {
             player.sendMessage(Text.literal(materialResult.message()), false);
             sendMissingMaterials(player, materialResult);
@@ -78,7 +93,21 @@ public class FabricBuilderWandItem extends Item {
         );
 
         if (result.snapshot() != null) {
-            BlockForgeFabric.UNDO.record(result.snapshot());
+            BlockForgeFabric.UNDO.record(result.snapshot().withMaterialTransaction(materialResult.transaction()));
+        } else if (materialResult.transaction() != null) {
+            var rollbackResult = MATERIALS.rollback(player, materialResult.transaction());
+            sendPlacementResult(player, result);
+            if (materialResult.transaction().hasConsumedItems()) {
+                player.sendMessage(Text.literal("Build placed no blocks; rolled back "
+                        + rollbackResult.refundedItems()
+                        + " consumed items"
+                        + (rollbackResult.droppedItems() > 0
+                        ? ", dropped " + rollbackResult.droppedItems() + " items near player."
+                        : ".")), false);
+            } else {
+                sendMaterialResult(player, materialResult);
+            }
+            return ActionResult.FAIL;
         }
 
         sendPlacementResult(player, result);
@@ -124,7 +153,16 @@ public class FabricBuilderWandItem extends Item {
                 + result.appliedProperties()
                 + ". totalBlocks="
                 + result.totalBlocks()
-                + ". Use /blockforge undo to revert blocks."), false);
+                + ". Use /blockforge undo to restore blocks and refund materials."), false);
+    }
+
+    private static void sendSecurityDenied(ServerPlayerEntity player, ProtectionPreflightReport report) {
+        player.sendMessage(Text.literal(report.reason().isBlank()
+                ? "BlockForge Fabric build denied by security preflight."
+                : report.reason()), false);
+        for (String warning : report.warnings()) {
+            player.sendMessage(Text.literal("Warning: " + warning), false);
+        }
     }
 
     private static void sendMaterialResult(
@@ -142,7 +180,10 @@ public class FabricBuilderWandItem extends Item {
 
         player.sendMessage(Text.literal("Consumed "
                 + materialResult.consumedItems()
-                + " items. Materials are not refunded yet in Fabric alpha."), false);
+                + (materialResult.consumedFromNearbyContainers() > 0
+                ? " items (nearbyContainers=" + materialResult.consumedFromNearbyContainers() + ")"
+                : " items")
+                + ". Use /blockforge undo to restore blocks and refund materials."), false);
     }
 
     private static void sendMissingMaterials(

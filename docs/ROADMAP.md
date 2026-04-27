@@ -2,15 +2,19 @@
 
 ## Near Term
 
-- Stabilize the v1.2.3 Fabric / Forge GUI Selector, Builder Wand, Ghost Preview, and Survival Material Cost Alpha.
+- Stabilize v1.4 Blueprint Pack import/export across Web, NeoForge, Fabric,
+  and Forge.
 - Keep NeoForge 1.21.1 as the recommended complete Connector target.
-- Keep Fabric and Forge 1.21.1 as Alpha connectors until material refund parity lands.
-- Validate Fabric and Forge GUI Selector, Builder Wand, Ghost Preview, and survival material cost in real Minecraft instances.
+- Keep Fabric and Forge 1.21.1 as Alpha connectors while refund undo and material UX mature.
+- Defer small v1.3.x manual Minecraft testing until the v1.3.5 multiloader regression pass.
 - Stabilize BlockForge Blueprint v1 as the Web and Mod shared protocol.
 - Add schema validation tooling for exported blueprint files.
 - Add Ghost Preview collision and replacement scans.
 - Add search/paging when the Blueprint Selector list grows.
-- Add material refund undo for Fabric and Forge.
+- Add GUI material summaries for Fabric and Forge.
+- Stabilize nearby container material sourcing Alpha across NeoForge, Fabric,
+  and Forge.
+- Run the v1.4.0 Blueprint Pack regression in real Minecraft clients.
 - Add special material cost rules for non-cube blocks.
 - Improve release artifact publishing beyond CI artifact upload.
 - Add Java-side parser tests when the Connector test setup is stable.
@@ -19,6 +23,8 @@
 ## Export Formats
 
 - Keep JSON, Blueprint v1/v2 JSON, `.mcfunction`, and Function Data Pack ZIP exports stable.
+- Stabilize `.blockforgepack.zip` import/export and add imported pack library
+  management after the Alpha protocol proves out.
 - Add Minecraft Structure `.nbt` export.
 - Add Structure Data Pack ZIP export for `/place template` workflows.
 - Explore `.schem` export after the native Minecraft formats are reliable.
@@ -45,6 +51,20 @@
 - v1.2.1: Fabric and Forge GUI Selector Alpha parity.
 - v1.2.2: Fabric and Forge Ghost Preview Alpha parity.
 - v1.2.3: Fabric and Forge Survival Material Cost Alpha parity.
-- v1.2.4+: Fabric and Forge material refund undo and material UX refinement.
+- v1.2.4: Fabric and Forge Material Refund Undo Alpha parity.
+- v1.2.5: Multiloader Parity Alpha regression and release-candidate documentation.
+- v1.3.0: Nearby Material Source common core.
+- v1.3.1: NeoForge nearby container material sourcing reference implementation.
+- v1.3.5: Fabric / Forge nearby container adapters plus batched multiloader
+  in-game regression checklist for v1.3.
+- v1.4.0: Blueprint Pack import/export on Web and pack loading on NeoForge,
+  Fabric, and Forge.
+- v1.4.1+: Imported pack library management and pack UX polish.
 
 See [Multi-loader Plan](./MULTILOADER_PLAN.md) for details.
+## v1.5.0 Security Layer
+
+- Server permission nodes, built-in protection regions, build preflight, and
+  protected nearby-container material sourcing checks for NeoForge, Fabric, and
+  Forge.
+- Manual Minecraft regression testing remains pending.

@@ -2,6 +2,204 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [1.5.0] - Unreleased
+
+### Added
+
+- Added common permission nodes and permission check result DTOs.
+- Added common protection region, build area, matcher, preflight, and
+  `protection-regions.json` schema.
+- Added NeoForge, Fabric, and Forge fallback permission services.
+- Added NeoForge, Fabric, and Forge protection region loaders for
+  `config/blockforge/protection-regions.json`.
+- Added `/blockforge protection folder|reload|list|info|check` and
+  `/blockforge permissions check <node>` on all three connectors.
+- Added build preflight before material consumption and block placement.
+- Added protected-container checks for nearby material sourcing and refunds.
+- Added `docs/PERMISSIONS_AND_PROTECTION.md`.
+
+### Changed
+
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.5.0-alpha.1`.
+- Builder Wand builds now use BlockForge permission/protection checks instead
+  of loader-specific hard-coded permission checks.
+
+### Notes
+
+- External provider integrations such as LuckPerms, Fabric Permissions API,
+  FTB Chunks, and Open Parties and Claims remain optional/planned.
+- v1.5.0 NeoForge and Fabric manual Minecraft regression testing is pending.
+
+### Manual Testing
+
+- Forge 1.21.1 development client smoke test passed on 2026-04-27.
+- Fixed Forge client join failure caused by an unsynchronized custom Brigadier
+  blueprint id argument type; Forge now uses a vanilla string argument with
+  registry suggestions.
+- Confirmed Forge protection regions can deny `/blockforge protection check`
+  when `allowedPermissions` is empty.
+- Confirmed Forge protected-area command build and Builder Wand build are
+  denied before material consumption and block placement.
+- Confirmed Forge build and undo still work outside the protected area.
+- Confirmed OP bypass is controlled by the region's `allowedPermissions`
+  field: an empty list denies everyone, while adding
+  `blockforge.build.bypass_protection` allows OP fallback bypass.
+
+### Review Follow-up Fixes
+
+- Confirmed the v1.3.5 nearby source review fixes remain present while adding
+  v1.5.0 security: Fabric and Forge nearby container sourcing use runtime
+  settings instead of compile-time-disabled constants, Fabric source refunds
+  validate the stored dimension id, Fabric container insertion/extraction now
+  respects inventory slot rules, and Fabric dryrun reports material source
+  status.
+- Confirmed the v1.4.0 Blueprint Pack review fixes remain present: pack export
+  writes each manifest entry from the matching model index, Web import strictly
+  rejects unsafe external pack and blueprint ids, and the published schema
+  rejects traversal, absolute, backslash, and Windows-drive blueprint paths.
+
+## [1.4.0] - Unreleased
+
+### Added
+
+- Added Blueprint Pack v1 protocol documentation and JSON schema.
+- Added Web Blueprint Pack export using Blueprint JSON v2 inside
+  `.blockforgepack.zip`.
+- Added Web Blueprint Pack import with manifest validation, blueprint JSON
+  validation, and path traversal rejection.
+- Added common Blueprint Pack metadata DTOs and registry id helpers.
+- Added NeoForge, Fabric, and Forge pack loaders for
+  `config/blockforge/packs/`.
+- Added `/blockforge packs folder|reload|list|info|blueprints|validate` on all
+  three connectors.
+- Added `examples/packs/starter_buildings/` as a source example pack.
+- Added Blueprint Pack Vitest coverage for manifest creation, export, import,
+  path traversal rejection, missing manifest, and invalid blueprint JSON.
+
+### Changed
+
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.4.0-alpha.1`.
+- `/blockforge reload` now scans loose blueprints and Blueprint Packs.
+- Pack blueprints use `packId/blueprintId` registry ids to avoid loose
+  blueprint collisions.
+- GUI Selector details now label blueprints as `source=loose` or `source=pack`.
+
+### Fixed
+
+- Fixed Blueprint Pack export for packs containing multiple models with the
+  same display name by writing each manifest entry from the corresponding
+  source model index.
+- Fixed Web Blueprint Pack import so external manifests must already use safe
+  `packId` and blueprint ids; invalid ids are rejected instead of silently
+  normalized.
+- Tightened the public Blueprint Pack JSON schema so blueprint paths reject
+  path traversal, absolute paths, backslashes, and Windows drive prefixes.
+
+### Notes
+
+- Blueprint Pack support is Alpha.
+- Pack zip files are read directly and are not extracted to disk.
+- v1.4.0 manual Minecraft regression testing is pending.
+
+## [1.3.5] - Unreleased
+
+### Added
+
+- Added nearby container material sourcing Alpha for NeoForge, Fabric, and
+  Forge.
+- Added NeoForge / Fabric / Forge source scanners for loaded nearby containers.
+- Added Fabric and Forge source-aware material consumption and undo refund.
+- Added `/blockforge sources scan` and `/blockforge sources selected` on all
+  three loaders.
+- Added common material source data models for player inventory, nearby
+  containers, and mixed sources.
+- Added `MaterialSourceConfig` with safe defaults for future nearby container
+  sourcing.
+- Added material source scan plan and scan result models.
+- Added `MaterialSourcePlanner` for loader-neutral source report planning.
+- Added `docs/MATERIAL_SOURCES.md` for the v1.3 nearby material source design.
+
+### Changed
+
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.3.5-alpha.1`.
+- Extended `ConsumedMaterialEntry` and `MaterialTransaction` with optional
+  source metadata while keeping existing player-inventory constructors.
+- Updated NeoForge, Fabric, and Forge survival material flow to optionally
+  combine player inventory and nearby containers by configured source priority.
+- Updated undo material refund to prefer original nearby containers, then
+  player inventory, then player-near drops where supported.
+- Updated the Loader Feature Matrix to mark nearby chest material sourcing as
+  Alpha on all three loaders.
+
+### Fixed
+
+- Fixed Fabric and Forge nearby container sourcing so Alpha testers can enable
+  the feature at runtime instead of shipping it permanently compiled off.
+- Fixed Fabric nearby source refunds so stored source dimension ids are checked
+  before resolving a container at the saved coordinates.
+- Fixed Fabric container material mutation to respect inventory slot validity
+  and sided inventory insert/extract rules.
+- Fixed Fabric dryrun output to include material source settings and source
+  availability so source behavior can be inspected before building.
+
+### Notes
+
+- Nearby container sourcing is disabled by default on all loaders.
+- Fabric and Forge use runtime `/blockforge sources` settings for this Alpha;
+  config file support is planned.
+- Forge nearby container source-aware consumption and undo refund passed a
+  focused real-client smoke test on 2026-04-26: player-sourced materials
+  returned to the player inventory, and chest-sourced materials returned to the
+  original chest.
+- NeoForge and Fabric nearby container sourcing manual testing remains pending
+  for the v1.3.5 multiloader regression pass.
+
+## [1.2.5] - Unreleased
+
+### Changed
+
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.2.5-alpha.1`.
+- Refreshed the English and Chinese Loader Feature Matrix for multiloader
+  parity release-candidate documentation.
+- Added a v1.2.5 multiloader regression checklist covering NeoForge, Fabric,
+  and Forge command, GUI, Builder Wand, Ghost Preview, survival material, refund
+  undo, and repeated undo history flows.
+- Updated publishing and release notes documentation for the
+  `v1.2.5-alpha.1` multiloader parity Alpha release.
+
+### Notes
+
+- This release candidate does not add new gameplay features.
+- Forge Ghost Preview skewed line-box rendering is documented as fixed.
+- Fabric and Forge undo history is documented as a 20-entry per-player Alpha
+  history stack.
+- Fabric / Forge material refund undo remains pending for the planned batched
+  in-game regression pass.
+
+## [1.2.4] - Unreleased
+
+### Added
+
+- Added common `MaterialRefundResult` for loader-neutral material refund results.
+- Added Fabric Material Refund Undo Alpha for command builds and Builder Wand builds.
+- Added Forge Material Refund Undo Alpha for command builds and Builder Wand builds.
+- Added Fabric and Forge material transactions on undo snapshots.
+- Added inventory-full refund overflow drops near the player.
+
+### Changed
+
+- Aligned Web, NeoForge, Fabric, and Forge versions to `1.2.4-alpha.1`.
+- Fabric and Forge successful survival builds now tell players that undo restores blocks and refunds materials.
+- Fabric and Forge `/blockforge undo` now restores blocks and refunds consumed survival materials.
+- Fabric and Forge build rollback now refunds materials if material consumption succeeds but no undo snapshot is produced.
+- Updated the Loader Feature Matrix to mark Fabric and Forge Material Refund Undo support as Alpha.
+
+### Notes
+
+- Creative builds create a creative-bypass transaction with no consumed items and do not refund materials on undo.
+- Fabric and Forge material refund undo is Alpha and does not include nearby chest sourcing, recipe substitutions, GUI material icons, or BlockEntity NBT undo.
+- Fabric / Forge Material Refund Undo manual Minecraft testing is pending and intentionally deferred for a later batch regression pass.
+
 ## [1.2.3] - Unreleased
 
 ### Added

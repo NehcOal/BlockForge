@@ -1,5 +1,7 @@
 package com.blockforge.connector.config;
 
+import com.blockforge.common.material.source.MaterialSourceConfig;
+import com.blockforge.common.material.source.MaterialSourcePriority;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public final class BlockForgeConfig {
@@ -15,6 +17,18 @@ public final class BlockForgeConfig {
     private static final ModConfigSpec.BooleanValue ALLOW_BUILD_IN_ADVENTURE_MODE;
     private static final ModConfigSpec.BooleanValue ALLOW_BUILD_IN_SPECTATOR_MODE;
     private static final ModConfigSpec.ConfigValue<String> MATERIAL_COST_MODE;
+    private static final ModConfigSpec.BooleanValue ENABLE_NEARBY_CONTAINERS;
+    private static final ModConfigSpec.IntValue NEARBY_CONTAINER_SEARCH_RADIUS;
+    private static final ModConfigSpec.IntValue NEARBY_CONTAINER_MAX_SCANNED;
+    private static final ModConfigSpec.EnumValue<MaterialSourcePriority> MATERIAL_SOURCE_PRIORITY;
+    private static final ModConfigSpec.BooleanValue RETURN_REFUNDS_TO_ORIGINAL_SOURCE;
+    private static final ModConfigSpec.BooleanValue ALLOW_PARTIAL_FROM_CONTAINERS;
+    private static final ModConfigSpec.BooleanValue ENABLE_PROTECTION_REGIONS;
+    private static final ModConfigSpec.BooleanValue REQUIRE_PERMISSIONS;
+    private static final ModConfigSpec.IntValue PERMISSION_FALLBACK_BUILD_LEVEL;
+    private static final ModConfigSpec.IntValue PERMISSION_FALLBACK_ADMIN_LEVEL;
+    private static final ModConfigSpec.BooleanValue ENFORCE_PROTECTION_ON_UNDO;
+    private static final ModConfigSpec.BooleanValue HIDE_INACCESSIBLE_CONTAINERS_FROM_SOURCES_SCAN;
 
     static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -59,6 +73,45 @@ public final class BlockForgeConfig {
         MATERIAL_COST_MODE = builder
                 .comment("Material cost mode. v1.0 RC supports simple: one placed block costs one block.asItem().")
                 .define("materialCostMode", "simple");
+        ENABLE_NEARBY_CONTAINERS = builder
+                .comment("Enable nearby container material sourcing for survival builds. Disabled by default.")
+                .define("enableNearbyContainers", MaterialSourceConfig.DEFAULT_ENABLE_NEARBY_CONTAINERS);
+        NEARBY_CONTAINER_SEARCH_RADIUS = builder
+                .comment("Radius around the build origin to scan for loaded nearby containers.")
+                .defineInRange("nearbyContainerSearchRadius", MaterialSourceConfig.DEFAULT_SEARCH_RADIUS, 1, 32);
+        NEARBY_CONTAINER_MAX_SCANNED = builder
+                .comment("Maximum number of nearby containers scanned for one build.")
+                .defineInRange("nearbyContainerMaxScanned", MaterialSourceConfig.DEFAULT_MAX_CONTAINERS_SCANNED, 1, 512);
+        MATERIAL_SOURCE_PRIORITY = builder
+                .comment("Material source priority: PLAYER_FIRST, CONTAINER_FIRST, PLAYER_ONLY, or CONTAINER_ONLY.")
+                .defineEnum("materialSourcePriority", MaterialSourceConfig.DEFAULT_PRIORITY);
+        RETURN_REFUNDS_TO_ORIGINAL_SOURCE = builder
+                .comment("When true, undo tries to refund nearby-container materials to their original container first.")
+                .define("returnRefundsToOriginalSource", MaterialSourceConfig.DEFAULT_RETURN_REFUNDS_TO_ORIGINAL_SOURCE);
+        ALLOW_PARTIAL_FROM_CONTAINERS = builder
+                .comment("Allow one material requirement to be split between player inventory and nearby containers.")
+                .define("allowPartialFromContainers", MaterialSourceConfig.DEFAULT_ALLOW_PARTIAL_FROM_CONTAINERS);
+        builder.pop();
+
+        builder.push("security");
+        ENABLE_PROTECTION_REGIONS = builder
+                .comment("Enable BlockForge built-in protection regions from config/blockforge/protection-regions.json.")
+                .define("enableProtectionRegions", true);
+        REQUIRE_PERMISSIONS = builder
+                .comment("When true, BlockForge permission checks require the configured permission provider or OP fallback.")
+                .define("requirePermissions", false);
+        PERMISSION_FALLBACK_BUILD_LEVEL = builder
+                .comment("Vanilla fallback permission level for build-related permission checks.")
+                .defineInRange("permissionFallbackBuildLevel", 0, 0, 4);
+        PERMISSION_FALLBACK_ADMIN_LEVEL = builder
+                .comment("Vanilla fallback permission level for admin permission checks.")
+                .defineInRange("permissionFallbackAdminLevel", 2, 0, 4);
+        ENFORCE_PROTECTION_ON_UNDO = builder
+                .comment("When true, undo restore also respects current protection regions.")
+                .define("enforceProtectionOnUndo", false);
+        HIDE_INACCESSIBLE_CONTAINERS_FROM_SOURCES_SCAN = builder
+                .comment("Hide containers denied by protection regions from sources scan output.")
+                .define("hideInaccessibleContainersFromSourcesScan", true);
         builder.pop();
 
         SPEC = builder.build();
@@ -109,5 +162,64 @@ public final class BlockForgeConfig {
 
     public static String materialCostMode() {
         return MATERIAL_COST_MODE.get();
+    }
+
+    public static boolean enableNearbyContainers() {
+        return ENABLE_NEARBY_CONTAINERS.get();
+    }
+
+    public static int nearbyContainerSearchRadius() {
+        return NEARBY_CONTAINER_SEARCH_RADIUS.get();
+    }
+
+    public static int nearbyContainerMaxScanned() {
+        return NEARBY_CONTAINER_MAX_SCANNED.get();
+    }
+
+    public static MaterialSourcePriority materialSourcePriority() {
+        return MATERIAL_SOURCE_PRIORITY.get();
+    }
+
+    public static boolean returnRefundsToOriginalSource() {
+        return RETURN_REFUNDS_TO_ORIGINAL_SOURCE.get();
+    }
+
+    public static boolean allowPartialFromContainers() {
+        return ALLOW_PARTIAL_FROM_CONTAINERS.get();
+    }
+
+    public static MaterialSourceConfig materialSourceConfig() {
+        return new MaterialSourceConfig(
+                enableNearbyContainers(),
+                nearbyContainerSearchRadius(),
+                materialSourcePriority(),
+                allowPartialFromContainers(),
+                returnRefundsToOriginalSource(),
+                nearbyContainerMaxScanned()
+        );
+    }
+
+    public static boolean enableProtectionRegions() {
+        return ENABLE_PROTECTION_REGIONS.get();
+    }
+
+    public static boolean requirePermissions() {
+        return REQUIRE_PERMISSIONS.get();
+    }
+
+    public static int permissionFallbackBuildLevel() {
+        return PERMISSION_FALLBACK_BUILD_LEVEL.get();
+    }
+
+    public static int permissionFallbackAdminLevel() {
+        return PERMISSION_FALLBACK_ADMIN_LEVEL.get();
+    }
+
+    public static boolean enforceProtectionOnUndo() {
+        return ENFORCE_PROTECTION_ON_UNDO.get();
+    }
+
+    public static boolean hideInaccessibleContainersFromSourcesScan() {
+        return HIDE_INACCESSIBLE_CONTAINERS_FROM_SOURCES_SCAN.get();
     }
 }

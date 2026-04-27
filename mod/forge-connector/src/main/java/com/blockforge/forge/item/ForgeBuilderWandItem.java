@@ -1,6 +1,8 @@
 package com.blockforge.forge.item;
 
 import com.blockforge.common.blueprint.Blueprint;
+import com.blockforge.common.security.permission.BlockForgePermissionAction;
+import com.blockforge.common.security.protection.ProtectionPreflightReport;
 import com.blockforge.common.selection.PlayerSelection;
 import com.blockforge.forge.BlockForgeForge;
 import com.blockforge.forge.builder.ForgeBlueprintPlacer;
@@ -62,7 +64,20 @@ public class ForgeBuilderWandItem extends Item {
             return InteractionResult.FAIL;
         }
 
-        ForgeMaterialBuildGate.BuildMaterialResult materialResult = MATERIALS.prepare(player, blueprint);
+        ProtectionPreflightReport security = BlockForgeForge.PROTECTION.preflight(
+                player,
+                level,
+                basePos,
+                blueprint,
+                selection.rotation(),
+                BlockForgePermissionAction.BUILD_WAND
+        );
+        if (!security.allowed()) {
+            sendSecurityDenied(player, security);
+            return InteractionResult.FAIL;
+        }
+
+        ForgeMaterialBuildGate.BuildMaterialResult materialResult = MATERIALS.prepare(player, level, basePos, blueprint);
         if (!materialResult.allowed()) {
             player.sendSystemMessage(Component.literal(materialResult.message()));
             sendMissingMaterials(player, materialResult);
@@ -78,7 +93,21 @@ public class ForgeBuilderWandItem extends Item {
         );
 
         if (result.snapshot() != null) {
-            BlockForgeForge.UNDO.record(result.snapshot());
+            BlockForgeForge.UNDO.record(result.snapshot().withMaterialTransaction(materialResult.transaction()));
+        } else if (materialResult.transaction() != null) {
+            var rollbackResult = MATERIALS.rollback(player, materialResult.transaction());
+            sendPlacementResult(player, result);
+            if (materialResult.transaction().hasConsumedItems()) {
+                player.sendSystemMessage(Component.literal("Build placed no blocks; rolled back "
+                        + rollbackResult.refundedItems()
+                        + " consumed items"
+                        + (rollbackResult.droppedItems() > 0
+                        ? ", dropped " + rollbackResult.droppedItems() + " items near player."
+                        : ".")));
+            } else {
+                sendMaterialResult(player, materialResult);
+            }
+            return InteractionResult.FAIL;
         }
 
         sendPlacementResult(player, result);
@@ -124,7 +153,16 @@ public class ForgeBuilderWandItem extends Item {
                 + result.appliedProperties()
                 + ". totalBlocks="
                 + result.totalBlocks()
-                + ". Use /blockforge undo to revert blocks."));
+                + ". Use /blockforge undo to restore blocks and refund materials."));
+    }
+
+    private static void sendSecurityDenied(ServerPlayer player, ProtectionPreflightReport report) {
+        player.sendSystemMessage(Component.literal(report.reason().isBlank()
+                ? "BlockForge Forge build denied by security preflight."
+                : report.reason()));
+        for (String warning : report.warnings()) {
+            player.sendSystemMessage(Component.literal("Warning: " + warning));
+        }
     }
 
     private static void sendMaterialResult(
@@ -142,7 +180,10 @@ public class ForgeBuilderWandItem extends Item {
 
         player.sendSystemMessage(Component.literal("Consumed "
                 + materialResult.consumedItems()
-                + " items. Materials are not refunded yet in Forge alpha."));
+                + (materialResult.consumedFromNearbyContainers() > 0
+                ? " items (nearbyContainers=" + materialResult.consumedFromNearbyContainers() + ")"
+                : " items")
+                + ". Use /blockforge undo to restore blocks and refund materials."));
     }
 
     private static void sendMissingMaterials(

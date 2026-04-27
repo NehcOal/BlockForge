@@ -1,33 +1,47 @@
 package com.blockforge.connector.blueprint;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import com.blockforge.common.pack.LoadedBlueprintPack;
+import com.blockforge.connector.pack.BlueprintPackLoader;
+import com.blockforge.connector.pack.BlueprintPackRegistry;
 
 public class BlueprintRegistry {
     private final Path directory;
     private final BlueprintLoader loader;
+    private final BlueprintPackRegistry packRegistry;
     private final Map<String, Blueprint> blueprints = new LinkedHashMap<>();
+    private Set<String> looseBlueprintIds = Set.of();
     private List<String> warnings = List.of();
 
     public BlueprintRegistry(Path directory) {
         this.directory = directory;
         this.loader = new BlueprintLoader();
+        this.packRegistry = new BlueprintPackRegistry(BlueprintPackLoader.defaultPackDirectory());
     }
 
     public LoadSummary reload() {
         BlueprintLoader.LoadResult result = loader.load(directory);
         blueprints.clear();
+        List<String> nextWarnings = new ArrayList<>(result.warnings());
 
         for (Blueprint blueprint : result.blueprints()) {
             blueprints.put(blueprint.getId(), blueprint);
         }
+        looseBlueprintIds = Set.copyOf(blueprints.keySet());
 
-        warnings = result.warnings();
-        return new LoadSummary(blueprints.size(), warnings);
+        BlueprintPackRegistry.LoadResult packResult = packRegistry.reload(looseBlueprintIds);
+        blueprints.putAll(packResult.blueprints());
+        nextWarnings.addAll(packResult.warnings());
+
+        warnings = List.copyOf(nextWarnings);
+        return new LoadSummary(blueprints.size(), packRegistry.getPacks().size(), warnings);
     }
 
     public Optional<Blueprint> get(String id) {
@@ -50,6 +64,18 @@ public class BlueprintRegistry {
         return directory;
     }
 
-    public record LoadSummary(int loadedCount, List<String> warnings) {
+    public Path getPackDirectory() {
+        return packRegistry.getDirectory();
+    }
+
+    public List<LoadedBlueprintPack> getPacks() {
+        return packRegistry.getPacks();
+    }
+
+    public BlueprintPackRegistry.LoadResult validatePacks() {
+        return packRegistry.validate(looseBlueprintIds);
+    }
+
+    public record LoadSummary(int loadedCount, int packCount, List<String> warnings) {
     }
 }

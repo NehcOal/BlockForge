@@ -1,0 +1,8 @@
+package com.blockforge.common.material.source;
+
+public enum MaterialSourcePriority {
+    PLAYER_FIRST,
+    CONTAINER_FIRST,
+    PLAYER_ONLY,
+    CONTAINER_ONLY
+}

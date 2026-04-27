@@ -1,9 +1,9 @@
-# BlockForge Release Notes Template
+# BlockForge v1.5.0-alpha.1 - Blueprint Pack Import / Export Alpha
 
 ## Release Type
 
-- Version: `1.2.3-alpha.1`
-- Type: Fabric / Forge GUI Selector + Builder Wand + Ghost Preview + Survival Material Cost Alpha parity
+- Version: `1.5.0-alpha.1`
+- Type: Blueprint Pack Import / Export Alpha regression candidate
 - Stability: Alpha for Fabric and Forge, recommended full experience on NeoForge
 
 ## Supported Minecraft Version
@@ -14,34 +14,40 @@
 ## Supported Loaders
 
 - NeoForge `21.1.227`: most complete Connector
-- Fabric Loader `0.19.2` with Fabric API `0.116.11+1.21.1`: GUI Selector + Builder Wand + Ghost Preview + Survival Material Cost Alpha
-- Forge `52.1.14`: GUI Selector + Builder Wand + Ghost Preview + Survival Material Cost Alpha
+- Fabric Loader `0.19.2` with Fabric API `0.116.11+1.21.1`: GUI Selector + Builder Wand + Ghost Preview + Survival Material Cost + Material Refund Undo + Nearby Material Source Alpha
+- Forge `52.1.14`: GUI Selector + Builder Wand + Ghost Preview + Survival Material Cost + Material Refund Undo + Nearby Material Source Alpha
 
 ## Download Files
 
-- `blockforge-connector-neoforge-1.2.3-alpha.1.jar`
-- `blockforge-connector-fabric-1.2.3-alpha.1.jar`
-- `blockforge-connector-forge-1.2.3-alpha.1.jar`
+- `blockforge-connector-neoforge-1.5.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.5.0-alpha.1.jar`
+- `blockforge-connector-forge-1.5.0-alpha.1.jar`
 
 ## Feature Matrix
 
-| Feature | NeoForge | Fabric Alpha | Forge Alpha |
+| Feature | NeoForge | Fabric | Forge |
 |---|---|---|---|
-| Blueprint v1/v2 loading | yes | yes | yes |
-| Examples install | yes | yes | yes |
-| Reload/list/info/dryrun | yes | yes | yes |
-| Build command | yes | yes | yes |
-| Rotation | yes | yes | yes |
-| Undo blocks | yes | yes | yes |
-| GUI Selector | yes | yes, Alpha | yes, Alpha |
-| Builder Wand | yes | yes, Alpha | yes, Alpha |
-| Ghost Preview | yes | yes, Alpha | yes, Alpha |
-| Survival material cost | yes | yes, Alpha | yes, Alpha |
-| Material refund undo | yes | no | no |
-| BlockEntity NBT undo | yes, best effort | no | no |
+| Blueprint v1/v2 loading | ✅ | ✅ Alpha | ✅ Alpha |
+| Examples install | ✅ | ✅ Alpha | ✅ Alpha |
+| Reload/list/info/dryrun | ✅ | ✅ Alpha | ✅ Alpha |
+| Build command | ✅ | ✅ Alpha | ✅ Alpha |
+| Rotation | ✅ | ✅ Alpha | ✅ Alpha |
+| Undo blocks | ✅ | ✅ Alpha | ✅ Alpha |
+| Builder Wand | ✅ | ✅ Alpha | ✅ Alpha |
+| GUI Selector | ✅ | ✅ Alpha | ✅ Alpha |
+| Ghost Preview | ✅ | ✅ Alpha | ✅ Alpha |
+| Survival material cost | ✅ | ✅ Alpha | ✅ Alpha |
+| Material refund undo | ✅ | ✅ Alpha | ✅ Alpha |
+| BlockEntity NBT undo | ✅ best effort | ❌ | ❌ |
+| Nearby chest material sourcing | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Blueprint Pack import | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 
 NeoForge is the most complete connector for now. Fabric and Forge include GUI
-Selector, Builder Wand, Ghost Preview, and Survival Material Cost Alpha support.
+Selector, Builder Wand, Ghost Preview, Survival Material Cost, and Material
+Refund Undo Alpha support. Nearby chest material sourcing is implemented as a
+multiloader Alpha feature in v1.3.5 and disabled by default on every loader.
+Blueprint Pack import is Alpha on all three connectors; Web export/import is
+also Alpha.
 
 ## Verified Tests
 
@@ -54,21 +60,40 @@ Selector, Builder Wand, Ghost Preview, and Survival Material Cost Alpha support.
 
 Manual Minecraft status:
 
-- NeoForge: full Connector flows previously verified.
-- Fabric: command-loop Alpha verified; GUI, Builder Wand, Ghost Preview, and survival material cost manual testing pending.
-- Forge: command-loop Alpha verified; GUI, Builder Wand, Ghost Preview, and survival material cost manual testing pending.
-- v1.2.3: Survival Material Cost Alpha build validation passed.
+- NeoForge: full Connector flows previously verified; v1.3.5 nearby container
+  sourcing manual testing pending.
+- Fabric: command-loop Alpha verified; GUI, Builder Wand, Ghost Preview,
+  survival material cost, material refund undo, and nearby container sourcing
+  manual testing pending.
+- Forge: command-loop Alpha verified; GUI, Builder Wand, Ghost Preview,
+  survival material cost, and material refund undo previously verified. A
+  v1.3.5 focused nearby container smoke test passed: player-sourced materials
+  refund to player inventory, and chest-sourced materials refund to the
+  original chest.
+- v1.4.0 build validation: pending before release.
+- Full NeoForge / Fabric / Forge v1.4.0 Blueprint Pack regression testing is
+  still pending.
 
 ## Known Limitations
 
 - Fabric and Forge Ghost Preview only renders a bounding box and ground footprint.
 - Fabric and Forge preview does not scan collisions, show material status,
   render individual blocks, or preview textures.
-- Fabric and Forge consume survival materials but do not refund them on undo yet.
-- Fabric and Forge do not include GUI material summaries or BlockEntity NBT undo.
+- Fabric and Forge Material Refund Undo is Alpha; inventory overflow drops near
+  the player.
+- Nearby container sourcing is disabled by default. Forge has a focused
+  source-aware refund smoke pass; NeoForge and Fabric nearby source testing
+  remain pending.
+- Fabric and Forge do not include GUI material source details, recipe
+  substitutions, protected-container permission checks, or BlockEntity NBT undo.
 - Fabric and Forge Builder Wand support is Alpha and has a 2 second per-player cooldown.
 - Fabric and Forge undo snapshots are in-memory and capped at 20 snapshots per player.
 - Fabric and Forge do not persist undo history across disconnects or restarts.
+- Dedicated server smoke testing is pending for this release candidate.
+- Web pack import currently displays an import summary and does not persist an
+  imported pack library.
+- Blueprint Pack zips are loaded from `config/blockforge/packs/`; there is no
+  remote download or server-client pack sync.
 - No automatic publishing to Modrinth or CurseForge is performed by this release
   template.
 
@@ -77,4 +102,11 @@ Manual Minecraft status:
 - Use the jar that matches your loader.
 - Keep existing blueprint JSON files in `.minecraft/config/blockforge/blueprints/`.
 - NeoForge users should prefer the NeoForge jar for the complete experience.
-- Fabric and Forge users should treat this as an Alpha GUI + command + material-cost workflow.
+- Fabric and Forge users should treat this as an Alpha GUI + command +
+  material-cost + refund-undo workflow.
+## v1.5.0 Security Notes
+
+- Permissions/protection support is Alpha.
+- Supported loaders: NeoForge, Fabric, Forge.
+- Manual Minecraft regression testing pending unless explicitly verified.
+- External permission and claim integrations are planned optional adapters.

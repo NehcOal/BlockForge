@@ -19,6 +19,19 @@ export {
 export { voxelModelToBlueprintV1 } from "@/lib/voxel/blueprintProtocol";
 export { voxelModelToBlueprintV2 } from "@/lib/voxel/blueprintProtocolV2";
 export {
+  BLOCKFORGE_PACK_EXTENSION,
+  createPackManifestFromModels,
+  createPackRegistryId,
+  validatePackBlueprintPath,
+  validatePackManifest,
+  type BlockForgePackBlueprintEntryV1,
+  type BlockForgePackManifestV1,
+  type ImportedBlueprintPack,
+  type PackExportOptions
+} from "@/lib/voxel/blueprintPack";
+export { voxelModelsToBlueprintPackZip } from "@/lib/voxel/blueprintPackExport";
+export { importBlueprintPackZip } from "@/lib/voxel/blueprintPackImport";
+export {
   createSafeFileName,
   createSafeResourcePath
 } from "@/lib/voxel/exportUtils";

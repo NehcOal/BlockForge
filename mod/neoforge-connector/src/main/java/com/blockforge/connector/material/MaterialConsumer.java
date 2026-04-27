@@ -1,5 +1,7 @@
 package com.blockforge.connector.material;
 
+import com.blockforge.connector.config.BlockForgeConfig;
+import com.blockforge.connector.material.source.NeoForgeMaterialSourceRefundHandler;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 public class MaterialConsumer {
+    private final NeoForgeMaterialSourceRefundHandler sourceRefundHandler = new NeoForgeMaterialSourceRefundHandler();
+
     public ConsumeResult consume(ServerPlayer player, MaterialReport report) {
         long gameTime = player == null ? 0L : player.serverLevel().getGameTime();
         return consume(player, report.blueprintId(), gameTime, report);
@@ -94,6 +98,10 @@ public class MaterialConsumer {
     public MaterialRefundResult refundMaterials(ServerPlayer player, MaterialTransaction transaction) {
         if (player == null || transaction == null || transaction.creativeBypass() || transaction.consumedItems().isEmpty()) {
             return MaterialRefundResult.empty();
+        }
+
+        if (transaction.includesNearbyContainers()) {
+            return sourceRefundHandler.refund(player, transaction, BlockForgeConfig.materialSourceConfig());
         }
 
         int refunded = 0;

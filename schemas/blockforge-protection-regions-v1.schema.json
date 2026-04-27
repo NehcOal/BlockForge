@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://blockforge.dev/schemas/blockforge-protection-regions-v1.schema.json",
+  "title": "BlockForge Protection Regions v1",
+  "type": "object",
+  "required": ["schemaVersion", "regions"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "regions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/region" }
+    }
+  },
+  "$defs": {
+    "region": {
+      "type": "object",
+      "required": ["id", "dimensionId", "minX", "minY", "minZ", "maxX", "maxY", "maxZ", "mode"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[a-z0-9_-]+$"
+        },
+        "dimensionId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "minX": { "type": "integer" },
+        "minY": { "type": "integer" },
+        "minZ": { "type": "integer" },
+        "maxX": { "type": "integer" },
+        "maxY": { "type": "integer" },
+        "maxZ": { "type": "integer" },
+        "mode": { "enum": ["ALLOW", "DENY"] },
+        "allowedPlayers": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": []
+        },
+        "deniedPlayers": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": []
+        },
+        "allowedPermissions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": []
+        },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": []
+        },
+        "description": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    }
+  }
+}

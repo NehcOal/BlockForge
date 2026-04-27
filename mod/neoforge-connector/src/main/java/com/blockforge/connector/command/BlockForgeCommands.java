@@ -7,16 +7,30 @@ import com.blockforge.connector.blueprint.ExampleBlueprintInstaller;
 import com.blockforge.connector.blueprint.BlueprintRegistry;
 import com.blockforge.connector.builder.BlueprintPlacer;
 import com.blockforge.connector.builder.BlueprintRotation;
+import com.blockforge.connector.config.BlockForgeConfig;
 import com.blockforge.connector.material.MaterialBuildGate;
 import com.blockforge.connector.material.MaterialRefundResult;
 import com.blockforge.connector.material.MaterialReport;
 import com.blockforge.connector.material.MaterialRequirement;
+import com.blockforge.connector.material.source.NeoForgeMaterialSourceAdapter;
+import com.blockforge.connector.material.source.NeoForgeMaterialSourceScanner;
 import com.blockforge.connector.network.BlockForgeNetwork;
 import com.blockforge.connector.player.PlayerBlueprintSelection;
 import com.blockforge.connector.registry.ModItems;
 import com.blockforge.connector.undo.PlacementSnapshot;
 import com.blockforge.connector.undo.UndoManager;
+import com.blockforge.common.material.source.MaterialSourceItemEntry;
+import com.blockforge.common.material.source.MaterialSourceReport;
+import com.blockforge.common.material.source.MaterialSourceScanResult;
+import com.blockforge.common.material.source.MaterialSourceType;
+import com.blockforge.common.pack.BlueprintPackRegistryEntry;
+import com.blockforge.common.pack.LoadedBlueprintPack;
+import com.blockforge.common.security.permission.BlockForgePermissionAction;
+import com.blockforge.common.security.protection.BlockForgeProtectionRegion;
+import com.blockforge.common.security.protection.ProtectionPreflightReport;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -35,6 +49,8 @@ public final class BlockForgeCommands {
     private static final ExampleBlueprintInstaller EXAMPLES = new ExampleBlueprintInstaller();
     private static final MaterialBuildGate MATERIALS = new MaterialBuildGate();
     private static final BuildService BUILDS = new BuildService(BlockForgeConnector.UNDO);
+    private static final NeoForgeMaterialSourceScanner SOURCE_SCANNER = new NeoForgeMaterialSourceScanner();
+    private static final NeoForgeMaterialSourceAdapter SOURCE_ADAPTER = new NeoForgeMaterialSourceAdapter();
 
     private BlockForgeCommands() {
     }
@@ -54,6 +70,22 @@ public final class BlockForgeCommands {
                 .then(Commands.literal("reload")
                         .requires(source -> source.hasPermission(2))
                         .executes(context -> reload(context, registry)))
+                .then(Commands.literal("packs")
+                        .then(Commands.literal("folder")
+                                .executes(context -> packsFolder(context, registry)))
+                        .then(Commands.literal("reload")
+                                .requires(source -> source.hasPermission(2))
+                                .executes(context -> reload(context, registry)))
+                        .then(Commands.literal("list")
+                                .executes(context -> packsList(context, registry)))
+                        .then(Commands.literal("info")
+                                .then(packIdArgument(registry)
+                                        .executes(context -> packsInfo(context, registry))))
+                        .then(Commands.literal("blueprints")
+                                .then(packIdArgument(registry)
+                                        .executes(context -> packsBlueprints(context, registry))))
+                        .then(Commands.literal("validate")
+                                .executes(context -> packsValidate(context, registry))))
                 .then(Commands.literal("list")
                         .executes(context -> list(context, registry)))
                 .then(Commands.literal("select")
@@ -86,6 +118,34 @@ public final class BlockForgeCommands {
                                 .executes(context -> materialsSelected(context, registry)))
                         .then(blueprintIdArgument(registry)
                                 .executes(context -> materials(context, registry))))
+                .then(Commands.literal("sources")
+                        .then(Commands.literal("scan")
+                                .executes(BlockForgeCommands::sourcesScan))
+                        .then(Commands.literal("selected")
+                                .executes(context -> sourcesSelected(context, registry))))
+                .then(Commands.literal("protection")
+                        .then(Commands.literal("folder")
+                                .executes(BlockForgeCommands::protectionFolder))
+                        .then(Commands.literal("reload")
+                                .requires(source -> source.hasPermission(2))
+                                .executes(BlockForgeCommands::protectionReload))
+                        .then(Commands.literal("list")
+                                .executes(BlockForgeCommands::protectionList))
+                        .then(Commands.literal("info")
+                                .then(Commands.argument("region", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::protectionInfo)))
+                        .then(Commands.literal("check")
+                                .then(blueprintIdArgument(registry)
+                                        .executes(context -> protectionCheckAtPlayer(context, registry))
+                                        .then(Commands.literal("at")
+                                                .then(Commands.argument("x", IntegerArgumentType.integer())
+                                                        .then(Commands.argument("y", IntegerArgumentType.integer())
+                                                                .then(Commands.argument("z", IntegerArgumentType.integer())
+                                                                        .executes(context -> protectionCheckAtCoordinates(context, registry)))))))))
+                .then(Commands.literal("permissions")
+                        .then(Commands.literal("check")
+                                .then(Commands.argument("node", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::permissionCheck))))
                 .then(Commands.literal("build")
                         .requires(source -> source.hasPermission(2))
                         .then(blueprintIdArgument(registry)
@@ -154,13 +214,23 @@ public final class BlockForgeCommands {
     private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack, String> blueprintIdArgument(
             BlueprintRegistry registry
     ) {
-        return Commands.argument("id", StringArgumentType.word())
+        return Commands.argument("id", BlueprintIdArgumentType.id())
                 .suggests((context, builder) -> SharedSuggestionProvider.suggest(registry.getIds(), builder));
     }
 
     private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack, String> rotationArgument() {
         return Commands.argument("rotation", StringArgumentType.word())
                 .suggests((context, builder) -> SharedSuggestionProvider.suggest(List.of("0", "90", "180", "270"), builder));
+    }
+
+    private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack, String> packIdArgument(
+            BlueprintRegistry registry
+    ) {
+        return Commands.argument("packId", StringArgumentType.word())
+                .suggests((context, builder) -> SharedSuggestionProvider.suggest(
+                        registry.getPacks().stream().map(pack -> pack.manifest().packId()).toList(),
+                        builder
+                ));
     }
 
     private static int showFolder(
@@ -180,7 +250,11 @@ public final class BlockForgeCommands {
     ) {
         BlueprintRegistry.LoadSummary summary = registry.reload();
         context.getSource().sendSuccess(
-                () -> Component.literal("Loaded " + summary.loadedCount() + " BlockForge blueprint(s)."),
+                () -> Component.literal("Loaded "
+                        + summary.loadedCount()
+                        + " BlockForge blueprint(s) from loose files and "
+                        + summary.packCount()
+                        + " pack(s)."),
                 true
         );
 
@@ -197,6 +271,109 @@ public final class BlockForgeCommands {
         }
 
         return summary.loadedCount();
+    }
+
+    private static int packsFolder(
+            CommandContext<CommandSourceStack> context,
+            BlueprintRegistry registry
+    ) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge pack folder: " + registry.getPackDirectory()),
+                false
+        );
+        return 1;
+    }
+
+    private static int packsList(
+            CommandContext<CommandSourceStack> context,
+            BlueprintRegistry registry
+    ) {
+        if (registry.getPacks().isEmpty()) {
+            context.getSource().sendFailure(Component.literal("No BlockForge packs loaded from " + registry.getPackDirectory()));
+            return 0;
+        }
+
+        context.getSource().sendSuccess(() -> Component.literal("Loaded BlockForge packs:"), false);
+        for (LoadedBlueprintPack pack : registry.getPacks()) {
+            context.getSource().sendSuccess(
+                    () -> Component.literal("- "
+                            + pack.manifest().packId()
+                            + " | "
+                            + pack.manifest().name()
+                            + " | version="
+                            + pack.manifest().version()
+                            + " | blueprints="
+                            + pack.entries().size()
+                            + " | warnings="
+                            + pack.warnings().size()),
+                    false
+            );
+        }
+        return registry.getPacks().size();
+    }
+
+    private static int packsInfo(
+            CommandContext<CommandSourceStack> context,
+            BlueprintRegistry registry
+    ) {
+        LoadedBlueprintPack pack = findPack(context, registry);
+        if (pack == null) {
+            return 0;
+        }
+
+        context.getSource().sendSuccess(
+                () -> Component.literal(pack.manifest().packId()
+                        + " | "
+                        + pack.manifest().name()
+                        + " | version="
+                        + pack.manifest().version()
+                        + " | author="
+                        + pack.manifest().author()
+                        + " | tags="
+                        + String.join(",", pack.manifest().tags())
+                        + " | description="
+                        + pack.manifest().description()),
+                false
+        );
+        return 1;
+    }
+
+    private static int packsBlueprints(
+            CommandContext<CommandSourceStack> context,
+            BlueprintRegistry registry
+    ) {
+        LoadedBlueprintPack pack = findPack(context, registry);
+        if (pack == null) {
+            return 0;
+        }
+
+        for (BlueprintPackRegistryEntry entry : pack.entries()) {
+            context.getSource().sendSuccess(
+                    () -> Component.literal("- " + entry.registryId() + " | " + entry.name() + " | " + entry.path()),
+                    false
+            );
+        }
+        return pack.entries().size();
+    }
+
+    private static int packsValidate(
+            CommandContext<CommandSourceStack> context,
+            BlueprintRegistry registry
+    ) {
+        var result = registry.validatePacks();
+        context.getSource().sendSuccess(
+                () -> Component.literal("Validated BlockForge packs: packs="
+                        + result.packs().size()
+                        + " | blueprints="
+                        + result.blueprints().size()
+                        + " | warnings="
+                        + result.warnings().size()),
+                false
+        );
+        for (String warning : result.warnings()) {
+            context.getSource().sendFailure(Component.literal("Warning: " + warning));
+        }
+        return result.packs().size();
     }
 
     private static int list(
@@ -452,6 +629,128 @@ public final class BlockForgeCommands {
         return 1;
     }
 
+    private static int protectionFolder(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge protection file: " + BlockForgeConnector.PROTECTION.file()),
+                false
+        );
+        return 1;
+    }
+
+    private static int protectionReload(CommandContext<CommandSourceStack> context) {
+        var config = BlockForgeConnector.PROTECTION.reload();
+        context.getSource().sendSuccess(
+                () -> Component.literal("Loaded " + config.regions().size() + " BlockForge protection region(s)."),
+                true
+        );
+        for (String warning : config.warnings()) {
+            context.getSource().sendFailure(Component.literal("Warning: " + warning));
+        }
+        return config.regions().size();
+    }
+
+    private static int protectionList(CommandContext<CommandSourceStack> context) {
+        if (BlockForgeConnector.PROTECTION.regions().isEmpty()) {
+            context.getSource().sendSuccess(() -> Component.literal("No BlockForge protection regions loaded."), false);
+            return 0;
+        }
+        for (BlockForgeProtectionRegion region : BlockForgeConnector.PROTECTION.regions()) {
+            context.getSource().sendSuccess(() -> Component.literal("- " + describeRegion(region)), false);
+        }
+        return BlockForgeConnector.PROTECTION.regions().size();
+    }
+
+    private static int protectionInfo(CommandContext<CommandSourceStack> context) {
+        String id = StringArgumentType.getString(context, "region");
+        BlockForgeProtectionRegion region = BlockForgeConnector.PROTECTION.find(id).orElse(null);
+        if (region == null) {
+            context.getSource().sendFailure(Component.literal("Unknown BlockForge protection region: " + id));
+            return 0;
+        }
+        context.getSource().sendSuccess(
+                () -> Component.literal(describeRegion(region)
+                        + " | allowedPlayers=" + region.allowedPlayers().size()
+                        + " | allowedPermissions=" + region.allowedPermissions()),
+                false
+        );
+        return 1;
+    }
+
+    private static int protectionCheckAtPlayer(CommandContext<CommandSourceStack> context, BlueprintRegistry registry) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        PlayerBlueprintSelection selection = BlockForgeConnector.SELECTIONS.getOrCreate(player.getUUID());
+        BlueprintRotation rotation = selection.hasSelection() ? selection.getRotation() : BlueprintRotation.NONE;
+        return protectionCheck(context, registry, player, player.blockPosition(), rotation);
+    }
+
+    private static int protectionCheckAtCoordinates(CommandContext<CommandSourceStack> context, BlueprintRegistry registry) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        PlayerBlueprintSelection selection = BlockForgeConnector.SELECTIONS.getOrCreate(player.getUUID());
+        BlueprintRotation rotation = selection.hasSelection() ? selection.getRotation() : BlueprintRotation.NONE;
+        BlockPos basePos = new BlockPos(
+                IntegerArgumentType.getInteger(context, "x"),
+                IntegerArgumentType.getInteger(context, "y"),
+                IntegerArgumentType.getInteger(context, "z")
+        );
+        return protectionCheck(context, registry, player, basePos, rotation);
+    }
+
+    private static int protectionCheck(
+            CommandContext<CommandSourceStack> context,
+            BlueprintRegistry registry,
+            ServerPlayer player,
+            BlockPos basePos,
+            BlueprintRotation rotation
+    ) {
+        Blueprint blueprint = findBlueprint(context, registry);
+        if (blueprint == null) {
+            return 0;
+        }
+        ProtectionPreflightReport report = BlockForgeConnector.PROTECTION.preflight(
+                player,
+                context.getSource().getLevel(),
+                basePos,
+                blueprint,
+                rotation,
+                BlockForgePermissionAction.BUILD_WAND
+        );
+        if (!report.allowed()) {
+            sendSecurityDenied(context.getSource(), report);
+            return 0;
+        }
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge protection check allowed for "
+                        + blueprint.getId()
+                        + " | checkedBlocks="
+                        + report.checkedBlocks()),
+                false
+        );
+        return 1;
+    }
+
+    private static int permissionCheck(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        String node = StringArgumentType.getString(context, "node");
+        var result = BlockForgeConnector.PROTECTION.permissions().check(player, node, 2);
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge permission " + node + ": " + (result.allowed() ? "allowed" : "denied")),
+                false
+        );
+        if (!result.allowed()) {
+            context.getSource().sendFailure(Component.literal(result.reason()));
+        }
+        return result.allowed() ? 1 : 0;
+    }
+
     private static int dryRun(
             CommandContext<CommandSourceStack> context,
             BlueprintRegistry registry
@@ -478,6 +777,10 @@ public final class BlockForgeCommands {
 
         MaterialReport report = MATERIALS.report(blueprint, getPlayerOrNull(context));
         sendMaterialReport(context.getSource(), report);
+        ServerPlayer player = getPlayerOrNull(context);
+        if (player != null && BlockForgeConfig.enableNearbyContainers()) {
+            sendMaterialSourceReport(context.getSource(), materialSourceReport(blueprint, player, report));
+        }
         return report.totalRequiredItems();
     }
 
@@ -504,7 +807,82 @@ public final class BlockForgeCommands {
 
         MaterialReport report = MATERIALS.report(blueprint, player);
         sendMaterialReport(context.getSource(), report);
+        if (BlockForgeConfig.enableNearbyContainers()) {
+            sendMaterialSourceReport(context.getSource(), materialSourceReport(blueprint, player, report));
+        }
         return report.totalRequiredItems();
+    }
+
+    private static int sourcesScan(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        NeoForgeMaterialSourceScanner.Scan scan = SOURCE_SCANNER.scan(
+                player,
+                context.getSource().getLevel(),
+                player.blockPosition(),
+                BlockForgeConfig.materialSourceConfig()
+        );
+        MaterialSourceScanResult result = scan.result();
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge material sources scan: enabled="
+                        + BlockForgeConfig.enableNearbyContainers()
+                        + " | radius="
+                        + BlockForgeConfig.nearbyContainerSearchRadius()
+                        + " | foundContainers="
+                        + result.foundContainers()
+                        + " | scannedBlocks="
+                        + result.scannedBlocks()),
+                false
+        );
+
+        result.sources()
+                .stream()
+                .limit(12)
+                .forEach(source -> context.getSource().sendSuccess(
+                        () -> Component.literal("- "
+                                + source.displayName()
+                                + " @ "
+                                + source.x()
+                                + ","
+                                + source.y()
+                                + ","
+                                + source.z()),
+                        false
+                ));
+        for (String warning : result.warnings()) {
+            context.getSource().sendFailure(Component.literal("Warning: " + warning));
+        }
+        return result.foundContainers();
+    }
+
+    private static int sourcesSelected(
+            CommandContext<CommandSourceStack> context,
+            BlueprintRegistry registry
+    ) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        PlayerBlueprintSelection selection = BlockForgeConnector.SELECTIONS.getOrCreate(player.getUUID());
+        if (!selection.hasSelection()) {
+            context.getSource().sendFailure(Component.literal("No BlockForge blueprint selected. Run /blockforge select <id> first."));
+            return 0;
+        }
+
+        Blueprint blueprint = registry.get(selection.getSelectedBlueprintId()).orElse(null);
+        if (blueprint == null) {
+            context.getSource().sendFailure(Component.literal("Selected BlockForge blueprint is not loaded: " + selection.getSelectedBlueprintId()));
+            return 0;
+        }
+
+        MaterialReport report = MATERIALS.report(blueprint, player);
+        MaterialSourceReport sourceReport = materialSourceReport(blueprint, player, report);
+        sendMaterialSourceReport(context.getSource(), sourceReport);
+        return sourceReport.totalRequiredItems();
     }
 
     private static int buildAtPlayer(
@@ -583,14 +961,36 @@ public final class BlockForgeCommands {
                 context.getSource().sendFailure(Component.literal("BlockForge build rejected: " + buildResult.message()));
             }
 
-            if (buildResult.materialReport() != null) {
-                sendMaterialReport(context.getSource(), buildResult.materialReport());
-            }
-            return 0;
+        if (buildResult.materialReport() != null) {
+            sendMaterialReport(context.getSource(), buildResult.materialReport());
         }
+        if (buildResult.materialSourceReport() != null) {
+            sendMaterialSourceReport(context.getSource(), buildResult.materialSourceReport());
+        }
+        return 0;
+    }
 
         sendPlacementResult(context.getSource(), "Build complete", buildResult);
         return buildResult.placementResult().placedBlocks();
+    }
+
+    private static MaterialSourceReport materialSourceReport(
+            Blueprint blueprint,
+            ServerPlayer player,
+            MaterialReport report
+    ) {
+        NeoForgeMaterialSourceScanner.Scan scan = SOURCE_SCANNER.scan(
+                player,
+                player.serverLevel(),
+                player.blockPosition(),
+                BlockForgeConfig.materialSourceConfig()
+        );
+        return SOURCE_ADAPTER.report(
+                report,
+                player,
+                scan.containers(),
+                BlockForgeConfig.materialSourceConfig()
+        );
     }
 
     private static ServerPlayer getPlayerOrNull(CommandContext<CommandSourceStack> context) {
@@ -630,6 +1030,21 @@ public final class BlockForgeCommands {
         });
     }
 
+    private static LoadedBlueprintPack findPack(
+            CommandContext<CommandSourceStack> context,
+            BlueprintRegistry registry
+    ) {
+        String packId = StringArgumentType.getString(context, "packId");
+        return registry.getPacks()
+                .stream()
+                .filter(pack -> pack.manifest().packId().equals(packId))
+                .findFirst()
+                .orElseGet(() -> {
+                    context.getSource().sendFailure(Component.literal("Unknown BlockForge pack id: " + packId));
+                    return null;
+                });
+    }
+
     private static void sendPlacementResult(
             CommandSourceStack source,
             String label,
@@ -666,6 +1081,36 @@ public final class BlockForgeCommands {
         );
     }
 
+    private static void sendSecurityDenied(CommandSourceStack source, ProtectionPreflightReport report) {
+        source.sendFailure(Component.literal(report.reason().isBlank()
+                ? "BlockForge build denied by security preflight."
+                : report.reason()));
+        for (String warning : report.warnings()) {
+            source.sendFailure(Component.literal("Warning: " + warning));
+        }
+    }
+
+    private static String describeRegion(BlockForgeProtectionRegion region) {
+        return region.id()
+                + " | "
+                + region.mode()
+                + " | "
+                + region.dimensionId()
+                + " | ["
+                + region.minX()
+                + ","
+                + region.minY()
+                + ","
+                + region.minZ()
+                + "] -> ["
+                + region.maxX()
+                + ","
+                + region.maxY()
+                + ","
+                + region.maxZ()
+                + "]";
+    }
+
     private static String materialSummary(BuildService.BuildResult buildResult) {
         if (buildResult == null || buildResult.materialReport() == null) {
             return "";
@@ -673,6 +1118,16 @@ public final class BlockForgeCommands {
 
         if (buildResult.creativeBypass()) {
             return ". Creative mode: no materials consumed";
+        }
+
+        if (buildResult.consumedFromNearbyContainers() > 0) {
+            return ". consumedItems="
+                    + buildResult.consumedItems()
+                    + " (player="
+                    + buildResult.consumedFromPlayerInventory()
+                    + ", nearbyContainers="
+                    + buildResult.consumedFromNearbyContainers()
+                    + ")";
         }
 
         return ". consumedItems=" + buildResult.consumedItems();
@@ -701,7 +1156,11 @@ public final class BlockForgeCommands {
                     + result.restoredBlocks()
                     + " blocks and refunded "
                     + refund.refundedItems()
-                    + " items, dropped "
+                    + " items (containers="
+                    + refund.refundedToContainers()
+                    + ", player="
+                    + refund.refundedToPlayer()
+                    + "), dropped "
                     + refund.droppedItems()
                     + " items near player.";
         }
@@ -710,7 +1169,11 @@ public final class BlockForgeCommands {
                 + result.restoredBlocks()
                 + " blocks and refunded "
                 + refund.refundedItems()
-                + " items from blueprint "
+                + " items (containers="
+                + refund.refundedToContainers()
+                + ", player="
+                + refund.refundedToPlayer()
+                + ") from blueprint "
                 + result.blueprintId()
                 + ".";
     }
@@ -794,6 +1257,69 @@ public final class BlockForgeCommands {
         }
     }
 
+    private static void sendMaterialSourceReport(CommandSourceStack source, MaterialSourceReport report) {
+        source.sendSuccess(
+                () -> Component.literal("BlockForge material sources: "
+                        + report.blueprintId()
+                        + " | enabled="
+                        + BlockForgeConfig.enableNearbyContainers()
+                        + " | priority="
+                        + BlockForgeConfig.materialSourcePriority()
+                        + " | radius="
+                        + BlockForgeConfig.nearbyContainerSearchRadius()
+                        + " | requiredItems="
+                        + report.totalRequiredItems()
+                        + " | availableItems="
+                        + report.totalAvailableItems()
+                        + " | missingItems="
+                        + report.totalMissingItems()
+                        + " | enoughMaterials="
+                        + report.enoughMaterials()
+                        + " | playerReserved="
+                        + reservedFrom(report, MaterialSourceType.PLAYER_INVENTORY)
+                        + " | containerReserved="
+                        + reservedFrom(report, MaterialSourceType.NEARBY_CONTAINER)),
+                false
+        );
+
+        int shown = 0;
+        for (MaterialSourceItemEntry entry : report.entries()) {
+            if (shown >= 8) {
+                source.sendSuccess(() -> Component.literal("... more material source entries omitted."), false);
+                break;
+            }
+
+            if (entry.reserved() <= 0 && entry.available() <= 0) {
+                continue;
+            }
+
+            source.sendSuccess(
+                    () -> Component.literal("- "
+                            + entry.itemId()
+                            + " source="
+                            + (entry.source() == null ? "unknown" : entry.source().displayName())
+                            + " available="
+                            + entry.available()
+                            + ", reserved="
+                            + entry.reserved()),
+                    false
+            );
+            shown++;
+        }
+
+        for (String warning : report.warnings()) {
+            source.sendFailure(Component.literal("Warning: " + warning));
+        }
+    }
+
+    private static int reservedFrom(MaterialSourceReport report, MaterialSourceType sourceType) {
+        return report.entries()
+                .stream()
+                .filter(entry -> entry.source() != null && entry.source().type() == sourceType)
+                .mapToInt(MaterialSourceItemEntry::reserved)
+                .sum();
+    }
+
     private static String describe(Blueprint blueprint) {
         return blueprint.getId()
                 + " | "
@@ -802,5 +1328,20 @@ public final class BlockForgeCommands {
                 + blueprint.getSize().format()
                 + " | blocks="
                 + blueprint.getBlockCount();
+    }
+
+    private static final class BlueprintIdArgumentType implements ArgumentType<String> {
+        private static BlueprintIdArgumentType id() {
+            return new BlueprintIdArgumentType();
+        }
+
+        @Override
+        public String parse(StringReader reader) {
+            int start = reader.getCursor();
+            while (reader.canRead() && reader.peek() != ' ') {
+                reader.skip();
+            }
+            return reader.getString().substring(start, reader.getCursor());
+        }
     }
 }

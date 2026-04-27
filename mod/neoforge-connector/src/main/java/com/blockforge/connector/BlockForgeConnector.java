@@ -7,6 +7,7 @@ import com.blockforge.connector.config.BlockForgeConfig;
 import com.blockforge.connector.network.BlockForgeNetwork;
 import com.blockforge.connector.player.PlayerSelectionManager;
 import com.blockforge.connector.registry.ModItems;
+import com.blockforge.connector.security.NeoForgeProtectionService;
 import com.blockforge.connector.undo.UndoManager;
 import com.mojang.logging.LogUtils;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -30,6 +31,7 @@ public class BlockForgeConnector {
     );
     public static final PlayerSelectionManager SELECTIONS = new PlayerSelectionManager();
     public static final UndoManager UNDO = new UndoManager();
+    public static final NeoForgeProtectionService PROTECTION = new NeoForgeProtectionService();
 
     public BlockForgeConnector(IEventBus modEventBus, ModContainer modContainer) {
         modContainer.registerConfig(ModConfig.Type.COMMON, BlockForgeConfig.SPEC);
@@ -53,6 +55,7 @@ public class BlockForgeConnector {
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         BLUEPRINTS.reload();
+        PROTECTION.reload();
         LOGGER.info(
                 "Loaded {} BlockForge blueprints from {}",
                 BLUEPRINTS.getBlueprints().size(),

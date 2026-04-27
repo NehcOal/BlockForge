@@ -4,11 +4,491 @@ This checklist prepares the NeoForge Connector for real Minecraft validation.
 Passing `gradlew build` confirms compilation only; it does not replace in-game
 testing.
 
+## v1.4.0 Blueprint Pack Regression
+
+Release version:
+
+```text
+1.4.0-alpha.1
+```
+
+Expected release jars:
+
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.4.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.4.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.4.0-alpha.1.jar
+```
+
+Prepare a pack:
+
+1. Zip `examples/packs/starter_buildings/` so `blockforge-pack.json` is at the
+   zip root.
+2. Rename it to `starter_buildings.blockforgepack.zip`.
+3. Put it in `config/blockforge/packs/` for the tested instance.
+
+Run this section separately for NeoForge, Fabric, and Forge:
+
+```mcfunction
+/blockforge packs validate
+/blockforge packs list
+/blockforge packs info starter_buildings
+/blockforge packs blueprints starter_buildings
+/blockforge reload
+/blockforge list
+/blockforge info starter_buildings/tiny_platform
+/blockforge select starter_buildings/tiny_platform
+/blockforge gui
+/blockforge wand
+```
+
+Manual checks:
+
+1. GUI Selector shows `starter_buildings/tiny_platform`.
+2. GUI details label the blueprint as `source=pack`.
+3. Builder Wand can place the pack blueprint.
+4. Ghost Preview follows the selected pack blueprint dimensions.
+5. `/blockforge materials starter_buildings/tiny_platform` works.
+6. `/blockforge undo` restores the placement and material transaction.
+
+Pack error cases:
+
+- Missing `blockforge-pack.json` reports a warning and does not crash reload.
+- `blueprints/../evil.json` is rejected.
+- Absolute blueprint paths are rejected.
+- Missing blueprint files are reported as warnings.
+- Duplicate manifest blueprint ids are rejected.
+- Invalid blueprint JSON is reported as a warning.
+
+Review follow-up checks:
+
+- Export a pack containing two models with the same display name and confirm
+  each zip entry contains the matching model, not the first same-name model.
+- Import a pack manifest with `packId: "Starter Buildings"` and confirm Web
+  import rejects it instead of silently rewriting it to `starter_buildings`.
+- Validate `schemas/blockforge-pack-v1.schema.json` against
+  `blueprints/../evil.json`, `/blueprints/tiny_platform.json`,
+  `C:/blueprints/tiny_platform.json`, and backslash paths; all must fail.
+
+Status: v1.4.0 manual Minecraft regression testing is pending.
+
 Fabric and Forge Alpha are also covered here as separate checklists. NeoForge
 remains the full-featured Connector; Fabric and Forge now include GUI Selector,
-Builder Wand, Ghost Preview, and Survival Material Cost Alpha support. Fabric
-and Forge still intentionally do not cover material refunds or BlockEntity NBT
-undo.
+Builder Wand, Ghost Preview, Survival Material Cost, and Material Refund Undo
+Alpha support. Fabric and Forge still intentionally do not cover BlockEntity
+NBT undo.
+
+## v1.3.x Testing Strategy
+
+v1.3.x introduces nearby material source groundwork. Small v1.3.x versions use
+build validation only:
+
+- `pnpm lint`
+- `pnpm test`
+- `pnpm build`
+- NeoForge Gradle build
+- Fabric Gradle build
+- Forge Gradle build
+
+Manual Minecraft testing is deferred until the v1.3.5 multiloader regression
+pass. Do not mark nearby container sourcing as passed on any loader until that
+loader has been run in a real Minecraft client.
+
+## v1.3.5 Nearby Container Source Multiloader Regression Checklist
+
+Release version:
+
+```text
+1.3.5-alpha.1
+```
+
+Expected release jars:
+
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.3.5-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.3.5-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.3.5-alpha.1.jar
+```
+
+Expected result:
+
+- Common material source DTOs compile in all three loader modules.
+- Existing player-inventory material transactions remain compatible.
+- NeoForge, Fabric, and Forge compile with nearby container scanner, source
+  report, source-aware consumption, and source-aware undo refund.
+- Manual Minecraft testing remains pending for loaders that have not yet been
+  run in real clients.
+- Forge nearby container source-aware consumption and undo refund passed a
+  focused real-client smoke test on 2026-04-26.
+
+Current manual status:
+
+- NeoForge nearby container sourcing: pending.
+- Fabric nearby container sourcing: pending.
+- Forge nearby container sourcing: passed for source-aware consume and refund.
+
+Forge v1.3.5 focused smoke result:
+
+- Runtime nearby sourcing was enabled with `/blockforge sources enable`.
+- Materials consumed from the player inventory returned to the player
+  inventory after `/blockforge undo`.
+- Materials consumed from a nearby chest returned to that chest after
+  `/blockforge undo`.
+- Result summary: source-aware refund works for player and chest sources in
+  the Forge development client.
+
+Review follow-up checks:
+
+- Fabric and Forge nearby sourcing must be enabled through runtime settings
+  such as `/blockforge sources enable`; it must not depend on a
+  `public static final false` guard.
+- Fabric source-aware undo should refuse to resolve an original container if
+  the stored source dimension does not match the player's current dimension.
+- Fabric container source extraction/insertion should respect
+  `Inventory.isValid` and `SidedInventory` slot exposure rules.
+- Fabric `/blockforge dryrun <id>` should display material source enabled
+  state, priority, search radius, availability, and enough-materials status.
+
+Run this section separately for NeoForge, Fabric, and Forge.
+
+### Basic Setup
+
+```mcfunction
+/blockforge examples install
+/blockforge reload
+/blockforge gui
+/blockforge select tiny_platform
+/blockforge wand
+```
+
+Expected result:
+
+- Examples install and reload correctly.
+- GUI opens and selection state syncs with `/blockforge selected`.
+- Builder Wand is available and uses the selected blueprint.
+
+### Player Inventory Material Source
+
+```mcfunction
+/gamemode survival
+/clear
+/give @s minecraft:stone_bricks 9
+/blockforge materials selected
+```
+
+Manual checks:
+
+1. Build `tiny_platform` with the Builder Wand.
+2. Confirm the build succeeds.
+3. Confirm player inventory materials are consumed.
+4. Run `/blockforge undo`.
+5. Confirm blocks are restored and materials are refunded.
+
+### Nearby Container Material Source
+
+```mcfunction
+/blockforge sources scan
+/blockforge sources selected
+```
+
+Manual checks:
+
+1. Enable nearby containers for the tested loader.
+   - NeoForge: set `enableNearbyContainers=true` in common config.
+   - Fabric / Forge: run `/blockforge sources enable` for the current server
+     session.
+2. Place a chest or barrel near the build position.
+3. Put the required `minecraft:stone_bricks` into the container.
+4. Clear the player inventory.
+5. Run `/blockforge sources scan` and confirm the container is listed.
+6. Run `/blockforge sources selected` and confirm container availability is
+   counted.
+7. Build with Builder Wand.
+8. Confirm materials are consumed from the nearby container.
+9. Run `/blockforge undo`.
+10. Confirm blocks are restored.
+11. Confirm materials return to the original container when possible,
+    otherwise to player inventory or player-near drops.
+
+### Source Priority
+
+Test each priority mode:
+
+```mcfunction
+/blockforge sources priority PLAYER_FIRST
+/blockforge sources priority CONTAINER_FIRST
+/blockforge sources priority PLAYER_ONLY
+/blockforge sources priority CONTAINER_ONLY
+```
+
+Expected result:
+
+- `PLAYER_FIRST` consumes player inventory first, then nearby containers.
+- `CONTAINER_FIRST` consumes nearby containers first, then player inventory.
+- `PLAYER_ONLY` ignores nearby containers.
+- `CONTAINER_ONLY` ignores player inventory.
+
+### Nearby Container Edge Cases
+
+Manual checks:
+
+1. Container has insufficient materials: build is rejected and missing items are
+   reported.
+2. Containers exceed `maxContainersScanned`: scan reports the limit warning.
+3. Container is outside radius: it is not counted.
+4. Inventory is full during refund: overflow items drop near the player.
+5. Original container is broken before undo: refund falls back to player
+   inventory or drops.
+
+Expected v1.3.5 documentation status:
+
+- Build validation complete.
+- NeoForge / Fabric / Forge nearby container manual testing pending.
+- Do not mark v1.3.5 as in-game passed until the full regression above is run.
+
+## v1.2.5 Multiloader Regression Test
+
+Release version:
+
+```text
+1.2.5-alpha.1
+```
+
+Expected release jars:
+
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.5-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.5-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.2.5-alpha.1.jar
+```
+
+Run this checklist separately for NeoForge, Fabric, and Forge. NeoForge is the
+recommended complete connector. Fabric and Forge are Alpha parity connectors.
+
+### Basic Commands
+
+```mcfunction
+/blockforge folder
+/blockforge examples list
+/blockforge examples install
+/blockforge reload
+/blockforge list
+/blockforge info tiny_platform
+/blockforge dryrun tiny_platform
+/blockforge info not_exist
+/blockforge build not_exist
+```
+
+Expected result:
+
+- Built-in examples install without overwriting existing files.
+- Reload loads `tiny_platform`, `small_test_house`, `state_test_house`, and
+  `medieval_tower`.
+- `info` and `dryrun` print blueprint metadata and skipped/warning counts.
+- Invalid blueprint ids are rejected without crashing.
+
+### GUI Selector
+
+```mcfunction
+/blockforge gui
+```
+
+Also press the default `B` key.
+
+Manual checks:
+
+1. Open the GUI with the command.
+2. Open the GUI with the `B` key.
+3. Select `tiny_platform`.
+4. Select rotation `90`.
+5. Click Select.
+6. Run `/blockforge selected`.
+
+Expected result:
+
+- The GUI opens on the client.
+- The selected blueprint and rotation are server-validated.
+- `/blockforge selected` matches the GUI selection.
+
+### Builder Wand
+
+```mcfunction
+/blockforge wand
+```
+
+Hold the Builder Wand, right-click a block, then run:
+
+```mcfunction
+/blockforge undo
+```
+
+Expected result:
+
+- The wand places `tiny_platform` at clicked block plus clicked side.
+- Placement output includes placed/skipped counts.
+- Undo restores the placed blocks.
+
+### Ghost Preview
+
+Manual checks:
+
+1. Hold the Builder Wand and look at a block.
+2. Confirm the preview outline appears.
+3. Run `/blockforge rotate 180`.
+4. Confirm the preview updates.
+5. Run `/blockforge select state_test_house`.
+6. Confirm the preview dimensions update.
+
+Expected result:
+
+- The preview is visible only while holding the Builder Wand with a valid
+  selection.
+- Preview base position matches Builder Wand placement.
+- Fabric and Forge render a bounding box and footprint only.
+
+### Survival Material Cost
+
+```mcfunction
+/gamemode survival
+/clear
+/blockforge materials selected
+```
+
+Expected result:
+
+- Materials are reported as missing.
+- Builder Wand build is rejected.
+
+Then run:
+
+```mcfunction
+/give @s minecraft:stone_bricks 9
+/blockforge materials selected
+```
+
+Expected result:
+
+- Materials are reported as enough for `tiny_platform`.
+- Builder Wand build succeeds.
+- Required materials are consumed.
+
+### Undo Material Refund
+
+```mcfunction
+/blockforge undo
+```
+
+Expected result:
+
+- Blocks are restored.
+- Survival materials are refunded.
+- If the inventory is full, overflow refund items drop near the player.
+- Creative builds report that no materials were consumed.
+
+### Repeated Undo History
+
+```mcfunction
+/blockforge select tiny_platform
+/blockforge wand
+```
+
+Build `tiny_platform` twice in different locations, then run:
+
+```mcfunction
+/blockforge undo
+/blockforge undo
+```
+
+Expected result:
+
+- NeoForge, Fabric, and Forge should undo both placements in reverse order.
+- Fabric and Forge currently keep an in-memory 20-entry per-player Alpha undo
+  history stack.
+- Undo history is not persisted across disconnects or server restarts.
+
+### Known Issue Status
+
+- Forge Ghost Preview skewed/slanted line-box rendering: fixed in v1.2.3 by
+  rendering the line box camera-relative like Fabric.
+- Fabric / Forge single-snapshot undo limitation: fixed in v1.2.3; both now
+  keep a 20-entry per-player undo history.
+- Fabric / Forge Material Refund Undo: implemented in v1.2.4; manual Minecraft
+  regression is pending for this v1.2.5 batch.
+- Dedicated server smoke test: pending. Do not mark dedicated server support as
+  passed until tested.
+
+## v1.2.4 Fabric / Forge Material Refund Undo Alpha Checklist
+
+Release version:
+
+```text
+1.2.4-alpha.1
+```
+
+Expected release jars:
+
+```text
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.2.4-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.2.4-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.2.4-alpha.1.jar
+```
+
+Recommended Fabric and Forge material refund test flow:
+
+```mcfunction
+/blockforge examples install
+/blockforge reload
+/blockforge select tiny_platform
+/blockforge wand
+/gamemode survival
+/clear
+/give @s minecraft:stone_bricks 9
+```
+
+Build `tiny_platform` with the Builder Wand, then run:
+
+```mcfunction
+/blockforge undo
+```
+
+Expected result:
+
+- Survival build succeeds when the player has the required materials.
+- `9` stone bricks are consumed during the build.
+- `/blockforge undo` restores the placed blocks.
+- `/blockforge undo` refunds `9` stone bricks to the player inventory.
+- The success message includes restored block count and refunded item count.
+
+Backpack full test:
+
+1. Fill the player inventory after giving the required build materials.
+2. Build `tiny_platform`.
+3. Run `/blockforge undo`.
+4. Confirm overflow refunded items drop near the player and the output includes
+   dropped item count.
+
+Creative test:
+
+1. Run `/gamemode creative`.
+2. Build `tiny_platform`.
+3. Run `/blockforge undo`.
+4. Confirm blocks are restored and the output says no materials were consumed.
+
+Known v1.2.4 Fabric / Forge limits:
+
+- Material Refund Undo is Alpha.
+- No nearby chest sourcing.
+- No recipe substitutions.
+- No GUI material icons.
+- No BlockEntity NBT undo.
+- Fabric / Forge Material Refund Undo manual Minecraft testing is pending.
+
+Manual testing plan:
+
+- v1.2.4 will not receive immediate standalone in-game testing.
+- Fabric and Forge manual regression will be batched after several follow-up
+  iterations, then run across Builder Wand, GUI Selector, Ghost Preview,
+  Survival Material Cost, Material Refund Undo, and repeated undo history.
 
 ## v1.2.3 Fabric / Forge Survival Material Cost Alpha Checklist
 
@@ -451,7 +931,7 @@ Copy the generated jar into the test instance `mods` folder.
 Example:
 
 ```text
-.minecraft/mods/blockforge-connector-neoforge-1.2.3-alpha.1.jar
+.minecraft/mods/blockforge-connector-neoforge-1.2.5-alpha.1.jar
 ```
 
 ## 4. Install Example Blueprints
@@ -1438,3 +1918,44 @@ common config registration.
 - Release Candidate 的打包、metadata、CI 文档和 common config 改动没有破坏核心 Connector 流程。
 
 本轮是 v1.0 RC 发布前烟测，范围小于前面版本的完整实机测试，重点验证发布整理改动没有引入启动或核心流程问题。
+
+## 30. v1.5.0 Security Regression
+
+Status: Forge 1.21.1 development client smoke test passed on 2026-04-27.
+NeoForge and Fabric manual Minecraft regression testing remains pending.
+
+Run on NeoForge, Fabric, and Forge:
+
+1. Create `config/blockforge/protection-regions.json` with a `DENY` region around spawn.
+2. Run `/blockforge protection reload`.
+3. Run `/blockforge protection list`.
+4. Run `/blockforge select tiny_platform`.
+5. In the protected area, run `/blockforge protection check tiny_platform`.
+6. In the protected area, try Builder Wand build.
+   - Expected: denied.
+   - Expected: no materials consumed.
+   - Expected: no blocks placed.
+7. Outside the protected area, build should be allowed.
+8. Test OP fallback or bypass permission behavior.
+9. Run `/blockforge permissions check blockforge.build.wand`.
+10. Put a material chest inside a protected region and run `/blockforge sources scan`.
+11. Confirm protected container materials are not used by a build without bypass.
+12. Confirm `/blockforge undo` restores the build and refunds materials; if container refund is protected, refund falls back to player inventory or drops.
+
+Manual result must not be marked passed until tested in Minecraft.
+
+Forge smoke result:
+
+- Forge client can join a newly created singleplayer world without
+  `Invalid player data`.
+- `/blockforge protection reload`, `/blockforge protection info`, and
+  `/blockforge protection check tiny_platform` work.
+- A DENY region with `allowedPermissions: []` denies protection checks for
+  `tiny_platform`.
+- Protected-area `/blockforge build tiny_platform` and Builder Wand build are
+  denied before materials are consumed or blocks are placed.
+- Outside the protected region, build and `/blockforge undo` still work.
+- OP bypass behavior is controlled by the region configuration:
+  `allowedPermissions: []` denies OP as well, while
+  `allowedPermissions: ["blockforge.build.bypass_protection"]` allows OP
+  fallback bypass.

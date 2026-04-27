@@ -6,6 +6,7 @@ import com.blockforge.forge.command.ForgeBlockForgeCommands;
 import com.blockforge.forge.network.ForgeBlueprintGuiNetworking;
 import com.blockforge.forge.player.ForgePlayerSelectionManager;
 import com.blockforge.forge.registry.ForgeModItems;
+import com.blockforge.forge.security.ForgeProtectionService;
 import com.blockforge.forge.undo.ForgeUndoManager;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.common.MinecraftForge;
@@ -25,12 +26,14 @@ public class BlockForgeForge {
     );
     public static final ForgeUndoManager UNDO = new ForgeUndoManager();
     public static final ForgePlayerSelectionManager SELECTIONS = new ForgePlayerSelectionManager();
+    public static final ForgeProtectionService PROTECTION = new ForgeProtectionService();
 
     public BlockForgeForge(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
         ForgeModItems.register(modEventBus);
         ForgeBlueprintGuiNetworking.register();
         BLUEPRINTS.reload();
+        PROTECTION.reload();
         MinecraftForge.EVENT_BUS.register(this);
         LOGGER.info(
                 "Loaded {} BlockForge Forge blueprint(s) from {}",

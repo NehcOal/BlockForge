@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "packId": "starter_buildings",
+  "name": "Starter Buildings",
+  "version": "1.0.0",
+  "description": "A small starter pack of BlockForge example blueprints.",
+  "author": "BlockForge",
+  "license": "MIT",
+  "minecraftVersion": "1.21.1",
+  "blockforgeVersion": "1.4.0-alpha.1",
+  "tags": [
+    "starter",
+    "survival",
+    "test"
+  ],
+  "blueprints": [
+    {
+      "id": "tiny_platform",
+      "name": "Tiny Platform",
+      "path": "blueprints/tiny_platform.blueprint.json",
+      "description": "A minimal 3x3 platform.",
+      "tags": [
+        "test",
+        "starter"
+      ]
+    },
+    {
+      "id": "small_test_house",
+      "name": "Small Test House",
+      "path": "blueprints/small_test_house.blueprint.json",
+      "description": "A compact test house using common survival materials.",
+      "tags": [
+        "house",
+        "starter"
+      ]
+    }
+  ]
+}

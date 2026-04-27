@@ -11,7 +11,7 @@ displayURL="https://github.com/NehcOal/BlockForge"
 authors="NehcOal and contributors"
 description='''
 BlockForge Connector NeoForge loads BlockForge Blueprint JSON v1/v2 files exported by the BlockForge web app.
-It provides /blockforge commands, a Builder Wand, Ghost Preview, GUI selection, material checks, and undo support for Minecraft Java 1.21.1 with NeoForge 21.1.227.
+It provides /blockforge commands, a Builder Wand, Ghost Preview, GUI selection, material checks, undo support, and nearby container material sourcing Alpha for Minecraft Java 1.21.1 with NeoForge 21.1.227.
 '''
 
 [[dependencies.${mod_id}]]
