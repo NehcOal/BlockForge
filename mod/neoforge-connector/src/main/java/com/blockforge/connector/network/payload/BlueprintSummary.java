@@ -2,6 +2,9 @@ package com.blockforge.connector.network.payload;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public record BlueprintSummary(
         String id,
         String name,
@@ -10,18 +13,48 @@ public record BlueprintSummary(
         int height,
         int depth,
         int blockCount,
-        boolean hasBlockStates
+        boolean hasBlockStates,
+        String sourceType,
+        String sourceId,
+        int warningCount,
+        List<String> tags
 ) {
+    public BlueprintSummary {
+        sourceType = sourceType == null || sourceType.isBlank() ? "loose" : sourceType;
+        sourceId = sourceId == null ? "" : sourceId;
+        tags = tags == null ? List.of() : List.copyOf(tags);
+    }
+
     public static BlueprintSummary read(RegistryFriendlyByteBuf buffer) {
+        String id = buffer.readUtf();
+        String name = buffer.readUtf();
+        int schemaVersion = buffer.readVarInt();
+        int width = buffer.readVarInt();
+        int height = buffer.readVarInt();
+        int depth = buffer.readVarInt();
+        int blockCount = buffer.readVarInt();
+        boolean hasBlockStates = buffer.readBoolean();
+        String sourceType = buffer.readUtf();
+        String sourceId = buffer.readUtf();
+        int warningCount = buffer.readVarInt();
+        int tagCount = buffer.readVarInt();
+        List<String> tags = new ArrayList<>(tagCount);
+        for (int index = 0; index < tagCount; index++) {
+            tags.add(buffer.readUtf());
+        }
         return new BlueprintSummary(
-                buffer.readUtf(),
-                buffer.readUtf(),
-                buffer.readVarInt(),
-                buffer.readVarInt(),
-                buffer.readVarInt(),
-                buffer.readVarInt(),
-                buffer.readVarInt(),
-                buffer.readBoolean()
+                id,
+                name,
+                schemaVersion,
+                width,
+                height,
+                depth,
+                blockCount,
+                hasBlockStates,
+                sourceType,
+                sourceId,
+                warningCount,
+                tags
         );
     }
 
@@ -34,6 +67,13 @@ public record BlueprintSummary(
         buffer.writeVarInt(summary.depth());
         buffer.writeVarInt(summary.blockCount());
         buffer.writeBoolean(summary.hasBlockStates());
+        buffer.writeUtf(summary.sourceType());
+        buffer.writeUtf(summary.sourceId());
+        buffer.writeVarInt(summary.warningCount());
+        buffer.writeVarInt(summary.tags().size());
+        for (String tag : summary.tags()) {
+            buffer.writeUtf(tag);
+        }
     }
 
     public String sizeLabel() {

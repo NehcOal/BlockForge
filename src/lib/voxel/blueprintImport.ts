@@ -26,6 +26,7 @@ export type ImportedBlueprintAsset = {
   sourceType: ImportedBlueprintSourceType;
   id: string;
   name: string;
+  sourceFileName?: string;
   summary: {
     blueprintCount: number;
     warningCount: number;

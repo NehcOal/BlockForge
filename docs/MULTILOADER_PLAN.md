@@ -269,3 +269,13 @@ v1.5.0 adds common permission/protection abstractions and Alpha adapters for
 NeoForge, Fabric, and Forge. Protection preflight runs before material
 consumption and placement. External permission/claim mods remain optional and
 planned rather than hard dependencies.
+# v1.8.0 GUI Query Alpha
+
+`v1.8.0-alpha.1` adds a loader-neutral GUI query model in `mod/common`:
+`BlueprintGuiQuery`, `BlueprintSourceFilter`, `BlueprintWarningFilter`,
+`BlueprintSortMode`, `PagedBlueprintResult`, and `BlueprintGuiQueryService`.
+NeoForge, Fabric, and Forge send query payloads to the server; the server
+filters, sorts, paginates, and returns only the current page. Selection remains
+server-validated and continues to drive Builder Wand and Ghost Preview state.
+
+Minecraft manual regression is pending.

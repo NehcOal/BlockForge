@@ -11,6 +11,14 @@ import java.util.List;
 
 public record BlueprintListPayload(
         List<BlueprintSummary> blueprints,
+        int page,
+        int pageSize,
+        int totalItems,
+        int totalPages,
+        boolean hasPrevious,
+        boolean hasNext,
+        String selectedBlueprintId,
+        int selectedRotation,
         boolean openScreen
 ) implements CustomPacketPayload {
     public static final Type<BlueprintListPayload> TYPE = new Type<>(
@@ -31,7 +39,18 @@ public record BlueprintListPayload(
         for (int index = 0; index < count; index++) {
             summaries.add(BlueprintSummary.read(buffer));
         }
-        return new BlueprintListPayload(summaries, buffer.readBoolean());
+        return new BlueprintListPayload(
+                summaries,
+                buffer.readVarInt(),
+                buffer.readVarInt(),
+                buffer.readVarInt(),
+                buffer.readVarInt(),
+                buffer.readBoolean(),
+                buffer.readBoolean(),
+                buffer.readUtf(),
+                buffer.readVarInt(),
+                buffer.readBoolean()
+        );
     }
 
     private static void write(RegistryFriendlyByteBuf buffer, BlueprintListPayload payload) {
@@ -39,6 +58,14 @@ public record BlueprintListPayload(
         for (BlueprintSummary summary : payload.blueprints()) {
             BlueprintSummary.write(buffer, summary);
         }
+        buffer.writeVarInt(payload.page());
+        buffer.writeVarInt(payload.pageSize());
+        buffer.writeVarInt(payload.totalItems());
+        buffer.writeVarInt(payload.totalPages());
+        buffer.writeBoolean(payload.hasPrevious());
+        buffer.writeBoolean(payload.hasNext());
+        buffer.writeUtf(payload.selectedBlueprintId());
+        buffer.writeVarInt(payload.selectedRotation());
         buffer.writeBoolean(payload.openScreen());
     }
 

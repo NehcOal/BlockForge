@@ -1,8 +1,8 @@
-# BlockForge v1.7.0-alpha.1 - Web Workbench Alpha
+# BlockForge v1.8.0-alpha.1 - Web Polish + GUI Search Alpha
 
 ## Release Type
 
-- Version: `1.7.0-alpha.1`
+- Version: `1.8.0-alpha.1`
 - Type: Web Import / Validation / Local Generation Workbench Alpha candidate
 - Stability: Alpha for Fabric and Forge, recommended full experience on NeoForge
 
@@ -19,9 +19,9 @@
 
 ## Download Files
 
-- `blockforge-connector-neoforge-1.7.0-alpha.1.jar`
-- `blockforge-connector-fabric-1.7.0-alpha.1.jar`
-- `blockforge-connector-forge-1.7.0-alpha.1.jar`
+- `blockforge-connector-neoforge-1.8.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.8.0-alpha.1.jar`
+- `blockforge-connector-forge-1.8.0-alpha.1.jar`
 
 ## Feature Matrix
 
@@ -86,10 +86,18 @@ Manual Minecraft status:
   v1.3.5 focused nearby container smoke test passed: player-sourced materials
   refund to player inventory, and chest-sourced materials refund to the
   original chest.
-- v1.7.0 build validation: pending before release.
-- Full NeoForge / Fabric / Forge v1.7.0 Minecraft regression testing
+- v1.8.0 build validation: pending before release.
+- Full NeoForge / Fabric / Forge v1.8.0 Minecraft regression testing
   is still pending.
 - Browser visual QA is pending.
+
+## GUI Search Highlights
+
+- NeoForge, Fabric, and Forge Blueprint Selector GUI now supports search,
+  source filtering, warning filtering, sorting, and server-side pagination.
+- Rows show source tags and best-effort warning badges.
+- Selection, Builder Wand, and Ghost Preview remain linked through the
+  server-validated selection request.
 
 ## Known Limitations
 

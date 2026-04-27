@@ -4,20 +4,20 @@ This checklist prepares the NeoForge Connector for real Minecraft validation.
 Passing `gradlew build` confirms compilation only; it does not replace in-game
 testing.
 
-## v1.7.0 Web Workbench Release Gate
+## v1.8.0 Web Polish + GUI Search Release Gate
 
 Release version:
 
 ```text
-1.7.0-alpha.1
+1.8.0-alpha.1
 ```
 
 Expected release jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.7.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.7.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.7.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.8.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-1.8.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-1.8.0-alpha.1.jar
 ```
 
 Build validation:
@@ -32,6 +32,25 @@ mod/forge-connector/gradlew.bat build
 ```
 
 Status: Minecraft manual regression pending. Browser visual QA pending.
+
+GUI search/filter manual checks:
+
+| Loader | Search | Source filter | Warning filter | Sort | Pagination | Select/Wand/Preview | Status |
+|---|---|---|---|---|---|---|---|
+| NeoForge | pending | pending | pending | pending | pending | pending | pending |
+| Fabric | pending | pending | pending | pending | pending | pending | pending |
+| Forge | pending | pending | pending | pending | pending | pending | pending |
+
+Expected GUI behavior:
+
+- `/blockforge gui` opens page 1.
+- Search is case-insensitive and matches id, name, source id, pack id, and tags.
+- Source filter cycles All, Loose, Pack, Schematic.
+- Warning filter cycles All, With warnings, Without warnings.
+- Sort cycles name, block count, and source modes.
+- Previous/Next clamp at list boundaries.
+- Selecting a filtered result still updates `/blockforge selected`, Builder Wand,
+  and Ghost Preview through the server-validated selection request.
 
 ## v1.6.0 Schematic Interop Regression
 

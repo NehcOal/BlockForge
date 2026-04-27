@@ -471,3 +471,12 @@ BlockForge permission/protection preflight before build commands, Builder Wand
 placement, material consumption, and nearby-container material use. External
 claim/permission integrations are planned; current behavior falls back to
 vanilla permission levels when permission enforcement is enabled.
+# v1.8.0-alpha.1 GUI Search Notes
+
+- `/blockforge gui` opens the Alpha selector with search, pagination, source
+  filtering, warning filtering, sorting, source tags, warning badges, material
+  summary access, and rotation controls.
+- GUI results are queried on the server with `BlueprintGuiQueryService`.
+- Selection remains server-validated and continues to update Builder Wand and
+  Ghost Preview state.
+- Minecraft manual regression is pending.

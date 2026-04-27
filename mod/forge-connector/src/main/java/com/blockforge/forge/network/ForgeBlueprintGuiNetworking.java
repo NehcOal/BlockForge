@@ -1,8 +1,14 @@
 package com.blockforge.forge.network;
 
 import com.blockforge.common.blueprint.Blueprint;
+import com.blockforge.common.gui.BlueprintGuiQuery;
+import com.blockforge.common.gui.BlueprintGuiQueryService;
 import com.blockforge.common.gui.BlueprintListView;
+import com.blockforge.common.gui.BlueprintSortMode;
+import com.blockforge.common.gui.BlueprintSourceFilter;
 import com.blockforge.common.gui.BlueprintSummary;
+import com.blockforge.common.gui.BlueprintWarningFilter;
+import com.blockforge.common.gui.PagedBlueprintResult;
 import com.blockforge.common.selection.PlayerSelection;
 import com.blockforge.common.selection.SelectionRequest;
 import com.blockforge.forge.BlockForgeForge;
@@ -20,7 +26,6 @@ import net.minecraftforge.network.SimpleChannel;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public final class ForgeBlueprintGuiNetworking {
@@ -71,13 +76,29 @@ public final class ForgeBlueprintGuiNetworking {
         CHANNEL.send(new BlueprintListRequestPayload(openScreen), PacketDistributor.SERVER.noArg());
     }
 
+    public static void requestBlueprintList(
+            boolean openScreen,
+            String searchText,
+            BlueprintSourceFilter sourceFilter,
+            BlueprintWarningFilter warningFilter,
+            BlueprintSortMode sortMode,
+            int page,
+            int pageSize
+    ) {
+        CHANNEL.send(new BlueprintListRequestPayload(openScreen, searchText, sourceFilter, warningFilter, sortMode, page, pageSize), PacketDistributor.SERVER.noArg());
+    }
+
     public static void requestSelection(String blueprintId, int rotationDegrees) {
         CHANNEL.send(new SelectBlueprintRequestPayload(blueprintId, rotationDegrees), PacketDistributor.SERVER.noArg());
     }
 
     public static void sendBlueprintList(ServerPlayer player, boolean openScreen) {
+        sendBlueprintList(player, openScreen, BlueprintGuiQuery.firstPage());
+    }
+
+    public static void sendBlueprintList(ServerPlayer player, boolean openScreen, BlueprintGuiQuery query) {
         CHANNEL.send(new BlueprintListPayload(
-                createListView(BlockForgeForge.BLUEPRINTS, BlockForgeForge.SELECTIONS, player),
+                createListView(BlockForgeForge.BLUEPRINTS, BlockForgeForge.SELECTIONS, player, query),
                 openScreen
         ), PacketDistributor.PLAYER.with(player));
         syncPreviewSelection(player);
@@ -118,7 +139,7 @@ public final class ForgeBlueprintGuiNetworking {
     private static void handleListRequest(BlueprintListRequestPayload payload, CustomPayloadEvent.Context context) {
         ServerPlayer player = context.getSender();
         if (player != null) {
-            sendBlueprintList(player, payload.openScreen());
+            sendBlueprintList(player, payload.openScreen(), payload.query());
         }
     }
 
@@ -158,13 +179,14 @@ public final class ForgeBlueprintGuiNetworking {
     private static BlueprintListView createListView(
             ForgeBlueprintRegistry registry,
             ForgePlayerSelectionManager selectionManager,
-            ServerPlayer player
+            ServerPlayer player,
+            BlueprintGuiQuery query
     ) {
         List<BlueprintSummary> summaries = registry.getBlueprints()
                 .stream()
-                .sorted(Comparator.comparing(Blueprint::getId))
                 .map(ForgeBlueprintGuiNetworking::summary)
                 .toList();
+        PagedBlueprintResult page = BlueprintGuiQueryService.query(summaries, query);
         PlayerSelection selection = selectionManager.get(player.getUUID()).orElse(null);
         String selectedId = "";
         int rotation = 0;
@@ -178,7 +200,7 @@ public final class ForgeBlueprintGuiNetworking {
             }
         }
 
-        return new BlueprintListView(summaries, selectedId, rotation);
+        return BlueprintListView.from(page, selectedId, rotation);
     }
 
     private static BlueprintSummary summary(Blueprint blueprint) {
@@ -190,7 +212,11 @@ public final class ForgeBlueprintGuiNetworking {
                 blueprint.getSize().height(),
                 blueprint.getSize().depth(),
                 blueprint.getBlockCount(),
-                blueprint.getPalette().values().stream().anyMatch(entry -> !entry.properties().isEmpty())
+                blueprint.getPalette().values().stream().anyMatch(entry -> !entry.properties().isEmpty()),
+                sourceType(blueprint.getId()),
+                sourceId(blueprint.getId()),
+                0,
+                List.of(sourceType(blueprint.getId()), blueprint.getSchemaVersion() == 2 ? "v2" : "v1")
         );
     }
 
@@ -236,13 +262,43 @@ public final class ForgeBlueprintGuiNetworking {
         }
     }
 
-    public record BlueprintListRequestPayload(boolean openScreen) {
+    public record BlueprintListRequestPayload(
+            boolean openScreen,
+            String searchText,
+            BlueprintSourceFilter sourceFilter,
+            BlueprintWarningFilter warningFilter,
+            BlueprintSortMode sortMode,
+            int page,
+            int pageSize
+    ) {
+        public BlueprintListRequestPayload(boolean openScreen) {
+            this(openScreen, "", BlueprintSourceFilter.ALL, BlueprintWarningFilter.ALL, BlueprintSortMode.NAME_ASC, 0, BlueprintGuiQuery.DEFAULT_PAGE_SIZE);
+        }
+
+        public BlueprintGuiQuery query() {
+            return new BlueprintGuiQuery(searchText, sourceFilter, warningFilter, sortMode, page, pageSize);
+        }
+
         private static BlueprintListRequestPayload read(FriendlyByteBuf buffer) {
-            return new BlueprintListRequestPayload(buffer.readBoolean());
+            return new BlueprintListRequestPayload(
+                    buffer.readBoolean(),
+                    buffer.readUtf(),
+                    buffer.readEnum(BlueprintSourceFilter.class),
+                    buffer.readEnum(BlueprintWarningFilter.class),
+                    buffer.readEnum(BlueprintSortMode.class),
+                    buffer.readVarInt(),
+                    buffer.readVarInt()
+            );
         }
 
         private static void write(BlueprintListRequestPayload payload, FriendlyByteBuf buffer) {
             buffer.writeBoolean(payload.openScreen());
+            buffer.writeUtf(payload.searchText());
+            buffer.writeEnum(payload.sourceFilter());
+            buffer.writeEnum(payload.warningFilter());
+            buffer.writeEnum(payload.sortMode());
+            buffer.writeVarInt(payload.page());
+            buffer.writeVarInt(payload.pageSize());
         }
     }
 
@@ -253,10 +309,16 @@ public final class ForgeBlueprintGuiNetworking {
             for (int index = 0; index < count; index++) {
                 summaries.add(readSummary(buffer));
             }
+            int page = buffer.readVarInt();
+            int pageSize = buffer.readVarInt();
+            int totalItems = buffer.readVarInt();
+            int totalPages = buffer.readVarInt();
+            boolean hasPrevious = buffer.readBoolean();
+            boolean hasNext = buffer.readBoolean();
             String selected = buffer.readUtf();
             int rotation = buffer.readVarInt();
             boolean openScreen = buffer.readBoolean();
-            return new BlueprintListPayload(new BlueprintListView(summaries, selected, rotation), openScreen);
+            return new BlueprintListPayload(new BlueprintListView(summaries, page, pageSize, totalItems, totalPages, hasPrevious, hasNext, selected, rotation), openScreen);
         }
 
         private static void write(BlueprintListPayload payload, FriendlyByteBuf buffer) {
@@ -264,6 +326,12 @@ public final class ForgeBlueprintGuiNetworking {
             for (BlueprintSummary summary : payload.view().blueprints()) {
                 writeSummary(buffer, summary);
             }
+            buffer.writeVarInt(payload.view().page());
+            buffer.writeVarInt(payload.view().pageSize());
+            buffer.writeVarInt(payload.view().totalItems());
+            buffer.writeVarInt(payload.view().totalPages());
+            buffer.writeBoolean(payload.view().hasPrevious());
+            buffer.writeBoolean(payload.view().hasNext());
             buffer.writeUtf(payload.view().selectedBlueprintId());
             buffer.writeVarInt(payload.view().rotationDegrees());
             buffer.writeBoolean(payload.openScreen());
@@ -352,7 +420,11 @@ public final class ForgeBlueprintGuiNetworking {
                 buffer.readVarInt(),
                 buffer.readVarInt(),
                 buffer.readVarInt(),
-                buffer.readBoolean()
+                buffer.readBoolean(),
+                buffer.readUtf(),
+                buffer.readUtf(),
+                buffer.readVarInt(),
+                readTags(buffer)
         );
     }
 
@@ -365,5 +437,33 @@ public final class ForgeBlueprintGuiNetworking {
         buffer.writeVarInt(summary.depth());
         buffer.writeVarInt(summary.blockCount());
         buffer.writeBoolean(summary.hasBlockStates());
+        buffer.writeUtf(summary.sourceType());
+        buffer.writeUtf(summary.sourceId());
+        buffer.writeVarInt(summary.warningCount());
+        buffer.writeVarInt(summary.tags().size());
+        for (String tag : summary.tags()) {
+            buffer.writeUtf(tag);
+        }
+    }
+
+    private static List<String> readTags(FriendlyByteBuf buffer) {
+        int count = buffer.readVarInt();
+        List<String> tags = new ArrayList<>(count);
+        for (int index = 0; index < count; index++) {
+            tags.add(buffer.readUtf());
+        }
+        return tags;
+    }
+
+    private static String sourceType(String id) {
+        if (id.startsWith("schem/") || id.endsWith(".schem")) {
+            return "schematic";
+        }
+        return id.contains("/") ? "pack" : "loose";
+    }
+
+    private static String sourceId(String id) {
+        int separator = id.indexOf('/');
+        return separator > 0 ? id.substring(0, separator) : "";
     }
 }

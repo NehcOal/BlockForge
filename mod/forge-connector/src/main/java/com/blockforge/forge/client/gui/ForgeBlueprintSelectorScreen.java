@@ -1,11 +1,16 @@
 package com.blockforge.forge.client.gui;
 
 import com.blockforge.common.gui.BlueprintSummary;
+import com.blockforge.common.gui.BlueprintGuiQuery;
+import com.blockforge.common.gui.BlueprintSortMode;
+import com.blockforge.common.gui.BlueprintSourceFilter;
+import com.blockforge.common.gui.BlueprintWarningFilter;
 import com.blockforge.forge.material.source.ForgeMaterialSourceSettings;
 import com.blockforge.forge.network.ForgeBlueprintGuiNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -13,6 +18,11 @@ import java.util.List;
 
 public class ForgeBlueprintSelectorScreen extends Screen {
     private static final int[] ROTATIONS = {0, 90, 180, 270};
+    private String searchText = "";
+    private BlueprintSourceFilter sourceFilter = BlueprintSourceFilter.ALL;
+    private BlueprintWarningFilter warningFilter = BlueprintWarningFilter.ALL;
+    private BlueprintSortMode sortMode = BlueprintSortMode.NAME_ASC;
+    private int page = 0;
 
     public ForgeBlueprintSelectorScreen() {
         super(Component.translatable("screen.blockforge_connector.blueprint_selector"));
@@ -45,10 +55,44 @@ public class ForgeBlueprintSelectorScreen extends Screen {
         clearWidgets();
 
         int left = Math.max(20, width / 2 - 190);
-        int top = Math.max(32, height / 2 - 100);
+        int top = Math.max(28, height / 2 - 116);
         int listWidth = 180;
         int detailsLeft = left + listWidth + 20;
         List<BlueprintSummary> summaries = ForgeBlueprintClientCache.blueprints();
+
+        EditBox search = new EditBox(font, left, top + 22, listWidth, 20, Component.literal("Search"));
+        search.setValue(searchText);
+        search.setResponder(value -> {
+            searchText = value;
+            page = 0;
+            requestPage(false);
+        });
+        addRenderableWidget(search);
+
+        addRenderableWidget(Button.builder(Component.literal("Source: " + sourceFilter.name().toLowerCase()), ignored -> {
+                    sourceFilter = next(sourceFilter);
+                    page = 0;
+                    requestPage(false);
+                    rebuildWidgets();
+                })
+                .bounds(left, top + 46, 86, 20)
+                .build());
+        addRenderableWidget(Button.builder(Component.literal("Warn: " + warningFilter.name().toLowerCase()), ignored -> {
+                    warningFilter = next(warningFilter);
+                    page = 0;
+                    requestPage(false);
+                    rebuildWidgets();
+                })
+                .bounds(left + 94, top + 46, 86, 20)
+                .build());
+        addRenderableWidget(Button.builder(Component.literal("Sort: " + sortMode.name().toLowerCase()), ignored -> {
+                    sortMode = next(sortMode);
+                    page = 0;
+                    requestPage(false);
+                    rebuildWidgets();
+                })
+                .bounds(left, top + 70, listWidth, 20)
+                .build());
 
         int row = 0;
         for (BlueprintSummary summary : summaries) {
@@ -56,8 +100,8 @@ public class ForgeBlueprintSelectorScreen extends Screen {
                 break;
             }
 
-            int buttonY = top + 24 + row * 24;
-            Button button = Button.builder(Component.literal(summary.name()), ignored -> {
+            int buttonY = top + 96 + row * 22;
+            Button button = Button.builder(Component.literal(summary.name() + " [" + summary.sourceType() + "]" + (summary.warningCount() > 0 ? " !" : "")), ignored -> {
                         ForgeBlueprintClientCache.selectLocally(summary.id());
                         rebuildWidgets();
                     })
@@ -69,6 +113,23 @@ public class ForgeBlueprintSelectorScreen extends Screen {
             addRenderableWidget(button);
             row++;
         }
+
+        Button previous = Button.builder(Component.literal("Previous"), ignored -> {
+                    page = Math.max(0, ForgeBlueprintClientCache.page() - 1);
+                    requestPage(false);
+                })
+                .bounds(left, top + 254, 86, 20)
+                .build();
+        previous.active = ForgeBlueprintClientCache.hasPrevious();
+        addRenderableWidget(previous);
+        Button next = Button.builder(Component.literal("Next"), ignored -> {
+                    page = ForgeBlueprintClientCache.page() + 1;
+                    requestPage(false);
+                })
+                .bounds(left + 94, top + 254, 86, 20)
+                .build();
+        next.active = ForgeBlueprintClientCache.hasNext();
+        addRenderableWidget(next);
 
         int rotationY = top + 140;
         for (int index = 0; index < ROTATIONS.length; index++) {
@@ -92,8 +153,21 @@ public class ForgeBlueprintSelectorScreen extends Screen {
         addRenderableWidget(selectButton);
 
         addRenderableWidget(Button.builder(Component.translatable("screen.blockforge_connector.close"), ignored -> onClose())
-                .bounds(detailsLeft + 90, top + 166, 82, 20)
+                .bounds(detailsLeft + 90, top + 254, 82, 20)
                 .build());
+    }
+
+    private void requestPage(boolean openScreen) {
+        ForgeBlueprintClientCache.beginLoading();
+        ForgeBlueprintGuiNetworking.requestBlueprintList(
+                openScreen,
+                searchText,
+                sourceFilter,
+                warningFilter,
+                sortMode,
+                page,
+                BlueprintGuiQuery.DEFAULT_PAGE_SIZE
+        );
     }
 
     private void submitSelection() {
@@ -105,10 +179,10 @@ public class ForgeBlueprintSelectorScreen extends Screen {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         int left = Math.max(20, width / 2 - 190);
-        int top = Math.max(32, height / 2 - 100);
+        int top = Math.max(28, height / 2 - 116);
         int detailsLeft = left + 200;
         int panelRight = detailsLeft + 180;
-        int panelBottom = top + 210;
+        int panelBottom = top + 288;
 
         graphics.fill(0, 0, width, height, 0x99000000);
         graphics.fill(left - 12, top - 18, panelRight + 12, panelBottom + 12, 0xF0101820);
@@ -119,17 +193,26 @@ public class ForgeBlueprintSelectorScreen extends Screen {
         graphics.drawString(font, Component.translatable("screen.blockforge_connector.blueprints"), left, top + 8, 0xFFE7F7FF, false);
 
         if (ForgeBlueprintClientCache.loading()) {
-            graphics.drawString(font, Component.translatable("screen.blockforge_connector.loading"), left, top + 34, 0xFFFFD37A, false);
+            graphics.drawString(font, Component.translatable("screen.blockforge_connector.loading"), left, top + 98, 0xFFFFD37A, false);
         } else if (ForgeBlueprintClientCache.blueprints().isEmpty()) {
             graphics.drawWordWrap(
                     font,
-                    Component.translatable("screen.blockforge_connector.empty"),
+                    Component.literal(searchText.isBlank()
+                            ? "No blueprints loaded. Run /blockforge examples install and /blockforge reload."
+                            : "No blueprints match your search."),
                     left,
-                    top + 34,
+                    top + 98,
                     180,
                     0xFFFFD37A
             );
         }
+        graphics.drawString(font, "Page "
+                + (ForgeBlueprintClientCache.totalPages() == 0 ? 0 : ForgeBlueprintClientCache.page() + 1)
+                + " / "
+                + ForgeBlueprintClientCache.totalPages()
+                + " | Total "
+                + ForgeBlueprintClientCache.totalItems()
+                + " blueprints", left, top + 236, 0xFFB6C7D4, false);
 
         renderDetails(graphics, detailsLeft, top);
 
@@ -159,15 +242,17 @@ public class ForgeBlueprintSelectorScreen extends Screen {
 
         graphics.drawString(font, summary.name(), x, y + 28, 0xFFFFFFFF, false);
         graphics.drawString(font, summary.id(), x, y + 40, 0xFF9AA8B5, false);
-        graphics.drawString(font, Component.literal(sourceLabel(summary.id())), x, y + 52, 0xFFB6C7D4, false);
+        graphics.drawString(font, Component.literal("source=" + summary.sourceType()
+                + (summary.sourceId().isBlank() ? "" : " | id=" + summary.sourceId())), x, y + 52, 0xFFB6C7D4, false);
         graphics.drawString(font, Component.translatable("screen.blockforge_connector.size", summary.sizeLabel()), x, y + 64, 0xFFC9D7E2, false);
         graphics.drawString(font, Component.translatable("screen.blockforge_connector.blocks", summary.blockCount()), x, y + 76, 0xFFC9D7E2, false);
-        graphics.drawString(font, "schemaVersion=" + summary.schemaVersion(), x, y + 88, 0xFFC9D7E2, false);
+        graphics.drawString(font, Component.literal(summary.warningCount() > 0 ? "warnings=" + summary.warningCount() : "warnings=0"), x, y + 88, summary.warningCount() > 0 ? 0xFFFFD37A : 0xFFB6C7D4, false);
+        graphics.drawString(font, "schemaVersion=" + summary.schemaVersion(), x, y + 100, 0xFFC9D7E2, false);
         graphics.drawString(
                 font,
                 Component.translatable("screen.blockforge_connector.block_states", summary.hasBlockStates()),
                 x,
-                y + 100,
+                y + 112,
                 summary.hasBlockStates() ? 0xFF8EF0B4 : 0xFFB6C7D4,
                 false
         );
@@ -194,9 +279,19 @@ public class ForgeBlueprintSelectorScreen extends Screen {
         graphics.drawString(font, Component.translatable("screen.blockforge_connector.rotation"), x, y + 130, 0xFFE7F7FF, false);
     }
 
-    private String sourceLabel(String id) {
-        int separator = id.indexOf('/');
-        return separator > 0 ? "source=pack | pack=" + id.substring(0, separator) : "source=loose";
+    private static BlueprintSourceFilter next(BlueprintSourceFilter value) {
+        BlueprintSourceFilter[] values = BlueprintSourceFilter.values();
+        return values[(value.ordinal() + 1) % values.length];
+    }
+
+    private static BlueprintWarningFilter next(BlueprintWarningFilter value) {
+        BlueprintWarningFilter[] values = BlueprintWarningFilter.values();
+        return values[(value.ordinal() + 1) % values.length];
+    }
+
+    private static BlueprintSortMode next(BlueprintSortMode value) {
+        BlueprintSortMode[] values = BlueprintSortMode.values();
+        return values[(value.ordinal() + 1) % values.length];
     }
 
     @Override

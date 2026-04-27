@@ -4,8 +4,11 @@ import com.blockforge.connector.blueprint.Blueprint;
 import com.blockforge.connector.builder.BlueprintRotation;
 import com.blockforge.connector.material.MaterialBuildGate;
 import com.blockforge.connector.material.MaterialReport;
+import com.blockforge.common.gui.BlueprintGuiQueryService;
+import com.blockforge.common.gui.PagedBlueprintResult;
 import com.blockforge.connector.network.payload.BlueprintListPayload;
 import com.blockforge.connector.network.payload.BlueprintSummary;
+import com.blockforge.connector.player.PlayerBlueprintSelection;
 import com.blockforge.connector.network.payload.ClearPreviewPayload;
 import com.blockforge.connector.network.payload.MaterialReportPayload;
 import com.blockforge.connector.network.payload.MaterialReportRequestPayload;
@@ -22,7 +25,6 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Comparator;
 import java.util.List;
 
 public final class BlockForgeNetwork {
@@ -94,14 +96,40 @@ public final class BlockForgeNetwork {
     }
 
     public static void sendBlueprintList(ServerPlayer player, boolean openScreen) {
-        PacketDistributor.sendToPlayer(player, new BlueprintListPayload(createBlueprintSummaries(), openScreen));
+        sendBlueprintList(player, openScreen, RequestBlueprintListPayload.defaultQuery());
     }
 
-    private static List<BlueprintSummary> createBlueprintSummaries() {
+    public static void sendBlueprintList(ServerPlayer player, boolean openScreen, com.blockforge.common.gui.BlueprintGuiQuery query) {
+        PagedBlueprintResult page = BlueprintGuiQueryService.query(
+                createCommonBlueprintSummaries(),
+                query
+        );
+        PlayerBlueprintSelection selection = com.blockforge.connector.BlockForgeConnector.SELECTIONS.getOrCreate(player.getUUID());
+        String selectedId = "";
+        int rotation = 0;
+        if (selection.hasSelection()
+                && com.blockforge.connector.BlockForgeConnector.BLUEPRINTS.get(selection.getSelectedBlueprintId()).isPresent()) {
+            selectedId = selection.getSelectedBlueprintId();
+            rotation = selection.getRotation().degrees();
+        }
+        PacketDistributor.sendToPlayer(player, new BlueprintListPayload(
+                page.items().stream().map(BlockForgeNetwork::toPayloadSummary).toList(),
+                page.page(),
+                page.pageSize(),
+                page.totalItems(),
+                page.totalPages(),
+                page.hasPrevious(),
+                page.hasNext(),
+                selectedId,
+                rotation,
+                openScreen
+        ));
+    }
+
+    private static List<com.blockforge.common.gui.BlueprintSummary> createCommonBlueprintSummaries() {
         return com.blockforge.connector.BlockForgeConnector.BLUEPRINTS.getBlueprints()
                 .stream()
-                .sorted(Comparator.comparing(Blueprint::getId))
-                .map(blueprint -> new BlueprintSummary(
+                .map(blueprint -> new com.blockforge.common.gui.BlueprintSummary(
                         blueprint.getId(),
                         blueprint.getName(),
                         blueprint.getSchemaVersion(),
@@ -109,15 +137,48 @@ public final class BlockForgeNetwork {
                         blueprint.getSize().height(),
                         blueprint.getSize().depth(),
                         blueprint.getBlockCount(),
-                        blueprint.getPalettePropertyCount() > 0
+                        blueprint.getPalettePropertyCount() > 0,
+                        sourceType(blueprint.getId()),
+                        sourceId(blueprint.getId()),
+                        0,
+                        List.of(sourceType(blueprint.getId()), blueprint.getSchemaVersion() == 2 ? "v2" : "v1")
                 ))
                 .toList();
     }
 
+    private static BlueprintSummary toPayloadSummary(com.blockforge.common.gui.BlueprintSummary summary) {
+        return new BlueprintSummary(
+                summary.id(),
+                summary.name(),
+                summary.schemaVersion(),
+                summary.width(),
+                summary.height(),
+                summary.depth(),
+                summary.blockCount(),
+                summary.hasBlockStates(),
+                summary.sourceType(),
+                summary.sourceId(),
+                summary.warningCount(),
+                summary.tags()
+        );
+    }
+
     private static void handleListRequest(Player player, RequestBlueprintListPayload payload) {
         if (player instanceof ServerPlayer serverPlayer) {
-            sendBlueprintList(serverPlayer, payload.openScreen());
+            sendBlueprintList(serverPlayer, payload.openScreen(), payload.query());
         }
+    }
+
+    private static String sourceType(String id) {
+        if (id.startsWith("schem/") || id.endsWith(".schem")) {
+            return "schematic";
+        }
+        return id.contains("/") ? "pack" : "loose";
+    }
+
+    private static String sourceId(String id) {
+        int separator = id.indexOf('/');
+        return separator > 0 ? id.substring(0, separator) : "";
     }
 
     private static void handleSelectRequest(Player player, SelectBlueprintRequestPayload payload) {

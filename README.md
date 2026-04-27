@@ -5,13 +5,12 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v1.7.0 Web Workbench Alpha
+## v1.8.0 Web Polish + In-game GUI Alpha
 
-BlockForge v1.7.0-alpha.1 turns the Web app into a local import, validation,
-and Local Prompt Rule Generator workbench. It can import Blueprint JSON,
-Sponge `.schem`, and `.blockforgepack.zip` files, show field-level validation
-reports, preview local rule-generated models in 3D, and export through the
-existing multi-format pipeline.
+BlockForge v1.8.0-alpha.1 polishes the Web import, validation, and Local
+Prompt Rule Generator workbench, then adds query-based in-game GUI search,
+pagination, source filtering, warning filtering, sorting, source tags, and
+warning badges for NeoForge, Fabric, and Forge.
 
 Web Workbench highlights:
 
@@ -23,15 +22,28 @@ Web Workbench highlights:
 - Generate local rule-based prompt models without using an external AI API.
 - Export JSON, Blueprint v1/v2, Blueprint Pack, `.schem`, `.mcfunction`, and
   Data Pack ZIP.
+- Collapse import summaries and validation reports, with user-readable import
+  errors plus expandable developer details.
+
+In-game GUI highlights:
+
+- Search by blueprint id, name, source id, pack id, and tags.
+- Filter by All, Loose, Pack, and Schematic sources.
+- Filter by warning state and sort by name, block count, or source.
+- Page server-side results with 8 blueprints per page.
+- Show source tags, best-effort warning badges, material summary status, and
+  rotation controls while keeping selection, Builder Wand, and Ghost Preview
+  linked to the server-validated selection.
 
 See [Web Workbench](./docs/WEB_WORKBENCH.md) for usage notes and current
-limits. External AI API adapter work is planned for v2.0.
+limits. See [GUI Search And Filters](./docs/GUI_SEARCH_AND_FILTERS.md) for the
+Connector GUI query model. External AI API adapter work is planned for v2.0.
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-1.7.0-alpha.1.jar`
-- `blockforge-connector-fabric-1.7.0-alpha.1.jar`
-- `blockforge-connector-forge-1.7.0-alpha.1.jar`
+- `blockforge-connector-neoforge-1.8.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.8.0-alpha.1.jar`
+- `blockforge-connector-forge-1.8.0-alpha.1.jar`
 
 Current validation status:
 
@@ -105,8 +117,19 @@ Expected release jars:
 | Build preflight | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 | Container protection checks | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 | Sponge `.schem` import | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| In-game GUI search | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| In-game GUI pagination | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| In-game GUI source filtering | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 | Sponge `.schem` export | planned | planned | planned |
 | Litematica `.litematic` | planned | planned | planned |
+
+## Web Feature Matrix
+
+| Feature | Web |
+|---|---|
+| Web Workbench | ✅ Alpha |
+| Blueprint validation report | ✅ Alpha |
+| Local Rule Generator | ✅ Alpha |
 
 ## Schematic Interop Matrix
 
@@ -142,6 +165,9 @@ See [Permissions and Protection](./docs/PERMISSIONS_AND_PROTECTION.md) for the
 v1.5 server safety model.
 See [Schematic Interop](./docs/SCHEMATIC_INTEROP.md) for the v1.6 Sponge
 schematic import/export notes.
+See [GUI Search And Filters](./docs/GUI_SEARCH_AND_FILTERS.md) for the v1.8
+server-side GUI search, pagination, filtering, sorting, source tags, and
+warning badge notes.
 
 Fabric / Forge GUI + Builder Wand + Ghost Preview + Survival Materials Alpha flow:
 

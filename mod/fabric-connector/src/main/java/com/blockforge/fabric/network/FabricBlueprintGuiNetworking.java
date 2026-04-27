@@ -1,8 +1,14 @@
 package com.blockforge.fabric.network;
 
 import com.blockforge.common.blueprint.Blueprint;
+import com.blockforge.common.gui.BlueprintGuiQuery;
+import com.blockforge.common.gui.BlueprintGuiQueryService;
 import com.blockforge.common.gui.BlueprintListView;
+import com.blockforge.common.gui.BlueprintSortMode;
+import com.blockforge.common.gui.BlueprintSourceFilter;
 import com.blockforge.common.gui.BlueprintSummary;
+import com.blockforge.common.gui.BlueprintWarningFilter;
+import com.blockforge.common.gui.PagedBlueprintResult;
 import com.blockforge.common.selection.PlayerSelection;
 import com.blockforge.common.selection.SelectionRequest;
 import com.blockforge.fabric.BlockForgeFabric;
@@ -18,7 +24,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public final class FabricBlueprintGuiNetworking {
@@ -42,7 +47,7 @@ public final class FabricBlueprintGuiNetworking {
 
         ServerPlayNetworking.registerGlobalReceiver(
                 BLUEPRINT_LIST_REQUEST_ID,
-                (payload, context) -> sendBlueprintList(context.player(), payload.openScreen())
+                (payload, context) -> sendBlueprintList(context.player(), payload.openScreen(), payload.query())
         );
         ServerPlayNetworking.registerGlobalReceiver(
                 SELECT_BLUEPRINT_REQUEST_ID,
@@ -51,8 +56,12 @@ public final class FabricBlueprintGuiNetworking {
     }
 
     public static void sendBlueprintList(ServerPlayerEntity player, boolean openScreen) {
+        sendBlueprintList(player, openScreen, BlueprintGuiQuery.firstPage());
+    }
+
+    public static void sendBlueprintList(ServerPlayerEntity player, boolean openScreen, BlueprintGuiQuery query) {
         ServerPlayNetworking.send(player, new BlueprintListPayload(
-                createListView(BlockForgeFabric.BLUEPRINTS, BlockForgeFabric.SELECTIONS, player),
+                createListView(BlockForgeFabric.BLUEPRINTS, BlockForgeFabric.SELECTIONS, player, query),
                 openScreen
         ));
         syncPreviewSelection(player);
@@ -121,13 +130,14 @@ public final class FabricBlueprintGuiNetworking {
     private static BlueprintListView createListView(
             FabricBlueprintRegistry registry,
             FabricPlayerSelectionManager selectionManager,
-            ServerPlayerEntity player
+            ServerPlayerEntity player,
+            BlueprintGuiQuery query
     ) {
         List<BlueprintSummary> summaries = registry.getBlueprints()
                 .stream()
-                .sorted(Comparator.comparing(Blueprint::getId))
                 .map(FabricBlueprintGuiNetworking::summary)
                 .toList();
+        PagedBlueprintResult page = BlueprintGuiQueryService.query(summaries, query);
         PlayerSelection selection = selectionManager.get(player.getUuid()).orElse(null);
         String selectedId = "";
         int rotation = 0;
@@ -141,7 +151,7 @@ public final class FabricBlueprintGuiNetworking {
             }
         }
 
-        return new BlueprintListView(summaries, selectedId, rotation);
+        return BlueprintListView.from(page, selectedId, rotation);
     }
 
     private static BlueprintSummary summary(Blueprint blueprint) {
@@ -153,7 +163,11 @@ public final class FabricBlueprintGuiNetworking {
                 blueprint.getSize().height(),
                 blueprint.getSize().depth(),
                 blueprint.getBlockCount(),
-                blueprint.getPalette().values().stream().anyMatch(entry -> !entry.properties().isEmpty())
+                blueprint.getPalette().values().stream().anyMatch(entry -> !entry.properties().isEmpty()),
+                sourceType(blueprint.getId()),
+                sourceId(blueprint.getId()),
+                0,
+                List.of(sourceType(blueprint.getId()), blueprint.getSchemaVersion() == 2 ? "v2" : "v1")
         );
     }
 
@@ -171,18 +185,48 @@ public final class FabricBlueprintGuiNetworking {
         return new CustomPayload.Id<>(Identifier.of(BlockForgeFabric.MOD_ID, path));
     }
 
-    public record BlueprintListRequestPayload(boolean openScreen) implements CustomPayload {
+    public record BlueprintListRequestPayload(
+            boolean openScreen,
+            String searchText,
+            BlueprintSourceFilter sourceFilter,
+            BlueprintWarningFilter warningFilter,
+            BlueprintSortMode sortMode,
+            int page,
+            int pageSize
+    ) implements CustomPayload {
         public static final PacketCodec<RegistryByteBuf, BlueprintListRequestPayload> CODEC = PacketCodec.of(
                 BlueprintListRequestPayload::write,
                 BlueprintListRequestPayload::read
         );
 
+        public BlueprintListRequestPayload(boolean openScreen) {
+            this(openScreen, "", BlueprintSourceFilter.ALL, BlueprintWarningFilter.ALL, BlueprintSortMode.NAME_ASC, 0, BlueprintGuiQuery.DEFAULT_PAGE_SIZE);
+        }
+
+        public BlueprintGuiQuery query() {
+            return new BlueprintGuiQuery(searchText, sourceFilter, warningFilter, sortMode, page, pageSize);
+        }
+
         private static BlueprintListRequestPayload read(RegistryByteBuf buffer) {
-            return new BlueprintListRequestPayload(buffer.readBoolean());
+            return new BlueprintListRequestPayload(
+                    buffer.readBoolean(),
+                    buffer.readString(),
+                    buffer.readEnumConstant(BlueprintSourceFilter.class),
+                    buffer.readEnumConstant(BlueprintWarningFilter.class),
+                    buffer.readEnumConstant(BlueprintSortMode.class),
+                    buffer.readVarInt(),
+                    buffer.readVarInt()
+            );
         }
 
         private static void write(BlueprintListRequestPayload payload, RegistryByteBuf buffer) {
             buffer.writeBoolean(payload.openScreen());
+            buffer.writeString(payload.searchText());
+            buffer.writeEnumConstant(payload.sourceFilter());
+            buffer.writeEnumConstant(payload.warningFilter());
+            buffer.writeEnumConstant(payload.sortMode());
+            buffer.writeVarInt(payload.page());
+            buffer.writeVarInt(payload.pageSize());
         }
 
         @Override
@@ -203,10 +247,16 @@ public final class FabricBlueprintGuiNetworking {
             for (int index = 0; index < count; index++) {
                 summaries.add(readSummary(buffer));
             }
+            int page = buffer.readVarInt();
+            int pageSize = buffer.readVarInt();
+            int totalItems = buffer.readVarInt();
+            int totalPages = buffer.readVarInt();
+            boolean hasPrevious = buffer.readBoolean();
+            boolean hasNext = buffer.readBoolean();
             String selected = buffer.readString();
             int rotation = buffer.readVarInt();
             boolean openScreen = buffer.readBoolean();
-            return new BlueprintListPayload(new BlueprintListView(summaries, selected, rotation), openScreen);
+            return new BlueprintListPayload(new BlueprintListView(summaries, page, pageSize, totalItems, totalPages, hasPrevious, hasNext, selected, rotation), openScreen);
         }
 
         private static void write(BlueprintListPayload payload, RegistryByteBuf buffer) {
@@ -214,6 +264,12 @@ public final class FabricBlueprintGuiNetworking {
             for (BlueprintSummary summary : payload.view().blueprints()) {
                 writeSummary(buffer, summary);
             }
+            buffer.writeVarInt(payload.view().page());
+            buffer.writeVarInt(payload.view().pageSize());
+            buffer.writeVarInt(payload.view().totalItems());
+            buffer.writeVarInt(payload.view().totalPages());
+            buffer.writeBoolean(payload.view().hasPrevious());
+            buffer.writeBoolean(payload.view().hasNext());
             buffer.writeString(payload.view().selectedBlueprintId());
             buffer.writeVarInt(payload.view().rotationDegrees());
             buffer.writeBoolean(payload.openScreen());
@@ -347,7 +403,11 @@ public final class FabricBlueprintGuiNetworking {
                 buffer.readVarInt(),
                 buffer.readVarInt(),
                 buffer.readVarInt(),
-                buffer.readBoolean()
+                buffer.readBoolean(),
+                buffer.readString(),
+                buffer.readString(),
+                buffer.readVarInt(),
+                readTags(buffer)
         );
     }
 
@@ -360,5 +420,33 @@ public final class FabricBlueprintGuiNetworking {
         buffer.writeVarInt(summary.depth());
         buffer.writeVarInt(summary.blockCount());
         buffer.writeBoolean(summary.hasBlockStates());
+        buffer.writeString(summary.sourceType());
+        buffer.writeString(summary.sourceId());
+        buffer.writeVarInt(summary.warningCount());
+        buffer.writeVarInt(summary.tags().size());
+        for (String tag : summary.tags()) {
+            buffer.writeString(tag);
+        }
+    }
+
+    private static List<String> readTags(RegistryByteBuf buffer) {
+        int count = buffer.readVarInt();
+        List<String> tags = new ArrayList<>(count);
+        for (int index = 0; index < count; index++) {
+            tags.add(buffer.readString());
+        }
+        return tags;
+    }
+
+    private static String sourceType(String id) {
+        if (id.startsWith("schem/") || id.endsWith(".schem")) {
+            return "schematic";
+        }
+        return id.contains("/") ? "pack" : "loose";
+    }
+
+    private static String sourceId(String id) {
+        int separator = id.indexOf('/');
+        return separator > 0 ? id.substring(0, separator) : "";
     }
 }

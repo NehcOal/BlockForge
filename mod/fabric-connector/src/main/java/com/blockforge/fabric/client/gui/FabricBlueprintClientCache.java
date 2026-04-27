@@ -12,6 +12,12 @@ public final class FabricBlueprintClientCache {
     private static int rotationDegrees;
     private static boolean loading;
     private static String message = "";
+    private static int page;
+    private static int pageSize = 8;
+    private static int totalItems;
+    private static int totalPages;
+    private static boolean hasPrevious;
+    private static boolean hasNext;
 
     private FabricBlueprintClientCache() {
     }
@@ -25,6 +31,12 @@ public final class FabricBlueprintClientCache {
         blueprints = view.blueprints();
         selectedBlueprintId = view.selectedBlueprintId();
         rotationDegrees = view.rotationDegrees();
+        page = view.page();
+        pageSize = view.pageSize();
+        totalItems = view.totalItems();
+        totalPages = view.totalPages();
+        hasPrevious = view.hasPrevious();
+        hasNext = view.hasNext();
         loading = false;
 
         if (selectedBlueprintId.isBlank() && !blueprints.isEmpty()) {
@@ -76,4 +88,11 @@ public final class FabricBlueprintClientCache {
                 .filter(summary -> summary.id().equals(selectedBlueprintId))
                 .findFirst();
     }
+
+    public static int page() { return page; }
+    public static int pageSize() { return pageSize; }
+    public static int totalItems() { return totalItems; }
+    public static int totalPages() { return totalPages; }
+    public static boolean hasPrevious() { return hasPrevious; }
+    public static boolean hasNext() { return hasNext; }
 }

@@ -1,6 +1,6 @@
 # Web Workbench
 
-BlockForge v1.7.0-alpha.1 adds a local Web Import / Validation / Local
+BlockForge v1.8.0-alpha.1 polishes the local Web Import / Validation / Local
 Generation Workbench. It keeps the app local-first: files are parsed in the
 browser, validation runs locally, and no cloud storage or external AI API is
 used.
@@ -14,9 +14,10 @@ The Web app can import:
 - `.blockforgepack.zip`
 
 Imported files are parsed into a shared local summary shape with source type,
-blueprint count, warnings, validation status, dimensions, palette count, and
-block count. Pack import currently performs local parsing and display only; it
-does not persist a pack library.
+source filename, blueprint count, warnings, errors, validation status,
+dimensions, palette count, and block count. Import summaries are collapsible and
+show success, warning, or error status. Pack import currently performs local
+parsing and display only; it does not persist a pack library.
 
 ## Export Formats
 
@@ -35,9 +36,11 @@ The current model can still be exported as:
 Validation reports use field-level issues:
 
 ```text
-severity: error | warning
-field: JSON field path such as blocks[2].state
+severity: error | warning | info
+section: Model | Size | Origin | Palette | Blocks | Coordinates | Duplicate blocks | Missing palette references
+path: JSON field path such as blocks[2].state
 message: user-facing validation detail
+suggestion: optional fix hint
 ```
 
 Current checks include:
@@ -50,6 +53,14 @@ Current checks include:
 - Missing palette references
 - Duplicate block coordinates
 - Out-of-bounds block coordinates
+- Informational model block counts
+
+Examples:
+
+- `error: blocks[3] references missing palette key "stonee"`
+- `error: block at x=20 is outside width=11`
+- `warning: duplicate block coordinate 1,2,3; later block wins`
+- `info: model contains 656 blocks`
 
 ## Local Rule Generator
 
