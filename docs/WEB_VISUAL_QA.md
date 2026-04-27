@@ -2,7 +2,7 @@
 
 Status: Browser visual QA pending until manually checked.
 
-Use this checklist before promoting `v1.8.0-alpha.1` from Alpha candidate to a public release.
+Use this checklist before promoting `v2.0.0-alpha.1` from Alpha candidate to a public release.
 
 ## Viewports
 
@@ -26,9 +26,35 @@ Use this checklist before promoting `v1.8.0-alpha.1` from Alpha candidate to a p
 | ExportPanel | Data formats, Minecraft command formats, Minecraft structure formats, and Pack formats stay readable | pending |
 | Validation report | Model, Size, Origin, Palette, Blocks, Coordinates, Duplicate blocks, and Missing palette references are readable | pending |
 | Dark mode contrast | Text and badges are legible on the current dark voxel theme | pending |
+| Render mode Auto | Small models use mesh; larger models use instanced | pending |
+| Render mode Mesh | Preview renders with individual meshes | pending |
+| Render mode Instanced | Preview renders with InstancedMesh groups | pending |
+| 100 block model | Model renders and remains interactive | pending |
+| 500 block model | Model renders without obvious stutter | pending |
+| 1000+ block model | Model does not freeze the browser | pending |
+| Export Preview PNG | PNG export completes from current camera angle | pending |
+| PNG file non-empty | Exported file opens and has visible model pixels | pending |
+| Import `.schem` then screenshot | Imported schematic can be captured | pending |
+| Local tower screenshot | Local Rule Generator tower can be captured | pending |
+| Blueprint Pack screenshot | Imported pack model can be captured | pending |
+
+## v1.9.1 / v2.0 AI Generation Visual QA
+
+Status values: `passed`, `pending`, `needs manual check`.
+
+| Flow | Expected Result | Status |
+|---|---|---|
+| AI Generator UI disabled without API key | External AI section shows setup required and disabled button | pending |
+| AI Generator request state | Generate with AI button shows generating state during request | needs manual check |
+| AI Generator success state | Validated structure plan summary appears and preview updates | needs manual check |
+| AI Generator error state | Friendly error appears without replacing current preview | needs manual check |
+| 3D preview not clipped | tiny_platform, tower, bridge, cottage, and imported `.schem` fit camera reasonably | pending |
+| Screenshot success state | Export Preview PNG shows success message after file creation | pending |
+| Screenshot failure state | Export Preview PNG shows friendly error if canvas export fails | needs manual check |
 
 ## Limitations
 
 - This checklist is manual until browser screenshot automation is added.
 - Local Rule Generator is deterministic and local-only; no prompt is sent to any server.
-- External AI API adapter is planned for v2.0.
+- External AI Generation Alpha requires a server runtime and server-side API key.
+- Minecraft vanilla texture files are not bundled; material styling is procedural.

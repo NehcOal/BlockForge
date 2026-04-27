@@ -2,6 +2,9 @@
 
 ## Near Term
 
+- Stabilize v2.0 AI Generation Alpha: server-side provider configuration,
+  Structure Plan validation, preview/export of generated blueprints, and clear
+  prompt privacy/cost copy.
 - Stabilize v1.6 Sponge `.schem` import/export across Web, NeoForge, Fabric,
   and Forge.
 - Keep NeoForge 1.21.1 as the recommended complete Connector target.
@@ -19,7 +22,7 @@
 - Stabilize the v1.7 Web Import / Validation / Local Generation Workbench.
 - Stabilize the v1.8 in-game GUI search, pagination, filtering, sorting,
   source tags, and warning badges across NeoForge, Fabric, and Forge.
-- Keep external AI API adapter work planned for v2.0.
+- Keep Local Rule Generator as the no-key fallback for AI generation.
 - Add special material cost rules for non-cube blocks.
 - Improve release artifact publishing beyond CI artifact upload.
 - Add Java-side parser tests when the Connector test setup is stable.
@@ -46,6 +49,8 @@
 - Improve block visual materials.
 - Add optional Minecraft-like textures.
 - Use `InstancedMesh` when model size grows beyond the current preset scale.
+- v1.9.0: Rendering Performance + Screenshot Export.
+- v2.0.0: AI Generation Alpha with optional server-side OpenAI provider.
 
 ## Multi-loader Plan
 
@@ -69,9 +74,10 @@
 - v1.6.0: Sponge `.schem` v3 export/import on Web and schematic loading on
   NeoForge, Fabric, and Forge.
 - v1.7.0: Web Import / Validation / Local Generation Workbench.
-- v1.8.0: Web Polish + in-game GUI search, pagination, filtering, sorting,
+- v1.9.0: Web Polish + in-game GUI search, pagination, filtering, sorting,
   source tags, and warning badges.
-- v2.0.0: External AI API adapter exploration after local workbench stabilizes.
+- v2.0.0: AI Generation Alpha, AI Structure Plan v1, and optional server-side
+  OpenAI provider.
 
 See [Multi-loader Plan](./MULTILOADER_PLAN.md) for details.
 ## v1.5.0 Security Layer
