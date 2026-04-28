@@ -2,7 +2,16 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { AppCopy } from "@/lib/i18n";
-import { mapUnknownAiError, type GenerateBlueprintResult } from "@/lib/ai";
+import {
+  aiPromptPresets,
+  generateAiCandidates,
+  mapUnknownAiError,
+  selectBestCandidate,
+  type AiGenerationCandidate,
+  type GenerateBlueprintResult
+} from "@/lib/ai";
+import { AiCandidateCompare } from "@/components/AiCandidateCompare";
+import { StructurePlanViewer } from "@/components/StructurePlanViewer";
 import type { VoxelModel } from "@/types/blueprint";
 
 type AiStatus = {
@@ -41,6 +50,12 @@ export function AiGenerationPanel({
   const [planSummary, setPlanSummary] = useState("");
   const [structurePlanJson, setStructurePlanJson] = useState("");
   const [copyStatus, setCopyStatus] = useState("");
+  const [presetCategory, setPresetCategory] = useState("all");
+  const [selectedPresetId, setSelectedPresetId] = useState("");
+  const [candidates, setCandidates] = useState<AiGenerationCandidate[]>([]);
+  const [selectedCandidateId, setSelectedCandidateId] = useState("");
+  const filteredPresets = aiPromptPresets.filter((preset) => presetCategory === "all" || preset.category === presetCategory);
+  const selectedCandidate = candidates.find((candidate) => candidate.id === selectedCandidateId);
 
   useEffect(() => {
     let mounted = true;
@@ -129,6 +144,29 @@ export function AiGenerationPanel({
     }
   }
 
+  async function handleGenerateLocalCandidates(count: number) {
+    const nextPrompt = prompt.trim();
+    if (!nextPrompt) return;
+    const nextCandidates = await generateAiCandidates({
+      prompt: nextPrompt,
+      provider: "local-rule",
+      candidateCount: count,
+      maxBlocks: 2000
+    }, { presetId: selectedPresetId || undefined });
+    const best = selectBestCandidate(nextCandidates);
+    setCandidates(nextCandidates);
+    if (best) {
+      setSelectedCandidateId(best.id);
+      onExternalGenerated(best.model, nextPrompt);
+    }
+  }
+
+  function applyPreset(id: string) {
+    setSelectedPresetId(id);
+    const preset = aiPromptPresets.find((item) => item.id === id);
+    if (preset) onPromptChange(preset.prompt);
+  }
+
   async function copyStructurePlanJson() {
     if (!structurePlanJson) return;
     try {
@@ -164,6 +202,32 @@ export function AiGenerationPanel({
         value={prompt}
       />
 
+      <div className="mt-3 grid gap-2 rounded-md border border-forge/15 bg-black/20 p-3 text-xs text-stone-300">
+        <div className="grid gap-2 sm:grid-cols-2">
+          <label>
+            <span className="block font-bold text-stone-200">Preset category</span>
+            <select className="forge-input mt-1 w-full px-2 py-2" onChange={(event) => setPresetCategory(event.target.value)} value={presetCategory}>
+              <option value="all">All</option>
+              <option value="starter">Starter</option>
+              <option value="medieval">Medieval</option>
+              <option value="survival">Survival</option>
+              <option value="dungeon">Dungeon</option>
+              <option value="bridge">Bridge</option>
+              <option value="statue">Statue</option>
+              <option value="utility">Utility</option>
+              <option value="custom">Custom</option>
+            </select>
+          </label>
+          <label>
+            <span className="block font-bold text-stone-200">Prompt preset</span>
+            <select className="forge-input mt-1 w-full px-2 py-2" onChange={(event) => applyPreset(event.target.value)} value={selectedPresetId}>
+              <option value="">Custom prompt</option>
+              {filteredPresets.map((preset) => <option key={preset.id} value={preset.id}>{preset.name}</option>)}
+            </select>
+          </label>
+        </div>
+      </div>
+
       <div className="mt-4 rounded-md border border-forge/15 bg-black/20 p-4">
         <div className="flex items-start justify-between gap-3">
           <div>
@@ -182,6 +246,13 @@ export function AiGenerationPanel({
           type="button"
         >
           {copy.button}
+        </button>
+        <button
+          className="forge-secondary-button mt-2 w-full px-4 py-3 text-sm"
+          onClick={() => void handleGenerateLocalCandidates(3)}
+          type="button"
+        >
+          Generate 3 candidates locally
         </button>
       </div>
 
@@ -253,6 +324,16 @@ export function AiGenerationPanel({
           </details>
         ) : null}
       </div>
+
+      <AiCandidateCompare
+        candidates={candidates}
+        onSelect={(candidate) => {
+          setSelectedCandidateId(candidate.id);
+          onExternalGenerated(candidate.model, candidate.prompt);
+        }}
+        selectedCandidateId={selectedCandidateId}
+      />
+      <StructurePlanViewer plan={selectedCandidate?.structurePlan} />
 
       <div className="mt-4 rounded-md border border-forge/15 bg-black/25 px-4 py-3 text-sm text-stone-400">
         {generatedModelLabel ? (

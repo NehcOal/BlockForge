@@ -1,4 +1,4 @@
-# BlockForge v2.0.0-alpha.1 - AI Generation Alpha
+# BlockForge v2.5.0-alpha.1 - AI Productization + Local Library + Import Hardening
 
 ## Release Train Rules
 
@@ -16,8 +16,8 @@ major-version feature branch and release train.
 
 ## Release Type
 
-- Version: `2.0.0-alpha.1`
-- Type: AI Generation Alpha candidate
+- Version: `2.5.0-alpha.1`
+- Type: AI Productization Alpha candidate
 - Stability: Alpha for Fabric and Forge, recommended full experience on NeoForge
 
 ## Supported Minecraft Version
@@ -33,9 +33,9 @@ major-version feature branch and release train.
 
 ## Download Files
 
-- `blockforge-connector-neoforge-2.0.0-alpha.1.jar`
-- `blockforge-connector-fabric-2.0.0-alpha.1.jar`
-- `blockforge-connector-forge-2.0.0-alpha.1.jar`
+- `blockforge-connector-neoforge-2.5.0-alpha.1.jar`
+- `blockforge-connector-fabric-2.5.0-alpha.1.jar`
+- `blockforge-connector-forge-2.5.0-alpha.1.jar`
 
 ## Feature Matrix
 
@@ -71,6 +71,16 @@ schematic export is Alpha. Mod-side schematic export is planned.
 
 ## Web Workbench Highlights
 
+- AI Prompt Presets.
+- Multi-candidate generation.
+- AI Quality Score and best-candidate badge.
+- Structure Plan Viewer.
+- Candidate Compare.
+- Refine workflow.
+- Generation History.
+- Local Blueprint Library.
+- Workspace export/import.
+- Import report, import job queue, and import worker fallback scaffolding.
 - Local Rule Generator fallback remains available without API keys.
 - Optional OpenAI provider is available through server-side API routes.
 - AI Structure Plan v1 defines high-level structure elements before block

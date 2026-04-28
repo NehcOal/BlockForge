@@ -2,7 +2,7 @@
 
 Status: Browser visual QA pending until manually checked.
 
-Use this checklist before promoting `v2.0.0-alpha.1` from Alpha candidate to a public release.
+Use this checklist before promoting `v2.5.0-alpha.1` from Alpha candidate to a public release.
 
 ## Viewports
 
@@ -53,6 +53,14 @@ Status values: `passed`, `pending`, `needs manual check`.
 | 3D preview not clipped | tiny_platform, tower, bridge, cottage, and imported `.schem` fit camera reasonably | pending |
 | Screenshot success state | Export Preview PNG shows success message after file creation | pending |
 | Screenshot failure state | Export Preview PNG shows friendly error if canvas export fails | needs manual check |
+| AI prompt presets | Preset dropdown filters and fills prompts | pending |
+| Multi-candidate generation | Candidate cards render and best candidate is marked | pending |
+| Quality score | Score badge and breakdown are readable | pending |
+| Generation history | Recent generations can be searched and loaded | pending |
+| Local blueprint library | Saved blueprints can be searched, favorited, loaded, and exported | pending |
+| Import job queue | Jobs show pending/running/success/warning/error states | pending |
+| IndexedDB persistence | Local data survives reload in same browser profile | needs manual check |
+| Worker fallback | Import worker fallback shows friendly errors when worker is unavailable | needs manual check |
 
 ## Limitations
 

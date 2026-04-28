@@ -15,6 +15,7 @@ export type GenerateBlueprintRequest = {
   };
   styleHint?: string;
   maxBlocks?: number;
+  candidateCount?: number;
   provider: AiProviderId;
 };
 

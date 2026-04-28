@@ -7,7 +7,7 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 ## v2.0.0 AI Generation Alpha
 
-BlockForge v2.0.0-alpha.1 adds an optional AI generation pipeline while keeping
+BlockForge v2.5.0-alpha.1 adds an optional AI generation pipeline while keeping
 the Local Rule Generator as the default fallback.
 
 AI Generation highlights:
@@ -28,9 +28,9 @@ known Alpha limits.
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-2.0.0-alpha.1.jar`
-- `blockforge-connector-fabric-2.0.0-alpha.1.jar`
-- `blockforge-connector-forge-2.0.0-alpha.1.jar`
+- `blockforge-connector-neoforge-2.5.0-alpha.1.jar`
+- `blockforge-connector-fabric-2.5.0-alpha.1.jar`
+- `blockforge-connector-forge-2.5.0-alpha.1.jar`
 
 Current validation status:
 
@@ -200,6 +200,17 @@ Expected release jars:
 | Local Rule Generator | ✅ Alpha |
 | External AI Generation | ✅ Alpha |
 | AI Structure Plan validation | ✅ Alpha |
+| AI Prompt Presets | ✅ Alpha |
+| Multi-candidate Generation | ✅ Alpha |
+| AI Quality Score | ✅ Alpha |
+| Structure Plan Viewer | ✅ Alpha |
+| Candidate Compare | ✅ Alpha |
+| Refine Workflow | ✅ Alpha |
+| Generation History | ✅ Alpha |
+| Local Blueprint Library | ✅ Alpha |
+| Workspace Export/Import | ✅ Alpha |
+| Import Job Queue | ✅ Alpha |
+| Import Worker | ✅ Alpha |
 | Web 3D instanced rendering | ✅ Alpha |
 | Preview PNG export | ✅ Alpha |
 | Minecraft-inspired procedural materials | ✅ Alpha |
@@ -655,11 +666,10 @@ examples/
 
 ## Roadmap
 
-- Current train: `v2.0 AI Generation Alpha`. This is not stable yet.
-- v2.1: AI Quality & UX.
-- v2.2: Blueprint Library.
-- v2.3: Server Polish.
-- v2.4: Schematic Hardening.
+- Current train: `v2.5 AI Productization Alpha`. This is not stable yet.
+- v2.6: Multiplayer / Server QA.
+- v2.7: Litematica interop.
+- v2.8: Blueprint marketplace / sharing exploration.
 - v3.0: Major Product Redesign.
 
 BlockForge now groups small polish, tests, and documentation updates into the

@@ -37,6 +37,29 @@ export {
 } from "@/lib/ai/providers/openaiProvider";
 export { generateBlueprint, getAiStatus } from "@/lib/ai/generationService";
 export {
+  aiPromptPresets,
+  getAiPromptPresetById,
+  getAiPromptPresets
+} from "@/lib/ai/presets/promptPresets";
+export type {
+  AiPromptPreset,
+  AiPromptPresetCategory
+} from "@/lib/ai/presets/promptPresetTypes";
+export {
+  createCandidate,
+  generateAiCandidates,
+  selectBestCandidate,
+  type AiGenerationCandidate
+} from "@/lib/ai/candidateGeneration";
+export {
+  scoreAiCandidate
+} from "@/lib/ai/quality/qualityRules";
+export type { AiQualityScore } from "@/lib/ai/quality/qualityScore";
+export {
+  refinePromptLocally,
+  type AiRefinementRequest
+} from "@/lib/ai/refinement";
+export {
   createAiFriendlyError,
   getAiFriendlyErrorMessage,
   mapUnknownAiError,

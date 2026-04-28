@@ -14,16 +14,15 @@ Recommended current branch:
 
 | Version | Theme | Goal | Release Gate |
 |---|---|---|---|
-| v2.0 | AI Generation Alpha | Ship optional server-side AI generation with Local Rule Generator fallback, AI Structure Plan v1, validation, preview, and export | Web checks, mocked provider tests, docs, Browser visual QA, Minecraft manual regression notes |
-| v2.1 | AI Quality & UX | Improve AI prompt UX, structure plan summaries, validation messages, retry/edit flows, and local fallback polish | No API-key regression, no client key exposure, improved usability tests |
-| v2.2 | Blueprint Library | Make imported/generated blueprints easier to browse, compare, reuse, and export | Library UX tests, import/export regression, path safety checks |
-| v2.3 | Server Polish | Improve connector server commands, materials feedback, GUI state consistency, and admin-facing docs | NeoForge/Fabric/Forge build, command smoke checklist, no loader parity regressions |
-| v2.4 | Schematic Hardening | Harden `.schem` import/export edge cases, warnings, blockstate coverage, and manual regression docs | Web schematic tests, Java parser tests where practical, real-client regression checklist |
-| v3.0 | Major Product Redesign | Rework the product experience around a more complete creator workflow and stronger presentation quality | Separate product/design plan before implementation |
+| v2.5 | AI Productization + Local Library + Server UX + Import Hardening | Package v2.1-v2.5 as one Alpha train | Web checks, mocked provider tests, import/library tests, docs, Browser visual QA pending, Minecraft manual regression pending |
+| v2.6 | Multiplayer / Server QA | Run deeper server and multiplayer validation passes | Dedicated server smoke test and command regression checklist |
+| v2.7 | Litematica Interop | Explore `.litematic` import/export after schematic hardening | Design doc and PoC before mainline support |
+| v2.8 | Blueprint Marketplace / Sharing | Explore sharing workflows without compromising local-first behavior | Product design and safety review |
+| v3.0 | Product Redesign | Rework the product experience around a more complete creator workflow and stronger presentation quality | Separate product/design plan before implementation |
 
 ## v2.0 AI Generation Alpha
 
-- Keep `v2.0.0-alpha.1` clearly marked as Alpha, not stable.
+- Keep `v2.5.0-alpha.1` clearly marked as Alpha, not stable.
 - Keep Local Rule Generator as the no-key fallback.
 - Keep OpenAI provider optional and server-side only.
 - Do not expose API keys to browser client code.

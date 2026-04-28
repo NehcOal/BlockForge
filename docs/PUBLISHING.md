@@ -5,7 +5,7 @@
 This guide prepares the current multi-loader Alpha release. It does not
 publish automatically to GitHub, Modrinth, or CurseForge.
 
-For `2.0.0-alpha.1`, confirm AI generation remains Alpha, no API key is bundled
+For `2.5.0-alpha.1`, confirm AI productization remains Alpha, no API key is bundled
 in client code, and External AI requires a server runtime with `OPENAI_API_KEY`.
 External AI live testing is tracked in `docs/AI_LIVE_TESTING.md` and must remain
 `pending` unless a real server-side key was configured and tested.
@@ -40,12 +40,12 @@ cd ..\forge-connector
 gradlew.bat build
 ```
 
-Expected jars for `2.0.0-alpha.1`:
+Expected jars for `2.5.0-alpha.1`:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-2.0.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-2.0.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-2.0.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-2.5.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-2.5.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-2.5.0-alpha.1.jar
 ```
 
 ## GitHub Alpha Release
@@ -143,11 +143,11 @@ download file names match the expected jar names above.
   Claims integrations are planned, not bundled.
 - Manual Minecraft regression testing must remain pending until explicitly
   tested.
-# v2.0.0-alpha.1 Release Checklist
+# v2.5.0-alpha.1 Release Checklist
 
 - Confirm Web `pnpm lint`, `pnpm test`, and `pnpm build`.
 - Confirm NeoForge, Fabric, and Forge Gradle builds produce
-  `2.0.0-alpha.1` jars.
+  `2.5.0-alpha.1` jars.
 - Keep release notes clear that Minecraft manual regression and Browser visual
   QA are pending until manually checked.
 - Include `docs/WEB_VISUAL_QA.md` and `docs/GUI_SEARCH_AND_FILTERS.md` in the

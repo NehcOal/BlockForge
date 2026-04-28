@@ -9,15 +9,15 @@ testing.
 Release version:
 
 ```text
-2.0.0-alpha.1
+2.5.0-alpha.1
 ```
 
 Expected release jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-2.0.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-2.0.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-2.0.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-2.5.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-2.5.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-2.5.0-alpha.1.jar
 ```
 
 Build validation:
