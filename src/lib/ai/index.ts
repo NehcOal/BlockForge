@@ -36,3 +36,10 @@ export {
   isOpenAiConfigured
 } from "@/lib/ai/providers/openaiProvider";
 export { generateBlueprint, getAiStatus } from "@/lib/ai/generationService";
+export {
+  createAiFriendlyError,
+  getAiFriendlyErrorMessage,
+  mapUnknownAiError,
+  type AiErrorCode,
+  type AiFriendlyError
+} from "@/lib/ai/errorMessages";

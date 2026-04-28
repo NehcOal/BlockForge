@@ -40,4 +40,12 @@ describe("validateStructurePlan", () => {
     expect(report.valid).toBe(false);
     expect(report.errors.some((error) => error.path === "elements")).toBe(true);
   });
+
+  it("rejects duplicate element ids", () => {
+    const plan = createValidStructurePlan();
+    plan.elements.push({ ...plan.elements[0] });
+    const report = validateStructurePlan(plan);
+    expect(report.valid).toBe(false);
+    expect(report.errors.some((error) => error.message.includes("must be unique"))).toBe(true);
+  });
 });

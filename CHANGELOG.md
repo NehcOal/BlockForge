@@ -19,6 +19,9 @@ All notable changes to BlockForge will be documented in this file.
 - Added AI generation tests with mocked provider calls; tests do not call
   external APIs.
 - Added `docs/AI_GENERATION.md`.
+- Added `docs/AI_LIVE_TESTING.md` for manual external provider smoke testing.
+- Added `docs/RELEASE_PROCESS.md` for major-version train branching, release
+  labels, Draft PR expectations, jar assets, and honest QA status wording.
 - Added Web InstancedMesh rendering for larger voxel previews.
 - Added render mode selection: Auto, Mesh, and Instanced.
 - Added rendering stats for block count, unique block types, resolved render
@@ -51,6 +54,9 @@ All notable changes to BlockForge will be documented in this file.
 - Web import summaries and validation reports are clearer and collapsible, with
   user-readable import errors and expandable developer details.
 - Aligned Web, NeoForge, Fabric, and Forge versions to `2.0.0-alpha.1`.
+- Adopted a major-version train process: small polish, docs, tests, and bugfixes
+  stay in the active major-version branch instead of opening `0.0.1` feature
+  branches.
 
 ### Notes
 

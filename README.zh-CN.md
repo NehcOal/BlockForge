@@ -617,21 +617,16 @@ pnpm lint
 
 ## Roadmap
 
-- 完整 datapack ZIP 导出。
-- Builder Wand 实机验证与 Ghost Preview。
-- Ghost Preview 的完整碰撞和覆盖检查。
-- Blueprint Selector 增加搜索、分页和缩略图。
-- Undo 材料返还边界测试。
-- 为门、流体、火把和多方块结构添加特殊材料成本规则。
-- 改进 release artifact 自动发布。
-- Blueprint v1/v2 schema 校验工具。
-- Fabric / Forge Connector Alpha 后续 parity work。
-- `.schem` 导出。
-- 方块贴图渲染。
-- 使用 `InstancedMesh` 优化大模型渲染性能。
-- prompt-to-structure 规则生成引擎。
-- 接入外部 AI API adapter，实现自然语言蓝图生成；该能力计划放到 v2.0。
-- 为 GitHub README 补充项目截图。
+- 当前大版本列车：`v2.0 AI Generation Alpha`。这不是 stable。
+- v2.1：AI Quality & UX。
+- v2.2：Blueprint Library。
+- v2.3：Server Polish。
+- v2.4：Schematic Hardening。
+- v3.0：Major Product Redesign。
+
+后续小 polish、小测试、小文档都合并进当前大版本分支，不再为 `v2.0.1`
+这类小功能单独开分支。详见 [Roadmap](./docs/ROADMAP.md) 和
+[Release Process](./docs/RELEASE_PROCESS.md)。
 
 ## 贡献
 

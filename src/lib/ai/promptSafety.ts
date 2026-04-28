@@ -23,7 +23,7 @@ export type PromptSafetyResult = {
 };
 
 export function validatePromptSafety(
-  request: Pick<GenerateBlueprintRequest, "prompt" | "maxBlocks">
+  request: Pick<GenerateBlueprintRequest, "prompt" | "maxBlocks" | "sizeHint">
 ): PromptSafetyResult {
   const sanitizedPrompt = request.prompt.trim();
   const errors: string[] = [];
@@ -42,6 +42,10 @@ export function validatePromptSafety(
     errors.push("Prompt asks for unsafe real-world harmful content.");
   }
 
+  if (!includesAny(lowered, ["tower", "cottage", "house", "hut", "bridge", "dungeon", "statue", "castle", "building", "build", "structure", "塔", "小屋", "房子", "桥", "地牢", "雕像", "建筑"])) {
+    errors.push("Prompt must describe a building or voxel structure.");
+  }
+
   const requestedMaxBlocks = request.maxBlocks ?? DEFAULT_MAX_BLOCKS;
   if (!Number.isInteger(requestedMaxBlocks) || requestedMaxBlocks < 1) {
     errors.push("maxBlocks must be a positive integer.");
@@ -56,6 +60,14 @@ export function validatePromptSafety(
     warnings.push(`maxBlocks was capped at ${MAX_AI_BLOCKS}.`);
   }
 
+  if (request.sizeHint) {
+    for (const [key, value] of Object.entries(request.sizeHint)) {
+      if (value !== undefined && (!Number.isInteger(value) || value < 1 || value > 64)) {
+        errors.push(`sizeHint.${key} must be an integer from 1 to 64.`);
+      }
+    }
+  }
+
   return {
     valid: errors.length === 0,
     sanitizedPrompt,
@@ -63,4 +75,8 @@ export function validatePromptSafety(
     errors,
     warnings
   };
+}
+
+function includesAny(text: string, needles: string[]): boolean {
+  return needles.some((needle) => text.includes(needle));
 }

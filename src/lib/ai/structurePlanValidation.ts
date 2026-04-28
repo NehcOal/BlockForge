@@ -166,6 +166,7 @@ function validateElements(
   }
 
   let estimatedBlocks = 0;
+  const elementIds = new Set<string>();
   value.forEach((element, index) => {
     const path = `elements[${index}]`;
     if (!isRecord(element)) {
@@ -173,7 +174,13 @@ function validateElements(
       return;
     }
 
-    requireString(element, "id", errors, path);
+    if (typeof element.id !== "string" || !element.id.trim()) {
+      errors.push(issue(`${path}.id`, "id is required."));
+    } else if (elementIds.has(element.id)) {
+      errors.push(issue(`${path}.id`, `Element id "${element.id}" must be unique.`));
+    } else {
+      elementIds.add(element.id);
+    }
     if (!["floor", "wall", "roof", "window", "door", "pillar", "bridge_deck", "arch", "decoration", "custom"].includes(String(element.type))) {
       errors.push(issue(`${path}.type`, "Element type is not supported."));
     }

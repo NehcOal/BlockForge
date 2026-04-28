@@ -36,6 +36,8 @@ The first external provider is OpenAI.
 - The key is never read by browser client code.
 - The Web UI only enables the external AI button after `/api/ai/status`
   reports that OpenAI is configured.
+- `/api/ai/generate-blueprint` returns validated generation results and never
+  returns the API key.
 
 Environment:
 
@@ -45,6 +47,8 @@ OPENAI_MODEL=gpt-4.1-mini
 ```
 
 `OPENAI_MODEL` is optional.
+
+See [AI Live Testing](./AI_LIVE_TESTING.md) for the manual smoke checklist.
 
 ## AI Structure Plan v1
 
@@ -66,6 +70,9 @@ declared size, and every `blockKey` must exist in the palette.
 Schema file:
 
 - `schemas/blockforge-ai-structure-plan-v1.schema.json`
+
+OpenAI Structured Outputs are used so the provider requests JSON that conforms
+to this schema instead of free-form natural language.
 
 ## Validation Pipeline
 
@@ -96,6 +103,8 @@ If validation fails, the result is shown as an error and is not loaded into the
 - No multiplayer AI generation queue.
 - No persistent cloud generation history.
 - No external provider works without a server runtime and API key.
+- External AI live test is pending until a real server-side key is configured
+  and tested manually.
 - Browser visual QA is pending.
 - Minecraft manual regression is pending.
 

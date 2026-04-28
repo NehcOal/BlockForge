@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { AppCopy } from "@/lib/i18n";
-import type { GenerateBlueprintResult } from "@/lib/ai";
+import { mapUnknownAiError, type GenerateBlueprintResult } from "@/lib/ai";
 import type { VoxelModel } from "@/types/blueprint";
 
 type AiStatus = {
@@ -22,7 +22,7 @@ type AiGenerationPanelProps = {
   onExternalGenerated: (model: VoxelModel, prompt: string) => void;
 };
 
-type ExternalState = "loading" | "not-configured" | "ready" | "generating" | "success" | "error";
+type ExternalState = "loading" | "not-configured" | "ready" | "generating" | "validation-failed" | "success" | "error";
 
 export function AiGenerationPanel({
   copy,
@@ -37,7 +37,10 @@ export function AiGenerationPanel({
   const [status, setStatus] = useState<AiStatus | null>(null);
   const [externalState, setExternalState] = useState<ExternalState>("loading");
   const [externalError, setExternalError] = useState("");
+  const [developerDetails, setDeveloperDetails] = useState("");
   const [planSummary, setPlanSummary] = useState("");
+  const [structurePlanJson, setStructurePlanJson] = useState("");
+  const [copyStatus, setCopyStatus] = useState("");
 
   useEffect(() => {
     let mounted = true;
@@ -62,6 +65,7 @@ export function AiGenerationPanel({
     if (externalState === "loading") return "Checking provider";
     if (externalState === "not-configured") return "Not configured";
     if (externalState === "generating") return "Generating";
+    if (externalState === "validation-failed") return "Validation failed";
     if (externalState === "success") return "Ready";
     if (externalState === "error") return "Error";
     return "Ready";
@@ -77,7 +81,10 @@ export function AiGenerationPanel({
 
     setExternalState("generating");
     setExternalError("");
+    setDeveloperDetails("");
     setPlanSummary("");
+    setStructurePlanJson("");
+    setCopyStatus("");
 
     try {
       const response = await fetch("/api/ai/generate-blueprint", {
@@ -96,7 +103,12 @@ export function AiGenerationPanel({
       };
 
       if (!response.ok || !payload.result) {
-        throw new Error(payload.details?.join(" ") ?? payload.error ?? "AI generation failed.");
+        const details = payload.details?.join(" ") ?? payload.error ?? "AI generation failed.";
+        const friendly = mapUnknownAiError(new Error(details));
+        setDeveloperDetails(friendly.developerDetails ?? details);
+        setExternalError(friendly.message);
+        setExternalState(friendly.code === "validation-failed" ? "validation-failed" : "error");
+        return;
       }
 
       const result = payload.result;
@@ -106,11 +118,24 @@ export function AiGenerationPanel({
           ? `${structurePlan.name} · ${structurePlan.intent} · ${structurePlan.elements.length} elements`
           : `${result.model.name} · ${result.model.blocks.length} blocks`
       );
+      setStructurePlanJson(structurePlan ? JSON.stringify(structurePlan, null, 2) : "");
       onExternalGenerated(result.model, nextPrompt);
       setExternalState("success");
     } catch (error) {
-      setExternalState("error");
-      setExternalError(error instanceof Error ? error.message : "AI generation failed.");
+      const friendly = mapUnknownAiError(error);
+      setExternalState(friendly.code === "validation-failed" ? "validation-failed" : "error");
+      setExternalError(friendly.message);
+      setDeveloperDetails(friendly.developerDetails ?? "");
+    }
+  }
+
+  async function copyStructurePlanJson() {
+    if (!structurePlanJson) return;
+    try {
+      await navigator.clipboard.writeText(structurePlanJson);
+      setCopyStatus("Structure Plan JSON copied.");
+    } catch {
+      setCopyStatus("Copy failed. Use developer details instead.");
     }
   }
 
@@ -187,13 +212,20 @@ export function AiGenerationPanel({
         >
           {externalState === "generating" ? "Generating with AI..." : "Generate with AI"}
         </button>
+        <button
+          className="forge-secondary-button mt-2 w-full px-4 py-3 text-sm"
+          onClick={onGenerateLocal}
+          type="button"
+        >
+          Fallback to Local Rule Generator
+        </button>
 
         {externalState === "not-configured" ? (
           <p className="mt-3 rounded-md border border-amber-400/25 bg-amber-400/10 px-3 py-2 text-xs leading-5 text-amber-100">
             OpenAI provider is disabled until OPENAI_API_KEY is configured on the server.
           </p>
         ) : null}
-        {externalState === "error" && externalError ? (
+        {(externalState === "error" || externalState === "validation-failed") && externalError ? (
           <p className="mt-3 rounded-md border border-red-400/25 bg-red-400/10 px-3 py-2 text-xs leading-5 text-red-100">
             {externalError}
           </p>
@@ -202,6 +234,23 @@ export function AiGenerationPanel({
           <p className="mt-3 rounded-md border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 text-xs leading-5 text-emerald-100">
             Structure plan validated: {planSummary}
           </p>
+        ) : null}
+        {structurePlanJson ? (
+          <button
+            className="forge-secondary-button mt-3 w-full px-4 py-2 text-xs"
+            onClick={() => void copyStructurePlanJson()}
+            type="button"
+          >
+            Copy Structure Plan JSON
+          </button>
+        ) : null}
+        {copyStatus ? <p className="mt-2 text-xs text-stone-400">{copyStatus}</p> : null}
+        {developerDetails || structurePlanJson ? (
+          <details className="mt-3 rounded border border-sky-400/15 bg-black/20 p-3 text-xs text-stone-400">
+            <summary className="cursor-pointer text-stone-200">Developer details</summary>
+            {developerDetails ? <pre className="mt-2 whitespace-pre-wrap break-words">{developerDetails}</pre> : null}
+            {structurePlanJson ? <pre className="mt-2 max-h-60 overflow-auto whitespace-pre-wrap break-words">{structurePlanJson}</pre> : null}
+          </details>
         ) : null}
       </div>
 

@@ -1,4 +1,5 @@
 import { aiStructurePlanJsonSchema } from "@/lib/ai/structurePlanSchema";
+import { mapUnknownAiError } from "@/lib/ai/errorMessages";
 import { validatePromptSafety } from "@/lib/ai/promptSafety";
 import type { AiStructurePlan } from "@/lib/ai/structurePlan";
 import type { GenerateBlueprintRequest } from "@/lib/ai/types";
@@ -85,7 +86,11 @@ export async function generateOpenAiStructurePlan(
     throw new Error("OpenAI response did not include a structure plan.");
   }
 
-  return JSON.parse(outputText) as AiStructurePlan;
+  try {
+    return JSON.parse(outputText) as AiStructurePlan;
+  } catch (error) {
+    throw new Error(mapUnknownAiError(error).message);
+  }
 }
 
 export function extractOutputText(data: OpenAiResponseBody): string | undefined {

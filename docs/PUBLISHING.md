@@ -7,6 +7,8 @@ publish automatically to GitHub, Modrinth, or CurseForge.
 
 For `2.0.0-alpha.1`, confirm AI generation remains Alpha, no API key is bundled
 in client code, and External AI requires a server runtime with `OPENAI_API_KEY`.
+External AI live testing is tracked in `docs/AI_LIVE_TESTING.md` and must remain
+`pending` unless a real server-side key was configured and tested.
 
 NeoForge is the recommended full-experience Connector. Fabric and Forge are
 Alpha connectors with command builds, GUI Selector Alpha, Builder Wand Alpha
@@ -64,6 +66,9 @@ mod/forge-connector/build/libs/blockforge-connector-forge-2.0.0-alpha.1.jar
 11. Do not claim Fabric or Forge BlockEntity NBT undo, collision-aware preview,
    full block preview support, protected-container permission checks, or GUI
    material source details.
+12. Do not claim Browser visual QA, Minecraft manual regression, External AI
+   live testing, dedicated server smoke testing, Modrinth publishing, or
+   CurseForge publishing passed unless they were actually performed.
 
 ## Modrinth Preparation
 

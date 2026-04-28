@@ -45,9 +45,11 @@ Status values: `passed`, `pending`, `needs manual check`.
 | Flow | Expected Result | Status |
 |---|---|---|
 | AI Generator UI disabled without API key | External AI section shows setup required and disabled button | pending |
+| External AI ready with API status | Status endpoint reports configured provider and UI enables external generation | needs manual check |
 | AI Generator request state | Generate with AI button shows generating state during request | needs manual check |
 | AI Generator success state | Validated structure plan summary appears and preview updates | needs manual check |
 | AI Generator error state | Friendly error appears without replacing current preview | needs manual check |
+| Validation failed state | Validation errors are shown and preview remains unchanged | needs manual check |
 | 3D preview not clipped | tiny_platform, tower, bridge, cottage, and imported `.schem` fit camera reasonably | pending |
 | Screenshot success state | Export Preview PNG shows success message after file creation | pending |
 | Screenshot failure state | Export Preview PNG shows friendly error if canvas export fails | needs manual check |

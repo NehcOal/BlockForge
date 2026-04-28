@@ -655,22 +655,16 @@ examples/
 
 ## Roadmap
 
-- Full datapack ZIP export.
-- Ghost Preview for the Builder Wand.
-- Full Ghost Preview collision and replacement checks.
-- Improve Blueprint Selector with search, paging, and thumbnails.
-- Add material refund edge-case tests.
-- Add special material cost rules for doors, fluids, torches, and multi-block placements.
-- Improve release artifact publishing.
-- Blueprint v1/v2 schema validation tooling.
-- Fabric and Forge Connector parity work after command Alpha validation.
-- `.schem` export.
-- Block texture rendering.
-- InstancedMesh performance optimization for larger voxel models.
-- Prompt-to-structure rule engine.
-- External AI API adapter for natural-language blueprint generation, planned
-  for v2.0.
-- Screenshot gallery for GitHub project presentation.
+- Current train: `v2.0 AI Generation Alpha`. This is not stable yet.
+- v2.1: AI Quality & UX.
+- v2.2: Blueprint Library.
+- v2.3: Server Polish.
+- v2.4: Schematic Hardening.
+- v3.0: Major Product Redesign.
+
+BlockForge now groups small polish, tests, and documentation updates into the
+active major-version branch instead of creating separate small feature branches.
+See [Roadmap](./docs/ROADMAP.md) and [Release Process](./docs/RELEASE_PROCESS.md).
 
 ## Contributing
 

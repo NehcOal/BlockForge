@@ -1,5 +1,36 @@
 # BlockForge Roadmap
 
+## Version Train
+
+BlockForge now uses one feature branch per major product train. Small fixes,
+polish, documentation updates, and focused tests are grouped into the active
+major-version branch instead of creating separate `0.0.1` feature branches.
+
+Recommended current branch:
+
+- `feature/v2.0-ai-generation`
+
+## Active Train
+
+| Version | Theme | Goal | Release Gate |
+|---|---|---|---|
+| v2.0 | AI Generation Alpha | Ship optional server-side AI generation with Local Rule Generator fallback, AI Structure Plan v1, validation, preview, and export | Web checks, mocked provider tests, docs, Browser visual QA, Minecraft manual regression notes |
+| v2.1 | AI Quality & UX | Improve AI prompt UX, structure plan summaries, validation messages, retry/edit flows, and local fallback polish | No API-key regression, no client key exposure, improved usability tests |
+| v2.2 | Blueprint Library | Make imported/generated blueprints easier to browse, compare, reuse, and export | Library UX tests, import/export regression, path safety checks |
+| v2.3 | Server Polish | Improve connector server commands, materials feedback, GUI state consistency, and admin-facing docs | NeoForge/Fabric/Forge build, command smoke checklist, no loader parity regressions |
+| v2.4 | Schematic Hardening | Harden `.schem` import/export edge cases, warnings, blockstate coverage, and manual regression docs | Web schematic tests, Java parser tests where practical, real-client regression checklist |
+| v3.0 | Major Product Redesign | Rework the product experience around a more complete creator workflow and stronger presentation quality | Separate product/design plan before implementation |
+
+## v2.0 AI Generation Alpha
+
+- Keep `v2.0.0-alpha.1` clearly marked as Alpha, not stable.
+- Keep Local Rule Generator as the no-key fallback.
+- Keep OpenAI provider optional and server-side only.
+- Do not expose API keys to browser client code.
+- Validate AI Structure Plan output before converting to `VoxelModel`.
+- Keep Browser visual QA pending until manually checked.
+- Keep Minecraft manual regression pending until real clients are tested.
+
 ## Near Term
 
 - Stabilize v2.0 AI Generation Alpha: server-side provider configuration,
@@ -8,29 +39,16 @@
 - Stabilize v1.6 Sponge `.schem` import/export across Web, NeoForge, Fabric,
   and Forge.
 - Keep NeoForge 1.21.1 as the recommended complete Connector target.
-- Keep Fabric and Forge 1.21.1 as Alpha connectors while refund undo and material UX mature.
-- Defer small v1.3.x manual Minecraft testing until the v1.3.5 multiloader regression pass.
-- Stabilize BlockForge Blueprint v1 as the Web and Mod shared protocol.
-- Add schema validation tooling for exported blueprint files.
-- Add Ghost Preview collision and replacement scans.
-- Add search/paging when the Blueprint Selector list grows.
-- Add GUI material summaries for Fabric and Forge.
-- Stabilize nearby container material sourcing Alpha across NeoForge, Fabric,
-  and Forge.
+- Keep Fabric and Forge 1.21.1 as Alpha connectors while refund undo and
+  material UX mature.
 - Run the v1.4.0 Blueprint Pack regression in real Minecraft clients.
 - Run the v1.6.0 Schematic Interop regression in real Minecraft clients.
-- Stabilize the v1.7 Web Import / Validation / Local Generation Workbench.
-- Stabilize the v1.8 in-game GUI search, pagination, filtering, sorting,
-  source tags, and warning badges across NeoForge, Fabric, and Forge.
-- Keep Local Rule Generator as the no-key fallback for AI generation.
-- Add special material cost rules for non-cube blocks.
-- Improve release artifact publishing beyond CI artifact upload.
-- Add Java-side parser tests when the Connector test setup is stable.
 - Expand Blueprint v2 block state coverage beyond basic string properties.
 
 ## Export Formats
 
-- Keep JSON, Blueprint v1/v2 JSON, `.mcfunction`, and Function Data Pack ZIP exports stable.
+- Keep JSON, Blueprint v1/v2 JSON, `.mcfunction`, and Function Data Pack ZIP
+  exports stable.
 - Stabilize `.blockforgepack.zip` import/export and add imported pack library
   management after the Alpha protocol proves out.
 - Add Minecraft Structure `.nbt` export.
@@ -38,51 +56,20 @@
 - Stabilize Sponge `.schem` v3 export/import and add mod-side export later.
 - Explore Litematica `.litematic` after Sponge interop proves stable.
 
-## Local Generation
+## Web Product
 
-- Improve the Local Prompt Rule Generator.
-- Add more voxel presets.
-- Keep the generator local-first before integrating any external AI API.
+- Improve the Local Rule Generator without changing its local-only promise.
+- Improve External AI setup/status/error states.
+- Improve Preview PNG and README screenshot workflow.
+- Keep procedural material styling; Minecraft vanilla texture files are not
+  bundled.
 
-## Rendering
+## Connector Plan
 
-- Improve block visual materials.
-- Add optional Minecraft-like textures.
-- Use `InstancedMesh` when model size grows beyond the current preset scale.
-- v1.9.0: Rendering Performance + Screenshot Export.
-- v2.0.0: AI Generation Alpha with optional server-side OpenAI provider.
+- Preserve NeoForge, Fabric, and Forge command naming consistency.
+- Keep connector core changes out of v2.0 release-process-only updates.
+- Track GUI, Builder Wand, Ghost Preview, material, protection, schematic, and
+  pack regressions in `docs/MOD_CONNECTOR_TESTING.md`.
 
-## Multi-loader Plan
-
-- v1.1.0: common core for blueprint, rotation, material data, build planning, undo records, and platform adapter interfaces.
-- v1.1.1: Fabric Connector command Alpha.
-- v1.1.2: Forge Connector command Alpha.
-- v1.1.3: multi-loader Alpha stabilization, feature matrix, CI artifact naming, and release packaging.
-- v1.2.0: Fabric and Forge Builder Wand Alpha parity.
-- v1.2.1: Fabric and Forge GUI Selector Alpha parity.
-- v1.2.2: Fabric and Forge Ghost Preview Alpha parity.
-- v1.2.3: Fabric and Forge Survival Material Cost Alpha parity.
-- v1.2.4: Fabric and Forge Material Refund Undo Alpha parity.
-- v1.2.5: Multiloader Parity Alpha regression and release-candidate documentation.
-- v1.3.0: Nearby Material Source common core.
-- v1.3.1: NeoForge nearby container material sourcing reference implementation.
-- v1.3.5: Fabric / Forge nearby container adapters plus batched multiloader
-  in-game regression checklist for v1.3.
-- v1.4.0: Blueprint Pack import/export on Web and pack loading on NeoForge,
-  Fabric, and Forge.
-- v1.5.0: Server permissions and protection layer.
-- v1.6.0: Sponge `.schem` v3 export/import on Web and schematic loading on
-  NeoForge, Fabric, and Forge.
-- v1.7.0: Web Import / Validation / Local Generation Workbench.
-- v1.9.0: Web Polish + in-game GUI search, pagination, filtering, sorting,
-  source tags, and warning badges.
-- v2.0.0: AI Generation Alpha, AI Structure Plan v1, and optional server-side
-  OpenAI provider.
-
-See [Multi-loader Plan](./MULTILOADER_PLAN.md) for details.
-## v1.5.0 Security Layer
-
-- Server permission nodes, built-in protection regions, build preflight, and
-  protected nearby-container material sourcing checks for NeoForge, Fabric, and
-  Forge.
-- Manual Minecraft regression testing remains pending.
+See [Multi-loader Plan](./MULTILOADER_PLAN.md) for historical connector
+milestones.

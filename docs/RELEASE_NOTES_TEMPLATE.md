@@ -1,5 +1,19 @@
 # BlockForge v2.0.0-alpha.1 - AI Generation Alpha
 
+## Release Train Rules
+
+- `alpha`: feature candidate. Use for active development and feature-complete
+  previews that still need regression and visual QA.
+- `rc`: regression candidate. Use after feature scope is frozen and release
+  validation is the primary work.
+- `stable`: official public release. Use only after required automated checks,
+  release documentation, and manual gates are complete.
+- `patch`: bugfix only for an already published `stable` release. Do not use
+  patch versions for new small features or polish.
+
+Small polish, docs, tests, and minor fixes should be collected in the active
+major-version feature branch and release train.
+
 ## Release Type
 
 - Version: `2.0.0-alpha.1`
