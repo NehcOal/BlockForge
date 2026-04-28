@@ -4,20 +4,20 @@ This checklist prepares the NeoForge Connector for real Minecraft validation.
 Passing `gradlew build` confirms compilation only; it does not replace in-game
 testing.
 
-## v1.8.0 Web Polish + GUI Search Release Gate
+## v1.9.0 Rendering Performance + Screenshot Export Release Gate
 
 Release version:
 
 ```text
-1.8.0-alpha.1
+2.5.0-alpha.1
 ```
 
 Expected release jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.8.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.8.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.8.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-2.5.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-2.5.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-2.5.0-alpha.1.jar
 ```
 
 Build validation:

@@ -2,10 +2,50 @@
 
 All notable changes to BlockForge will be documented in this file.
 
-## [1.8.0-alpha.1] - Unreleased
+## [2.5.0-alpha.1] - Unreleased
+
+### v2.5 Added
+
+- Added AI prompt presets for twelve common build requests.
+- Added local multi-candidate generation and best-candidate selection.
+- Added heuristic AI quality scoring for validation, buildability, material
+  diversity, structure, and symmetry.
+- Added Structure Plan viewer and candidate comparison UI components.
+- Added local refine prompt helper.
+- Added local generation history, local blueprint library, workspace import /
+  export helpers, and IndexedDB migration scaffolding.
+- Added unified import reports, import job queue, and optional import worker
+  fallback scaffolding.
+- Added v2.5 docs for AI quality, local library, import pipeline, server admin,
+  and dedicated server setup.
+- Updated release docs for `2.5.0-alpha.1` packaging and pending QA.
 
 ### Added
 
+- Added AI Generation Alpha with optional OpenAI provider.
+- Added server-side AI status and generation API routes.
+- Added AI Structure Plan v1 TypeScript types and JSON Schema.
+- Added Structure Plan validation, deterministic Structure Plan to VoxelModel
+  conversion, and Blueprint v2 validation before preview/export.
+- Added Local Rule Generator provider fallback under the AI provider
+  architecture.
+- Added AI Generation Panel with Local Generation and External AI Generation
+  sections, provider status, request/error/success states, and privacy/cost
+  notices.
+- Added AI generation tests with mocked provider calls; tests do not call
+  external APIs.
+- Added `docs/AI_GENERATION.md`.
+- Added `docs/AI_LIVE_TESTING.md` for manual external provider smoke testing.
+- Added `docs/RELEASE_PROCESS.md` for major-version train branching, release
+  labels, Draft PR expectations, jar assets, and honest QA status wording.
+- Added Web InstancedMesh rendering for larger voxel previews.
+- Added render mode selection: Auto, Mesh, and Instanced.
+- Added rendering stats for block count, unique block types, resolved render
+  mode, and estimated draw groups.
+- Added Minecraft-inspired procedural material styles without bundling vanilla
+  Minecraft texture files.
+- Added Preview PNG export for README, release note, and gallery screenshots.
+- Added camera, render grouping, material style, and screenshot utility tests.
 - Added Web Blueprint JSON import with local parsing and validation summary.
 - Added field-level Blueprint validation reports for schema, size, origin,
   palette references, duplicate coordinates, and out-of-bounds blocks.
@@ -29,11 +69,15 @@ All notable changes to BlockForge will be documented in this file.
   workbench while keeping the existing preview and multi-format export flow.
 - Web import summaries and validation reports are clearer and collapsible, with
   user-readable import errors and expandable developer details.
-- Aligned Web, NeoForge, Fabric, and Forge versions to `1.8.0-alpha.1`.
+- Aligned Web, NeoForge, Fabric, and Forge versions to `2.5.0-alpha.1`.
+- Adopted a major-version train process: small polish, docs, tests, and bugfixes
+  stay in the active major-version branch instead of opening `0.0.1` feature
+  branches.
 
 ### Notes
 
-- External AI API adapter is planned for v2.0.
+- External AI provider requires a server runtime and `OPENAI_API_KEY`.
+- API keys are not exposed to the browser client bundle.
 - Manual Minecraft regression is pending.
 - Browser visual QA is pending.
 

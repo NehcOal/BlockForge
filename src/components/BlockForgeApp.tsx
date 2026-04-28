@@ -6,7 +6,7 @@ import { Hero } from "@/components/Hero";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { PresetSelector } from "@/components/PresetSelector";
 import { PreviewPanel } from "@/components/PreviewPanel";
-import { PromptPanel } from "@/components/PromptPanel";
+import { AiGenerationPanel } from "@/components/AiGenerationPanel";
 import { appCopy, getPresetCopy, type Locale } from "@/lib/i18n";
 import { generateVoxelModelFromPrompt, getAllPresets, getPresetById } from "@/lib/voxel";
 import type { PresetId } from "@/types/blueprint";
@@ -38,6 +38,11 @@ export function BlockForgeApp() {
     setGeneratedModel(generateVoxelModelFromPrompt(nextPrompt || selectedPresetCopy.name).model);
   }
 
+  function handleExternalGenerated(model: VoxelModel, sourcePrompt: string) {
+    setGeneratedPrompt(sourcePrompt);
+    setGeneratedModel(model);
+  }
+
   function handlePresetSelect(presetId: PresetId) {
     setSelectedPresetId(presetId);
     setGeneratedModel(null);
@@ -59,13 +64,14 @@ export function BlockForgeApp() {
 
         <section className="grid flex-1 gap-6 py-6 lg:grid-cols-[430px_minmax(0,1fr)] lg:items-start xl:gap-7">
           <aside className="space-y-4">
-            <PromptPanel
+            <AiGenerationPanel
               copy={copy.prompt}
               generatedPrompt={generatedPrompt}
               generatedModelLabel={generatedModel?.name}
               prompt={prompt}
               selectedPresetLabel={selectedPresetCopy.name}
-              onGenerate={handleGenerate}
+              onExternalGenerated={handleExternalGenerated}
+              onGenerateLocal={handleGenerate}
               onPromptChange={setPrompt}
             />
             <PresetSelector
