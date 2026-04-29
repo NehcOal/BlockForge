@@ -1,4 +1,4 @@
-# BlockForge v3.1.0-alpha.1 - Gameplay Utility Blocks + Advanced Builder Wand
+# BlockForge v3.2.0-alpha.1 - Construction Workflow + Build Planner
 
 ## Release Train Rules
 
@@ -16,8 +16,8 @@ major-version feature branch and release train.
 
 ## Release Type
 
-- Version: `3.1.0-alpha.1`
-- Type: Gameplay Utility Blocks Alpha candidate
+- Version: `3.2.0-alpha.1`
+- Type: Construction Workflow Alpha candidate
 - Stability: Alpha for Fabric and Forge, recommended full experience on NeoForge
 
 ## Supported Minecraft Version
@@ -33,9 +33,9 @@ major-version feature branch and release train.
 
 ## Download Files
 
-- `blockforge-connector-neoforge-3.1.0-alpha.1.jar`
-- `blockforge-connector-fabric-3.1.0-alpha.1.jar`
-- `blockforge-connector-forge-3.1.0-alpha.1.jar`
+- `blockforge-connector-neoforge-3.2.0-alpha.1.jar`
+- `blockforge-connector-fabric-3.2.0-alpha.1.jar`
+- `blockforge-connector-forge-3.2.0-alpha.1.jar`
 
 ## Feature Matrix
 
@@ -62,6 +62,29 @@ major-version feature branch and release train.
 | Material Cache block | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 | Builder Anchor | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 | Advanced Builder Wand modes | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Build Planner model | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Layer Build planning | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Build Pause/Resume state | ✅ Alpha | scaffold | scaffold |
+| Repair Plan pure logic | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Collision/Replace report | pure validation | pure validation | pure validation |
+
+## v3.2 Highlights
+
+- Common BuildPlan / BuildLayer / BuildStep model.
+- Deterministic low-to-high layer planning.
+- Pure BuildPlan validation for duplicates, missing palette references, and
+  world-height issues.
+- Per-player BuildPlan manager scaffolding across all three loaders.
+- NeoForge command-driven BuildPlan Alpha commands.
+- Missing-coordinate repair plan pure logic.
+
+## v3.2 Known Limitations
+
+- BuildPlan `step` is simulated in this alpha and does not place blocks.
+- Fabric/Forge BuildPlan command parity is planned.
+- Real tick-based execution is planned for the Builder Station train.
+- Minecraft manual regression is pending.
+- Dedicated server smoke test is pending.
 
 ## v3.1 Highlights
 
@@ -221,7 +244,7 @@ Manual Minecraft status:
 - Supported loaders: NeoForge, Fabric, Forge.
 - Manual Minecraft regression testing pending unless explicitly verified.
 - External permission and claim integrations are planned optional adapters.
-# BlockForge v3.1.0-alpha.1 - Product Workbench Alpha
+# BlockForge v3.2.0-alpha.1 - Product Workbench Alpha
 
 ## Summary
 

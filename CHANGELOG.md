@@ -2,7 +2,31 @@
 
 All notable changes to BlockForge will be documented in this file.
 
-## [3.1.0-alpha.1] - Unreleased
+## [3.2.0-alpha.1] - Unreleased
+
+### v3.2 Added
+
+- Added common Build Planner data model: BuildPlan, BuildLayer, BuildStep,
+  BuildProgress, BuildIssue, options, and status enums.
+- Added deterministic BuildPlanFactory, BuildLayerPlanner, BuildStepPlanner,
+  BuildPlanValidator, RepairPlanFactory, and BuildPlanStepper.
+- Added per-player BuildPlanManager scaffolding for NeoForge, Fabric, and
+  Forge.
+- Added NeoForge command-driven `/blockforge buildplan ...` alpha commands for
+  create, preview, start, pause, resume, cancel, step, status, repair, and
+  clear.
+- Added Java pure logic tests for plan generation, layering, validation,
+  progress, and repair plans.
+- Added `docs/BUILD_PLANNER.md`.
+
+### v3.2 Notes
+
+- BuildPlan `step` is a safe command-alpha simulated batch in
+  `3.2.0-alpha.1`; it does not place world blocks yet.
+- Existing direct build and Builder Wand BUILD remain the real placement path.
+- Fabric/Forge command parity and real loader step execution are planned inside
+  the v3.2 train.
+- Minecraft manual regression and dedicated server smoke testing are pending.
 
 ### v3.1 Added
 
@@ -46,7 +70,7 @@ All notable changes to BlockForge will be documented in this file.
   fallback scaffolding.
 - Added v2.5 docs for AI quality, local library, import pipeline, server admin,
   and dedicated server setup.
-- Updated release docs for `3.1.0-alpha.1` packaging and pending QA.
+- Updated release docs for `3.2.0-alpha.1` packaging and pending QA.
 
 ### Added
 
@@ -97,7 +121,7 @@ All notable changes to BlockForge will be documented in this file.
   workbench while keeping the existing preview and multi-format export flow.
 - Web import summaries and validation reports are clearer and collapsible, with
   user-readable import errors and expandable developer details.
-- Aligned Web, NeoForge, Fabric, and Forge versions to `3.1.0-alpha.1`.
+- Aligned Web, NeoForge, Fabric, and Forge versions to `3.2.0-alpha.1`.
 - Adopted a major-version train process: small polish, docs, tests, and bugfixes
   stay in the active major-version branch instead of opening `0.0.1` feature
   branches.
@@ -843,7 +867,7 @@ All notable changes to BlockForge will be documented in this file.
 
 - Prompt input is local UI state in v0.1.0. Real prompt-to-structure generation is planned for a future release.
 - Full datapack ZIP export, `.schem` export, block texture rendering, and InstancedMesh performance optimization are on the roadmap.
-# 3.1.0-alpha.1
+# 3.2.0-alpha.1
 
 ## Added
 

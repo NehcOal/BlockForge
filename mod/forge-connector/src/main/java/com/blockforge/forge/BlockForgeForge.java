@@ -2,6 +2,7 @@ package com.blockforge.forge;
 
 import com.blockforge.forge.blueprint.ForgeBlueprintLoader;
 import com.blockforge.forge.blueprint.ForgeBlueprintRegistry;
+import com.blockforge.forge.buildplan.ForgeBuildPlanManager;
 import com.blockforge.forge.command.ForgeBlockForgeCommands;
 import com.blockforge.forge.network.ForgeBlueprintGuiNetworking;
 import com.blockforge.forge.player.ForgePlayerSelectionManager;
@@ -34,6 +35,7 @@ public class BlockForgeForge {
     public static final ForgePlayerSelectionManager SELECTIONS = new ForgePlayerSelectionManager();
     public static final ForgeProtectionService PROTECTION = new ForgeProtectionService();
     public static final BuilderWandStateStore WAND_STATES = new BuilderWandStateStore();
+    public static final ForgeBuildPlanManager BUILD_PLANS = new ForgeBuildPlanManager();
 
     public BlockForgeForge(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();

@@ -2,6 +2,7 @@ package com.blockforge.connector;
 
 import com.blockforge.connector.blueprint.BlueprintLoader;
 import com.blockforge.connector.blueprint.BlueprintRegistry;
+import com.blockforge.connector.buildplan.NeoForgeBuildPlanManager;
 import com.blockforge.connector.command.BlockForgeCommands;
 import com.blockforge.connector.config.BlockForgeConfig;
 import com.blockforge.connector.network.BlockForgeNetwork;
@@ -39,6 +40,7 @@ public class BlockForgeConnector {
     public static final UndoManager UNDO = new UndoManager();
     public static final NeoForgeProtectionService PROTECTION = new NeoForgeProtectionService();
     public static final BuilderWandStateStore WAND_STATES = new BuilderWandStateStore();
+    public static final NeoForgeBuildPlanManager BUILD_PLANS = new NeoForgeBuildPlanManager();
 
     public BlockForgeConnector(IEventBus modEventBus, ModContainer modContainer) {
         modContainer.registerConfig(ModConfig.Type.COMMON, BlockForgeConfig.SPEC);

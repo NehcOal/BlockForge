@@ -1,6 +1,6 @@
 # AI Generation
 
-Status: `v3.1.0-alpha.1` AI Generation Alpha.
+Status: `v3.2.0-alpha.1` AI Generation Alpha.
 
 BlockForge v2.0 adds an optional AI generation pipeline:
 

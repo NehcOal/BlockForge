@@ -1,6 +1,6 @@
 # Builder Wand Advanced
 
-Status: `3.1.0-alpha.1` Alpha. Minecraft manual regression is pending.
+Status: `3.2.0-alpha.1` Alpha. Minecraft manual regression is pending.
 
 The Builder Wand now has a shared pure-Java state model used by NeoForge,
 Fabric, and Forge:
@@ -67,3 +67,12 @@ anchor-based base-position replacement remains pending manual gameplay polish.
 - The existing protection preflight still runs before placement.
 - Existing survival material checks still run before placement.
 - No Minecraft manual regression has been completed for v3.1 yet.
+
+## v3.2 Build Planner Link
+
+Build Planner adds a command-driven construction planning layer. In
+`3.2.0-alpha.1`, NeoForge exposes `/blockforge buildplan ...` commands while
+Fabric and Forge keep shared manager scaffolding pending command parity.
+
+Builder Wand BUILD mode still performs the actual existing placement path.
+BuildPlan step execution is currently simulated and does not place blocks.

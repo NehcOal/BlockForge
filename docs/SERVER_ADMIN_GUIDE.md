@@ -1,6 +1,6 @@
 # Server Admin Guide
 
-Status: `v3.1.0-alpha.1` Alpha documentation.
+Status: `v3.2.0-alpha.1` Alpha documentation.
 
 ## Recommended Settings
 

@@ -2,7 +2,7 @@
 
 Status: Browser visual QA pending until manually checked.
 
-Use this checklist before promoting `v3.1.0-alpha.1` from Alpha candidate to a public release.
+Use this checklist before promoting `v3.2.0-alpha.1` from Alpha candidate to a public release.
 
 ## Viewports
 
@@ -68,7 +68,7 @@ Status values: `passed`, `pending`, `needs manual check`.
 - Local Rule Generator is deterministic and local-only; no prompt is sent to any server.
 - External AI Generation Alpha requires a server runtime and server-side API key.
 - Minecraft vanilla texture files are not bundled; material styling is procedural.
-# v3.1.0-alpha.1 Visual QA Checklist
+# v3.2.0-alpha.1 Visual QA Checklist
 
 Status values must be `pending`, `needs manual check`, or `passed`. Do not mark
 items passed without manual browser verification.

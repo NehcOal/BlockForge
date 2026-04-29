@@ -9,15 +9,15 @@ testing.
 Release version:
 
 ```text
-3.1.0-alpha.1
+3.2.0-alpha.1
 ```
 
 Expected release jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-3.1.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-3.1.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-3.1.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-3.2.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-3.2.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-3.2.0-alpha.1.jar
 ```
 
 Build validation:
@@ -55,6 +55,30 @@ Run this matrix separately for NeoForge, Fabric, and Forge:
 | Undo | Blocks and materials follow existing undo behavior | pending |
 | Dry-run/materials mode | No blocks are placed | pending |
 | Material Cache interaction | Alpha status message appears | pending |
+| Dedicated server smoke | Server starts without client-only class crash | pending |
+
+## v3.2 Build Planner Manual Checks
+
+Status: pending until tested in real Minecraft clients and dedicated servers.
+
+Run on NeoForge first, then repeat on Fabric/Forge when command parity lands:
+
+| Step | Expected | Status |
+|---|---|---|
+| `/blockforge examples install` | Examples installed | pending |
+| `/blockforge reload` | Registry reloads | pending |
+| `/blockforge select tiny_platform` | Selection updates | pending |
+| `/blockforge buildplan create tiny_platform` | Per-player plan is created | pending |
+| `/blockforge buildplan preview` | Blocks/layers/issues are reported; no blocks placed | pending |
+| `/blockforge buildplan start` | Status becomes RUNNING | pending |
+| `/blockforge buildplan status` | Progress summary is shown | pending |
+| `/blockforge buildplan pause` | Status becomes PAUSED | pending |
+| `/blockforge buildplan resume` | Status becomes RUNNING | pending |
+| `/blockforge buildplan step` | Command-alpha batch advances without world placement | pending |
+| `/blockforge buildplan cancel` | Status becomes CANCELLED | pending |
+| `/blockforge buildplan clear` | Non-running plan clears | pending |
+| Direct Builder Wand BUILD | Existing real placement still works | pending |
+| `/blockforge undo` | Existing undo still works for real placement | pending |
 | Dedicated server smoke | Server starts without client-only class crash | pending |
 
 GUI search/filter manual checks:

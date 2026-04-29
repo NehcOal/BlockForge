@@ -21,6 +21,14 @@ import com.blockforge.connector.undo.PlacementSnapshot;
 import com.blockforge.connector.undo.UndoManager;
 import com.blockforge.common.gameplay.BuilderWandMode;
 import com.blockforge.common.gameplay.BuilderWandState;
+import com.blockforge.common.buildplan.BuildPlan;
+import com.blockforge.common.buildplan.BuildPlanFactory;
+import com.blockforge.common.buildplan.BuildPlanOptions;
+import com.blockforge.common.buildplan.BuildPlanStatus;
+import com.blockforge.common.buildplan.BuildPlanValidator;
+import com.blockforge.common.buildplan.BuildProgress;
+import com.blockforge.common.buildplan.BuildStepStatus;
+import com.blockforge.common.buildplan.BuildPlanStepper;
 import com.blockforge.common.material.source.MaterialSourceItemEntry;
 import com.blockforge.common.material.source.MaterialSourceReport;
 import com.blockforge.common.material.source.MaterialSourceScanResult;
@@ -144,6 +152,33 @@ public final class BlockForgeCommands {
                                         .executes(BlockForgeCommands::clearWandAnchor))))
                 .then(Commands.literal("gui")
                         .executes(BlockForgeCommands::openGui))
+                .then(Commands.literal("buildplan")
+                        .then(Commands.literal("create")
+                                .then(blueprintIdArgument(registry)
+                                        .executes(context -> buildPlanCreateAtPlayer(context, registry))
+                                        .then(Commands.literal("at")
+                                                .then(Commands.argument("x", IntegerArgumentType.integer())
+                                                        .then(Commands.argument("y", IntegerArgumentType.integer())
+                                                                .then(Commands.argument("z", IntegerArgumentType.integer())
+                                                                        .executes(context -> buildPlanCreateAtCoordinates(context, registry))))))))
+                        .then(Commands.literal("preview")
+                                .executes(BlockForgeCommands::buildPlanPreview))
+                        .then(Commands.literal("status")
+                                .executes(BlockForgeCommands::buildPlanStatus))
+                        .then(Commands.literal("start")
+                                .executes(context -> buildPlanSetStatus(context, BuildPlanStatus.RUNNING)))
+                        .then(Commands.literal("pause")
+                                .executes(context -> buildPlanSetStatus(context, BuildPlanStatus.PAUSED)))
+                        .then(Commands.literal("resume")
+                                .executes(context -> buildPlanSetStatus(context, BuildPlanStatus.RUNNING)))
+                        .then(Commands.literal("cancel")
+                                .executes(context -> buildPlanSetStatus(context, BuildPlanStatus.CANCELLED)))
+                        .then(Commands.literal("step")
+                                .executes(BlockForgeCommands::buildPlanStep))
+                        .then(Commands.literal("repair")
+                                .executes(BlockForgeCommands::buildPlanRepair))
+                        .then(Commands.literal("clear")
+                                .executes(BlockForgeCommands::buildPlanClear)))
                 .then(Commands.literal("undo")
                         .executes(BlockForgeCommands::undo)
                         .then(Commands.literal("list")
@@ -873,6 +908,221 @@ public final class BlockForgeCommands {
                 false
         );
         return 1;
+    }
+
+    private static int buildPlanCreateAtPlayer(CommandContext<CommandSourceStack> context, BlueprintRegistry registry) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        BlockPos pos = player.blockPosition();
+        return buildPlanCreate(context, registry, pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    private static int buildPlanCreateAtCoordinates(CommandContext<CommandSourceStack> context, BlueprintRegistry registry) {
+        return buildPlanCreate(
+                context,
+                registry,
+                IntegerArgumentType.getInteger(context, "x"),
+                IntegerArgumentType.getInteger(context, "y"),
+                IntegerArgumentType.getInteger(context, "z")
+        );
+    }
+
+    private static int buildPlanCreate(CommandContext<CommandSourceStack> context, BlueprintRegistry registry, int x, int y, int z) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        Blueprint blueprint = registry.get(StringArgumentType.getString(context, "id")).orElse(null);
+        if (blueprint == null) {
+            context.getSource().sendFailure(Component.literal("Unknown BlockForge blueprint id."));
+            return 0;
+        }
+        PlayerBlueprintSelection selection = BlockForgeConnector.SELECTIONS.getOrCreate(player.getUUID());
+        BuilderWandState wand = BlockForgeConnector.WAND_STATES.getOrCreate(player.getUUID());
+        BuildPlan plan = BuildPlanFactory.create(
+                toCommonBlueprint(blueprint),
+                player.getUUID(),
+                player.level().dimension().location().toString(),
+                x,
+                y,
+                z,
+                selection.getRotation().degrees(),
+                wand.mirroredX(),
+                wand.mirroredZ(),
+                wand.offsetX(),
+                wand.offsetY(),
+                wand.offsetZ(),
+                BuildPlanOptions.defaults(),
+                player.level().getGameTime()
+        );
+        BlockForgeConnector.BUILD_PLANS.delegate().save(player.getUUID(), plan);
+        context.getSource().sendSuccess(
+                () -> Component.literal("Created BuildPlan "
+                        + plan.planId()
+                        + " blocks="
+                        + plan.totalBlocks()
+                        + " layers="
+                        + plan.totalLayers()
+                        + " status="
+                        + plan.status()),
+                true
+        );
+        return plan.totalBlocks();
+    }
+
+    private static int buildPlanPreview(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        BuildPlan plan = BlockForgeConnector.BUILD_PLANS.delegate().get(player.getUUID()).orElse(null);
+        if (plan == null) {
+            context.getSource().sendFailure(Component.literal("No active BlockForge BuildPlan."));
+            return 0;
+        }
+        int issues = BuildPlanValidator.validate(plan, player.level().getMinBuildHeight(), player.level().getMaxBuildHeight()).size();
+        context.getSource().sendSuccess(
+                () -> Component.literal("BuildPlan preview: blueprint="
+                        + plan.blueprintId()
+                        + ", base="
+                        + plan.baseX()
+                        + ","
+                        + plan.baseY()
+                        + ","
+                        + plan.baseZ()
+                        + ", blocks="
+                        + plan.totalBlocks()
+                        + ", layers="
+                        + plan.totalLayers()
+                        + ", issues="
+                        + issues
+                        + ". Collision/material/protection preview is command-alpha and does not place or consume."),
+                false
+        );
+        return issues;
+    }
+
+    private static int buildPlanStatus(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        BuildPlan plan = BlockForgeConnector.BUILD_PLANS.delegate().get(player.getUUID()).orElse(null);
+        if (plan == null) {
+            context.getSource().sendFailure(Component.literal("No active BlockForge BuildPlan."));
+            return 0;
+        }
+        BuildProgress progress = BuildProgress.fromPlan(plan);
+        context.getSource().sendSuccess(
+                () -> Component.literal("BuildPlan status: "
+                        + progress.status()
+                        + " placed="
+                        + progress.placedBlocks()
+                        + " skipped="
+                        + progress.skippedBlocks()
+                        + " failed="
+                        + progress.failedBlocks()
+                        + " total="
+                        + progress.totalBlocks()
+                        + " percent="
+                        + String.format("%.1f", progress.percent())
+                        + "%"),
+                false
+        );
+        return progress.placedBlocks();
+    }
+
+    private static int buildPlanSetStatus(CommandContext<CommandSourceStack> context, BuildPlanStatus status) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        var updated = BlockForgeConnector.BUILD_PLANS.delegate().setStatus(player.getUUID(), status);
+        if (updated.isEmpty()) {
+            context.getSource().sendFailure(Component.literal("No active BlockForge BuildPlan."));
+            return 0;
+        }
+        context.getSource().sendSuccess(() -> Component.literal("BuildPlan status set to " + status + "."), true);
+        return 1;
+    }
+
+    private static int buildPlanStep(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        BuildPlan plan = BlockForgeConnector.BUILD_PLANS.delegate().get(player.getUUID()).orElse(null);
+        if (plan == null) {
+            context.getSource().sendFailure(Component.literal("No active BlockForge BuildPlan."));
+            return 0;
+        }
+        BuildPlan next = BuildPlanStepper.markNextBatch(plan, BuildPlanOptions.defaults().maxBlocksPerStep(), BuildStepStatus.SKIPPED);
+        BlockForgeConnector.BUILD_PLANS.delegate().save(player.getUUID(), next.status() == BuildPlanStatus.COMPLETED ? next.withStatus(BuildPlanStatus.COMPLETED) : next.withStatus(BuildPlanStatus.PAUSED));
+        context.getSource().sendSuccess(
+                () -> Component.literal("BuildPlan step simulated a safe command-alpha batch. Real per-step placement remains pending; use direct build or wand BUILD for actual placement."),
+                true
+        );
+        return BuildPlanOptions.defaults().maxBlocksPerStep();
+    }
+
+    private static com.blockforge.common.blueprint.Blueprint toCommonBlueprint(Blueprint blueprint) {
+        java.util.Map<String, com.blockforge.common.blueprint.BlueprintPaletteEntry> palette = blueprint.getPalette()
+                .entrySet()
+                .stream()
+                .collect(java.util.stream.Collectors.toMap(
+                        java.util.Map.Entry::getKey,
+                        entry -> new com.blockforge.common.blueprint.BlueprintPaletteEntry(
+                                entry.getValue().name(),
+                                entry.getValue().properties()
+                        )
+                ));
+        java.util.List<com.blockforge.common.blueprint.BlueprintBlock> blocks = blueprint.getBlocks()
+                .stream()
+                .map(block -> new com.blockforge.common.blueprint.BlueprintBlock(
+                        block.getX(),
+                        block.getY(),
+                        block.getZ(),
+                        block.getState()
+                ))
+                .toList();
+        return new com.blockforge.common.blueprint.Blueprint(
+                blueprint.getSchemaVersion(),
+                blueprint.getId(),
+                blueprint.getName(),
+                blueprint.getDescription(),
+                blueprint.getMinecraftVersion(),
+                blueprint.getGenerator(),
+                new com.blockforge.common.blueprint.BlueprintSize(
+                        blueprint.getSize().width(),
+                        blueprint.getSize().height(),
+                        blueprint.getSize().depth()
+                ),
+                palette,
+                blocks
+        );
+    }
+
+    private static int buildPlanRepair(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("BuildPlan repair alpha is available in common pure logic. World diff repair is pending loader integration."),
+                false
+        );
+        return 1;
+    }
+
+    private static int buildPlanClear(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        boolean cleared = BlockForgeConnector.BUILD_PLANS.delegate().clear(player.getUUID()).isPresent();
+        context.getSource().sendSuccess(
+                () -> Component.literal(cleared ? "Cleared current BuildPlan." : "No non-running BuildPlan was cleared."),
+                true
+        );
+        return cleared ? 1 : 0;
     }
 
     private static int protectionFolder(CommandContext<CommandSourceStack> context) {

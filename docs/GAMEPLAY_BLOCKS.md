@@ -1,6 +1,6 @@
 # Gameplay Blocks
 
-Status: `3.1.0-alpha.1` Alpha. Minecraft manual regression is pending.
+Status: `3.2.0-alpha.1` Alpha. Minecraft manual regression is pending.
 
 BlockForge v3.1 adds the first gameplay utility blocks for NeoForge, Fabric,
 and Forge. These blocks are meant to reduce command-only workflows and make the
@@ -21,7 +21,7 @@ Connector easier to use in survival and server play.
 
 - Registered on NeoForge, Fabric, and Forge as an Alpha gameplay block.
 - Intended role: a BlockForge-specific material source for Builder Wand builds.
-- v3.1.0-alpha.1 exposes the block and material source DTOs first.
+- v3.2.0-alpha.1 exposes the block and material source DTOs first.
 - Inventory-backed cache sourcing and refund targeting are planned follow-up
   polish inside the v3.1 train.
 

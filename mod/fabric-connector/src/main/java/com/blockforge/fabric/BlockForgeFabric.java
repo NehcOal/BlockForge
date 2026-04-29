@@ -2,6 +2,7 @@ package com.blockforge.fabric;
 
 import com.blockforge.fabric.blueprint.FabricBlueprintLoader;
 import com.blockforge.fabric.blueprint.FabricBlueprintRegistry;
+import com.blockforge.fabric.buildplan.FabricBuildPlanManager;
 import com.blockforge.fabric.command.FabricBlockForgeCommands;
 import com.blockforge.fabric.network.FabricBlueprintGuiNetworking;
 import com.blockforge.fabric.player.FabricPlayerSelectionManager;
@@ -27,6 +28,7 @@ public class BlockForgeFabric implements ModInitializer {
     public static final FabricPlayerSelectionManager SELECTIONS = new FabricPlayerSelectionManager();
     public static final FabricProtectionService PROTECTION = new FabricProtectionService();
     public static final BuilderWandStateStore WAND_STATES = new BuilderWandStateStore();
+    public static final FabricBuildPlanManager BUILD_PLANS = new FabricBuildPlanManager();
 
     @Override
     public void onInitialize() {
