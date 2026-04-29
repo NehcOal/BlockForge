@@ -2,15 +2,21 @@ package com.blockforge.connector;
 
 import com.blockforge.connector.blueprint.BlueprintLoader;
 import com.blockforge.connector.blueprint.BlueprintRegistry;
+import com.blockforge.connector.buildplan.NeoForgeBuildPlanManager;
 import com.blockforge.connector.command.BlockForgeCommands;
 import com.blockforge.connector.config.BlockForgeConfig;
 import com.blockforge.connector.network.BlockForgeNetwork;
 import com.blockforge.connector.player.PlayerSelectionManager;
+import com.blockforge.connector.registry.ModBlocks;
 import com.blockforge.connector.registry.ModItems;
 import com.blockforge.connector.security.NeoForgeProtectionService;
 import com.blockforge.connector.undo.UndoManager;
+import com.blockforge.common.gameplay.BuilderWandStateStore;
 import com.mojang.logging.LogUtils;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.InteractionResult;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -19,6 +25,7 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.slf4j.Logger;
 
@@ -32,9 +39,12 @@ public class BlockForgeConnector {
     public static final PlayerSelectionManager SELECTIONS = new PlayerSelectionManager();
     public static final UndoManager UNDO = new UndoManager();
     public static final NeoForgeProtectionService PROTECTION = new NeoForgeProtectionService();
+    public static final BuilderWandStateStore WAND_STATES = new BuilderWandStateStore();
+    public static final NeoForgeBuildPlanManager BUILD_PLANS = new NeoForgeBuildPlanManager();
 
     public BlockForgeConnector(IEventBus modEventBus, ModContainer modContainer) {
         modContainer.registerConfig(ModConfig.Type.COMMON, BlockForgeConfig.SPEC);
+        ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
         modEventBus.addListener(BlockForgeNetwork::register);
         modEventBus.addListener(this::addCreativeTabItems);
@@ -44,7 +54,43 @@ public class BlockForgeConnector {
     private void addCreativeTabItems(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             event.accept(ModItems.BUILDER_WAND.get());
+            event.accept(ModItems.BLUEPRINT_TABLE.get());
+            event.accept(ModItems.MATERIAL_CACHE.get());
+            event.accept(ModItems.BUILDER_ANCHOR.get());
         }
+    }
+
+    @SubscribeEvent
+    public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) {
+            return;
+        }
+
+        var state = event.getLevel().getBlockState(event.getPos());
+        if (state.is(ModBlocks.BLUEPRINT_TABLE.get())) {
+            BlockForgeNetwork.sendBlueprintList(player, true);
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
+        }
+
+        if (state.is(ModBlocks.BUILDER_ANCHOR.get())) {
+            var wandState = WAND_STATES.update(player.getUUID(), current -> current.withAnchor(anchorId(event.getPos()), event.getLevel().getGameTime()));
+            player.sendSystemMessage(Component.literal("BlockForge Builder Wand bound to anchor " + wandState.anchorId() + "."));
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
+        }
+
+        if (state.is(ModBlocks.MATERIAL_CACHE.get())) {
+            player.sendSystemMessage(Component.literal("BlockForge Material Cache alpha block registered. Inventory-backed sourcing is planned for a later v3.1 alpha polish commit."));
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+        }
+    }
+
+    private static String anchorId(net.minecraft.core.BlockPos pos) {
+        return pos.getX() + "," + pos.getY() + "," + pos.getZ();
     }
 
     @SubscribeEvent

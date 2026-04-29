@@ -2,10 +2,102 @@
 
 All notable changes to BlockForge will be documented in this file.
 
-## [1.8.0-alpha.1] - Unreleased
+## [3.2.0-alpha.1] - Unreleased
+
+### v3.2 Added
+
+- Added common Build Planner data model: BuildPlan, BuildLayer, BuildStep,
+  BuildProgress, BuildIssue, options, and status enums.
+- Added deterministic BuildPlanFactory, BuildLayerPlanner, BuildStepPlanner,
+  BuildPlanValidator, RepairPlanFactory, and BuildPlanStepper.
+- Added per-player BuildPlanManager scaffolding for NeoForge, Fabric, and
+  Forge.
+- Added NeoForge command-driven `/blockforge buildplan ...` alpha commands for
+  create, preview, start, pause, resume, cancel, step, status, repair, and
+  clear.
+- Added Java pure logic tests for plan generation, layering, validation,
+  progress, and repair plans.
+- Added `docs/BUILD_PLANNER.md`.
+
+### v3.2 Notes
+
+- BuildPlan `step` is a safe command-alpha simulated batch in
+  `3.2.0-alpha.1`; it does not place world blocks yet.
+- Existing direct build and Builder Wand BUILD remain the real placement path.
+- Fabric/Forge command parity and real loader step execution are planned inside
+  the v3.2 train.
+- Minecraft manual regression and dedicated server smoke testing are pending.
+
+### v3.1 Added
+
+- Added Blueprint Table, Material Cache, and Builder Anchor block registration
+  for NeoForge, Fabric, and Forge.
+- Added simple original placeholder textures, blockstates, block models, item
+  models, and lang keys for the new gameplay blocks.
+- Added Blueprint Table right-click GUI entry on all three loaders.
+- Added Builder Anchor right-click binding into shared Builder Wand state.
+- Added shared common gameplay DTOs for Builder Wand modes, wand state, anchors,
+  material caches, and placement options.
+- Added Builder Wand mode handling for preview, build, dry-run, materials, and
+  non-build configuration states.
+- Added sneak + right-click wand mode cycling across NeoForge, Fabric, and
+  Forge.
+- Added initial NeoForge `/blockforge wand ...` command helpers for mode,
+  options, offset, mirror, replace, and anchor clear.
+- Added common tests for Builder Wand state, placement offset, mirror flags,
+  anchor binding, and material cache placement options.
+- Added `docs/GAMEPLAY_BLOCKS.md` and `docs/BUILDER_WAND_ADVANCED.md`.
+
+### v3.1 Notes
+
+- Material Cache inventory-backed material sourcing is registered and modeled,
+  but full container/menu integration remains planned inside the v3.1 train.
+- Anchor-fixed build base replacement and mirrored placement transformation are
+  Alpha follow-up items.
+- Minecraft manual regression and dedicated server smoke testing are pending.
+
+### v2.5 Added
+
+- Added AI prompt presets for twelve common build requests.
+- Added local multi-candidate generation and best-candidate selection.
+- Added heuristic AI quality scoring for validation, buildability, material
+  diversity, structure, and symmetry.
+- Added Structure Plan viewer and candidate comparison UI components.
+- Added local refine prompt helper.
+- Added local generation history, local blueprint library, workspace import /
+  export helpers, and IndexedDB migration scaffolding.
+- Added unified import reports, import job queue, and optional import worker
+  fallback scaffolding.
+- Added v2.5 docs for AI quality, local library, import pipeline, server admin,
+  and dedicated server setup.
+- Updated release docs for `3.2.0-alpha.1` packaging and pending QA.
 
 ### Added
 
+- Added AI Generation Alpha with optional OpenAI provider.
+- Added server-side AI status and generation API routes.
+- Added AI Structure Plan v1 TypeScript types and JSON Schema.
+- Added Structure Plan validation, deterministic Structure Plan to VoxelModel
+  conversion, and Blueprint v2 validation before preview/export.
+- Added Local Rule Generator provider fallback under the AI provider
+  architecture.
+- Added AI Generation Panel with Local Generation and External AI Generation
+  sections, provider status, request/error/success states, and privacy/cost
+  notices.
+- Added AI generation tests with mocked provider calls; tests do not call
+  external APIs.
+- Added `docs/AI_GENERATION.md`.
+- Added `docs/AI_LIVE_TESTING.md` for manual external provider smoke testing.
+- Added `docs/RELEASE_PROCESS.md` for major-version train branching, release
+  labels, Draft PR expectations, jar assets, and honest QA status wording.
+- Added Web InstancedMesh rendering for larger voxel previews.
+- Added render mode selection: Auto, Mesh, and Instanced.
+- Added rendering stats for block count, unique block types, resolved render
+  mode, and estimated draw groups.
+- Added Minecraft-inspired procedural material styles without bundling vanilla
+  Minecraft texture files.
+- Added Preview PNG export for README, release note, and gallery screenshots.
+- Added camera, render grouping, material style, and screenshot utility tests.
 - Added Web Blueprint JSON import with local parsing and validation summary.
 - Added field-level Blueprint validation reports for schema, size, origin,
   palette references, duplicate coordinates, and out-of-bounds blocks.
@@ -29,11 +121,15 @@ All notable changes to BlockForge will be documented in this file.
   workbench while keeping the existing preview and multi-format export flow.
 - Web import summaries and validation reports are clearer and collapsible, with
   user-readable import errors and expandable developer details.
-- Aligned Web, NeoForge, Fabric, and Forge versions to `1.8.0-alpha.1`.
+- Aligned Web, NeoForge, Fabric, and Forge versions to `3.2.0-alpha.1`.
+- Adopted a major-version train process: small polish, docs, tests, and bugfixes
+  stay in the active major-version branch instead of opening `0.0.1` feature
+  branches.
 
 ### Notes
 
-- External AI API adapter is planned for v2.0.
+- External AI provider requires a server runtime and `OPENAI_API_KEY`.
+- API keys are not exposed to the browser client bundle.
 - Manual Minecraft regression is pending.
 - Browser visual QA is pending.
 
@@ -771,3 +867,27 @@ All notable changes to BlockForge will be documented in this file.
 
 - Prompt input is local UI state in v0.1.0. Real prompt-to-structure generation is planned for a future release.
 - Full datapack ZIP export, `.schem` export, block texture rendering, and InstancedMesh performance optimization are on the roadmap.
+# 3.2.0-alpha.1
+
+## Added
+
+- Unified Product Workbench shell, sidebar, topbar, status bar, and command action registry.
+- Experimental Litematica `.litematic` import pipeline into Blueprint v2.
+- Local Blueprint Gallery data model, search/filter/sort, and gallery bundle import/export logic.
+- Server diagnostics pure schema helpers and server issue template.
+- v3.0 release readiness, visual QA, Litematica, Gallery, Workbench, and Known Issues docs.
+
+## Changed
+
+- Version train moved to `feature/v3.0-product-workbench`.
+- Import reports now include Litematica and Gallery bundle sources.
+- Web UI is organized under the new workbench shell while preserving existing generation, preview, and export flows.
+
+## Notes
+
+- This is an alpha candidate, not stable.
+- Litematica support is partial and experimental.
+- Browser visual QA is pending.
+- Minecraft manual regression is pending.
+- External AI live test is pending.
+- Dedicated server smoke test is pending.
