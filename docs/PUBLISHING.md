@@ -2,8 +2,13 @@
 
 ## Scope
 
-This guide prepares the `1.6.0-alpha.1` multi-loader Alpha release. It does not
+This guide prepares the current multi-loader Alpha release. It does not
 publish automatically to GitHub, Modrinth, or CurseForge.
+
+For `3.1.0-alpha.1`, confirm AI productization remains Alpha, no API key is bundled
+in client code, and External AI requires a server runtime with `OPENAI_API_KEY`.
+External AI live testing is tracked in `docs/AI_LIVE_TESTING.md` and must remain
+`pending` unless a real server-side key was configured and tested.
 
 NeoForge is the recommended full-experience Connector. Fabric and Forge are
 Alpha connectors with command builds, GUI Selector Alpha, Builder Wand Alpha
@@ -35,12 +40,12 @@ cd ..\forge-connector
 gradlew.bat build
 ```
 
-Expected jars:
+Expected jars for `3.1.0-alpha.1`:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.6.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.6.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.6.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-3.1.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-3.1.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-3.1.0-alpha.1.jar
 ```
 
 ## GitHub Alpha Release
@@ -61,6 +66,9 @@ mod/forge-connector/build/libs/blockforge-connector-forge-1.6.0-alpha.1.jar
 11. Do not claim Fabric or Forge BlockEntity NBT undo, collision-aware preview,
    full block preview support, protected-container permission checks, or GUI
    material source details.
+12. Do not claim Browser visual QA, Minecraft manual regression, External AI
+   live testing, dedicated server smoke testing, Modrinth publishing, or
+   CurseForge publishing passed unless they were actually performed.
 
 ## Modrinth Preparation
 
@@ -135,12 +143,30 @@ download file names match the expected jar names above.
   Claims integrations are planned, not bundled.
 - Manual Minecraft regression testing must remain pending until explicitly
   tested.
-# v1.8.0-alpha.1 Release Checklist
+# v3.1.0-alpha.1 Release Checklist
 
 - Confirm Web `pnpm lint`, `pnpm test`, and `pnpm build`.
 - Confirm NeoForge, Fabric, and Forge Gradle builds produce
-  `1.8.0-alpha.1` jars.
+  `3.1.0-alpha.1` jars.
 - Keep release notes clear that Minecraft manual regression and Browser visual
   QA are pending until manually checked.
 - Include `docs/WEB_VISUAL_QA.md` and `docs/GUI_SEARCH_AND_FILTERS.md` in the
   release notes.
+- Include Web rendering notes: InstancedMesh alpha, Preview PNG export, and no
+  bundled Minecraft vanilla textures.
+- Include AI Generation notes: Local Rule Generator fallback, optional
+  server-side OpenAI provider, no client-side API key exposure, and validation
+  before preview/export.
+# v3.1.0-alpha.1 Publishing Notes
+
+`3.1.0-alpha.1` is an alpha candidate. Do not mark it stable.
+
+- GitHub Release may upload the three connector jars as alpha assets.
+- Expected assets:
+  - `blockforge-connector-neoforge-3.1.0-alpha.1.jar`
+  - `blockforge-connector-fabric-3.1.0-alpha.1.jar`
+  - `blockforge-connector-forge-3.1.0-alpha.1.jar`
+- Modrinth / CurseForge publishing remains pending unless actually published.
+- Web demo link remains pending unless deployed.
+- Browser visual QA, Minecraft manual regression, External AI live test, and
+  dedicated server smoke test must remain pending until manually verified.

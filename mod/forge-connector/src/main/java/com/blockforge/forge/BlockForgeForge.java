@@ -5,12 +5,18 @@ import com.blockforge.forge.blueprint.ForgeBlueprintRegistry;
 import com.blockforge.forge.command.ForgeBlockForgeCommands;
 import com.blockforge.forge.network.ForgeBlueprintGuiNetworking;
 import com.blockforge.forge.player.ForgePlayerSelectionManager;
+import com.blockforge.forge.registry.ForgeModBlocks;
 import com.blockforge.forge.registry.ForgeModItems;
 import com.blockforge.forge.security.ForgeProtectionService;
 import com.blockforge.forge.undo.ForgeUndoManager;
+import com.blockforge.common.gameplay.BuilderWandStateStore;
 import com.mojang.logging.LogUtils;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -27,9 +33,11 @@ public class BlockForgeForge {
     public static final ForgeUndoManager UNDO = new ForgeUndoManager();
     public static final ForgePlayerSelectionManager SELECTIONS = new ForgePlayerSelectionManager();
     public static final ForgeProtectionService PROTECTION = new ForgeProtectionService();
+    public static final BuilderWandStateStore WAND_STATES = new BuilderWandStateStore();
 
     public BlockForgeForge(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
+        ForgeModBlocks.register(modEventBus);
         ForgeModItems.register(modEventBus);
         ForgeBlueprintGuiNetworking.register();
         BLUEPRINTS.reload();
@@ -45,5 +53,38 @@ public class BlockForgeForge {
     @SubscribeEvent
     public void onRegisterCommands(RegisterCommandsEvent event) {
         ForgeBlockForgeCommands.register(event.getDispatcher(), BLUEPRINTS, UNDO, SELECTIONS);
+    }
+
+    @SubscribeEvent
+    public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) {
+            return;
+        }
+
+        var state = event.getLevel().getBlockState(event.getPos());
+        if (state.is(ForgeModBlocks.BLUEPRINT_TABLE.get())) {
+            ForgeBlueprintGuiNetworking.sendBlueprintList(player, true);
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
+        }
+
+        if (state.is(ForgeModBlocks.BUILDER_ANCHOR.get())) {
+            var pos = event.getPos();
+            var wandState = WAND_STATES.update(player.getUUID(), current -> current.withAnchor(
+                    pos.getX() + "," + pos.getY() + "," + pos.getZ(),
+                    event.getLevel().getGameTime()
+            ));
+            player.sendSystemMessage(Component.literal("BlockForge Builder Wand bound to anchor " + wandState.anchorId() + "."));
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
+        }
+
+        if (state.is(ForgeModBlocks.MATERIAL_CACHE.get())) {
+            player.sendSystemMessage(Component.literal("BlockForge Material Cache alpha block registered. Inventory-backed sourcing is planned for a later v3.1 alpha polish commit."));
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+        }
     }
 }

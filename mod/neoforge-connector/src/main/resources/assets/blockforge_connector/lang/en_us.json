@@ -18,5 +18,11 @@
   "screen.blockforge_connector.size": "Size: %s",
   "screen.blockforge_connector.block_states": "BlockState support: %s",
   "screen.blockforge_connector.hint": "Select a blueprint, choose rotation, then use Builder Wand to preview and build.",
-  "screen.blockforge_connector.empty": "No blueprints loaded. Run /blockforge examples install and /blockforge reload."
+  "screen.blockforge_connector.empty": "No blueprints loaded. Run /blockforge examples install and /blockforge reload.",
+  "block.blockforge_connector.material_cache": "BlockForge Material Cache",
+  "block.blockforge_connector.blueprint_table": "BlockForge Blueprint Table",
+  "item.blockforge_connector.material_cache": "BlockForge Material Cache",
+  "block.blockforge_connector.builder_anchor": "BlockForge Builder Anchor",
+  "item.blockforge_connector.blueprint_table": "BlockForge Blueprint Table",
+  "item.blockforge_connector.builder_anchor": "BlockForge Builder Anchor"
 }

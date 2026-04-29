@@ -10,6 +10,7 @@ export {
   validateVoxelModel
 } from "@/lib/voxel/utils";
 export { blockStyles } from "@/lib/voxel/blockStyles";
+export { materialStyles } from "@/lib/voxel/materialStyles";
 export {
   createBlueprintJsonFileName,
   createBlueprintV2JsonFileName,
@@ -44,6 +45,10 @@ export {
 export { exportSpongeSchematicBlob, blueprintV2ToSpongeSchematic } from "@/lib/voxel/schematic/spongeSchematicExport";
 export { importSpongeSchematicBlob, spongeSchematicToBlueprintV2 } from "@/lib/voxel/schematic/spongeSchematicImport";
 export { schematicFileName } from "@/lib/voxel/schematic/schematicValidation";
+export { importLitematicBuffer, normalizeSyntheticLitematic } from "@/lib/voxel/litematic/litematicImport";
+export { parseLitematicBlockState, formatLitematicBlockState } from "@/lib/voxel/litematic/litematicBlockState";
+export { validateParsedLitematic } from "@/lib/voxel/litematic/litematicValidation";
+export { litematicToBlueprintV2 } from "@/lib/voxel/litematic/litematicToBlueprint";
 export {
   generateVoxelModelFromPrompt,
   type PromptGenerationKind,
@@ -63,10 +68,23 @@ export {
 export { minecraftBlockIds } from "@/lib/voxel/minecraftBlocks";
 export { voxelModelToMcFunction } from "@/lib/voxel/mcfunction";
 export {
+  estimateDrawGroups,
   getCameraPosition,
   getModelCenterOffset,
+  groupBlocksByType,
+  resolveRenderMode,
   toRenderPosition
 } from "@/lib/voxel/rendering";
+export {
+  getModelBoundingBox,
+  getModelCenter,
+  getPreviewScale,
+  getRecommendedCameraPosition
+} from "@/lib/voxel/camera";
+export {
+  canvasToPngBlob,
+  createPreviewScreenshotFileName
+} from "@/lib/voxel/previewScreenshot";
 export {
   createDungeonEntrance,
   createMedievalTower,
@@ -74,6 +92,15 @@ export {
   createSmallCottage,
   createStoneBridge
 } from "@/lib/voxel/presets";
+export type {
+  RenderMode,
+  ResolvedRenderMode,
+  VoxelRenderGroup,
+  RenderPosition
+} from "@/lib/voxel/rendering";
+export type {
+  ModelBoundingBox
+} from "@/lib/voxel/camera";
 export type {
   BlockType,
   PresetId,
@@ -111,3 +138,10 @@ export type {
   SpongeSchematicExportOptions,
   SpongeSchematicV3
 } from "@/lib/voxel/schematic/spongeSchematic";
+export type {
+  ImportedLitematic,
+  LitematicBlockState,
+  LitematicImportLimits,
+  LitematicRegion,
+  ParsedLitematic
+} from "@/lib/voxel/litematic/litematicTypes";

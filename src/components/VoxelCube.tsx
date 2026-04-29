@@ -16,6 +16,8 @@ export function VoxelCube({ block, model }: VoxelCubeProps) {
       <boxGeometry args={[0.96, 0.96, 0.96]} />
       <meshStandardMaterial
         color={style.color}
+        emissive={style.emissive}
+        emissiveIntensity={style.emissiveIntensity ?? 0}
         metalness={style.metalness ?? 0}
         opacity={style.opacity ?? 1}
         roughness={style.roughness ?? 0.75}
