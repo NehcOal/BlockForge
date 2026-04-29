@@ -1,6 +1,6 @@
 # Builder Station
 
-Status: `4.0.0-beta.1` beta candidate. Minecraft manual regression is pending.
+Status: `4.1.0-beta.1` beta candidate. Minecraft manual regression is pending.
 
 Builder Station is the beta server-side construction runner for BuildPlan
 jobs. v3.5 registered the in-game block on all three loaders; v4.0 adds the
@@ -23,6 +23,9 @@ placement.
 - `BuilderStationTickExecutor`: pure runtime that marks bounded BuildPlan
   batches and refuses unsafe ticks when chunks, protection, materials, quota, or
   cooldown gates fail.
+- `BuilderStationStatusView`: common state payload for future station screens.
+- `BuilderStationActionValidator`: server-side action gate for create/start/
+  pause/resume/step/cancel/clear GUI buttons.
 - NeoForge command scaffold:
   - `/blockforge station list`
   - `/blockforge station info`
@@ -44,9 +47,9 @@ placement.
 - Persistent queue storage.
 - Full Material Cache inventory-backed sourcing.
 - Multiplayer conflict resolution.
-- UI/menu for station jobs.
+- Loader-specific UI/menu for station jobs.
 
-Those are planned follow-up commits inside the v3.5 train.
+Those remain planned follow-up commits inside the v4.x gameplay beta train.
 
 ## Safety Rules
 

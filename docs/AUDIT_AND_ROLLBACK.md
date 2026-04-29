@@ -1,11 +1,11 @@
 # BlockForge Audit And Rollback
 
-Version: 4.0.0-beta.1
+Version: 4.1.0-beta.1
 
-Audit and rollback support is alpha-scaffolded for multiplayer servers.
+Audit and rollback support is beta-scaffolded for multiplayer servers.
 
-v4.0 keeps audit persistence partial. The common audit DTO and in-memory lookup
-remain available, while JSONL persistence is still planned.
+v4.1 adds JSONL formatting and admin rollback decision logic. Loader-level file
+writing and world rollback integration remain partial until real server testing.
 
 ## Audit Events
 
@@ -16,6 +16,11 @@ The common audit model can record:
 - Builder Station start / pause / resume / cancel / complete
 - Undo
 - Material consumed / refunded summary
+
+`AuditJsonlFormatter` serializes each `BuildAuditEntry` to one JSON object per
+line for the planned path:
+
+`config/blockforge/audit/blockforge-audit-YYYY-MM-DD.jsonl`
 
 ## Commands
 
@@ -29,10 +34,12 @@ Fabric / Forge command parity is planned.
 
 ## Rollback
 
-Rollback depends on existing undo snapshots. If no snapshot exists, admin rollback should report unavailable instead of guessing world changes.
+Rollback depends on existing undo snapshots. `AdminRollbackPlanner` rejects
+rollback when the caller lacks permission, no snapshot exists, or protection is
+enforced and denies the rollback area. It never guesses world changes.
 
 ## Current Alpha Limits
 
-- Persistent audit export is planned.
-- Admin rollback command is planned.
+- Loader file-writing integration for JSONL audit is pending.
+- Admin rollback world integration is partial.
 - Dedicated server smoke test is pending.

@@ -1,6 +1,6 @@
 # Gameplay Blocks
 
-Status: `4.0.0-beta.1` Beta candidate. Minecraft manual regression is pending.
+Status: `4.1.0-beta.1` Beta candidate. Minecraft manual regression is pending.
 
 See also: [Gameplay GUI](./GAMEPLAY_GUI.md).
 
@@ -23,7 +23,7 @@ Connector easier to use in survival and server play.
 
 - Registered on NeoForge, Fabric, and Forge as an Alpha gameplay block.
 - Intended role: a BlockForge-specific material source for Builder Wand builds.
-- v4.0.0-beta.1 exposes the block and material source DTOs first.
+- v4.1.0-beta.1 exposes the block and material source DTOs first.
 - Inventory-backed cache sourcing and refund targeting are planned follow-up
   polish inside the v3.1 train.
 

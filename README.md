@@ -5,21 +5,26 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v4.0.0 Gameplay Beta Candidate
+## v4.1.0 Gameplay GUI + Runtime Beta
 
-BlockForge v4.0.0-beta.1 focuses on making the v3 gameplay systems safer to
+BlockForge v4.1.0-beta.1 focuses on making the v3 gameplay systems safer to
 test on real clients and servers. It does not add new Web or AI product scope.
 
 Beta highlights:
 
-- Builder Station common tick runtime with loaded-chunk, protection, material,
-  quota, and cooldown gates.
+- Material Cache menu state and Builder Station status/action DTOs for
+  loader-safe GUI implementation.
+- Builder Station action validation for create/start/pause/resume/step/cancel
+  buttons.
+- Audit JSONL formatting, admin rollback decisions, and friendly cooldown
+  policy helpers.
 - Diagnostics fields for active stations, active jobs, audit entries, quota
   denials, and material network sources.
-- Gameplay Beta testing and QA report docs.
+- Gameplay GUI, audit, rollback, and beta QA docs updated for v4.1.
 
-Still partial: loader-integrated station world placement, Material Cache GUI,
-Builder Station GUI, audit persistence, and real dedicated server QA.
+Still partial: loader-specific Material Cache/Builder Station screens,
+loader-integrated station world placement, audit file writing, and real
+dedicated server QA.
 
 See [Gameplay Beta Testing](./docs/GAMEPLAY_BETA_TESTING.md) and
 [Gameplay Beta QA Report](./docs/GAMEPLAY_BETA_QA_REPORT.md).
@@ -47,7 +52,7 @@ See [Builder Station](./docs/BUILDER_STATION.md) and
 
 ## v3.2.0 Construction Workflow + Build Planner Alpha
 
-BlockForge v4.0.0-beta.1 adds the first Build Planner layer. It turns a
+BlockForge v3.2.0-alpha.1 adds the first Build Planner layer. It turns a
 blueprint placement into a deterministic, previewable construction plan before
 the world is touched.
 
@@ -68,7 +73,7 @@ See [Build Planner](./docs/BUILD_PLANNER.md).
 
 ## v3.1.0 Gameplay Utility Blocks + Advanced Builder Wand Alpha
 
-BlockForge v4.0.0-beta.1 starts the in-game utility pass for NeoForge,
+BlockForge v3.1.0-alpha.1 starts the in-game utility pass for NeoForge,
 Fabric, and Forge. The goal is to make BlockForge usable from inside Minecraft
 without leaning on commands for every step.
 
@@ -99,7 +104,7 @@ Current validation status:
 
 ## v2.0.0 AI Generation Alpha
 
-BlockForge v4.0.0-beta.1 adds an optional AI generation pipeline while keeping
+BlockForge v4.1.0-beta.1 adds an optional AI generation pipeline while keeping
 the Local Rule Generator as the default fallback.
 
 AI Generation highlights:
@@ -120,9 +125,9 @@ known Alpha limits.
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-4.0.0-beta.1.jar`
-- `blockforge-connector-fabric-4.0.0-beta.1.jar`
-- `blockforge-connector-forge-4.0.0-beta.1.jar`
+- `blockforge-connector-neoforge-4.1.0-beta.1.jar`
+- `blockforge-connector-fabric-4.1.0-beta.1.jar`
+- `blockforge-connector-forge-4.1.0-beta.1.jar`
 
 Current validation status:
 
@@ -776,9 +781,9 @@ tests when they affect voxel generation or export behavior.
 ## License
 
 MIT
-# BlockForge v4.0.0-beta.1
+# BlockForge v4.1.0-beta.1
 
-BlockForge v4.0.0-beta.1 is a Product Workbench Alpha: release readiness,
+BlockForge v4.1.0-beta.1 is a Product Workbench Alpha: release readiness,
 experimental Litematica import, local Blueprint Gallery, server/admin polish,
 and a unified Web workbench shell.
 

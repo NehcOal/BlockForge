@@ -1,9 +1,9 @@
 # BlockForge Gameplay GUI
 
-Version: 4.0.0-beta.1
+Version: 4.1.0-beta.1
 
-Status: partial / planned. This beta keeps dedicated-server safety ahead of GUI
-scope.
+Status: common state/action layer implemented; loader-specific screens remain
+partial. This beta keeps dedicated-server safety ahead of GUI scope.
 
 ## Blueprint Table
 
@@ -22,16 +22,25 @@ Planned polish:
 
 ## Material Cache
 
-Status: planned / partial.
+Status: common menu state implemented; loader screens partial.
 
-The block is registered and documented, but a full inventory GUI and quick-move
-flow still need loader-specific implementation and real Minecraft testing.
+`MaterialCacheMenuState` carries cache id, position, slot counts, linked station
+count, material source priority, accessibility, protection state, and warnings.
+NeoForge/Fabric/Forge can render this state without loading client screen
+classes from common/server code.
+
+Still pending: full loader inventory screen, quick-move behavior, automation
+access, and real Minecraft inventory sync testing.
 
 ## Builder Station
 
-Status: planned / partial.
+Status: common status/action layer implemented; loader screens partial.
 
-The common runtime can process safe batches in pure tests. The GUI should show:
+The common runtime can process safe batches in pure tests. v4.1 adds
+`BuilderStationStatusView`, `BuilderStationAction`, and
+`BuilderStationActionValidator` so button clicks can be validated server-side.
+
+The GUI should show:
 
 - bound blueprint
 - bound anchor
@@ -47,7 +56,10 @@ permissions and state transitions.
 
 ## Construction Core
 
-Status: scaffold.
+Status: status view scaffold.
+
+`ConstructionCoreStatusView` summarizes project id, owner, station count, anchor
+count, cache count, and active job count.
 
 Expected future UI:
 
@@ -62,3 +74,4 @@ Expected future UI:
 - Client must not mutate job state directly.
 - Server remains authoritative for station, cache, quota, audit, and placement
   decisions.
+- Minecraft manual regression and dedicated server smoke test remain pending.

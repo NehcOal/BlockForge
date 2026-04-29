@@ -1,6 +1,6 @@
 # Known Issues
 
-Status for v4.0.0-beta.1:
+Status for v4.1.0-beta.1:
 
 - Browser visual QA: pending.
 - Minecraft manual regression: pending.
@@ -11,8 +11,10 @@ Status for v4.0.0-beta.1:
 - Material Cache inventory-backed sourcing is partial.
 - v4.0 Station Runtime is covered by pure tests, but loader-integrated world
   placement still needs real Minecraft validation.
-- Material Cache GUI and Builder Station GUI are planned / partial.
-- Audit persistence and admin rollback are planned / partial.
+- Material Cache GUI and Builder Station GUI have common state/action models,
+  but loader-specific screens are partial.
+- Audit JSONL formatting and admin rollback decisions are implemented in common
+  logic, but loader file-writing and world rollback integration are partial.
 - Modrinth / CurseForge publishing: pending.
 - Litematica support is partial and experimental.
 - No cloud sync.

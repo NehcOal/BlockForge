@@ -1,4 +1,4 @@
-# BlockForge v4.0.0-beta.1 - Gameplay Beta Candidate
+# BlockForge v4.1.0-beta.1 - Gameplay Beta Candidate
 
 ## Release Train Rules
 
@@ -16,7 +16,7 @@ major-version feature branch and release train.
 
 ## Release Type
 
-- Version: `4.0.0-beta.1`
+- Version: `4.1.0-beta.1`
 - Type: Gameplay Beta candidate
 - Stability: Alpha for Fabric and Forge, recommended full experience on NeoForge
 
@@ -33,9 +33,9 @@ major-version feature branch and release train.
 
 ## Download Files
 
-- `blockforge-connector-neoforge-4.0.0-beta.1.jar`
-- `blockforge-connector-fabric-4.0.0-beta.1.jar`
-- `blockforge-connector-forge-4.0.0-beta.1.jar`
+- `blockforge-connector-neoforge-4.1.0-beta.1.jar`
+- `blockforge-connector-fabric-4.1.0-beta.1.jar`
+- `blockforge-connector-forge-4.1.0-beta.1.jar`
 
 ## Feature Matrix
 
@@ -73,7 +73,21 @@ major-version feature branch and release train.
 | Server Audit / Quota DTOs | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 | NeoForge Station Commands | ✅ Alpha scaffold | planned | planned |
 | Station Runtime pure tick executor | ✅ Beta | ✅ common | ✅ common |
+| Material Cache GUI state | ✅ common | ✅ common | ✅ common |
+| Builder Station GUI action model | ✅ common | ✅ common | ✅ common |
+| Audit JSONL formatter | ✅ common | ✅ common | ✅ common |
+| Admin rollback decision model | ✅ common | ✅ common | ✅ common |
 | Gameplay Beta QA docs | ✅ Beta | ✅ Beta | ✅ Beta |
+
+## v4.1 Highlights
+
+- Material Cache GUI state now has a common server-safe payload.
+- Builder Station GUI actions now have common server-side validation.
+- Construction Core exposes a common project overview status view.
+- Audit entries can be serialized as JSONL for the planned audit file path.
+- Admin rollback decisions now check permission, snapshot availability, and
+  protection policy before world rollback integration.
+- Cooldown policy returns clear remaining-time messages.
 
 ## v4.0 Highlights
 
@@ -288,7 +302,7 @@ Manual Minecraft status:
 - Supported loaders: NeoForge, Fabric, Forge.
 - Manual Minecraft regression testing pending unless explicitly verified.
 - External permission and claim integrations are planned optional adapters.
-# BlockForge v4.0.0-beta.1 - Product Workbench Alpha
+# BlockForge v4.1.0-beta.1 - Product Workbench Alpha
 
 ## Summary
 
