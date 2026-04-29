@@ -239,7 +239,7 @@ Forge now loads `config/blockforge/protection-regions.json` and runs BlockForge
 permission/protection preflight before build commands, Builder Wand placement,
 material consumption, and nearby-container material use. External permission and
 claim integration is planned; the Alpha falls back to vanilla permission levels.
-# v1.8.0-alpha.1 GUI Search Notes
+# v4.0.0-beta.1 GUI Search Notes
 
 - `/blockforge gui` and the default `B` key open the Alpha selector with
   search, pagination, source filtering, warning filtering, sorting, source tags,
@@ -248,3 +248,35 @@ claim integration is planned; the Alpha falls back to vanilla permission levels.
 - Selection remains server-validated and continues to update Builder Wand and
   Ghost Preview state.
 - Minecraft manual regression is pending.
+
+## v4.0.0-beta.1 Web Rendering Note
+
+Connector logic is unchanged in this release. Version is synchronized with the
+Web Rendering Performance + Screenshot Export Alpha.
+
+## v4.0.0-beta.1 Notes
+
+- Version aligned to 4.0.0-beta.1.
+- Server diagnostics and dedicated server documentation are Alpha documentation items for this train.
+- Core connector gameplay logic is unchanged in the Web productization pass.
+- Minecraft manual regression and dedicated server smoke testing remain pending.
+
+
+
+## v4.0.0-beta.1 Gameplay Tools Notes
+
+- Adds Blueprint Table, Material Cache, and Builder Anchor block/item registration.
+- Blueprint Table opens the existing Blueprint Selector GUI from in-world right-click.
+- Builder Anchor binds the player's Builder Wand state to the anchor coordinate.
+- Builder Wand supports shared advanced mode state; sneak + right-click cycles modes.
+- Material Cache inventory-backed sourcing is registered as Alpha follow-up work.
+- Minecraft manual regression and dedicated server smoke testing remain pending.
+
+
+## v4.0.0-beta.1 Build Planner Notes
+
+- Adds shared BuildPlan manager scaffolding for this loader.
+- BuildPlan pure logic covers deterministic layer planning, validation, progress, and repair plan generation.
+- NeoForge currently has the reference `/blockforge buildplan ...` command set.
+- Real per-step world placement and Fabric/Forge command parity are planned v3.2 train polish.
+- Minecraft manual regression and dedicated server smoke testing remain pending.
