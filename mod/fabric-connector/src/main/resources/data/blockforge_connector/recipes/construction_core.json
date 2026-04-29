@@ -1,0 +1,26 @@
+{
+  "result": {
+    "count": 1,
+    "id": "blockforge_connector:construction_core"
+  },
+  "pattern": [
+    "ADA",
+    "RCR",
+    "ADA"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "C": {
+      "item": "minecraft:crafting_table"
+    }
+  },
+  "type": "minecraft:crafting_shaped"
+}

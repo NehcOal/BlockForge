@@ -2,30 +2,38 @@
 
 import { OrbitControls } from "@react-three/drei";
 import { useMemo } from "react";
+import { InstancedVoxelModel } from "@/components/InstancedVoxelModel";
 import { VoxelCube } from "@/components/VoxelCube";
-import { getCameraPosition } from "@/lib/voxel";
+import {
+  getModelCenter,
+  getRecommendedCameraPosition,
+  resolveRenderMode,
+  type RenderMode
+} from "@/lib/voxel";
 import type { VoxelModel } from "@/types/blueprint";
 
 type VoxelSceneProps = {
   model: VoxelModel;
+  renderMode: RenderMode;
 };
 
-export function VoxelScene({ model }: VoxelSceneProps) {
+export function VoxelScene({ model, renderMode }: VoxelSceneProps) {
   const cameraTarget = useMemo<[number, number, number]>(
-    () => [0, model.size.height / 2, 0],
-    [model.size.height]
+    () => getModelCenter(model),
+    [model]
   );
-  const cameraPosition = useMemo(() => getCameraPosition(model), [model]);
+  const cameraPosition = useMemo(() => getRecommendedCameraPosition(model), [model]);
+  const resolvedRenderMode = resolveRenderMode(model.blocks.length, renderMode);
   const gridSize = useMemo(
-    () => Math.max(model.size.width, model.size.depth) + 8,
+    () => Math.max(model.size.width, model.size.depth) + 12,
     [model.size.depth, model.size.width]
   );
 
   return (
     <>
       <color args={["#080706"]} attach="background" />
-      <fog args={["#080706", 22, 55]} attach="fog" />
-      <ambientLight intensity={0.42} />
+      <fog args={["#080706", 24, 72]} attach="fog" />
+      <ambientLight intensity={0.5} />
       <directionalLight
         castShadow
         color="#ffd08a"
@@ -36,15 +44,19 @@ export function VoxelScene({ model }: VoxelSceneProps) {
       />
       <directionalLight color="#6fb8ff" intensity={0.36} position={[-12, 10, -8]} />
 
-      <group>
-        {model.blocks.map((block) => (
-          <VoxelCube
-            block={block}
-            key={`${block.x}-${block.y}-${block.z}`}
-            model={model}
-          />
-        ))}
-      </group>
+      {resolvedRenderMode === "instanced" ? (
+        <InstancedVoxelModel model={model} />
+      ) : (
+        <group>
+          {model.blocks.map((block) => (
+            <VoxelCube
+              block={block}
+              key={`${block.x}-${block.y}-${block.z}`}
+              model={model}
+            />
+          ))}
+        </group>
+      )}
 
       <gridHelper
         args={[gridSize, gridSize, "#c4852d", "#2a2117"]}
@@ -60,8 +72,8 @@ export function VoxelScene({ model }: VoxelSceneProps) {
         enablePan
         enableZoom
         makeDefault
-        maxDistance={cameraPosition[0] * 2.2}
-        minDistance={5}
+        maxDistance={Math.max(18, cameraPosition[0] * 2.4)}
+        minDistance={3}
         target={cameraTarget}
       />
     </>

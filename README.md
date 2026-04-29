@@ -5,9 +5,120 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v1.8.0 Web Polish + In-game GUI Alpha
+## v3.5.0 Builder Station + Multiplayer Server Rules Alpha
 
-BlockForge v1.8.0-alpha.1 polishes the Web import, validation, and Local
+BlockForge v3.5.0-alpha.1 starts the Builder Station and multiplayer server
+rules train.
+
+Current alpha scope:
+
+- Builder Station, Material Link, and Construction Core are registered across
+  NeoForge, Fabric, and Forge with original placeholder resources.
+- Builder Station job status, queue model, and command-driven status/step
+  scaffold.
+- Server build rules for quota, cooldown, audit, project membership, and
+  material-source policy.
+- Pure Java rule evaluator, server gameplay DTOs, and resource coverage tests.
+
+Still partial: tick-based station world placement, persistent station jobs,
+inventory-backed Material Cache sourcing, and multiplayer conflict resolution.
+
+See [Builder Station](./docs/BUILDER_STATION.md) and
+[Material Network](./docs/MATERIAL_NETWORK.md).
+
+## v3.2.0 Construction Workflow + Build Planner Alpha
+
+BlockForge v3.5.0-alpha.1 adds the first Build Planner layer. It turns a
+blueprint placement into a deterministic, previewable construction plan before
+the world is touched.
+
+Highlights:
+
+- Common BuildPlan / BuildLayer / BuildStep model.
+- Deterministic layer planning from low Y to high Y.
+- Pure validation for duplicate coordinates, missing palette references, and
+  out-of-world Y positions.
+- Per-player BuildPlan manager scaffolding across NeoForge, Fabric, and Forge.
+- NeoForge `/blockforge buildplan ...` command-driven Alpha.
+- Repair plan pure logic for missing-coordinate-only repair planning.
+
+Current limitation: v3.2 step execution is simulated and does not place blocks.
+Existing direct build and Builder Wand BUILD remain the actual placement path.
+
+See [Build Planner](./docs/BUILD_PLANNER.md).
+
+## v3.1.0 Gameplay Utility Blocks + Advanced Builder Wand Alpha
+
+BlockForge v3.5.0-alpha.1 starts the in-game utility pass for NeoForge,
+Fabric, and Forge. The goal is to make BlockForge usable from inside Minecraft
+without leaning on commands for every step.
+
+Gameplay highlights:
+
+- Blueprint Table: right-click in-world entry point for the Blueprint Selector
+  GUI.
+- Material Cache: registered Alpha utility block and common material source DTO
+  for the next cache-backed material flow.
+- Builder Anchor: right-click anchor binding for player Builder Wand state.
+- Builder Wand modes: preview, build, dry-run, materials, undo, rotate, mirror,
+  offset, anchor, and clear-preview state.
+- Sneak + right-click cycles wand mode on all three loaders.
+- NeoForge includes initial `/blockforge wand ...` command helpers for mode,
+  options, offset, mirror, replace, and anchor clear.
+
+See [Gameplay Blocks](./docs/GAMEPLAY_BLOCKS.md) and
+[Builder Wand Advanced](./docs/BUILDER_WAND_ADVANCED.md).
+
+Current validation status:
+
+| Area | Status |
+|---|---|
+| Web lint/test/build | release gate |
+| NeoForge/Fabric/Forge Gradle builds | release gate |
+| Minecraft manual regression | pending |
+| Dedicated server smoke test | pending |
+
+## v2.0.0 AI Generation Alpha
+
+BlockForge v3.5.0-alpha.1 adds an optional AI generation pipeline while keeping
+the Local Rule Generator as the default fallback.
+
+AI Generation highlights:
+
+- Local Rule Generator remains available without any API key.
+- Optional OpenAI provider runs through server-side API routes only.
+- Browser client code never reads or bundles `OPENAI_API_KEY`.
+- External AI returns an AI Structure Plan v1, not trusted final blocks.
+- Structure Plans are validated before conversion to VoxelModel and Blueprint
+  v2.
+- AI-generated blueprints can use the existing 3D preview and multi-format
+  export flow.
+- External AI requests may send prompts to the selected provider and may incur
+  API cost.
+
+See [AI Generation](./docs/AI_GENERATION.md) for setup, privacy notes, and
+known Alpha limits.
+
+Expected release jars:
+
+- `blockforge-connector-neoforge-3.5.0-alpha.1.jar`
+- `blockforge-connector-fabric-3.5.0-alpha.1.jar`
+- `blockforge-connector-forge-3.5.0-alpha.1.jar`
+
+Current validation status:
+
+| Area | Status |
+|---|---|
+| Web lint/test/build | passing |
+| AI provider tests with mocks | passing |
+| NeoForge/Fabric/Forge Gradle builds | passing |
+| External AI manual API-key smoke test | not run |
+| Manual Minecraft regression | pending |
+| Browser visual QA | pending |
+
+## v1.9.0 Web Polish + In-game GUI Alpha
+
+BlockForge v1.9.0-alpha.1 polishes the Web import, validation, and Local
 Prompt Rule Generator workbench, then adds query-based in-game GUI search,
 pagination, source filtering, warning filtering, sorting, source tags, and
 warning badges for NeoForge, Fabric, and Forge.
@@ -37,13 +148,14 @@ In-game GUI highlights:
 
 See [Web Workbench](./docs/WEB_WORKBENCH.md) for usage notes and current
 limits. See [GUI Search And Filters](./docs/GUI_SEARCH_AND_FILTERS.md) for the
-Connector GUI query model. External AI API adapter work is planned for v2.0.
+Connector GUI query model. External AI Generation Alpha is documented in
+[AI Generation](./docs/AI_GENERATION.md).
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-1.8.0-alpha.1.jar`
-- `blockforge-connector-fabric-1.8.0-alpha.1.jar`
-- `blockforge-connector-forge-1.8.0-alpha.1.jar`
+- `blockforge-connector-neoforge-1.9.0-alpha.1.jar`
+- `blockforge-connector-fabric-1.9.0-alpha.1.jar`
+- `blockforge-connector-forge-1.9.0-alpha.1.jar`
 
 Current validation status:
 
@@ -54,6 +166,35 @@ Current validation status:
 | Web Workbench unit coverage | passing |
 | Manual Minecraft regression | pending |
 | Browser visual QA | pending |
+
+## v1.9.0 Rendering Performance + Screenshot Export Alpha
+
+BlockForge v1.9.0-alpha.1 adds a Web rendering performance pass for larger
+voxel previews. The 3D preview now supports `Auto`, `Mesh`, and `Instanced`
+render modes. Auto keeps the existing mesh path for small models and switches
+to InstancedMesh rendering at 300 blocks or more, grouped by block type.
+
+Web rendering highlights:
+
+- Instanced rendering for larger voxel models.
+- Rendering stats for block count, unique block types, render mode, and draw
+  groups.
+- Minecraft-inspired procedural material styles without bundling Minecraft
+  vanilla texture files.
+- Better camera fit helpers for large and small models.
+- Export Preview PNG for README, release notes, and gallery screenshots.
+
+### Generate a README screenshot
+
+1. Open the Web app and choose or generate a model.
+2. Adjust the 3D preview camera to the desired angle.
+3. Click `Export Preview PNG`.
+4. Place the image at `public/screenshots/blockforge-hero.png` when you want to
+   use it in the README, release notes, or a Modrinth gallery.
+
+The screenshot export uses the current preview canvas and does not upload data.
+The material style is procedural; Minecraft vanilla texture files are not
+included.
 
 ## v1.6.0 Schematic Interop Alpha
 
@@ -130,6 +271,23 @@ Expected release jars:
 | Web Workbench | ✅ Alpha |
 | Blueprint validation report | ✅ Alpha |
 | Local Rule Generator | ✅ Alpha |
+| External AI Generation | ✅ Alpha |
+| AI Structure Plan validation | ✅ Alpha |
+| AI Prompt Presets | ✅ Alpha |
+| Multi-candidate Generation | ✅ Alpha |
+| AI Quality Score | ✅ Alpha |
+| Structure Plan Viewer | ✅ Alpha |
+| Candidate Compare | ✅ Alpha |
+| Refine Workflow | ✅ Alpha |
+| Generation History | ✅ Alpha |
+| Local Blueprint Library | ✅ Alpha |
+| Workspace Export/Import | ✅ Alpha |
+| Import Job Queue | ✅ Alpha |
+| Import Worker | ✅ Alpha |
+| Web 3D instanced rendering | ✅ Alpha |
+| Preview PNG export | ✅ Alpha |
+| Minecraft-inspired procedural materials | ✅ Alpha |
+| Vanilla Minecraft texture pack | ❌ Not bundled |
 
 ## Schematic Interop Matrix
 
@@ -581,22 +739,15 @@ examples/
 
 ## Roadmap
 
-- Full datapack ZIP export.
-- Ghost Preview for the Builder Wand.
-- Full Ghost Preview collision and replacement checks.
-- Improve Blueprint Selector with search, paging, and thumbnails.
-- Add material refund edge-case tests.
-- Add special material cost rules for doors, fluids, torches, and multi-block placements.
-- Improve release artifact publishing.
-- Blueprint v1/v2 schema validation tooling.
-- Fabric and Forge Connector parity work after command Alpha validation.
-- `.schem` export.
-- Block texture rendering.
-- InstancedMesh performance optimization for larger voxel models.
-- Prompt-to-structure rule engine.
-- External AI API adapter for natural-language blueprint generation, planned
-  for v2.0.
-- Screenshot gallery for GitHub project presentation.
+- Current train: `v2.5 AI Productization Alpha`. This is not stable yet.
+- v2.6: Multiplayer / Server QA.
+- v2.7: Litematica interop.
+- v2.8: Blueprint marketplace / sharing exploration.
+- v3.0: Major Product Redesign.
+
+BlockForge now groups small polish, tests, and documentation updates into the
+active major-version branch instead of creating separate small feature branches.
+See [Roadmap](./docs/ROADMAP.md) and [Release Process](./docs/RELEASE_PROCESS.md).
 
 ## Contributing
 
@@ -606,3 +757,30 @@ tests when they affect voxel generation or export behavior.
 ## License
 
 MIT
+# BlockForge v3.5.0-alpha.1
+
+BlockForge v3.5.0-alpha.1 is a Product Workbench Alpha: release readiness,
+experimental Litematica import, local Blueprint Gallery, server/admin polish,
+and a unified Web workbench shell.
+
+## v3.0 Feature Matrix
+
+| Area | Feature | Status |
+|---|---|---|
+| Web | Litematica `.litematic` import | ✅ Alpha |
+| Web | Blueprint Gallery | ✅ Alpha |
+| Web | Gallery bundle export/import | ✅ Alpha |
+| Web | Unified Workbench UI | ✅ Alpha |
+| Web | Command Palette action registry | ✅ Alpha |
+| Web | Instanced rendering | ✅ Alpha |
+| Web | Preview PNG export | ✅ Alpha |
+| Web | External AI Generation | ✅ Alpha |
+| Mod | Litematica loading | Planned / pending real connector regression |
+| Mod | Diagnostics export | Planned / pending real connector regression |
+| Docs | Server admin docs | ✅ Alpha |
+
+Pending: Browser visual QA, Minecraft manual regression, External AI live test,
+Dedicated server smoke test, Modrinth / CurseForge publishing.
+
+Litematica support is experimental and does not claim full fidelity. Every
+imported file must produce a validation report before preview, export, or build.
