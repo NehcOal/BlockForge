@@ -4,20 +4,20 @@ This checklist prepares the NeoForge Connector for real Minecraft validation.
 Passing `gradlew build` confirms compilation only; it does not replace in-game
 testing.
 
-## v1.8.0 Web Polish + GUI Search Release Gate
+## v1.9.0 Rendering Performance + Screenshot Export Release Gate
 
 Release version:
 
 ```text
-1.8.0-alpha.1
+3.0.0-alpha.1
 ```
 
 Expected release jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.8.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.8.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.8.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-3.0.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-3.0.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-3.0.0-alpha.1.jar
 ```
 
 Build validation:
@@ -2086,3 +2086,29 @@ Forge smoke result:
   `allowedPermissions: []` denies OP as well, while
   `allowedPermissions: ["blockforge.build.bypass_protection"]` allows OP
   fallback bypass.
+# v3.0 Manual Regression Checklist
+
+Minecraft manual regression is pending until NeoForge, Fabric, and Forge are
+tested in real clients/servers.
+
+For each loader:
+
+- `/blockforge status` - pending
+- `/blockforge diagnostics` - pending
+- `/blockforge diagnostics export` - pending
+- `/blockforge examples install` - pending
+- `/blockforge reload` - pending
+- `/blockforge gui` - pending
+- GUI search / pagination / filters - pending
+- select loose blueprint - pending
+- select pack blueprint - pending
+- select schem blueprint - pending
+- select litematic blueprint, if connector loading is enabled - pending
+- Builder Wand build - pending
+- Ghost Preview - pending
+- Survival material cost - pending
+- Nearby container sourcing - pending
+- Undo material refund - pending
+- Protection region denied build - pending
+- Permission fallback - pending
+- Dedicated server smoke test - pending

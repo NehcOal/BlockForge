@@ -1,9 +1,9 @@
 # Web Workbench
 
-BlockForge v1.8.0-alpha.1 polishes the local Web Import / Validation / Local
+BlockForge v3.0.0-alpha.1 polishes the local Web Import / Validation / Local
 Generation Workbench. It keeps the app local-first: files are parsed in the
-browser, validation runs locally, and no cloud storage or external AI API is
-used.
+browser, validation runs locally, and no cloud storage is used. External AI
+Generation Alpha is optional and requires a server-side provider.
 
 ## Import Workbench
 
@@ -86,9 +86,32 @@ Supported material hints include stone, wood, gold, red, and blue.
 
 ## Current Limits
 
-- This is not an external AI API adapter.
-- External AI API adapter is planned for v2.0.
+- External AI Generation Alpha requires server runtime and server-side
+  `OPENAI_API_KEY`.
+- Local Rule Generator remains available without any API key.
+- Rendering uses procedural material styles; Minecraft vanilla texture files are
+  not bundled.
+- Preview PNG export reads the current local canvas only.
 - No cloud data is saved.
 - Imported packs are parsed and summarized locally only.
 - Minecraft manual regression is pending.
 - Browser visual QA is pending.
+
+## AI Generation Alpha
+
+The Web Workbench can receive generated blueprints from:
+
+- Local Rule Generator: deterministic, local, no server request.
+- External AI Provider: optional OpenAI provider through server-side API routes.
+
+External AI results are not trusted as final blocks. They must pass AI Structure
+Plan validation, deterministic conversion, and Blueprint v2 validation before
+they are loaded into preview/export.
+# v3.0 Workbench Additions
+
+- Unified workflow navigation: Generate, Import, Library, Gallery, Preview,
+  Export, AI, Diagnostics, Docs.
+- Import `.litematic` alpha is available through the validated import pipeline.
+- Gallery saves local Blueprint v2 items and can export/import gallery bundles.
+- All imports must produce an ImportReport before preview, library save, export,
+  or connector build.
