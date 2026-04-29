@@ -29,25 +29,21 @@ public final class BuilderStationTickExecutor {
             issues.add(issue("station_disabled", "error", "Builder Station runtime is disabled."));
             return paused(job, plan, issues, gameTime);
         }
-        if (!resolvedContext.loadedChunk()) {
-            issues.add(issue("chunk_unloaded", "warning", "Target chunk is not loaded; station will not force-load chunks."));
-            return paused(job, plan, issues, gameTime);
-        }
-        if (!resolvedContext.protectionAllowed()) {
-            issues.add(issue("protection_denied", "error", "Protection preflight denied this station batch."));
-            return failed(job, plan, issues, gameTime);
-        }
-        if (!resolvedContext.quotaAllowed()) {
-            issues.add(issue("quota_denied", "error", "Server quota denied this station batch."));
-            return paused(job, plan, issues, gameTime);
-        }
-        if (!resolvedContext.cooldownReady()) {
-            issues.add(issue("cooldown", "info", "Station cooldown is still active."));
-            return paused(job, plan, issues, gameTime);
-        }
-        if (!resolvedContext.materialsAvailable()) {
-            issues.add(issue("materials_missing", "error", "Required materials are not available."));
-            return paused(job, plan, issues, gameTime);
+        StationWorldPlacementDecision placementDecision = StationWorldPlacementGate.evaluate(new StationWorldPlacementContext(
+                resolvedContext.loadedChunk(),
+                true,
+                resolvedContext.protectionAllowed(),
+                resolvedContext.quotaAllowed(),
+                resolvedContext.cooldownReady(),
+                resolvedContext.materialsAvailable(),
+                true,
+                false
+        ));
+        if (!placementDecision.allowed()) {
+            issues.add(issue(placementDecision.issueType(), placementDecision.failJob() ? "error" : "warning", placementDecision.message()));
+            return placementDecision.failJob()
+                    ? failed(job, plan, issues, gameTime)
+                    : paused(job, plan, issues, gameTime);
         }
 
         BuildPlan runningPlan = plan.status() == BuildPlanStatus.RUNNING ? plan : plan.withStatus(BuildPlanStatus.RUNNING);

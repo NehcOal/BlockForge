@@ -1,11 +1,21 @@
 # BlockForge Gameplay GUI
 
-Version: 4.2.0-beta.1
+Version: 4.3.0-beta.1
 
 Status: common state/action layer implemented; loader-specific screens remain
 partial. This beta keeps dedicated-server safety ahead of GUI scope.
 
-v4.2 adds common inventory/runtime support used by loader GUIs:
+v4.3 keeps loader GUI parity explicit instead of silently treating common DTOs
+as completed Minecraft screens:
+
+- `LoaderGuiParityReport` records NeoForge, Fabric, and Forge status for
+  Material Cache GUI, Builder Station GUI, Construction Core GUI, station world
+  placement, admin rollback, advanced commands, audit persistence, diagnostics
+  export, and dedicated-server safety.
+- `LoaderGuiParityReport.releaseReadinessLabel()` keeps partial critical GUI or
+  runtime paths in `draft-pr-only` state.
+
+v4.2 added common inventory/runtime support used by loader GUIs:
 
 - `MaterialCacheInventory` models cache slots, insert/extract, full-cache fallback, and break drops without Minecraft classes.
 - `MaterialCacheMenuState` remains the server-safe menu state DTO.
@@ -39,7 +49,8 @@ NeoForge/Fabric/Forge can render this state without loading client screen
 classes from common/server code.
 
 Still pending: full loader inventory screen, quick-move behavior, automation
-access, and real Minecraft inventory sync testing.
+access, and real Minecraft inventory sync testing. Track NeoForge, Fabric, and
+Forge separately because parity may progress at different speeds.
 
 ## Builder Station
 
@@ -83,4 +94,6 @@ Expected future UI:
 - Client must not mutate job state directly.
 - Server remains authoritative for station, cache, quota, audit, and placement
   decisions.
+- Fabric / Forge advanced command parity should be tested with command-surface
+  coverage even when a command currently returns a clear partial message.
 - Minecraft manual regression and dedicated server smoke test remain pending.

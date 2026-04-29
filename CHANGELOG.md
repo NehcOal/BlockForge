@@ -2,33 +2,36 @@
 
 All notable changes to BlockForge will be documented in this file.
 
-## [4.2.0-beta.1] - Unreleased
+## [4.3.0-beta.1] - Unreleased
 
-### v4.1 Added
+### v4.3 Added
 
-- Added common Material Cache menu state for loader-safe inventory GUI work.
-- Added Builder Station status view, action enum, and server-side action
-  validator for GUI buttons.
-- Added Construction Core status view for project overview UI scaffolding.
-- Added Audit JSONL formatter for persistent audit file output.
-- Added Admin Rollback planner for permission, snapshot, and protection
-  decisions.
-- Added CooldownPolicy helper with user-friendly remaining-time messages.
-- Added Java tests for gameplay GUI state, station actions, audit JSONL,
-  rollback decisions, and cooldown policy.
+- Added loader GUI parity status reports so NeoForge, Fabric, and Forge GUI
+  gaps are tracked explicitly instead of implied by docs.
+- Added Station world placement gate for loaded chunk, dimension, protection,
+  quota, cooldown, material reservation, replace policy, and block entity
+  protection checks.
+- Added loader command surface model for required Fabric/Forge advanced command
+  parity.
+- Added Java tests for station world placement gating, loader GUI parity, and
+  advanced command surface coverage.
 
-### v4.1 Changed
+### v4.3 Changed
 
+- Routed `BuilderStationTickExecutor` through the station world placement gate
+  so material reservation failure pauses before any batch can be marked placed.
 - Updated gameplay GUI, Builder Station, audit/rollback, beta QA, and known
-  issues docs for the v4.1 beta line.
-- Bumped Web and connector versions to `4.2.0-beta.1`.
+  issues docs for the v4.3 beta line.
+- Bumped Web and connector versions to `4.3.0-beta.1`.
 
-### v4.1 Notes
+### v4.3 Notes
 
-- Material Cache GUI and Builder Station GUI now have common state/action
-  models, but loader-specific screens remain partial.
-- Audit JSONL formatting is implemented; loader file-writing integration is
-  still pending.
+- Material Cache GUI and Builder Station GUI still require real loader screen
+  work and Minecraft client verification.
+- Station world placement has a common safety gate, but loader-integrated world
+  mutation is still partial.
+- Audit JSONL and diagnostics export have common file helpers; loader command
+  wiring still needs dedicated server validation.
 - Minecraft manual regression and dedicated server smoke testing remain
   pending until executed in real clients and servers.
 
@@ -102,7 +105,7 @@ All notable changes to BlockForge will be documented in this file.
 ### v3.2 Notes
 
 - BuildPlan `step` is a safe command-alpha simulated batch in
-  `4.2.0-beta.1`; it does not place world blocks yet.
+  `4.3.0-beta.1`; it does not place world blocks yet.
 - Existing direct build and Builder Wand BUILD remain the real placement path.
 - Fabric/Forge command parity and real loader step execution are planned inside
   the v3.2 train.
@@ -150,7 +153,7 @@ All notable changes to BlockForge will be documented in this file.
   fallback scaffolding.
 - Added v2.5 docs for AI quality, local library, import pipeline, server admin,
   and dedicated server setup.
-- Updated release docs for `4.2.0-beta.1` packaging and pending QA.
+- Updated release docs for `4.3.0-beta.1` packaging and pending QA.
 
 ### Added
 
@@ -201,7 +204,7 @@ All notable changes to BlockForge will be documented in this file.
   workbench while keeping the existing preview and multi-format export flow.
 - Web import summaries and validation reports are clearer and collapsible, with
   user-readable import errors and expandable developer details.
-- Aligned Web, NeoForge, Fabric, and Forge versions to `4.2.0-beta.1`.
+- Aligned Web, NeoForge, Fabric, and Forge versions to `4.3.0-beta.1`.
 - Adopted a major-version train process: small polish, docs, tests, and bugfixes
   stay in the active major-version branch instead of opening `0.0.1` feature
   branches.
@@ -947,7 +950,7 @@ All notable changes to BlockForge will be documented in this file.
 
 - Prompt input is local UI state in v0.1.0. Real prompt-to-structure generation is planned for a future release.
 - Full datapack ZIP export, `.schem` export, block texture rendering, and InstancedMesh performance optimization are on the roadmap.
-# 4.2.0-beta.1
+# 4.3.0-beta.1
 
 ## Added
 

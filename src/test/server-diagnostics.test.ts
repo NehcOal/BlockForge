@@ -4,7 +4,7 @@ import { createServerDiagnosticsReport, formatServerStatus, validateServerDiagno
 describe("server diagnostics", () => {
   it("formats registry summary and warnings", () => {
     const report = createServerDiagnosticsReport({
-      version: "4.2.0-beta.1",
+      version: "4.3.0-beta.1",
       loader: "neoforge",
       minecraftVersion: "1.21.1",
       loadedLooseBlueprints: 2,

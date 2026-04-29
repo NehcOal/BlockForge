@@ -7,7 +7,7 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 ## v4.1.0 Gameplay GUI + Runtime Beta
 
-BlockForge v4.2.0-beta.1 focuses on making the v3 gameplay systems safer to
+BlockForge v4.3.0-beta.1 focuses on making the v3 gameplay systems safer to
 test on real clients and servers. It does not add new Web or AI product scope.
 
 Beta highlights:
@@ -104,7 +104,7 @@ Current validation status:
 
 ## v2.0.0 AI Generation Alpha
 
-BlockForge v4.2.0-beta.1 adds an optional AI generation pipeline while keeping
+BlockForge v4.3.0-beta.1 adds an optional AI generation pipeline while keeping
 the Local Rule Generator as the default fallback.
 
 AI Generation highlights:
@@ -125,9 +125,9 @@ known Alpha limits.
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-4.2.0-beta.1.jar`
-- `blockforge-connector-fabric-4.2.0-beta.1.jar`
-- `blockforge-connector-forge-4.2.0-beta.1.jar`
+- `blockforge-connector-neoforge-4.3.0-beta.1.jar`
+- `blockforge-connector-fabric-4.3.0-beta.1.jar`
+- `blockforge-connector-forge-4.3.0-beta.1.jar`
 
 Current validation status:
 
@@ -781,9 +781,9 @@ tests when they affect voxel generation or export behavior.
 ## License
 
 MIT
-# BlockForge v4.2.0-beta.1
+# BlockForge v4.3.0-beta.1
 
-BlockForge v4.2.0-beta.1 is a Product Workbench Alpha: release readiness,
+BlockForge v4.3.0-beta.1 is a Product Workbench Alpha: release readiness,
 experimental Litematica import, local Blueprint Gallery, server/admin polish,
 and a unified Web workbench shell.
 

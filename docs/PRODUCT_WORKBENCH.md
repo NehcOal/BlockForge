@@ -1,6 +1,6 @@
 # Product Workbench
 
-BlockForge v4.2.0-beta.1 introduces a unified product workbench shell. It is
+BlockForge v4.3.0-beta.1 introduces a unified product workbench shell. It is
 an information architecture update, not a rewrite of the existing stack.
 
 ## Navigation

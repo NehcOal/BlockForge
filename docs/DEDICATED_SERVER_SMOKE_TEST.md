@@ -1,6 +1,6 @@
 # BlockForge Dedicated Server Smoke Test
 
-Status: `4.2.0-beta.1` checklist. Do not mark passed until the server is actually started and the commands below are run.
+Status: `4.3.0-beta.1` checklist. Do not mark passed until the server is actually started and the commands below are run.
 
 Run this separately for NeoForge, Fabric, and Forge on Minecraft `1.21.1` with Java `21`.
 

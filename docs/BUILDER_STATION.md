@@ -1,6 +1,6 @@
 # Builder Station
 
-Status: `4.2.0-beta.1` beta candidate. Minecraft manual regression is pending.
+Status: `4.3.0-beta.1` beta candidate. Minecraft manual regression is pending.
 
 Builder Station is the beta server-side construction runner for BuildPlan
 jobs. v3.5 registered the in-game block on all three loaders; v4.0 adds the
@@ -8,6 +8,12 @@ common tick runtime used to validate station batches before loader world
 placement.
 
 v4.2 adds `StationMaterialResolver` and tightens runtime status handling. The resolver can require cache-backed station sources, reject owner inventory when server rules disable it, and pause station batches when material, quota, cooldown, chunk, or protection gates fail. Completion is driven by the ticked `BuildPlan` status rather than stale job totals.
+
+v4.3 adds `StationWorldPlacementGate`, a common pre-mutation gate that loader
+runtimes must call before placing any world block. It checks loaded chunk,
+dimension, protection, quota, cooldown, material reservation, replace policy,
+and protected block entities. Missing material pauses the job before a batch can
+be marked placed.
 
 ## Current Scope
 
@@ -45,9 +51,9 @@ v4.2 adds `StationMaterialResolver` and tightens runtime status handling. The re
 
 ## Not Yet Implemented
 
-- Tick-based world placement.
+- Loader-integrated world placement for station batches.
 - Persistent queue storage.
-- Full Material Cache inventory-backed sourcing.
+- Full loader Material Cache inventory-backed sourcing.
 - Multiplayer conflict resolution.
 - Loader-specific UI/menu for station jobs.
 

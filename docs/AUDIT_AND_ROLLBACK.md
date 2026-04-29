@@ -1,6 +1,6 @@
 # BlockForge Audit And Rollback
 
-Version: 4.2.0-beta.1
+Version: 4.3.0-beta.1
 
 v4.2 adds `AuditJsonlWriter`, a server-safe file writer for `config/blockforge/audit/blockforge-audit-YYYY-MM-DD.jsonl`.
 
