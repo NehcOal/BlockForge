@@ -1,4 +1,4 @@
-# BlockForge v4.1.0-beta.1 - Gameplay Beta Candidate
+# BlockForge v4.2.0-beta.1 - Gameplay Beta Candidate
 
 ## Release Train Rules
 
@@ -16,7 +16,7 @@ major-version feature branch and release train.
 
 ## Release Type
 
-- Version: `4.1.0-beta.1`
+- Version: `4.2.0-beta.1`
 - Type: Gameplay Beta candidate
 - Stability: Alpha for Fabric and Forge, recommended full experience on NeoForge
 
@@ -33,9 +33,9 @@ major-version feature branch and release train.
 
 ## Download Files
 
-- `blockforge-connector-neoforge-4.1.0-beta.1.jar`
-- `blockforge-connector-fabric-4.1.0-beta.1.jar`
-- `blockforge-connector-forge-4.1.0-beta.1.jar`
+- `blockforge-connector-neoforge-4.2.0-beta.1.jar`
+- `blockforge-connector-fabric-4.2.0-beta.1.jar`
+- `blockforge-connector-forge-4.2.0-beta.1.jar`
 
 ## Feature Matrix
 
@@ -302,7 +302,7 @@ Manual Minecraft status:
 - Supported loaders: NeoForge, Fabric, Forge.
 - Manual Minecraft regression testing pending unless explicitly verified.
 - External permission and claim integrations are planned optional adapters.
-# BlockForge v4.1.0-beta.1 - Product Workbench Alpha
+# BlockForge v4.2.0-beta.1 - Product Workbench Alpha
 
 ## Summary
 

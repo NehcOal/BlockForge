@@ -1,9 +1,18 @@
 # BlockForge Gameplay GUI
 
-Version: 4.1.0-beta.1
+Version: 4.2.0-beta.1
 
 Status: common state/action layer implemented; loader-specific screens remain
 partial. This beta keeps dedicated-server safety ahead of GUI scope.
+
+v4.2 adds common inventory/runtime support used by loader GUIs:
+
+- `MaterialCacheInventory` models cache slots, insert/extract, full-cache fallback, and break drops without Minecraft classes.
+- `MaterialCacheMenuState` remains the server-safe menu state DTO.
+- `BuilderStationStatusView` and `BuilderStationActionValidator` gate station buttons before server actions execute.
+- Loader-specific Material Cache and Builder Station screens remain partial until Minecraft client/server smoke tests are completed.
+
+Do not mark Material Cache GUI or Builder Station GUI as fully passed until NeoForge, Fabric, and Forge have been opened in-game and verified.
 
 ## Blueprint Table
 

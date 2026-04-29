@@ -1,13 +1,20 @@
-# BlockForge v4.1.0-beta.1 Gameplay Beta QA Report
+# BlockForge v4.2.0-beta.1 Gameplay Beta QA Report
 
 Date: 2026-04-29
 
 ## Summary
 
-v4.1.0-beta.1 continues the gameplay beta line by adding common GUI state/action
+v4.2.0-beta.1 continues the gameplay beta line by adding common GUI state/action
 models, audit JSONL formatting, admin rollback decisions, and cooldown policy
 helpers. Loader-specific screens and real server world integration remain
 partial.
+
+Additional v4.2 automated coverage:
+
+- Material Cache pure inventory insert/extract/drop behavior.
+- Station material resolver cache/owner-inventory server rules.
+- Audit JSONL file writing.
+- Diagnostics JSON export shape.
 
 This report does not claim Minecraft manual regression or dedicated server
 smoke testing passed.
@@ -34,9 +41,9 @@ Fill after final validation:
 | World block placement from station tick | partial, loader integration still guarded |
 | Material Cache GUI | common menu state implemented; loader screens partial |
 | Builder Station GUI | common status/action model implemented; loader screens partial |
-| Audit persistence | JSONL formatter implemented; loader file writing partial |
+| Audit persistence | common JSONL file writer implemented; loader command wiring needs smoke test |
 | Admin rollback | common decision logic implemented; world integration partial |
-| Diagnostics fields | implemented in Web/server diagnostics model |
+| Diagnostics fields | common JSON export model implemented; loader command wiring needs smoke test |
 
 ## Manual QA
 
@@ -51,6 +58,6 @@ Fill after final validation:
 
 ## Release Recommendation
 
-v4.1.0-beta.1 is suitable for a GitHub beta prerelease candidate from automated
+v4.2.0-beta.1 is suitable for a GitHub beta prerelease candidate from automated
 validation. It should not be marked stable until manual Minecraft and dedicated
 server QA are recorded.

@@ -1,4 +1,4 @@
-# BlockForge v4.1.0-beta.1 Gameplay Beta Testing
+# BlockForge v4.2.0-beta.1 Gameplay Beta Testing
 
 Status: beta candidate checklist. Manual Minecraft regression is pending until
 run in real clients and dedicated servers.

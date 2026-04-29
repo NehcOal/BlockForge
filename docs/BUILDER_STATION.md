@@ -1,11 +1,13 @@
 # Builder Station
 
-Status: `4.1.0-beta.1` beta candidate. Minecraft manual regression is pending.
+Status: `4.2.0-beta.1` beta candidate. Minecraft manual regression is pending.
 
 Builder Station is the beta server-side construction runner for BuildPlan
 jobs. v3.5 registered the in-game block on all three loaders; v4.0 adds the
 common tick runtime used to validate station batches before loader world
 placement.
+
+v4.2 adds `StationMaterialResolver` and tightens runtime status handling. The resolver can require cache-backed station sources, reject owner inventory when server rules disable it, and pause station batches when material, quota, cooldown, chunk, or protection gates fail. Completion is driven by the ticked `BuildPlan` status rather than stale job totals.
 
 ## Current Scope
 

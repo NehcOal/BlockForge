@@ -1,6 +1,6 @@
 # BlockForge Server Gameplay Rules
 
-Version: 4.1.0-beta.1
+Version: 4.2.0-beta.1
 
 Server Gameplay Rules are the alpha control layer for multiplayer BlockForge builds.
 

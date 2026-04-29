@@ -25,7 +25,7 @@ Recommended current branch:
 
 ## Current Beta Rules
 
-- Keep `4.1.0-beta.1` clearly marked as Beta, not stable.
+- Keep `4.2.0-beta.1` clearly marked as Beta, not stable.
 - Keep Local Rule Generator as the no-key fallback.
 - Keep OpenAI provider optional and server-side only.
 - Do not expose API keys to browser client code.

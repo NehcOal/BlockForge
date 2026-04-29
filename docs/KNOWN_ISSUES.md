@@ -1,6 +1,6 @@
 # Known Issues
 
-Status for v4.1.0-beta.1:
+Status for v4.2.0-beta.1:
 
 - Browser visual QA: pending.
 - Minecraft manual regression: pending.
@@ -23,3 +23,7 @@ Status for v4.1.0-beta.1:
 - Fabric / Forge advanced NBT undo coverage may remain partial.
 - Binary `.litematic` parsing needs broader fixture coverage before any stable
   compatibility claim.
+- Material Cache has common inventory logic, but loader-specific menu/screen behavior still needs manual client and server testing.
+- Builder Station has common runtime/material resolution, but full world placement and GUI parity remain partial until in-game regression is completed.
+- Audit JSONL writing has common file support, but loader command wiring and export flows need dedicated server validation.
+- Diagnostics JSON export has common file support, but loader command wiring needs dedicated server validation.

@@ -1,12 +1,19 @@
 # BlockForge Material Network Alpha
 
-Version: 4.1.0-beta.1
+Version: 4.2.0-beta.1
 
 Material Network is the v3.5 alpha scaffold for connecting Builder Station jobs to explicit material sources.
 
 v4.0 keeps the network server-safe: Material Link and Builder Station source
 types are modeled, but remote chunk loading and cross-dimension links remain
 blocked.
+
+v4.2 adds a pure `MaterialCacheInventory` and `StationMaterialResolver`:
+
+- Material Cache inventory supports deterministic insert/extract behavior.
+- Full caches return a remainder so loader adapters can fall back to player inventory or world drops.
+- Station material resolution can require cache-backed sources and reject owner inventory when server rules disable it.
+- Real loader inventory sync and hopper/automation behavior still require Minecraft runtime testing.
 
 ## Blocks
 
