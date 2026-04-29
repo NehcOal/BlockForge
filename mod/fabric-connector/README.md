@@ -235,7 +235,7 @@ BlockForge permission/protection preflight before build commands, Builder Wand
 placement, material consumption, and nearby-container material use. Fabric
 Permissions API / LuckPerms integration is planned; the Alpha falls back to
 vanilla permission levels.
-# v2.5.0-alpha.1 GUI Search Notes
+# v3.0.0-alpha.1 GUI Search Notes
 
 - `/blockforge gui` and the default `B` key open the Alpha selector with
   search, pagination, source filtering, warning filtering, sorting, source tags,
@@ -245,14 +245,14 @@ vanilla permission levels.
   Ghost Preview state.
 - Minecraft manual regression is pending.
 
-## v2.5.0-alpha.1 Web Rendering Note
+## v3.0.0-alpha.1 Web Rendering Note
 
 Connector logic is unchanged in this release. Version is synchronized with the
 Web Rendering Performance + Screenshot Export Alpha.
 
-## v2.5.0-alpha.1 Notes
+## v3.0.0-alpha.1 Notes
 
-- Version aligned to 2.5.0-alpha.1.
+- Version aligned to 3.0.0-alpha.1.
 - Server diagnostics and dedicated server documentation are Alpha documentation items for this train.
 - Core connector gameplay logic is unchanged in the Web productization pass.
 - Minecraft manual regression and dedicated server smoke testing remain pending.

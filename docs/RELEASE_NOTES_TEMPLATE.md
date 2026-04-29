@@ -1,4 +1,4 @@
-# BlockForge v2.5.0-alpha.1 - AI Productization + Local Library + Import Hardening
+# BlockForge v3.0.0-alpha.1 - AI Productization + Local Library + Import Hardening
 
 ## Release Train Rules
 
@@ -16,7 +16,7 @@ major-version feature branch and release train.
 
 ## Release Type
 
-- Version: `2.5.0-alpha.1`
+- Version: `3.0.0-alpha.1`
 - Type: AI Productization Alpha candidate
 - Stability: Alpha for Fabric and Forge, recommended full experience on NeoForge
 
@@ -33,9 +33,9 @@ major-version feature branch and release train.
 
 ## Download Files
 
-- `blockforge-connector-neoforge-2.5.0-alpha.1.jar`
-- `blockforge-connector-fabric-2.5.0-alpha.1.jar`
-- `blockforge-connector-forge-2.5.0-alpha.1.jar`
+- `blockforge-connector-neoforge-3.0.0-alpha.1.jar`
+- `blockforge-connector-fabric-3.0.0-alpha.1.jar`
+- `blockforge-connector-forge-3.0.0-alpha.1.jar`
 
 ## Feature Matrix
 
@@ -195,3 +195,27 @@ Manual Minecraft status:
 - Supported loaders: NeoForge, Fabric, Forge.
 - Manual Minecraft regression testing pending unless explicitly verified.
 - External permission and claim integrations are planned optional adapters.
+# BlockForge v3.0.0-alpha.1 - Product Workbench Alpha
+
+## Summary
+
+Release Readiness + Litematica Interop Alpha + Blueprint Gallery + Server Admin
+Polish + Unified Product Workbench.
+
+## Major Changes
+
+- Unified Product Workbench shell and status bar.
+- Command Palette action registry.
+- Experimental `.litematic` import pipeline into Blueprint v2.
+- Local Blueprint Gallery and `.blockforgegallery.zip` bundle format.
+- Server diagnostics schema/docs and server issue template.
+- v3.0 QA/readiness documentation.
+
+## Known Limitations
+
+- Browser visual QA pending.
+- Minecraft manual regression pending.
+- External AI live test pending.
+- Dedicated server smoke test pending.
+- Litematica support is partial and experimental.
+- No Modrinth / CurseForge publishing unless performed manually.

@@ -2,7 +2,7 @@
 
 Status: Browser visual QA pending until manually checked.
 
-Use this checklist before promoting `v2.5.0-alpha.1` from Alpha candidate to a public release.
+Use this checklist before promoting `v3.0.0-alpha.1` from Alpha candidate to a public release.
 
 ## Viewports
 
@@ -68,3 +68,33 @@ Status values: `passed`, `pending`, `needs manual check`.
 - Local Rule Generator is deterministic and local-only; no prompt is sent to any server.
 - External AI Generation Alpha requires a server runtime and server-side API key.
 - Minecraft vanilla texture files are not bundled; material styling is procedural.
+# v3.0.0-alpha.1 Visual QA Checklist
+
+Status values must be `pending`, `needs manual check`, or `passed`. Do not mark
+items passed without manual browser verification.
+
+| Area | Check | Status |
+|---|---|---|
+| Viewport | Chrome 1440px | pending |
+| Viewport | Chrome 1024px | pending |
+| Import | Blueprint JSON | pending |
+| Import | invalid Blueprint JSON | pending |
+| Import | `.schem` | pending |
+| Import | `.blockforgepack.zip` | pending |
+| Import | `.litematic` alpha | pending |
+| Generation | Local Rule Generator tower | pending |
+| AI | Prompt Presets | pending |
+| AI | Multi-candidate generation | pending |
+| AI | Quality Score | pending |
+| AI | Structure Plan Viewer | pending |
+| AI | Candidate Compare | pending |
+| Library | Generation History | pending |
+| Library | Local Blueprint Library | pending |
+| Gallery | Gallery grid/search/export | pending |
+| Import Jobs | Import Job Queue | pending |
+| Preview | Preview PNG export | pending |
+| Rendering | Render mode Auto / Mesh / Instanced | pending |
+| Layout | Dark UI contrast readable | pending |
+| Layout | ExportPanel not overflowing | pending |
+| Validation | Validation report readable | pending |
+| Preview | 3D preview not clipped | pending |

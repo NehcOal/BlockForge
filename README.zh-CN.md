@@ -3,7 +3,7 @@
 从文本提示生成 Minecraft 风格 voxel 方块建筑蓝图。
 
 BlockForge 是一个本地优先的 Minecraft 风格方块建筑蓝图生成器。当前
-v2.5.0-alpha.1 包含 Web 导入工作台、字段级校验报告、本地规则生成器、可选外部
+v3.0.0-alpha.1 包含 Web 导入工作台、字段级校验报告、本地规则生成器、可选外部
 AI Generation Alpha、3D 预览、Blueprint Pack、Sponge `.schem` v3 互通，以及三端
 Connector 构建流程。
 
@@ -11,7 +11,7 @@ Connector 构建流程。
 
 ## v2.0.0 AI Generation Alpha
 
-BlockForge v2.5.0-alpha.1 新增可选 AI 生成链路，同时继续把本地规则生成器作为默认 fallback。
+BlockForge v3.0.0-alpha.1 新增可选 AI 生成链路，同时继续把本地规则生成器作为默认 fallback。
 
 AI Generation 重点能力：
 
@@ -27,9 +27,9 @@ AI Generation 重点能力：
 
 预期发布 jar：
 
-- `blockforge-connector-neoforge-2.5.0-alpha.1.jar`
-- `blockforge-connector-fabric-2.5.0-alpha.1.jar`
-- `blockforge-connector-forge-2.5.0-alpha.1.jar`
+- `blockforge-connector-neoforge-3.0.0-alpha.1.jar`
+- `blockforge-connector-fabric-3.0.0-alpha.1.jar`
+- `blockforge-connector-forge-3.0.0-alpha.1.jar`
 
 当前验证状态：
 
@@ -645,3 +645,30 @@ pnpm lint
 ## License
 
 MIT
+# BlockForge v3.0.0-alpha.1
+
+BlockForge v3.0.0-alpha.1 是 Product Workbench Alpha：包含发布就绪整理、
+实验性 Litematica 导入、本地蓝图 Gallery、服务器管理员文档，以及统一 Web
+工作台外壳。
+
+## v3.0 功能矩阵
+
+| 区域 | 功能 | 状态 |
+|---|---|---|
+| Web | Litematica `.litematic` 导入 | ✅ Alpha |
+| Web | Blueprint Gallery | ✅ Alpha |
+| Web | Gallery bundle 导入/导出 | ✅ Alpha |
+| Web | Unified Workbench UI | ✅ Alpha |
+| Web | Command Palette action registry | ✅ Alpha |
+| Web | Instanced rendering | ✅ Alpha |
+| Web | Preview PNG export | ✅ Alpha |
+| Web | External AI Generation | ✅ Alpha |
+| Mod | Litematica loading | Planned / pending real connector regression |
+| Mod | Diagnostics export | Planned / pending real connector regression |
+| Docs | Server admin docs | ✅ Alpha |
+
+仍为 pending：Browser visual QA、Minecraft manual regression、External AI live
+test、Dedicated server smoke test、Modrinth / CurseForge publishing。
+
+Litematica 支持是实验性的，不宣传完整保真兼容。所有导入格式都必须先生成
+validation report，才能进入预览、导出或构建流程。

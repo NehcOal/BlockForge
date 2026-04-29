@@ -1,6 +1,6 @@
 # Import Pipeline
 
-Status: `v2.5.0-alpha.1` Alpha.
+Status: `v3.0.0-alpha.1` Alpha.
 
 ## Import Report
 
@@ -44,3 +44,9 @@ main-thread fallback should return a friendly error or complete the import.
 - path traversal
 
 Manual browser QA is pending.
+# v3.0 Import Pipeline Notes
+
+The import pipeline now includes Litematica alpha and Gallery bundle reports.
+Blueprint JSON, `.schem`, `.litematic`, `.blockforgepack.zip`, workspace, and
+gallery imports should all produce an ImportReport before entering preview,
+library, export, or connector workflows.

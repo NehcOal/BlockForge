@@ -95,3 +95,20 @@ Record status as:
 - `failed`: run and failed, with command and error summary.
 
 Never mark External AI live test as passed based on mocked tests.
+# v3.0 Live Test Status
+
+External AI live test: pending.
+
+Manual checklist:
+
+- Set `OPENAI_API_KEY` in `.env.local`.
+- Confirm `.env.local` is ignored by git.
+- Start `pnpm dev`.
+- Visit `/api/ai/status` and confirm `openaiConfigured` is true.
+- Send a minimal prompt through `/api/ai/generate-blueprint`.
+- Confirm the browser never receives the API key.
+- Confirm the result is an AI Structure Plan v1.
+- Confirm Structure Plan validation runs before preview.
+- Confirm validation failure does not enter preview/export.
+- Confirm Local Rule Generator fallback still works with no API key.
+- Record date, prompt, provider, result, warnings, and cost notes.

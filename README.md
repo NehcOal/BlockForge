@@ -7,7 +7,7 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 ## v2.0.0 AI Generation Alpha
 
-BlockForge v2.5.0-alpha.1 adds an optional AI generation pipeline while keeping
+BlockForge v3.0.0-alpha.1 adds an optional AI generation pipeline while keeping
 the Local Rule Generator as the default fallback.
 
 AI Generation highlights:
@@ -28,9 +28,9 @@ known Alpha limits.
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-2.5.0-alpha.1.jar`
-- `blockforge-connector-fabric-2.5.0-alpha.1.jar`
-- `blockforge-connector-forge-2.5.0-alpha.1.jar`
+- `blockforge-connector-neoforge-3.0.0-alpha.1.jar`
+- `blockforge-connector-fabric-3.0.0-alpha.1.jar`
+- `blockforge-connector-forge-3.0.0-alpha.1.jar`
 
 Current validation status:
 
@@ -684,3 +684,30 @@ tests when they affect voxel generation or export behavior.
 ## License
 
 MIT
+# BlockForge v3.0.0-alpha.1
+
+BlockForge v3.0.0-alpha.1 is a Product Workbench Alpha: release readiness,
+experimental Litematica import, local Blueprint Gallery, server/admin polish,
+and a unified Web workbench shell.
+
+## v3.0 Feature Matrix
+
+| Area | Feature | Status |
+|---|---|---|
+| Web | Litematica `.litematic` import | ✅ Alpha |
+| Web | Blueprint Gallery | ✅ Alpha |
+| Web | Gallery bundle export/import | ✅ Alpha |
+| Web | Unified Workbench UI | ✅ Alpha |
+| Web | Command Palette action registry | ✅ Alpha |
+| Web | Instanced rendering | ✅ Alpha |
+| Web | Preview PNG export | ✅ Alpha |
+| Web | External AI Generation | ✅ Alpha |
+| Mod | Litematica loading | Planned / pending real connector regression |
+| Mod | Diagnostics export | Planned / pending real connector regression |
+| Docs | Server admin docs | ✅ Alpha |
+
+Pending: Browser visual QA, Minecraft manual regression, External AI live test,
+Dedicated server smoke test, Modrinth / CurseForge publishing.
+
+Litematica support is experimental and does not claim full fidelity. Every
+imported file must produce a validation report before preview, export, or build.

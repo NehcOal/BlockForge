@@ -1,6 +1,6 @@
 # AI Generation
 
-Status: `v2.5.0-alpha.1` AI Generation Alpha.
+Status: `v3.0.0-alpha.1` AI Generation Alpha.
 
 BlockForge v2.0 adds an optional AI generation pipeline:
 
@@ -112,3 +112,10 @@ If validation fails, the result is shown as an error and is not loaded into the
 
 The provider interface is intentionally small so later versions can add other
 server-side providers without changing the Web preview/export pipeline.
+# v3.0 Notes
+
+AI generation remains alpha. External AI requests still require a server-side
+`OPENAI_API_KEY`, and Local Rule Generator remains the no-key fallback. AI output
+must continue through prompt safety, AI Structure Plan schema, Structure Plan
+validation, deterministic VoxelModel conversion, Blueprint validation, preview,
+and export.

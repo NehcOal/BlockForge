@@ -1,6 +1,6 @@
 # Web Workbench
 
-BlockForge v2.5.0-alpha.1 polishes the local Web Import / Validation / Local
+BlockForge v3.0.0-alpha.1 polishes the local Web Import / Validation / Local
 Generation Workbench. It keeps the app local-first: files are parsed in the
 browser, validation runs locally, and no cloud storage is used. External AI
 Generation Alpha is optional and requires a server-side provider.
@@ -107,3 +107,11 @@ The Web Workbench can receive generated blueprints from:
 External AI results are not trusted as final blocks. They must pass AI Structure
 Plan validation, deterministic conversion, and Blueprint v2 validation before
 they are loaded into preview/export.
+# v3.0 Workbench Additions
+
+- Unified workflow navigation: Generate, Import, Library, Gallery, Preview,
+  Export, AI, Diagnostics, Docs.
+- Import `.litematic` alpha is available through the validated import pipeline.
+- Gallery saves local Blueprint v2 items and can export/import gallery bundles.
+- All imports must produce an ImportReport before preview, library save, export,
+  or connector build.

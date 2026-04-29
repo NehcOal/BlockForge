@@ -28,7 +28,7 @@ GitHub Releases are based on tags.
 Recommended tag format:
 
 ```text
-v2.5.0-alpha.1
+v3.0.0-alpha.1
 v2.0.0-rc.1
 v2.0.0
 v2.0.1
@@ -114,3 +114,18 @@ validation before generated blueprints enter preview/export.
 
 External AI live testing is documented in `docs/AI_LIVE_TESTING.md` and remains
 pending until a real server-side API key is configured and tested manually.
+# v3.0 Train Rule
+
+- Active branch: `feature/v3.0-product-workbench`.
+- Alpha means feature candidate.
+- RC means regression candidate.
+- Stable means formal release.
+- Patch is only for bugfixes against an already published stable release.
+- One major product train uses one feature branch.
+- Do not create `v3.0.1` feature branches for small work.
+- Draft PR is recommended until Browser visual QA, Minecraft manual regression,
+  External AI live test, and dedicated server smoke test have evidence.
+- GitHub Release is based on a tag.
+- Release assets must include NeoForge, Fabric, and Forge jars when publishing
+  connector builds.
+- Pending/passed status must be honest.

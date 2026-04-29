@@ -18,9 +18,9 @@ export function createLibraryPackSummary(items: LocalBlueprintLibraryItem[]) {
     {
       packId: "local_library",
       name: "Local Blueprint Library",
-      version: "2.5.0-alpha.1",
+      version: "3.0.0-alpha.1",
       description: "Exported from BlockForge Local Blueprint Library",
-      blockforgeVersion: "2.5.0-alpha.1"
+      blockforgeVersion: "3.0.0-alpha.1"
     }
   );
 }

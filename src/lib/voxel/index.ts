@@ -45,6 +45,10 @@ export {
 export { exportSpongeSchematicBlob, blueprintV2ToSpongeSchematic } from "@/lib/voxel/schematic/spongeSchematicExport";
 export { importSpongeSchematicBlob, spongeSchematicToBlueprintV2 } from "@/lib/voxel/schematic/spongeSchematicImport";
 export { schematicFileName } from "@/lib/voxel/schematic/schematicValidation";
+export { importLitematicBuffer, normalizeSyntheticLitematic } from "@/lib/voxel/litematic/litematicImport";
+export { parseLitematicBlockState, formatLitematicBlockState } from "@/lib/voxel/litematic/litematicBlockState";
+export { validateParsedLitematic } from "@/lib/voxel/litematic/litematicValidation";
+export { litematicToBlueprintV2 } from "@/lib/voxel/litematic/litematicToBlueprint";
 export {
   generateVoxelModelFromPrompt,
   type PromptGenerationKind,
@@ -134,3 +138,10 @@ export type {
   SpongeSchematicExportOptions,
   SpongeSchematicV3
 } from "@/lib/voxel/schematic/spongeSchematic";
+export type {
+  ImportedLitematic,
+  LitematicBlockState,
+  LitematicImportLimits,
+  LitematicRegion,
+  ParsedLitematic
+} from "@/lib/voxel/litematic/litematicTypes";

@@ -253,11 +253,11 @@ config/blockforge/protection-regions.json
 
 The file is created automatically on first connector startup or protection
 reload. Builds denied by a region stop before materials are consumed.
-# v2.5.0-alpha.1 Notes
+# v3.0.0-alpha.1 Notes
 
-- Expected jars are `blockforge-connector-neoforge-2.5.0-alpha.1.jar`,
-  `blockforge-connector-fabric-2.5.0-alpha.1.jar`, and
-  `blockforge-connector-forge-2.5.0-alpha.1.jar`.
+- Expected jars are `blockforge-connector-neoforge-3.0.0-alpha.1.jar`,
+  `blockforge-connector-fabric-3.0.0-alpha.1.jar`, and
+  `blockforge-connector-forge-3.0.0-alpha.1.jar`.
 - `/blockforge gui` opens the Alpha selector with search, pagination, source
   filtering, warning filtering, sorting, source tags, and warning badges.
 - Minecraft manual regression is pending for this Alpha.

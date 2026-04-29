@@ -2,7 +2,7 @@
 
 All notable changes to BlockForge will be documented in this file.
 
-## [2.5.0-alpha.1] - Unreleased
+## [3.0.0-alpha.1] - Unreleased
 
 ### v2.5 Added
 
@@ -18,7 +18,7 @@ All notable changes to BlockForge will be documented in this file.
   fallback scaffolding.
 - Added v2.5 docs for AI quality, local library, import pipeline, server admin,
   and dedicated server setup.
-- Updated release docs for `2.5.0-alpha.1` packaging and pending QA.
+- Updated release docs for `3.0.0-alpha.1` packaging and pending QA.
 
 ### Added
 
@@ -69,7 +69,7 @@ All notable changes to BlockForge will be documented in this file.
   workbench while keeping the existing preview and multi-format export flow.
 - Web import summaries and validation reports are clearer and collapsible, with
   user-readable import errors and expandable developer details.
-- Aligned Web, NeoForge, Fabric, and Forge versions to `2.5.0-alpha.1`.
+- Aligned Web, NeoForge, Fabric, and Forge versions to `3.0.0-alpha.1`.
 - Adopted a major-version train process: small polish, docs, tests, and bugfixes
   stay in the active major-version branch instead of opening `0.0.1` feature
   branches.
@@ -815,3 +815,27 @@ All notable changes to BlockForge will be documented in this file.
 
 - Prompt input is local UI state in v0.1.0. Real prompt-to-structure generation is planned for a future release.
 - Full datapack ZIP export, `.schem` export, block texture rendering, and InstancedMesh performance optimization are on the roadmap.
+# 3.0.0-alpha.1
+
+## Added
+
+- Unified Product Workbench shell, sidebar, topbar, status bar, and command action registry.
+- Experimental Litematica `.litematic` import pipeline into Blueprint v2.
+- Local Blueprint Gallery data model, search/filter/sort, and gallery bundle import/export logic.
+- Server diagnostics pure schema helpers and server issue template.
+- v3.0 release readiness, visual QA, Litematica, Gallery, Workbench, and Known Issues docs.
+
+## Changed
+
+- Version train moved to `feature/v3.0-product-workbench`.
+- Import reports now include Litematica and Gallery bundle sources.
+- Web UI is organized under the new workbench shell while preserving existing generation, preview, and export flows.
+
+## Notes
+
+- This is an alpha candidate, not stable.
+- Litematica support is partial and experimental.
+- Browser visual QA is pending.
+- Minecraft manual regression is pending.
+- External AI live test is pending.
+- Dedicated server smoke test is pending.

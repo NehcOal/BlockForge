@@ -241,11 +241,11 @@ config/blockforge/protection-regions.json
 
 该文件会在 connector 首次启动或执行 protection reload 时自动创建。被保护区域拒绝的
 build 会在材料检查和扣除前停止。
-# v2.5.0-alpha.1 说明
+# v3.0.0-alpha.1 说明
 
-- 预期 jar 为 `blockforge-connector-neoforge-2.5.0-alpha.1.jar`、
-  `blockforge-connector-fabric-2.5.0-alpha.1.jar`、
-  `blockforge-connector-forge-2.5.0-alpha.1.jar`。
+- 预期 jar 为 `blockforge-connector-neoforge-3.0.0-alpha.1.jar`、
+  `blockforge-connector-fabric-3.0.0-alpha.1.jar`、
+  `blockforge-connector-forge-3.0.0-alpha.1.jar`。
 - `/blockforge gui` 会打开带搜索、分页、来源过滤、warning 过滤、排序、来源标签和
   warning badge 的 Alpha 选择器。
 - 本 Alpha 仍待 Minecraft 实机回归。

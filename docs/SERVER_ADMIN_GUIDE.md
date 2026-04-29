@@ -1,6 +1,6 @@
 # Server Admin Guide
 
-Status: `v2.5.0-alpha.1` Alpha documentation.
+Status: `v3.0.0-alpha.1` Alpha documentation.
 
 ## Recommended Settings
 
@@ -29,3 +29,17 @@ Planned/admin-facing diagnostics should summarize:
 - Nearby container sourcing is Alpha.
 - Protection checks should run before material consumption.
 - Manual Minecraft regression remains pending for this alpha candidate.
+# v3.0 Admin Notes
+
+Recommended diagnostic commands for manual regression:
+
+- `/blockforge status`
+- `/blockforge diagnostics`
+- `/blockforge diagnostics export`
+- `/blockforge litematics folder`
+- `/blockforge litematics reload`
+- `/blockforge litematics list`
+- `/blockforge litematics info <id>`
+- `/blockforge litematics validate`
+
+Command behavior must be verified in real Minecraft before marking passed.

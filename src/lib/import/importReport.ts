@@ -1,6 +1,6 @@
 export type ImportReport = {
   id: string;
-  sourceType: "blueprint-json" | "schem" | "blueprint-pack" | "workspace";
+  sourceType: "blueprint-json" | "schem" | "blueprint-pack" | "workspace" | "litematic" | "gallery";
   sourceFileName?: string;
   status: "success" | "warning" | "error";
   summary: {
