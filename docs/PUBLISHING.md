@@ -2,8 +2,13 @@
 
 ## Scope
 
-This guide prepares the `1.6.0-alpha.1` multi-loader Alpha release. It does not
+This guide prepares the current multi-loader Beta candidate. It does not
 publish automatically to GitHub, Modrinth, or CurseForge.
+
+For `4.2.0-beta.1`, confirm gameplay GUI/runtime work remains Beta, not stable.
+Material Cache and Builder Station have common state/action models, but
+loader-specific screens and real server smoke testing remain pending unless
+manually verified.
 
 NeoForge is the recommended full-experience Connector. Fabric and Forge are
 Alpha connectors with command builds, GUI Selector Alpha, Builder Wand Alpha
@@ -35,17 +40,17 @@ cd ..\forge-connector
 gradlew.bat build
 ```
 
-Expected jars:
+Expected jars for `4.2.0-beta.1`:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.6.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.6.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.6.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-4.2.0-beta.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-4.2.0-beta.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-4.2.0-beta.1.jar
 ```
 
-## GitHub Alpha Release
+## GitHub Beta Release Candidate
 
-1. Create a GitHub release for `v1.6.0-alpha.1`.
+1. Create a GitHub prerelease for `v4.2.0-beta.1`.
 2. Use `docs/RELEASE_NOTES_TEMPLATE.md` as the release body starting point.
 3. Upload the three loader jars.
 4. Confirm every jar file name includes the loader name.
@@ -61,6 +66,9 @@ mod/forge-connector/build/libs/blockforge-connector-forge-1.6.0-alpha.1.jar
 11. Do not claim Fabric or Forge BlockEntity NBT undo, collision-aware preview,
    full block preview support, protected-container permission checks, or GUI
    material source details.
+12. Do not claim Browser visual QA, Minecraft manual regression, External AI
+   live testing, dedicated server smoke testing, Modrinth publishing, or
+   CurseForge publishing passed unless they were actually performed.
 
 ## Modrinth Preparation
 
@@ -135,12 +143,30 @@ download file names match the expected jar names above.
   Claims integrations are planned, not bundled.
 - Manual Minecraft regression testing must remain pending until explicitly
   tested.
-# v1.8.0-alpha.1 Release Checklist
+# v4.2.0-beta.1 Release Checklist
 
 - Confirm Web `pnpm lint`, `pnpm test`, and `pnpm build`.
 - Confirm NeoForge, Fabric, and Forge Gradle builds produce
-  `1.8.0-alpha.1` jars.
+  `4.2.0-beta.1` jars.
 - Keep release notes clear that Minecraft manual regression and Browser visual
   QA are pending until manually checked.
 - Include `docs/WEB_VISUAL_QA.md` and `docs/GUI_SEARCH_AND_FILTERS.md` in the
   release notes.
+- Include Web rendering notes: InstancedMesh alpha, Preview PNG export, and no
+  bundled Minecraft vanilla textures.
+- Include AI Generation notes: Local Rule Generator fallback, optional
+  server-side OpenAI provider, no client-side API key exposure, and validation
+  before preview/export.
+# v4.2.0-beta.1 Publishing Notes
+
+`4.2.0-beta.1` is a beta prerelease candidate. Do not mark it stable.
+
+- GitHub Release may upload the three connector jars as beta prerelease assets.
+- Expected assets:
+  - `blockforge-connector-neoforge-4.2.0-beta.1.jar`
+  - `blockforge-connector-fabric-4.2.0-beta.1.jar`
+  - `blockforge-connector-forge-4.2.0-beta.1.jar`
+- Modrinth / CurseForge publishing remains pending unless actually published.
+- Web demo link remains pending unless deployed.
+- Browser visual QA, Minecraft manual regression, External AI live test, and
+  dedicated server smoke test must remain pending until manually verified.

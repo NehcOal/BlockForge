@@ -36,7 +36,7 @@ function readPayload(reader: BinaryReader, tag: number): NbtValue {
       for (let i = 0; i < length; i++) {
         value.push(readPayload(reader, itemType));
       }
-      return { type: "list", itemType: itemType as 1 | 2 | 3 | 4 | 7 | 8 | 9 | 10 | 11, value };
+      return { type: "list", itemType: itemType as 1 | 2 | 3 | 4 | 7 | 8 | 9 | 10 | 11 | 12, value };
     }
     case 10: {
       const value: Record<string, NbtValue> = {};
@@ -51,6 +51,8 @@ function readPayload(reader: BinaryReader, tag: number): NbtValue {
     }
     case 11:
       return { type: "intArray", value: reader.intArray() };
+    case 12:
+      return { type: "longArray", value: reader.longArray() };
     default:
       throw new Error(`Unsupported NBT tag: ${tag}`);
   }
@@ -80,7 +82,7 @@ class BinaryReader {
     return (this.u8() << 24) | (this.u8() << 16) | (this.u8() << 8) | this.u8();
   }
 
-  i64(): number {
+  i64(): bigint {
     let value = BigInt(0);
     for (let i = 0; i < 8; i++) {
       value = (value << BigInt(8)) | BigInt(this.u8());
@@ -88,7 +90,7 @@ class BinaryReader {
     if (value & (BigInt(1) << BigInt(63))) {
       value -= BigInt(1) << BigInt(64);
     }
-    return Number(value);
+    return value;
   }
 
   string(): string {
@@ -110,6 +112,11 @@ class BinaryReader {
   intArray(): number[] {
     const length = this.i32();
     return Array.from({ length }, () => this.i32());
+  }
+
+  longArray(): bigint[] {
+    const length = this.i32();
+    return Array.from({ length }, () => this.i64());
   }
 
   private ensure(length: number): void {

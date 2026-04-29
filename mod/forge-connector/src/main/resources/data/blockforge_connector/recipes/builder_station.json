@@ -1,0 +1,23 @@
+{
+  "result": {
+    "count": 1,
+    "id": "blockforge_connector:builder_station"
+  },
+  "pattern": [
+    "IRI",
+    "RCR",
+    "IRI"
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "C": {
+      "item": "minecraft:crafting_table"
+    }
+  },
+  "type": "minecraft:crafting_shaped"
+}

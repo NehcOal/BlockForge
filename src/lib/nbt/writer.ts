@@ -6,10 +6,11 @@ export type NbtValue =
   | { type: "string"; value: string }
   | { type: "byteArray"; value: Uint8Array }
   | { type: "intArray"; value: number[] }
+  | { type: "longArray"; value: Array<number | bigint> }
   | { type: "list"; itemType: NbtTagType; value: NbtValue[] }
   | { type: "compound"; value: Record<string, NbtValue> };
 
-export type NbtTagType = 1 | 2 | 3 | 4 | 7 | 8 | 9 | 10 | 11;
+export type NbtTagType = 1 | 2 | 3 | 4 | 7 | 8 | 9 | 10 | 11 | 12;
 
 const tagByType: Record<NbtValue["type"], NbtTagType> = {
   byte: 1,
@@ -20,7 +21,8 @@ const tagByType: Record<NbtValue["type"], NbtTagType> = {
   string: 8,
   list: 9,
   compound: 10,
-  intArray: 11
+  intArray: 11,
+  longArray: 12
 };
 
 export function writeNamedNbt(name: string, value: NbtValue): Uint8Array {
@@ -55,6 +57,10 @@ function writePayload(writer: BinaryWriter, value: NbtValue): void {
     case "intArray":
       writer.i32(value.value.length);
       value.value.forEach((item) => writer.i32(item));
+      return;
+    case "longArray":
+      writer.i32(value.value.length);
+      value.value.forEach((item) => writer.i64(item));
       return;
     case "list":
       writer.u8(value.itemType);

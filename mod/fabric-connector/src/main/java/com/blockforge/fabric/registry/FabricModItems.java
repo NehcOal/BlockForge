@@ -3,24 +3,59 @@ package com.blockforge.fabric.registry;
 import com.blockforge.fabric.BlockForgeFabric;
 import com.blockforge.fabric.item.FabricBuilderWandItem;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 
 public final class FabricModItems {
     public static final Item BUILDER_WAND = new FabricBuilderWandItem(new Item.Settings().maxCount(1));
+    public static final Block BLUEPRINT_TABLE = new Block(AbstractBlock.Settings.create().strength(2.5F).sounds(BlockSoundGroup.WOOD));
+    public static final Block MATERIAL_CACHE = new Block(AbstractBlock.Settings.create().strength(3.0F).sounds(BlockSoundGroup.METAL));
+    public static final Block BUILDER_ANCHOR = new Block(AbstractBlock.Settings.create().strength(4.0F).luminance(state -> 5).sounds(BlockSoundGroup.AMETHYST_BLOCK));
+    public static final Block BUILDER_STATION = new Block(AbstractBlock.Settings.create().strength(4.5F).luminance(state -> 3).sounds(BlockSoundGroup.METAL));
+    public static final Block MATERIAL_LINK = new Block(AbstractBlock.Settings.create().strength(2.0F).luminance(state -> 2).sounds(BlockSoundGroup.COPPER));
+    public static final Block CONSTRUCTION_CORE = new Block(AbstractBlock.Settings.create().strength(5.0F).luminance(state -> 7).sounds(BlockSoundGroup.AMETHYST_BLOCK));
+    public static final Item BLUEPRINT_TABLE_ITEM = new BlockItem(BLUEPRINT_TABLE, new Item.Settings());
+    public static final Item MATERIAL_CACHE_ITEM = new BlockItem(MATERIAL_CACHE, new Item.Settings());
+    public static final Item BUILDER_ANCHOR_ITEM = new BlockItem(BUILDER_ANCHOR, new Item.Settings());
+    public static final Item BUILDER_STATION_ITEM = new BlockItem(BUILDER_STATION, new Item.Settings());
+    public static final Item MATERIAL_LINK_ITEM = new BlockItem(MATERIAL_LINK, new Item.Settings());
+    public static final Item CONSTRUCTION_CORE_ITEM = new BlockItem(CONSTRUCTION_CORE, new Item.Settings());
 
     private FabricModItems() {
     }
 
     public static void register() {
+        registerBlock("blueprint_table", BLUEPRINT_TABLE, BLUEPRINT_TABLE_ITEM);
+        registerBlock("material_cache", MATERIAL_CACHE, MATERIAL_CACHE_ITEM);
+        registerBlock("builder_anchor", BUILDER_ANCHOR, BUILDER_ANCHOR_ITEM);
+        registerBlock("builder_station", BUILDER_STATION, BUILDER_STATION_ITEM);
+        registerBlock("material_link", MATERIAL_LINK, MATERIAL_LINK_ITEM);
+        registerBlock("construction_core", CONSTRUCTION_CORE, CONSTRUCTION_CORE_ITEM);
         Registry.register(
                 Registries.ITEM,
                 Identifier.of(BlockForgeFabric.MOD_ID, "builder_wand"),
                 BUILDER_WAND
         );
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> entries.add(BUILDER_WAND));
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
+            entries.add(BUILDER_WAND);
+            entries.add(BLUEPRINT_TABLE_ITEM);
+            entries.add(MATERIAL_CACHE_ITEM);
+            entries.add(BUILDER_ANCHOR_ITEM);
+            entries.add(BUILDER_STATION_ITEM);
+            entries.add(MATERIAL_LINK_ITEM);
+            entries.add(CONSTRUCTION_CORE_ITEM);
+        });
+    }
+
+    private static void registerBlock(String id, Block block, Item item) {
+        Registry.register(Registries.BLOCK, Identifier.of(BlockForgeFabric.MOD_ID, id), block);
+        Registry.register(Registries.ITEM, Identifier.of(BlockForgeFabric.MOD_ID, id), item);
     }
 }

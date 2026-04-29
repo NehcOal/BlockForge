@@ -42,9 +42,8 @@ public final class MaterialSourcePlanner {
                 continue;
             }
 
-            int available = resolvedConfig.priority() == MaterialSourcePriority.CONTAINER_ONLY
-                    ? 0
-                    : requirement.available();
+            boolean playerAllowed = sourceAllowed(playerSource, resolvedConfig);
+            int available = playerAllowed ? requirement.available() : 0;
             int reserved = Math.min(requirement.required(), available);
             entries.add(new MaterialSourceItemEntry(
                     requirement.itemId(),
@@ -52,7 +51,7 @@ public final class MaterialSourcePlanner {
                     available,
                     reserved,
                     0,
-                    playerSource
+                    playerAllowed ? playerSource : null
             ));
         }
 
@@ -164,6 +163,7 @@ public final class MaterialSourcePlanner {
     private static int sourceRank(MaterialSourceRef source, MaterialSourcePriority priority) {
         MaterialSourceType type = source == null ? MaterialSourceType.PLAYER_INVENTORY : source.type();
         return switch (priority) {
+            case CACHE_FIRST, CACHE_ONLY -> isCacheLike(type) ? 0 : 1;
             case CONTAINER_FIRST, CONTAINER_ONLY -> type == MaterialSourceType.NEARBY_CONTAINER ? 0 : 1;
             case PLAYER_FIRST, PLAYER_ONLY -> type == MaterialSourceType.PLAYER_INVENTORY ? 0 : 1;
         };
@@ -174,8 +174,17 @@ public final class MaterialSourcePlanner {
         return switch (config.priority()) {
             case PLAYER_ONLY -> type == MaterialSourceType.PLAYER_INVENTORY;
             case CONTAINER_ONLY -> type == MaterialSourceType.NEARBY_CONTAINER && config.enableNearbyContainers();
-            case PLAYER_FIRST, CONTAINER_FIRST -> type == MaterialSourceType.PLAYER_INVENTORY
+            case CACHE_ONLY -> isCacheLike(type);
+            case PLAYER_FIRST, CONTAINER_FIRST, CACHE_FIRST -> type == MaterialSourceType.PLAYER_INVENTORY
+                    || isCacheLike(type)
                     || (type == MaterialSourceType.NEARBY_CONTAINER && config.enableNearbyContainers());
         };
+    }
+
+    private static boolean isCacheLike(MaterialSourceType type) {
+        return type == MaterialSourceType.MATERIAL_CACHE
+                || type == MaterialSourceType.MATERIAL_LINK
+                || type == MaterialSourceType.MATERIAL_LINKED_CACHE
+                || type == MaterialSourceType.BUILDER_STATION;
     }
 }

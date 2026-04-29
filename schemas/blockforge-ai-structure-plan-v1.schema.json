@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://blockforge.local/schemas/blockforge-ai-structure-plan-v1.schema.json",
+  "title": "BlockForge AI Structure Plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "name",
+    "description",
+    "intent",
+    "size",
+    "palette",
+    "elements",
+    "constraints"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "description": { "type": "string", "minLength": 1, "maxLength": 500 },
+    "intent": {
+      "enum": ["tower", "cottage", "bridge", "dungeon", "statue", "custom"]
+    },
+    "size": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height", "depth"],
+      "properties": {
+        "width": { "type": "integer", "minimum": 1, "maximum": 64 },
+        "height": { "type": "integer", "minimum": 1, "maximum": 64 },
+        "depth": { "type": "integer", "minimum": 1, "maximum": 64 }
+      }
+    },
+    "palette": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "block", "minecraftBlockId"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+          "block": {
+            "enum": [
+              "stone_bricks",
+              "cobblestone",
+              "oak_planks",
+              "oak_log",
+              "glass",
+              "torch",
+              "door",
+              "stone",
+              "grass",
+              "water",
+              "gold_block",
+              "wool_red",
+              "wool_blue",
+              "wool_white"
+            ]
+          },
+          "minecraftBlockId": {
+            "type": "string",
+            "pattern": "^minecraft:[a-z0-9_./-]+$"
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          }
+        }
+      }
+    },
+    "elements": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "type", "blockKey", "from", "to"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1, "maxLength": 80 },
+          "type": {
+            "enum": [
+              "floor",
+              "wall",
+              "roof",
+              "window",
+              "door",
+              "pillar",
+              "bridge_deck",
+              "arch",
+              "decoration",
+              "custom"
+            ]
+          },
+          "blockKey": { "type": "string", "minLength": 1, "maxLength": 80 },
+          "from": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": { "type": "integer" }
+          },
+          "to": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": { "type": "integer" }
+          },
+          "hollow": { "type": "boolean" },
+          "notes": { "type": "string", "maxLength": 300 }
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maxBlocks", "allowUnsupportedBlocks"],
+      "properties": {
+        "maxBlocks": { "type": "integer", "minimum": 1, "maximum": 5000 },
+        "allowUnsupportedBlocks": { "const": false }
+      }
+    }
+  }
+}
