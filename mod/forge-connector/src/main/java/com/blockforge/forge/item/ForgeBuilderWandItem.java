@@ -1,6 +1,8 @@
 package com.blockforge.forge.item;
 
 import com.blockforge.common.blueprint.Blueprint;
+import com.blockforge.common.gameplay.BuilderWandMode;
+import com.blockforge.common.gameplay.BuilderWandState;
 import com.blockforge.common.security.permission.BlockForgePermissionAction;
 import com.blockforge.common.security.protection.ProtectionPreflightReport;
 import com.blockforge.common.selection.PlayerSelection;
@@ -34,6 +36,13 @@ public class ForgeBuilderWandItem extends Item {
         }
 
         PlayerSelection selection = BlockForgeForge.SELECTIONS.get(player.getUUID()).orElse(null);
+        BuilderWandState wandState = BlockForgeForge.WAND_STATES.getOrCreate(player.getUUID());
+        if (player.isShiftKeyDown()) {
+            wandState = BlockForgeForge.WAND_STATES.cycle(player.getUUID(), context.getLevel().getGameTime());
+            player.sendSystemMessage(Component.literal("BlockForge Builder Wand mode: " + wandState.mode().id()));
+            return InteractionResult.SUCCESS;
+        }
+
         if (selection == null) {
             player.sendSystemMessage(Component.literal("Use /blockforge select <id> first."));
             return InteractionResult.FAIL;
@@ -57,7 +66,30 @@ public class ForgeBuilderWandItem extends Item {
         }
 
         ServerLevel level = (ServerLevel) context.getLevel();
-        BlockPos basePos = context.getClickedPos().relative(context.getClickedFace());
+        if (wandState.mode() == BuilderWandMode.PREVIEW) {
+            player.sendSystemMessage(Component.literal("Preview refreshed for " + blueprint.getId() + ". Use /blockforge wand mode build to place."));
+            return InteractionResult.SUCCESS;
+        }
+
+        if (wandState.mode() == BuilderWandMode.DRY_RUN || wandState.mode() == BuilderWandMode.MATERIALS) {
+            player.sendSystemMessage(Component.literal("Builder Wand " + wandState.mode().id()
+                    + " mode: blueprint=" + blueprint.getId()
+                    + ", blocks=" + blueprint.getBlockCount()
+                    + ", offset=" + wandState.offsetX() + "," + wandState.offsetY() + "," + wandState.offsetZ()
+                    + ", mirrorX=" + wandState.mirroredX()
+                    + ", mirrorZ=" + wandState.mirroredZ() + "."));
+            return InteractionResult.SUCCESS;
+        }
+
+        if (wandState.mode() != BuilderWandMode.BUILD) {
+            player.sendSystemMessage(Component.literal("Builder Wand mode " + wandState.mode().id()
+                    + " updated state only. Use /blockforge wand mode build to place."));
+            return InteractionResult.SUCCESS;
+        }
+
+        BlockPos basePos = context.getClickedPos()
+                .relative(context.getClickedFace())
+                .offset(wandState.offsetX(), wandState.offsetY(), wandState.offsetZ());
         ForgeBlueprintPlacer.PlacementResult dryRun = PLACER.dryRun(level, basePos, blueprint, selection.rotation());
         if (dryRun.tooLarge() || dryRun.empty() || dryRun.placedBlocks() == 0) {
             sendPlacementResult(player, dryRun);

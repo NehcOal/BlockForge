@@ -2,7 +2,35 @@
 
 All notable changes to BlockForge will be documented in this file.
 
-## [3.0.0-alpha.1] - Unreleased
+## [3.1.0-alpha.1] - Unreleased
+
+### v3.1 Added
+
+- Added Blueprint Table, Material Cache, and Builder Anchor block registration
+  for NeoForge, Fabric, and Forge.
+- Added simple original placeholder textures, blockstates, block models, item
+  models, and lang keys for the new gameplay blocks.
+- Added Blueprint Table right-click GUI entry on all three loaders.
+- Added Builder Anchor right-click binding into shared Builder Wand state.
+- Added shared common gameplay DTOs for Builder Wand modes, wand state, anchors,
+  material caches, and placement options.
+- Added Builder Wand mode handling for preview, build, dry-run, materials, and
+  non-build configuration states.
+- Added sneak + right-click wand mode cycling across NeoForge, Fabric, and
+  Forge.
+- Added initial NeoForge `/blockforge wand ...` command helpers for mode,
+  options, offset, mirror, replace, and anchor clear.
+- Added common tests for Builder Wand state, placement offset, mirror flags,
+  anchor binding, and material cache placement options.
+- Added `docs/GAMEPLAY_BLOCKS.md` and `docs/BUILDER_WAND_ADVANCED.md`.
+
+### v3.1 Notes
+
+- Material Cache inventory-backed material sourcing is registered and modeled,
+  but full container/menu integration remains planned inside the v3.1 train.
+- Anchor-fixed build base replacement and mirrored placement transformation are
+  Alpha follow-up items.
+- Minecraft manual regression and dedicated server smoke testing are pending.
 
 ### v2.5 Added
 
@@ -18,7 +46,7 @@ All notable changes to BlockForge will be documented in this file.
   fallback scaffolding.
 - Added v2.5 docs for AI quality, local library, import pipeline, server admin,
   and dedicated server setup.
-- Updated release docs for `3.0.0-alpha.1` packaging and pending QA.
+- Updated release docs for `3.1.0-alpha.1` packaging and pending QA.
 
 ### Added
 
@@ -69,7 +97,7 @@ All notable changes to BlockForge will be documented in this file.
   workbench while keeping the existing preview and multi-format export flow.
 - Web import summaries and validation reports are clearer and collapsible, with
   user-readable import errors and expandable developer details.
-- Aligned Web, NeoForge, Fabric, and Forge versions to `3.0.0-alpha.1`.
+- Aligned Web, NeoForge, Fabric, and Forge versions to `3.1.0-alpha.1`.
 - Adopted a major-version train process: small polish, docs, tests, and bugfixes
   stay in the active major-version branch instead of opening `0.0.1` feature
   branches.
@@ -815,7 +843,7 @@ All notable changes to BlockForge will be documented in this file.
 
 - Prompt input is local UI state in v0.1.0. Real prompt-to-structure generation is planned for a future release.
 - Full datapack ZIP export, `.schem` export, block texture rendering, and InstancedMesh performance optimization are on the roadmap.
-# 3.0.0-alpha.1
+# 3.1.0-alpha.1
 
 ## Added
 

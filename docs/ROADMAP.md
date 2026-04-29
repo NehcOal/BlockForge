@@ -8,29 +8,25 @@ major-version branch instead of creating separate `0.0.1` feature branches.
 
 Recommended current branch:
 
-- `feature/v3.0-product-workbench`
+- `feature/v3.1-gameplay-tools`
 
 ## Active Train
 
 | Version | Theme | Goal | Release Gate |
 |---|---|---|---|
-| v2.6 | Regression QA + Live AI Readiness | Prepare visual QA, live AI smoke testing, and release notes for testers | Docs complete; Browser visual QA pending; External AI live test pending |
-| v2.7 | Litematica Interop Alpha | Add safe experimental `.litematic` import into Blueprint v2 | Validation report required; no full fidelity claim |
-| v2.8 | Blueprint Gallery / Sharing Workspace | Add local gallery, metadata, search, and gallery bundle import/export | Local-first; no marketplace; no cloud sync |
-| v2.9 | Multiplayer / Server Admin Polish | Improve diagnostics, admin docs, and server issue reporting | Diagnostics docs/schema; dedicated server smoke test pending |
-| v3.0 | Product Workbench Redesign | Organize Web into a unified workbench with status and command actions | Web checks pass; Browser visual QA pending |
+| v3.1 | Gameplay Utility Blocks + Advanced Builder Wand | Add Blueprint Table, Material Cache, Builder Anchor, and wand modes | Three loader builds pass; Minecraft manual regression pending |
 
 ## Next Trains
 
-- v3.1: Browser visual QA and product screenshot pass.
-- v3.2: Real Minecraft regression and dedicated server smoke test.
-- v3.3: Litematica binary fixture hardening.
-- v3.4: Connector diagnostics implementation parity.
+- v3.2: Material Cache inventory/menu and cache-backed sourcing parity.
+- v3.3: Anchor-fixed ghost preview and mirrored placement transformation.
+- v3.4: Real Minecraft regression and dedicated server smoke test.
+- v3.5: Litematica binary fixture hardening.
 - v4.0: Stable release planning after alpha/rc evidence is collected.
 
 ## Current Alpha Rules
 
-- Keep `3.0.0-alpha.1` clearly marked as Alpha, not stable.
+- Keep `3.1.0-alpha.1` clearly marked as Alpha, not stable.
 - Keep Local Rule Generator as the no-key fallback.
 - Keep OpenAI provider optional and server-side only.
 - Do not expose API keys to browser client code.

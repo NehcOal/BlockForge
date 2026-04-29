@@ -3,15 +3,43 @@
 从文本提示生成 Minecraft 风格 voxel 方块建筑蓝图。
 
 BlockForge 是一个本地优先的 Minecraft 风格方块建筑蓝图生成器。当前
-v3.0.0-alpha.1 包含 Web 导入工作台、字段级校验报告、本地规则生成器、可选外部
+v3.1.0-alpha.1 包含 Web 导入工作台、字段级校验报告、本地规则生成器、可选外部
 AI Generation Alpha、3D 预览、Blueprint Pack、Sponge `.schem` v3 互通，以及三端
 Connector 构建流程。
 
 [English README](./README.md) | [使用手册](./docs/USER_MANUAL.zh-CN.md)
 
+## v3.1.0 游戏内实用方块 + Builder Wand Alpha
+
+BlockForge v3.1.0-alpha.1 开始把重点转向 Minecraft 内体验，目标是减少玩家
+对命令的依赖，让 NeoForge / Fabric / Forge 三端都能从游戏内入口使用 BlockForge。
+
+游戏内更新：
+
+- Blueprint Table / 蓝图台：右键打开现有 Blueprint Selector GUI。
+- Material Cache / 材料缓存箱：已注册为 Alpha 实用方块，并加入 common 材料来源 DTO。
+- Builder Anchor / 建筑锚点：右键绑定当前玩家 Builder Wand 状态。
+- Builder Wand 模式：preview、build、dry_run、materials、undo、rotate、
+  mirror、offset、anchor、clear_preview。
+- 三端支持潜行 + 右键循环 wand mode。
+- NeoForge 先提供 `/blockforge wand ...` 命令辅助，包括 mode、options、
+  offset、mirror、replace、anchor clear。
+
+详见 [Gameplay Blocks](./docs/GAMEPLAY_BLOCKS.md) 和
+[Builder Wand Advanced](./docs/BUILDER_WAND_ADVANCED.md)。
+
+当前验证状态：
+
+| 范围 | 状态 |
+|---|---|
+| Web lint/test/build | 发布门禁 |
+| NeoForge/Fabric/Forge Gradle build | 发布门禁 |
+| Minecraft 实机回归 | 待执行 |
+| Dedicated server smoke test | 待执行 |
+
 ## v2.0.0 AI Generation Alpha
 
-BlockForge v3.0.0-alpha.1 新增可选 AI 生成链路，同时继续把本地规则生成器作为默认 fallback。
+BlockForge v3.1.0-alpha.1 新增可选 AI 生成链路，同时继续把本地规则生成器作为默认 fallback。
 
 AI Generation 重点能力：
 
@@ -27,9 +55,9 @@ AI Generation 重点能力：
 
 预期发布 jar：
 
-- `blockforge-connector-neoforge-3.0.0-alpha.1.jar`
-- `blockforge-connector-fabric-3.0.0-alpha.1.jar`
-- `blockforge-connector-forge-3.0.0-alpha.1.jar`
+- `blockforge-connector-neoforge-3.1.0-alpha.1.jar`
+- `blockforge-connector-fabric-3.1.0-alpha.1.jar`
+- `blockforge-connector-forge-3.1.0-alpha.1.jar`
 
 当前验证状态：
 
@@ -645,9 +673,9 @@ pnpm lint
 ## License
 
 MIT
-# BlockForge v3.0.0-alpha.1
+# BlockForge v3.1.0-alpha.1
 
-BlockForge v3.0.0-alpha.1 是 Product Workbench Alpha：包含发布就绪整理、
+BlockForge v3.1.0-alpha.1 是 Product Workbench Alpha：包含发布就绪整理、
 实验性 Litematica 导入、本地蓝图 Gallery、服务器管理员文档，以及统一 Web
 工作台外壳。
 

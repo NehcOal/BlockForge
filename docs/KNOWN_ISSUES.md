@@ -1,6 +1,6 @@
 # Known Issues
 
-Status for v3.0.0-alpha.1:
+Status for v3.1.0-alpha.1:
 
 - Browser visual QA: pending.
 - Minecraft manual regression: pending.

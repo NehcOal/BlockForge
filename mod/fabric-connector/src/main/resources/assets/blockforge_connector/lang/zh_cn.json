@@ -15,5 +15,11 @@
   "screen.blockforge_connector.block_states": "支持 BlockState：%s",
   "screen.blockforge_connector.hint": "选择蓝图和旋转角度后，使用建筑法杖建造。",
   "screen.blockforge_connector.empty": "未加载蓝图。请先执行 /blockforge examples install 和 /blockforge reload。",
-  "screen.blockforge_connector.loading": "正在加载蓝图..."
+  "screen.blockforge_connector.loading": "正在加载蓝图...",
+  "block.blockforge_connector.material_cache": "BlockForge 材料缓存箱",
+  "block.blockforge_connector.blueprint_table": "BlockForge 蓝图台",
+  "item.blockforge_connector.material_cache": "BlockForge 材料缓存箱",
+  "block.blockforge_connector.builder_anchor": "BlockForge 建筑锚点",
+  "item.blockforge_connector.blueprint_table": "BlockForge 蓝图台",
+  "item.blockforge_connector.builder_anchor": "BlockForge 建筑锚点"
 }

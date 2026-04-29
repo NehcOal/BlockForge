@@ -9,15 +9,15 @@ testing.
 Release version:
 
 ```text
-3.0.0-alpha.1
+3.1.0-alpha.1
 ```
 
 Expected release jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-3.0.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-3.0.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-3.0.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-3.1.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-3.1.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-3.1.0-alpha.1.jar
 ```
 
 Build validation:
@@ -32,6 +32,30 @@ mod/forge-connector/gradlew.bat build
 ```
 
 Status: Minecraft manual regression pending. Browser visual QA pending.
+
+## v3.1 Gameplay Utility Blocks Manual Checks
+
+Status: pending until tested in real Minecraft clients and dedicated servers.
+
+Run this matrix separately for NeoForge, Fabric, and Forge:
+
+| Step | Expected | Status |
+|---|---|---|
+| Start client | Mod loads without registry errors | pending |
+| Creative inventory | Blueprint Table, Material Cache, Builder Anchor, Builder Wand are available | pending |
+| Place Blueprint Table | Block places and keeps its model/texture | pending |
+| Right-click Blueprint Table | Blueprint Selector GUI opens | pending |
+| Place Builder Anchor | Block places and keeps its model/texture | pending |
+| Right-click Builder Anchor | Current wand state binds to anchor coordinate | pending |
+| Sneak + right-click Builder Wand | Wand mode cycles | pending |
+| `/blockforge wand mode build` on NeoForge | Mode changes to build | pending |
+| `/blockforge wand offset 1 0 1` on NeoForge | Offset appears in options | pending |
+| Select `tiny_platform` | Selection updates | pending |
+| Build with Builder Wand | Protection preflight runs before placement/material checks | pending |
+| Undo | Blocks and materials follow existing undo behavior | pending |
+| Dry-run/materials mode | No blocks are placed | pending |
+| Material Cache interaction | Alpha status message appears | pending |
+| Dedicated server smoke | Server starts without client-only class crash | pending |
 
 GUI search/filter manual checks:
 

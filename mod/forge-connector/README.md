@@ -239,7 +239,7 @@ Forge now loads `config/blockforge/protection-regions.json` and runs BlockForge
 permission/protection preflight before build commands, Builder Wand placement,
 material consumption, and nearby-container material use. External permission and
 claim integration is planned; the Alpha falls back to vanilla permission levels.
-# v3.0.0-alpha.1 GUI Search Notes
+# v3.1.0-alpha.1 GUI Search Notes
 
 - `/blockforge gui` and the default `B` key open the Alpha selector with
   search, pagination, source filtering, warning filtering, sorting, source tags,
@@ -249,15 +249,25 @@ claim integration is planned; the Alpha falls back to vanilla permission levels.
   Ghost Preview state.
 - Minecraft manual regression is pending.
 
-## v3.0.0-alpha.1 Web Rendering Note
+## v3.1.0-alpha.1 Web Rendering Note
 
 Connector logic is unchanged in this release. Version is synchronized with the
 Web Rendering Performance + Screenshot Export Alpha.
 
-## v3.0.0-alpha.1 Notes
+## v3.1.0-alpha.1 Notes
 
-- Version aligned to 3.0.0-alpha.1.
+- Version aligned to 3.1.0-alpha.1.
 - Server diagnostics and dedicated server documentation are Alpha documentation items for this train.
 - Core connector gameplay logic is unchanged in the Web productization pass.
 - Minecraft manual regression and dedicated server smoke testing remain pending.
 
+
+
+## v3.1.0-alpha.1 Gameplay Tools Notes
+
+- Adds Blueprint Table, Material Cache, and Builder Anchor block/item registration.
+- Blueprint Table opens the existing Blueprint Selector GUI from in-world right-click.
+- Builder Anchor binds the player's Builder Wand state to the anchor coordinate.
+- Builder Wand supports shared advanced mode state; sneak + right-click cycles modes.
+- Material Cache inventory-backed sourcing is registered as Alpha follow-up work.
+- Minecraft manual regression and dedicated server smoke testing remain pending.

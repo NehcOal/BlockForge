@@ -19,6 +19,8 @@ import com.blockforge.connector.player.PlayerBlueprintSelection;
 import com.blockforge.connector.registry.ModItems;
 import com.blockforge.connector.undo.PlacementSnapshot;
 import com.blockforge.connector.undo.UndoManager;
+import com.blockforge.common.gameplay.BuilderWandMode;
+import com.blockforge.common.gameplay.BuilderWandState;
 import com.blockforge.common.material.source.MaterialSourceItemEntry;
 import com.blockforge.common.material.source.MaterialSourceReport;
 import com.blockforge.common.material.source.MaterialSourceScanResult;
@@ -111,7 +113,35 @@ public final class BlockForgeCommands {
                                 .executes(context -> rotateSelection(context, registry))))
                 .then(Commands.literal("wand")
                         .requires(source -> source.hasPermission(2))
-                        .executes(BlockForgeCommands::giveWand))
+                        .executes(BlockForgeCommands::giveWand)
+                        .then(Commands.literal("mode")
+                                .executes(BlockForgeCommands::showWandMode)
+                                .then(Commands.argument("mode", StringArgumentType.word())
+                                        .suggests((context, builder) -> SharedSuggestionProvider.suggest(
+                                                java.util.Arrays.stream(BuilderWandMode.values()).map(BuilderWandMode::id),
+                                                builder
+                                        ))
+                                        .executes(BlockForgeCommands::setWandMode)))
+                        .then(Commands.literal("cycle")
+                                .executes(BlockForgeCommands::cycleWandMode))
+                        .then(Commands.literal("options")
+                                .executes(BlockForgeCommands::showWandOptions))
+                        .then(Commands.literal("offset")
+                                .then(Commands.argument("x", IntegerArgumentType.integer(-64, 64))
+                                        .then(Commands.argument("y", IntegerArgumentType.integer(-64, 64))
+                                                .then(Commands.argument("z", IntegerArgumentType.integer(-64, 64))
+                                                        .executes(BlockForgeCommands::setWandOffset)))))
+                        .then(Commands.literal("mirror")
+                                .then(Commands.argument("axis", StringArgumentType.word())
+                                        .suggests((context, builder) -> SharedSuggestionProvider.suggest(List.of("x", "z", "none"), builder))
+                                        .executes(BlockForgeCommands::setWandMirror)))
+                        .then(Commands.literal("replace")
+                                .then(Commands.argument("mode", StringArgumentType.word())
+                                        .suggests((context, builder) -> SharedSuggestionProvider.suggest(List.of("air_only", "allow_replace"), builder))
+                                        .executes(BlockForgeCommands::setWandReplaceMode)))
+                        .then(Commands.literal("anchor")
+                                .then(Commands.literal("clear")
+                                        .executes(BlockForgeCommands::clearWandAnchor))))
                 .then(Commands.literal("gui")
                         .executes(BlockForgeCommands::openGui))
                 .then(Commands.literal("undo")
@@ -674,6 +704,158 @@ public final class BlockForgeCommands {
 
         context.getSource().sendSuccess(
                 () -> Component.literal("Given BlockForge Builder Wand. Select a blueprint with /blockforge select <id>, then right-click a block."),
+                true
+        );
+        return 1;
+    }
+
+    private static int showWandMode(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        BuilderWandState state = BlockForgeConnector.WAND_STATES.getOrCreate(player.getUUID());
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge Builder Wand mode: " + state.mode().id()),
+                false
+        );
+        return 1;
+    }
+
+    private static int setWandMode(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        String value = StringArgumentType.getString(context, "mode");
+        BuilderWandMode mode;
+        try {
+            mode = BuilderWandMode.parse(value);
+        } catch (IllegalArgumentException error) {
+            context.getSource().sendFailure(Component.literal("Unknown Builder Wand mode: " + value));
+            return 0;
+        }
+
+        BuilderWandState state = BlockForgeConnector.WAND_STATES.setMode(player.getUUID(), mode, player.level().getGameTime());
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge Builder Wand mode set to " + state.mode().id() + "."),
+                true
+        );
+        return 1;
+    }
+
+    private static int cycleWandMode(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        BuilderWandState state = BlockForgeConnector.WAND_STATES.cycle(player.getUUID(), player.level().getGameTime());
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge Builder Wand mode: " + state.mode().id()),
+                true
+        );
+        return 1;
+    }
+
+    private static int showWandOptions(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        BuilderWandState state = BlockForgeConnector.WAND_STATES.getOrCreate(player.getUUID());
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge Builder Wand options: mode="
+                        + state.mode().id()
+                        + ", mirrorX=" + state.mirroredX()
+                        + ", mirrorZ=" + state.mirroredZ()
+                        + ", offset=" + state.offsetX() + "," + state.offsetY() + "," + state.offsetZ()
+                        + ", anchor=" + (state.anchorId() == null || state.anchorId().isBlank() ? "none" : state.anchorId())
+                        + ", replace=air_only"),
+                false
+        );
+        return 1;
+    }
+
+    private static int setWandOffset(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        int x = IntegerArgumentType.getInteger(context, "x");
+        int y = IntegerArgumentType.getInteger(context, "y");
+        int z = IntegerArgumentType.getInteger(context, "z");
+        BuilderWandState state = BlockForgeConnector.WAND_STATES.update(
+                player.getUUID(),
+                current -> current.withOffset(x, y, z, player.level().getGameTime())
+        );
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge Builder Wand offset set to "
+                        + state.offsetX() + "," + state.offsetY() + "," + state.offsetZ() + "."),
+                true
+        );
+        return 1;
+    }
+
+    private static int setWandMirror(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        String axis = StringArgumentType.getString(context, "axis").toLowerCase(java.util.Locale.ROOT);
+        boolean mirrorX = "x".equals(axis);
+        boolean mirrorZ = "z".equals(axis);
+        if (!mirrorX && !mirrorZ && !"none".equals(axis)) {
+            context.getSource().sendFailure(Component.literal("Mirror axis must be x, z, or none."));
+            return 0;
+        }
+
+        BuilderWandState state = BlockForgeConnector.WAND_STATES.update(
+                player.getUUID(),
+                current -> current.withMirror(mirrorX, mirrorZ, player.level().getGameTime())
+        );
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge Builder Wand mirror set: mirrorX="
+                        + state.mirroredX()
+                        + ", mirrorZ="
+                        + state.mirroredZ()
+                        + "."),
+                true
+        );
+        return 1;
+    }
+
+    private static int setWandReplaceMode(CommandContext<CommandSourceStack> context) {
+        String mode = StringArgumentType.getString(context, "mode");
+        if (!"air_only".equals(mode) && !"allow_replace".equals(mode)) {
+            context.getSource().sendFailure(Component.literal("Replace mode must be air_only or allow_replace."));
+            return 0;
+        }
+
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge Builder Wand replace mode is tracked as alpha placement metadata: " + mode + "."),
+                true
+        );
+        return 1;
+    }
+
+    private static int clearWandAnchor(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+
+        BlockForgeConnector.WAND_STATES.update(
+                player.getUUID(),
+                current -> current.withAnchor("", player.level().getGameTime())
+        );
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge Builder Wand anchor cleared."),
                 true
         );
         return 1;

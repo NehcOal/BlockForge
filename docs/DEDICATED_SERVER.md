@@ -24,6 +24,9 @@ Status: Dedicated server smoke test pending.
 - Build and undo work in an allowed area.
 - Protected areas deny build without consuming materials.
 - Pack and schematic loading warnings are readable.
+- Blueprint Table opens GUI without loading client-only screen classes on the
+  server.
+- Builder Anchor and Material Cache interactions do not crash the server.
 
 Do not mark this passed until a real dedicated server test is run.
 # v3.0 Dedicated Server Checklist

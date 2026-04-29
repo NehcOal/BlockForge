@@ -1,4 +1,4 @@
-# BlockForge v3.0.0-alpha.1 - AI Productization + Local Library + Import Hardening
+# BlockForge v3.1.0-alpha.1 - Gameplay Utility Blocks + Advanced Builder Wand
 
 ## Release Train Rules
 
@@ -16,8 +16,8 @@ major-version feature branch and release train.
 
 ## Release Type
 
-- Version: `3.0.0-alpha.1`
-- Type: AI Productization Alpha candidate
+- Version: `3.1.0-alpha.1`
+- Type: Gameplay Utility Blocks Alpha candidate
 - Stability: Alpha for Fabric and Forge, recommended full experience on NeoForge
 
 ## Supported Minecraft Version
@@ -33,9 +33,9 @@ major-version feature branch and release train.
 
 ## Download Files
 
-- `blockforge-connector-neoforge-3.0.0-alpha.1.jar`
-- `blockforge-connector-fabric-3.0.0-alpha.1.jar`
-- `blockforge-connector-forge-3.0.0-alpha.1.jar`
+- `blockforge-connector-neoforge-3.1.0-alpha.1.jar`
+- `blockforge-connector-fabric-3.1.0-alpha.1.jar`
+- `blockforge-connector-forge-3.1.0-alpha.1.jar`
 
 ## Feature Matrix
 
@@ -58,6 +58,32 @@ major-version feature branch and release train.
 | Permission nodes | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 | Protection regions | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 | Sponge `.schem` import | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Blueprint Table | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Material Cache block | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Builder Anchor | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Advanced Builder Wand modes | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+
+## v3.1 Highlights
+
+- Blueprint Table opens the existing Blueprint Selector GUI from an in-world
+  block interaction.
+- Material Cache is registered as the dedicated BlockForge material source
+  block for upcoming cache-backed material flow.
+- Builder Anchor binds the current player Builder Wand state to an in-world
+  anchor coordinate.
+- Builder Wand now tracks preview/build/dry-run/materials/undo/rotate/mirror/
+  offset/anchor/clear-preview modes.
+- Sneak + right-click cycles wand mode on all three loaders.
+- NeoForge includes first-pass `/blockforge wand ...` command helpers.
+
+## v3.1 Known Limitations
+
+- Material Cache inventory-backed sourcing is not yet complete.
+- Mirror flags are tracked but full mirrored placement transform is pending.
+- Anchor-fixed base replacement and fixed ghost preview still require manual
+  gameplay polish.
+- Minecraft manual regression is pending.
+- Dedicated server smoke test is pending.
 | Sponge `.schem` export | planned | planned | planned |
 
 NeoForge is the most complete connector for now. Fabric and Forge include GUI
@@ -195,7 +221,7 @@ Manual Minecraft status:
 - Supported loaders: NeoForge, Fabric, Forge.
 - Manual Minecraft regression testing pending unless explicitly verified.
 - External permission and claim integrations are planned optional adapters.
-# BlockForge v3.0.0-alpha.1 - Product Workbench Alpha
+# BlockForge v3.1.0-alpha.1 - Product Workbench Alpha
 
 ## Summary
 
