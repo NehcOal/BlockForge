@@ -1,6 +1,16 @@
 # Server Admin Guide
 
-Status: `v3.2.0-alpha.1` Alpha documentation.
+Status: `v3.5.0-alpha.1` Alpha documentation.
+
+## v3.5 Gameplay Alpha Admin Notes
+
+- Builder Station, Material Link, and Construction Core are Alpha blocks.
+- Station commands are scaffolded first on NeoForge.
+- Quota, cooldown, audit, and project membership have common data models and
+  tests, but persistent enforcement is partial.
+- Material Link does not load remote chunks and does not cross dimensions.
+- Admin audit export and rollback are planned.
+- Minecraft manual regression and dedicated server smoke testing remain pending.
 
 ## Recommended Settings
 

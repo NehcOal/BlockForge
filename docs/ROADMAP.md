@@ -8,25 +8,24 @@ major-version branch instead of creating separate `0.0.1` feature branches.
 
 Recommended current branch:
 
-- `feature/v3.2-construction-workflow`
+- `feature/v3.5-gameplay-alpha`
 
 ## Active Train
 
 | Version | Theme | Goal | Release Gate |
 |---|---|---|---|
-| v3.2 | Construction Workflow + Build Planner | Add deterministic BuildPlan model, layer planning, preview/status commands, and repair plan pure logic | Three loader builds pass; real per-step placement pending |
+| v3.5 | Builder Station + Material Network + Server Rules | Add station blocks, material links, audit/quota/cooldown scaffolds, gameplay resources, and alpha readiness docs | Web and three loader builds pass; real station tick placement pending |
 
 ## Next Trains
 
-- v3.3: Builder Station with real tick-based plan execution.
-- v3.4: Material Cache inventory/menu and cache-backed sourcing parity.
-- v3.5: Anchor-fixed ghost preview and mirrored placement transformation.
 - v3.6: Real Minecraft regression and dedicated server smoke test.
+- v3.7: Material Cache inventory/menu and cache-backed sourcing parity.
+- v3.8: Anchor-fixed ghost preview and mirrored placement transformation.
 - v4.0: Stable release planning after alpha/rc evidence is collected.
 
 ## Current Alpha Rules
 
-- Keep `3.2.0-alpha.1` clearly marked as Alpha, not stable.
+- Keep `3.5.0-alpha.1` clearly marked as Alpha, not stable.
 - Keep Local Rule Generator as the no-key fallback.
 - Keep OpenAI provider optional and server-side only.
 - Do not expose API keys to browser client code.

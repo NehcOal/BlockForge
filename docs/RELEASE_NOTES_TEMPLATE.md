@@ -1,4 +1,4 @@
-# BlockForge v3.2.0-alpha.1 - Construction Workflow + Build Planner
+# BlockForge v3.5.0-alpha.1 - Gameplay Alpha
 
 ## Release Train Rules
 
@@ -16,8 +16,8 @@ major-version feature branch and release train.
 
 ## Release Type
 
-- Version: `3.2.0-alpha.1`
-- Type: Construction Workflow Alpha candidate
+- Version: `3.5.0-alpha.1`
+- Type: Gameplay Alpha candidate
 - Stability: Alpha for Fabric and Forge, recommended full experience on NeoForge
 
 ## Supported Minecraft Version
@@ -33,9 +33,9 @@ major-version feature branch and release train.
 
 ## Download Files
 
-- `blockforge-connector-neoforge-3.2.0-alpha.1.jar`
-- `blockforge-connector-fabric-3.2.0-alpha.1.jar`
-- `blockforge-connector-forge-3.2.0-alpha.1.jar`
+- `blockforge-connector-neoforge-3.5.0-alpha.1.jar`
+- `blockforge-connector-fabric-3.5.0-alpha.1.jar`
+- `blockforge-connector-forge-3.5.0-alpha.1.jar`
 
 ## Feature Matrix
 
@@ -67,6 +67,31 @@ major-version feature branch and release train.
 | Build Pause/Resume state | ✅ Alpha | scaffold | scaffold |
 | Repair Plan pure logic | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 | Collision/Replace report | pure validation | pure validation | pure validation |
+| Builder Station | ✅ Alpha scaffold | ✅ Alpha scaffold | ✅ Alpha scaffold |
+| Material Link | ✅ Alpha scaffold | ✅ Alpha scaffold | ✅ Alpha scaffold |
+| Construction Core | ✅ Alpha scaffold | ✅ Alpha scaffold | ✅ Alpha scaffold |
+| Server Audit / Quota DTOs | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| NeoForge Station Commands | ✅ Alpha scaffold | planned | planned |
+
+## v3.5 Highlights
+
+- Builder Station, Material Link, and Construction Core are registered on all
+  three loaders.
+- Material Network source types are modeled in common material planning.
+- Server gameplay DTOs cover audit entries, quota, cooldown, projects, and
+  admin build summaries.
+- NeoForge exposes station/admin/quota command scaffolds.
+- Gameplay alpha resources include lang keys, models, recipes, loot tables, and
+  original placeholder textures.
+
+## v3.5 Known Limitations
+
+- Builder Station `step` is still a command-driven scaffold and does not place
+  world blocks.
+- Material Cache inventory-backed sourcing remains partial.
+- Admin audit export and rollback are planned.
+- Minecraft manual regression is pending.
+- Dedicated server smoke test is pending.
 
 ## v3.2 Highlights
 
@@ -244,7 +269,7 @@ Manual Minecraft status:
 - Supported loaders: NeoForge, Fabric, Forge.
 - Manual Minecraft regression testing pending unless explicitly verified.
 - External permission and claim integrations are planned optional adapters.
-# BlockForge v3.2.0-alpha.1 - Product Workbench Alpha
+# BlockForge v3.5.0-alpha.1 - Product Workbench Alpha
 
 ## Summary
 

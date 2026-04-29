@@ -28,6 +28,18 @@ public final class ModItems {
             ModBlocks.BUILDER_ANCHOR
     );
 
+    public static final DeferredItem<BlockItem> BUILDER_STATION = ITEMS.registerSimpleBlockItem(
+            ModBlocks.BUILDER_STATION
+    );
+
+    public static final DeferredItem<BlockItem> MATERIAL_LINK = ITEMS.registerSimpleBlockItem(
+            ModBlocks.MATERIAL_LINK
+    );
+
+    public static final DeferredItem<BlockItem> CONSTRUCTION_CORE = ITEMS.registerSimpleBlockItem(
+            ModBlocks.CONSTRUCTION_CORE
+    );
+
     private ModItems() {
     }
 

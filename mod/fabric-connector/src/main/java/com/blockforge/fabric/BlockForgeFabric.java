@@ -72,6 +72,21 @@ public class BlockForgeFabric implements ModInitializer {
                 return ActionResult.SUCCESS;
             }
 
+            if (state.isOf(FabricModItems.BUILDER_STATION)) {
+                serverPlayer.sendMessage(Text.literal("BlockForge Builder Station alpha scaffold. Use station commands for command-driven jobs."), false);
+                return ActionResult.SUCCESS;
+            }
+
+            if (state.isOf(FabricModItems.MATERIAL_LINK)) {
+                serverPlayer.sendMessage(Text.literal("BlockForge Material Link alpha scaffold. Links expose Material Cache sources to station jobs."), false);
+                return ActionResult.SUCCESS;
+            }
+
+            if (state.isOf(FabricModItems.CONSTRUCTION_CORE)) {
+                serverPlayer.sendMessage(Text.literal("BlockForge Construction Core alpha scaffold. Multi-station project coordination remains planned."), false);
+                return ActionResult.SUCCESS;
+            }
+
             return ActionResult.PASS;
         });
     }

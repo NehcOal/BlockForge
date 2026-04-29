@@ -23,5 +23,13 @@
   "item.blockforge_connector.material_cache": "BlockForge 材料缓存箱",
   "block.blockforge_connector.builder_anchor": "BlockForge 建筑锚点",
   "item.blockforge_connector.blueprint_table": "BlockForge 蓝图台",
-  "item.blockforge_connector.builder_anchor": "BlockForge 建筑锚点"
+  "item.blockforge_connector.builder_anchor": "BlockForge 建筑锚点",
+  "block.blockforge_connector.builder_station": "BlockForge 建筑站",
+  "item.blockforge_connector.builder_station": "BlockForge 建筑站",
+  "block.blockforge_connector.material_link": "BlockForge 材料链接器",
+  "item.blockforge_connector.material_link": "BlockForge 材料链接器",
+  "block.blockforge_connector.construction_core": "BlockForge 施工核心",
+  "item.blockforge_connector.construction_core": "BlockForge 施工核心",
+  "command.blockforge_connector.station": "建筑站",
+  "command.blockforge_connector.audit": "建造审计"
 }

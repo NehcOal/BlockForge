@@ -28,7 +28,7 @@ GitHub Releases are based on tags.
 Recommended tag format:
 
 ```text
-v3.2.0-alpha.1
+v3.5.0-alpha.1
 v2.0.0-rc.1
 v2.0.0
 v2.0.1

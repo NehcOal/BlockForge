@@ -87,6 +87,27 @@ public class BlockForgeForge {
             player.sendSystemMessage(Component.literal("BlockForge Material Cache alpha block registered. Inventory-backed sourcing is planned for a later v3.1 alpha polish commit."));
             event.setCancellationResult(InteractionResult.SUCCESS);
             event.setCanceled(true);
+            return;
+        }
+
+        if (state.is(ForgeModBlocks.BUILDER_STATION.get())) {
+            player.sendSystemMessage(Component.literal("BlockForge Builder Station alpha scaffold. Use station commands for command-driven jobs."));
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
+        }
+
+        if (state.is(ForgeModBlocks.MATERIAL_LINK.get())) {
+            player.sendSystemMessage(Component.literal("BlockForge Material Link alpha scaffold. Links expose Material Cache sources to station jobs."));
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
+        }
+
+        if (state.is(ForgeModBlocks.CONSTRUCTION_CORE.get())) {
+            player.sendSystemMessage(Component.literal("BlockForge Construction Core alpha scaffold. Multi-station project coordination remains planned."));
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
         }
     }
 }

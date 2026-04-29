@@ -57,6 +57,9 @@ public class BlockForgeConnector {
             event.accept(ModItems.BLUEPRINT_TABLE.get());
             event.accept(ModItems.MATERIAL_CACHE.get());
             event.accept(ModItems.BUILDER_ANCHOR.get());
+            event.accept(ModItems.BUILDER_STATION.get());
+            event.accept(ModItems.MATERIAL_LINK.get());
+            event.accept(ModItems.CONSTRUCTION_CORE.get());
         }
     }
 
@@ -84,6 +87,27 @@ public class BlockForgeConnector {
 
         if (state.is(ModBlocks.MATERIAL_CACHE.get())) {
             player.sendSystemMessage(Component.literal("BlockForge Material Cache alpha block registered. Inventory-backed sourcing is planned for a later v3.1 alpha polish commit."));
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
+        }
+
+        if (state.is(ModBlocks.BUILDER_STATION.get())) {
+            player.sendSystemMessage(Component.literal("BlockForge Builder Station alpha scaffold. Use /blockforge station status or /blockforge station step for command-driven jobs."));
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
+        }
+
+        if (state.is(ModBlocks.MATERIAL_LINK.get())) {
+            player.sendSystemMessage(Component.literal("BlockForge Material Link alpha scaffold. Links expose Material Cache sources to Builder Station jobs."));
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
+        }
+
+        if (state.is(ModBlocks.CONSTRUCTION_CORE.get())) {
+            player.sendSystemMessage(Component.literal("BlockForge Construction Core alpha scaffold. Multi-station project coordination remains planned."));
             event.setCancellationResult(InteractionResult.SUCCESS);
             event.setCanceled(true);
         }

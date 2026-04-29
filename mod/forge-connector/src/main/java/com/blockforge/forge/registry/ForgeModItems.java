@@ -35,6 +35,21 @@ public final class ForgeModItems {
             () -> new BlockItem(ForgeModBlocks.BUILDER_ANCHOR.get(), new Item.Properties())
     );
 
+    public static final RegistryObject<Item> BUILDER_STATION = ITEMS.register(
+            "builder_station",
+            () -> new BlockItem(ForgeModBlocks.BUILDER_STATION.get(), new Item.Properties())
+    );
+
+    public static final RegistryObject<Item> MATERIAL_LINK = ITEMS.register(
+            "material_link",
+            () -> new BlockItem(ForgeModBlocks.MATERIAL_LINK.get(), new Item.Properties())
+    );
+
+    public static final RegistryObject<Item> CONSTRUCTION_CORE = ITEMS.register(
+            "construction_core",
+            () -> new BlockItem(ForgeModBlocks.CONSTRUCTION_CORE.get(), new Item.Properties())
+    );
+
     private ForgeModItems() {
     }
 

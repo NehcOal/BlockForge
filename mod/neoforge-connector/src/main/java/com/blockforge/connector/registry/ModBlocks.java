@@ -33,6 +33,30 @@ public final class ModBlocks {
                     .sound(SoundType.AMETHYST))
     );
 
+    public static final DeferredBlock<Block> BUILDER_STATION = BLOCKS.register(
+            "builder_station",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .strength(4.5F)
+                    .lightLevel(state -> 3)
+                    .sound(SoundType.METAL))
+    );
+
+    public static final DeferredBlock<Block> MATERIAL_LINK = BLOCKS.register(
+            "material_link",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .strength(2.0F)
+                    .lightLevel(state -> 2)
+                    .sound(SoundType.COPPER))
+    );
+
+    public static final DeferredBlock<Block> CONSTRUCTION_CORE = BLOCKS.register(
+            "construction_core",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .strength(5.0F)
+                    .lightLevel(state -> 7)
+                    .sound(SoundType.AMETHYST))
+    );
+
     private ModBlocks() {
     }
 

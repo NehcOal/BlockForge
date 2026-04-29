@@ -9,15 +9,15 @@ testing.
 Release version:
 
 ```text
-3.2.0-alpha.1
+3.5.0-alpha.1
 ```
 
 Expected release jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-3.2.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-3.2.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-3.2.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-3.5.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-3.5.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-3.5.0-alpha.1.jar
 ```
 
 Build validation:
@@ -932,6 +932,36 @@ From `mod/fabric-connector`:
 ```bash
 ./gradlew build
 ```
+
+## v3.5 Gameplay Alpha Manual Checklist
+
+Status: pending until tested in real Minecraft clients and dedicated servers.
+
+Run separately on NeoForge, Fabric, and Forge:
+
+1. Start Minecraft Java 1.21.1 with Java 21.
+2. Confirm creative inventory contains Builder Wand, Blueprint Table, Material
+   Cache, Builder Anchor, Builder Station, Material Link, and Construction Core.
+3. Place Blueprint Table and right-click to open the Blueprint Selector.
+4. Place Material Cache, Builder Anchor, Builder Station, Material Link, and
+   Construction Core.
+5. Bind Builder Wand to Builder Anchor.
+6. Run `/blockforge examples install` and `/blockforge reload`.
+7. Select `tiny_platform`.
+8. Run wand BUILD, DRY_RUN, MATERIALS, and UNDO checks.
+9. Run `/blockforge buildplan create tiny_platform`.
+10. Run `/blockforge buildplan preview` and `/blockforge buildplan step`.
+11. Run `/blockforge station status`.
+12. Run `/blockforge station bind blueprint tiny_platform`.
+13. Run `/blockforge station bind anchor nearest`.
+14. Run `/blockforge station bind cache nearest`.
+15. Run `/blockforge station step`.
+16. Run `/blockforge admin audit`.
+17. Run `/blockforge quota get <player>`.
+18. Confirm protection-denied areas do not consume materials.
+19. Confirm dedicated server has no client-only class crash.
+
+Do not mark this checklist passed until it is run in-game.
 
 On Windows:
 

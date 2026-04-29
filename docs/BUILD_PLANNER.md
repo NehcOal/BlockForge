@@ -1,6 +1,6 @@
 # Build Planner
 
-Status: `3.2.0-alpha.1` command-driven Alpha. Minecraft manual regression and
+Status: `3.5.0-alpha.1` command-driven Alpha. Minecraft manual regression and
 dedicated server smoke testing are pending.
 
 Build Planner turns a selected blueprint placement into a deterministic plan
@@ -69,7 +69,7 @@ validated.
 
 ## Execution Status
 
-v3.2.0-alpha.1 is command-driven Alpha:
+v3.5.0-alpha.1 is command-driven Alpha:
 
 - `create` stores a per-player in-memory plan.
 - `preview` reports blocks, layers, base position, and pure validation issue

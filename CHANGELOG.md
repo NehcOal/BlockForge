@@ -2,7 +2,37 @@
 
 All notable changes to BlockForge will be documented in this file.
 
-## [3.2.0-alpha.1] - Unreleased
+## [3.5.0-alpha.1] - Unreleased
+
+### v3.5 Added
+
+- Added Builder Station common queue scaffolding: job status, job record, and
+  in-memory queue helper.
+- Added Builder Station, Material Link, and Construction Core block/item
+  registration across NeoForge, Fabric, and Forge.
+- Added original placeholder resources, lang keys, recipes, and loot tables for
+  the v3.5 gameplay blocks.
+- Added server rules common model and evaluator for future multiplayer
+  construction policies.
+- Added serverplay DTOs for audit entries, quotas, cooldowns, projects, admin
+  build summaries, and in-memory audit lookup.
+- Added NeoForge command scaffold for `/blockforge station ...`,
+  `/blockforge admin ...`, and `/blockforge quota ...`.
+- Added Java tests for queue progress, queue limits, and anchor-required server
+  rules.
+- Added resource coverage tests for gameplay block models, lang keys, loot
+  tables, recipes, and textures.
+- Added `docs/BUILDER_STATION.md`, `docs/MATERIAL_NETWORK.md`,
+  `docs/SERVER_GAMEPLAY_RULES.md`, `docs/AUDIT_AND_ROLLBACK.md`,
+  `docs/TEAM_BUILDS.md`, and `docs/GAMEPLAY_ALPHA_TESTING.md`.
+
+### v3.5 Notes
+
+- Tick-based world placement, persistent station jobs, full Material Cache
+  inventory sourcing, admin rollback, and multiplayer conflict handling remain
+  partial.
+- Minecraft manual regression and dedicated server smoke testing remain
+  pending.
 
 ### v3.2 Added
 
@@ -22,7 +52,7 @@ All notable changes to BlockForge will be documented in this file.
 ### v3.2 Notes
 
 - BuildPlan `step` is a safe command-alpha simulated batch in
-  `3.2.0-alpha.1`; it does not place world blocks yet.
+  `3.5.0-alpha.1`; it does not place world blocks yet.
 - Existing direct build and Builder Wand BUILD remain the real placement path.
 - Fabric/Forge command parity and real loader step execution are planned inside
   the v3.2 train.
@@ -70,7 +100,7 @@ All notable changes to BlockForge will be documented in this file.
   fallback scaffolding.
 - Added v2.5 docs for AI quality, local library, import pipeline, server admin,
   and dedicated server setup.
-- Updated release docs for `3.2.0-alpha.1` packaging and pending QA.
+- Updated release docs for `3.5.0-alpha.1` packaging and pending QA.
 
 ### Added
 
@@ -121,7 +151,7 @@ All notable changes to BlockForge will be documented in this file.
   workbench while keeping the existing preview and multi-format export flow.
 - Web import summaries and validation reports are clearer and collapsible, with
   user-readable import errors and expandable developer details.
-- Aligned Web, NeoForge, Fabric, and Forge versions to `3.2.0-alpha.1`.
+- Aligned Web, NeoForge, Fabric, and Forge versions to `3.5.0-alpha.1`.
 - Adopted a major-version train process: small polish, docs, tests, and bugfixes
   stay in the active major-version branch instead of opening `0.0.1` feature
   branches.
@@ -867,7 +897,7 @@ All notable changes to BlockForge will be documented in this file.
 
 - Prompt input is local UI state in v0.1.0. Real prompt-to-structure generation is planned for a future release.
 - Full datapack ZIP export, `.schem` export, block texture rendering, and InstancedMesh performance optimization are on the roadmap.
-# 3.2.0-alpha.1
+# 3.5.0-alpha.1
 
 ## Added
 

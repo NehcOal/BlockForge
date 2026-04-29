@@ -42,3 +42,12 @@ Dedicated server smoke test is pending.
 - Run `/blockforge status`.
 - Run `/blockforge diagnostics`.
 - Export diagnostics JSON before filing a server issue.
+## v3.5 Gameplay Alpha Notes
+
+- Verify Builder Station commands with `/blockforge station status`.
+- Verify admin scaffold with `/blockforge admin audit`.
+- Verify quota scaffold with `/blockforge quota get <player>`.
+- Keep `Minecraft manual regression` and `Dedicated server smoke test` marked
+  pending until a real server is started and joined by a client.
+- Do not mark Modrinth / CurseForge publishing complete unless release assets
+  have actually been uploaded.

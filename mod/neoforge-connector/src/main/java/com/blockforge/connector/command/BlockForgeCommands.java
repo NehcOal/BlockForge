@@ -179,6 +179,55 @@ public final class BlockForgeCommands {
                                 .executes(BlockForgeCommands::buildPlanRepair))
                         .then(Commands.literal("clear")
                                 .executes(BlockForgeCommands::buildPlanClear)))
+                .then(Commands.literal("station")
+                        .then(Commands.literal("list")
+                                .executes(BlockForgeCommands::stationList))
+                        .then(Commands.literal("info")
+                                .executes(BlockForgeCommands::stationInfo)
+                                .then(Commands.argument("id", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::stationInfo)))
+                        .then(Commands.literal("bind")
+                                .then(Commands.literal("blueprint")
+                                        .then(blueprintIdArgument(registry)
+                                                .executes(context -> stationBindBlueprint(context, registry))))
+                                .then(Commands.literal("anchor")
+                                        .then(Commands.literal("nearest")
+                                                .executes(BlockForgeCommands::stationBindAnchorNearest)))
+                                .then(Commands.literal("cache")
+                                        .then(Commands.literal("nearest")
+                                                .executes(BlockForgeCommands::stationBindCacheNearest))))
+                        .then(Commands.literal("createplan")
+                                .executes(BlockForgeCommands::stationCreatePlan))
+                        .then(Commands.literal("start")
+                                .executes(BlockForgeCommands::stationStart))
+                        .then(Commands.literal("pause")
+                                .executes(BlockForgeCommands::stationPause))
+                        .then(Commands.literal("resume")
+                                .executes(BlockForgeCommands::stationResume))
+                        .then(Commands.literal("cancel")
+                                .executes(BlockForgeCommands::stationCancel))
+                        .then(Commands.literal("step")
+                                .executes(BlockForgeCommands::stationStep))
+                        .then(Commands.literal("status")
+                                .executes(BlockForgeCommands::stationStatus))
+                        .then(Commands.literal("clear")
+                                .executes(BlockForgeCommands::stationClear)))
+                .then(Commands.literal("admin")
+                        .requires(source -> source.hasPermission(2))
+                        .then(Commands.literal("audit")
+                                .executes(BlockForgeCommands::adminAudit)
+                                .then(Commands.literal("export")
+                                        .executes(BlockForgeCommands::adminAuditExport)))
+                        .then(Commands.literal("builds")
+                                .executes(BlockForgeCommands::adminBuilds)))
+                .then(Commands.literal("quota")
+                        .requires(source -> source.hasPermission(2))
+                        .then(Commands.literal("get")
+                                .then(Commands.argument("player", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::quotaGet)))
+                        .then(Commands.literal("reset")
+                                .then(Commands.argument("player", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::quotaReset))))
                 .then(Commands.literal("undo")
                         .executes(BlockForgeCommands::undo)
                         .then(Commands.literal("list")
@@ -1751,6 +1800,146 @@ public final class BlockForgeCommands {
             );
             shown++;
         }
+    }
+
+    private static int stationList(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge Builder Station alpha: placed stations are discoverable in-world; persistent station registry is planned."),
+                false
+        );
+        return 1;
+    }
+
+    private static int stationInfo(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Builder Station: command-driven alpha. Supports bind blueprint/anchor/cache, createplan, step, pause, resume, cancel. Tick automation remains partial."),
+                false
+        );
+        return 1;
+    }
+
+    private static int stationBindBlueprint(CommandContext<CommandSourceStack> context, BlueprintRegistry registry) {
+        String blueprintId = StringArgumentType.getString(context, "id");
+        Blueprint blueprint = registry.get(blueprintId).orElse(null);
+        if (blueprint == null) {
+            context.getSource().sendFailure(Component.literal("Unknown blueprint: " + blueprintId));
+            return 0;
+        }
+        context.getSource().sendSuccess(
+                () -> Component.literal("Builder Station alpha binding accepted for blueprint " + describe(blueprint) + ". Persistent station storage remains planned."),
+                false
+        );
+        return 1;
+    }
+
+    private static int stationBindAnchorNearest(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Builder Station alpha anchor binding: nearest-anchor scan is planned; use Builder Wand anchor state for current command-driven plans."),
+                false
+        );
+        return 1;
+    }
+
+    private static int stationBindCacheNearest(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Builder Station alpha cache binding: Material Link and Material Cache scanning are scaffolded; inventory-backed cache sourcing remains partial."),
+                false
+        );
+        return 1;
+    }
+
+    private static int stationCreatePlan(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Builder Station createplan alpha uses the existing /blockforge buildplan create flow. Station-owned persistent jobs are planned."),
+                false
+        );
+        return 1;
+    }
+
+    private static int stationStart(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Builder Station status set to RUNNING for command-alpha feedback. Real station tick placement remains pending."),
+                true
+        );
+        return 1;
+    }
+
+    private static int stationPause(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(() -> Component.literal("Builder Station paused."), true);
+        return 1;
+    }
+
+    private static int stationResume(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(() -> Component.literal("Builder Station resumed."), true);
+        return 1;
+    }
+
+    private static int stationCancel(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(() -> Component.literal("Builder Station job cancelled. Use /blockforge undo for rollback when snapshots exist."), true);
+        return 1;
+    }
+
+    private static int stationStep(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Builder Station step executed as a safe command-alpha scaffold. It does not place blocks yet; BuildPlan direct placement remains the guarded path."),
+                true
+        );
+        return 1;
+    }
+
+    private static int stationStatus(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Builder Station status: IDLE/READY/RUNNING state model is available in common. Loader-persistent station jobs are partial."),
+                false
+        );
+        return 1;
+    }
+
+    private static int stationClear(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(() -> Component.literal("Builder Station alpha job cleared."), true);
+        return 1;
+    }
+
+    private static int adminAudit(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge audit alpha: common audit DTO and in-memory log are available. Persistent JSONL export is planned."),
+                false
+        );
+        return 1;
+    }
+
+    private static int adminAuditExport(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge audit export alpha: diagnostics export hook is planned; no file was written by this scaffold command."),
+                false
+        );
+        return 1;
+    }
+
+    private static int adminBuilds(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge admin builds alpha: active station/buildplan aggregation is planned after persistent job registry lands."),
+                false
+        );
+        return 1;
+    }
+
+    private static int quotaGet(CommandContext<CommandSourceStack> context) {
+        String playerName = StringArgumentType.getString(context, "player");
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge quota for " + playerName + ": alpha defaults are documented; enforcement is scaffolded in common rules."),
+                false
+        );
+        return 1;
+    }
+
+    private static int quotaReset(CommandContext<CommandSourceStack> context) {
+        String playerName = StringArgumentType.getString(context, "player");
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge quota reset requested for " + playerName + ". Persistent quota store is planned."),
+                true
+        );
+        return 1;
     }
 
     private static void sendMaterialSourceReport(CommandSourceStack source, MaterialSourceReport report) {

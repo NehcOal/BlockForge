@@ -5,9 +5,30 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
+## v3.5.0 Builder Station + Multiplayer Server Rules Alpha
+
+BlockForge v3.5.0-alpha.1 starts the Builder Station and multiplayer server
+rules train.
+
+Current alpha scope:
+
+- Builder Station, Material Link, and Construction Core are registered across
+  NeoForge, Fabric, and Forge with original placeholder resources.
+- Builder Station job status, queue model, and command-driven status/step
+  scaffold.
+- Server build rules for quota, cooldown, audit, project membership, and
+  material-source policy.
+- Pure Java rule evaluator, server gameplay DTOs, and resource coverage tests.
+
+Still partial: tick-based station world placement, persistent station jobs,
+inventory-backed Material Cache sourcing, and multiplayer conflict resolution.
+
+See [Builder Station](./docs/BUILDER_STATION.md) and
+[Material Network](./docs/MATERIAL_NETWORK.md).
+
 ## v3.2.0 Construction Workflow + Build Planner Alpha
 
-BlockForge v3.2.0-alpha.1 adds the first Build Planner layer. It turns a
+BlockForge v3.5.0-alpha.1 adds the first Build Planner layer. It turns a
 blueprint placement into a deterministic, previewable construction plan before
 the world is touched.
 
@@ -28,7 +49,7 @@ See [Build Planner](./docs/BUILD_PLANNER.md).
 
 ## v3.1.0 Gameplay Utility Blocks + Advanced Builder Wand Alpha
 
-BlockForge v3.2.0-alpha.1 starts the in-game utility pass for NeoForge,
+BlockForge v3.5.0-alpha.1 starts the in-game utility pass for NeoForge,
 Fabric, and Forge. The goal is to make BlockForge usable from inside Minecraft
 without leaning on commands for every step.
 
@@ -59,7 +80,7 @@ Current validation status:
 
 ## v2.0.0 AI Generation Alpha
 
-BlockForge v3.2.0-alpha.1 adds an optional AI generation pipeline while keeping
+BlockForge v3.5.0-alpha.1 adds an optional AI generation pipeline while keeping
 the Local Rule Generator as the default fallback.
 
 AI Generation highlights:
@@ -80,9 +101,9 @@ known Alpha limits.
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-3.2.0-alpha.1.jar`
-- `blockforge-connector-fabric-3.2.0-alpha.1.jar`
-- `blockforge-connector-forge-3.2.0-alpha.1.jar`
+- `blockforge-connector-neoforge-3.5.0-alpha.1.jar`
+- `blockforge-connector-fabric-3.5.0-alpha.1.jar`
+- `blockforge-connector-forge-3.5.0-alpha.1.jar`
 
 Current validation status:
 
@@ -736,9 +757,9 @@ tests when they affect voxel generation or export behavior.
 ## License
 
 MIT
-# BlockForge v3.2.0-alpha.1
+# BlockForge v3.5.0-alpha.1
 
-BlockForge v3.2.0-alpha.1 is a Product Workbench Alpha: release readiness,
+BlockForge v3.5.0-alpha.1 is a Product Workbench Alpha: release readiness,
 experimental Litematica import, local Blueprint Gallery, server/admin polish,
 and a unified Web workbench shell.
 

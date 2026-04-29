@@ -1,6 +1,6 @@
 # Local Blueprint Library
 
-Status: `v3.2.0-alpha.1` Alpha.
+Status: `v3.5.0-alpha.1` Alpha.
 
 The Local Blueprint Library stores generated, imported, schematic, pack, and
 preset blueprints in browser-local storage. It does not upload data.

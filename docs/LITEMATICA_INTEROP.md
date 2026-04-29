@@ -1,6 +1,6 @@
 # Litematica Interop Alpha
 
-BlockForge v3.2.0-alpha.1 adds experimental `.litematic` import plumbing. The
+BlockForge v3.5.0-alpha.1 adds experimental `.litematic` import plumbing. The
 goal is safe conversion into Blueprint v2, not full Litematica feature parity.
 
 ## Supported Scope
