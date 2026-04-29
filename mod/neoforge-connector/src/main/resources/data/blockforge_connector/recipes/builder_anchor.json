@@ -1,0 +1,26 @@
+{
+  "result": {
+    "count": 1,
+    "id": "blockforge_connector:builder_anchor"
+  },
+  "pattern": [
+    " A ",
+    "RIR",
+    " S "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "S": {
+      "item": "minecraft:stone"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "type": "minecraft:crafting_shaped"
+}

@@ -29,6 +29,11 @@ public final class BlockForgeConfig {
     private static final ModConfigSpec.IntValue PERMISSION_FALLBACK_ADMIN_LEVEL;
     private static final ModConfigSpec.BooleanValue ENFORCE_PROTECTION_ON_UNDO;
     private static final ModConfigSpec.BooleanValue HIDE_INACCESSIBLE_CONTAINERS_FROM_SOURCES_SCAN;
+    private static final ModConfigSpec.IntValue STATION_MAX_BLOCKS_PER_TICK;
+    private static final ModConfigSpec.IntValue STATION_MAX_QUEUE_SIZE;
+    private static final ModConfigSpec.IntValue STATION_COOLDOWN_SECONDS;
+    private static final ModConfigSpec.BooleanValue REQUIRE_MATERIAL_CACHE_FOR_STATION;
+    private static final ModConfigSpec.BooleanValue ALLOW_OWNER_INVENTORY_FOR_STATION;
 
     static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -91,6 +96,24 @@ public final class BlockForgeConfig {
         ALLOW_PARTIAL_FROM_CONTAINERS = builder
                 .comment("Allow one material requirement to be split between player inventory and nearby containers.")
                 .define("allowPartialFromContainers", MaterialSourceConfig.DEFAULT_ALLOW_PARTIAL_FROM_CONTAINERS);
+        builder.pop();
+
+        builder.push("station");
+        STATION_MAX_BLOCKS_PER_TICK = builder
+                .comment("Maximum number of Builder Station BuildPlan steps processed per tick batch.")
+                .defineInRange("stationMaxBlocksPerTick", 16, 1, 1024);
+        STATION_MAX_QUEUE_SIZE = builder
+                .comment("Maximum queued Builder Station jobs per runtime queue.")
+                .defineInRange("stationMaxQueueSize", 32, 1, 1024);
+        STATION_COOLDOWN_SECONDS = builder
+                .comment("Builder Station start/step cooldown in seconds.")
+                .defineInRange("stationCooldownSeconds", 5, 0, 3600);
+        REQUIRE_MATERIAL_CACHE_FOR_STATION = builder
+                .comment("Require Builder Station jobs to use Material Cache or Material Link sources.")
+                .define("requireMaterialCacheForStation", false);
+        ALLOW_OWNER_INVENTORY_FOR_STATION = builder
+                .comment("Allow Builder Station jobs to fall back to the owner inventory when configured.")
+                .define("allowOwnerInventoryForStation", true);
         builder.pop();
 
         builder.push("security");
@@ -221,5 +244,25 @@ public final class BlockForgeConfig {
 
     public static boolean hideInaccessibleContainersFromSourcesScan() {
         return HIDE_INACCESSIBLE_CONTAINERS_FROM_SOURCES_SCAN.get();
+    }
+
+    public static int stationMaxBlocksPerTick() {
+        return STATION_MAX_BLOCKS_PER_TICK.get();
+    }
+
+    public static int stationMaxQueueSize() {
+        return STATION_MAX_QUEUE_SIZE.get();
+    }
+
+    public static int stationCooldownSeconds() {
+        return STATION_COOLDOWN_SECONDS.get();
+    }
+
+    public static boolean requireMaterialCacheForStation() {
+        return REQUIRE_MATERIAL_CACHE_FOR_STATION.get();
+    }
+
+    public static boolean allowOwnerInventoryForStation() {
+        return ALLOW_OWNER_INVENTORY_FOR_STATION.get();
     }
 }
