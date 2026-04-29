@@ -1,6 +1,6 @@
 # Known Issues
 
-Status for v4.3.0-beta.1:
+Status for v4.4.0-beta.1:
 
 - Browser visual QA: pending.
 - Minecraft manual regression: pending.
@@ -33,3 +33,6 @@ Status for v4.3.0-beta.1:
 - Loader GUI parity is tracked by common status reports; NeoForge, Fabric, and
   Forge Material Cache / Builder Station screens are not yet all verified as
   fully interactive inventory GUIs.
+- v4.4 quick-move, screen-registration, mutation-result, audit-path, and
+  rollback-result contracts are covered by tests, but real loader Screen/Menu
+  classes and world rollback still need Minecraft manual regression.

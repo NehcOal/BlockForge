@@ -1,9 +1,16 @@
 # BlockForge Gameplay GUI
 
-Version: 4.3.0-beta.1
+Version: 4.4.0-beta.1
 
 Status: common state/action layer implemented; loader-specific screens remain
 partial. This beta keeps dedicated-server safety ahead of GUI scope.
+
+v4.4 adds the remaining shared contracts needed before real loader screens can
+be considered complete:
+
+- `MaterialCacheQuickMovePlan` defines cache/player/hotbar shift-click routing.
+- `LoaderScreenRegistrationPlan` records whether a loader keeps client Screen
+  classes isolated from common/server registration.
 
 v4.3 keeps loader GUI parity explicit instead of silently treating common DTOs
 as completed Minecraft screens:
@@ -48,9 +55,10 @@ count, material source priority, accessibility, protection state, and warnings.
 NeoForge/Fabric/Forge can render this state without loading client screen
 classes from common/server code.
 
-Still pending: full loader inventory screen, quick-move behavior, automation
-access, and real Minecraft inventory sync testing. Track NeoForge, Fabric, and
-Forge separately because parity may progress at different speeds.
+Still pending: full loader inventory screen, automation access, and real
+Minecraft inventory sync testing. Quick-move routing now has a common model,
+but each loader still needs its own Menu/ScreenHandler implementation verified
+in game.
 
 ## Builder Station
 

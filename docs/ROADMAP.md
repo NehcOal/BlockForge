@@ -8,24 +8,24 @@ major-version branch instead of creating separate `0.0.1` feature branches.
 
 Recommended current branch:
 
-- `feature/v4.3-loader-gui-runtime`
+- `feature/v4.4-real-gui-world-runtime`
 
 ## Active Train
 
 | Version | Theme | Goal | Release Gate |
 |---|---|---|---|
-| v4.3 | Loader GUI Parity + World Runtime Integration | Track three-loader GUI parity, gate station world placement before mutation, and expose command/audit/diagnostics integration status honestly | Web and three loader builds pass; manual Minecraft/server QA pending |
+| v4.4 | Real Loader GUI + World Placement + Rollback Integration | Add shared quick-move, screen-registration safety, station mutation accounting, loader file paths, and rollback integration contracts for real loader wiring | Web and three loader builds pass; manual Minecraft/server QA pending |
 
 ## Next Trains
 
-- v4.4: Loader-specific Material Cache and Builder Station screens.
-- v4.5: Real Minecraft regression and dedicated server smoke test.
-- v4.6: Anchor-fixed ghost preview and mirrored placement transformation.
+- v4.5: Loader-specific Material Cache and Builder Station screens.
+- v4.6: Real Minecraft regression and dedicated server smoke test.
+- v4.7: Anchor-fixed ghost preview and mirrored placement transformation.
 - v5.0: Stable release planning after beta/rc evidence is collected.
 
 ## Current Beta Rules
 
-- Keep `4.3.0-beta.1` clearly marked as Beta, not stable.
+- Keep `4.4.0-beta.1` clearly marked as Beta, not stable.
 - Keep Local Rule Generator as the no-key fallback.
 - Keep OpenAI provider optional and server-side only.
 - Do not expose API keys to browser client code.

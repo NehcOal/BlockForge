@@ -1,6 +1,6 @@
 # Server Admin Guide
 
-Status: `v4.3.0-beta.1` Alpha documentation.
+Status: `v4.4.0-beta.1` Alpha documentation.
 
 ## v3.5 Gameplay Alpha Admin Notes
 

@@ -1,6 +1,6 @@
 # AI Quality And UX
 
-Status: `v4.3.0-beta.1` Alpha.
+Status: `v4.4.0-beta.1` Alpha.
 
 ## Scope
 

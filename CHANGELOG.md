@@ -2,36 +2,37 @@
 
 All notable changes to BlockForge will be documented in this file.
 
-## [4.3.0-beta.1] - Unreleased
+## [4.4.0-beta.1] - Unreleased
 
-### v4.3 Added
+### v4.4 Added
 
-- Added loader GUI parity status reports so NeoForge, Fabric, and Forge GUI
-  gaps are tracked explicitly instead of implied by docs.
-- Added Station world placement gate for loaded chunk, dimension, protection,
-  quota, cooldown, material reservation, replace policy, and block entity
-  protection checks.
-- Added loader command surface model for required Fabric/Forge advanced command
-  parity.
-- Added Java tests for station world placement gating, loader GUI parity, and
-  advanced command surface coverage.
+- Added Material Cache quick-move slot routing model for cache, player
+  inventory, and hotbar slot transfer behavior.
+- Added loader screen registration safety model to keep client Screen classes
+  out of common/server registration paths.
+- Added Station world mutation result model for placed/skipped/failed block
+  accounting, undo snapshot recording, and audit recording.
+- Added loader integration path helper for audit JSONL and diagnostics JSON
+  output under `config/blockforge/`.
+- Added Admin rollback integration result model for snapshot, world restore,
+  material refund, audit, and station update outcomes.
+- Added Java tests for quick-move routing, screen registration safety, station
+  mutation results, loader integration paths, and rollback integration status.
 
-### v4.3 Changed
+### v4.4 Changed
 
-- Routed `BuilderStationTickExecutor` through the station world placement gate
-  so material reservation failure pauses before any batch can be marked placed.
 - Updated gameplay GUI, Builder Station, audit/rollback, beta QA, and known
-  issues docs for the v4.3 beta line.
-- Bumped Web and connector versions to `4.3.0-beta.1`.
+  issues docs for the v4.4 beta line.
+- Bumped Web and connector versions to `4.4.0-beta.1`.
 
-### v4.3 Notes
+### v4.4 Notes
 
-- Material Cache GUI and Builder Station GUI still require real loader screen
-  work and Minecraft client verification.
-- Station world placement has a common safety gate, but loader-integrated world
-  mutation is still partial.
-- Audit JSONL and diagnostics export have common file helpers; loader command
-  wiring still needs dedicated server validation.
+- Real NeoForge/Fabric/Forge inventory screens are still partial; v4.4 adds the
+  shared transfer and registration-safety contracts they must follow.
+- Station world placement now has explicit mutation-result accounting, but real
+  loader world mutation still requires Minecraft regression.
+- Rollback integration tracks snapshot/world/audit/station outcomes, but real
+  world restore remains partial until loader undo snapshots are wired by job id.
 - Minecraft manual regression and dedicated server smoke testing remain
   pending until executed in real clients and servers.
 
@@ -105,7 +106,7 @@ All notable changes to BlockForge will be documented in this file.
 ### v3.2 Notes
 
 - BuildPlan `step` is a safe command-alpha simulated batch in
-  `4.3.0-beta.1`; it does not place world blocks yet.
+  `4.4.0-beta.1`; it does not place world blocks yet.
 - Existing direct build and Builder Wand BUILD remain the real placement path.
 - Fabric/Forge command parity and real loader step execution are planned inside
   the v3.2 train.
@@ -153,7 +154,7 @@ All notable changes to BlockForge will be documented in this file.
   fallback scaffolding.
 - Added v2.5 docs for AI quality, local library, import pipeline, server admin,
   and dedicated server setup.
-- Updated release docs for `4.3.0-beta.1` packaging and pending QA.
+- Updated release docs for `4.4.0-beta.1` packaging and pending QA.
 
 ### Added
 
@@ -204,7 +205,7 @@ All notable changes to BlockForge will be documented in this file.
   workbench while keeping the existing preview and multi-format export flow.
 - Web import summaries and validation reports are clearer and collapsible, with
   user-readable import errors and expandable developer details.
-- Aligned Web, NeoForge, Fabric, and Forge versions to `4.3.0-beta.1`.
+- Aligned Web, NeoForge, Fabric, and Forge versions to `4.4.0-beta.1`.
 - Adopted a major-version train process: small polish, docs, tests, and bugfixes
   stay in the active major-version branch instead of opening `0.0.1` feature
   branches.
@@ -950,7 +951,7 @@ All notable changes to BlockForge will be documented in this file.
 
 - Prompt input is local UI state in v0.1.0. Real prompt-to-structure generation is planned for a future release.
 - Full datapack ZIP export, `.schem` export, block texture rendering, and InstancedMesh performance optimization are on the roadmap.
-# 4.3.0-beta.1
+# 4.4.0-beta.1
 
 ## Added
 

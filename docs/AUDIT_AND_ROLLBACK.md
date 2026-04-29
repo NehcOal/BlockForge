@@ -1,6 +1,17 @@
 # BlockForge Audit And Rollback
 
-Version: 4.3.0-beta.1
+Version: 4.4.0-beta.1
+
+v4.4 adds `LoaderIntegrationPaths`, the shared path helper for loader audit and
+diagnostics files:
+
+- Audit JSONL: `config/blockforge/audit/blockforge-audit-YYYY-MM-DD.jsonl`
+- Diagnostics JSON: `config/blockforge/diagnostics/blockforge-diagnostics-<timestamp>.json`
+
+v4.4 also adds `AdminRollbackIntegrationResult` so loaders can report whether a
+rollback found a snapshot, restored blocks, refunded materials, recorded audit,
+and updated station/job state. Real world rollback still requires loader undo
+snapshot lookup by job id and Minecraft regression.
 
 v4.2 adds `AuditJsonlWriter`, a server-safe file writer for `config/blockforge/audit/blockforge-audit-YYYY-MM-DD.jsonl`.
 

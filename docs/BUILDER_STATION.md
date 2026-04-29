@@ -1,6 +1,6 @@
 # Builder Station
 
-Status: `4.3.0-beta.1` beta candidate. Minecraft manual regression is pending.
+Status: `4.4.0-beta.1` beta candidate. Minecraft manual regression is pending.
 
 Builder Station is the beta server-side construction runner for BuildPlan
 jobs. v3.5 registered the in-game block on all three loaders; v4.0 adds the
@@ -14,6 +14,11 @@ runtimes must call before placing any world block. It checks loaded chunk,
 dimension, protection, quota, cooldown, material reservation, replace policy,
 and protected block entities. Missing material pauses the job before a batch can
 be marked placed.
+
+v4.4 adds `StationWorldMutationResult`, which loader runtimes should return
+after a real world batch. It records attempted, placed, skipped, and failed
+blocks plus whether an undo snapshot and audit entry were written. A station job
+should pause when a batch mutates the world but cannot record undo/audit data.
 
 ## Current Scope
 

@@ -5,26 +5,27 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v4.1.0 Gameplay GUI + Runtime Beta
+## v4.4.0 Real GUI + World Runtime Beta
 
-BlockForge v4.3.0-beta.1 focuses on making the v3 gameplay systems safer to
+BlockForge v4.4.0-beta.1 focuses on making the v3 gameplay systems safer to
 test on real clients and servers. It does not add new Web or AI product scope.
 
 Beta highlights:
 
-- Material Cache menu state and Builder Station status/action DTOs for
-  loader-safe GUI implementation.
-- Builder Station action validation for create/start/pause/resume/step/cancel
-  buttons.
-- Audit JSONL formatting, admin rollback decisions, and friendly cooldown
-  policy helpers.
-- Diagnostics fields for active stations, active jobs, audit entries, quota
-  denials, and material network sources.
-- Gameplay GUI, audit, rollback, and beta QA docs updated for v4.1.
+- Material Cache quick-move routing for cache, player inventory, and hotbar
+  transfer behavior.
+- Loader screen registration safety checks so client Screen classes stay out of
+  common/server paths.
+- Station world mutation accounting for placed/skipped/failed blocks, undo
+  snapshot recording, and audit recording.
+- Loader integration paths for audit JSONL and diagnostics JSON files under
+  `config/blockforge/`.
+- Admin rollback integration result tracking for snapshot, world restore,
+  material refund, audit, and station update outcomes.
 
 Still partial: loader-specific Material Cache/Builder Station screens,
-loader-integrated station world placement, audit file writing, and real
-dedicated server QA.
+loader-integrated station world placement, admin rollback world restore, and
+real dedicated server QA.
 
 See [Gameplay Beta Testing](./docs/GAMEPLAY_BETA_TESTING.md) and
 [Gameplay Beta QA Report](./docs/GAMEPLAY_BETA_QA_REPORT.md).
@@ -104,7 +105,7 @@ Current validation status:
 
 ## v2.0.0 AI Generation Alpha
 
-BlockForge v4.3.0-beta.1 adds an optional AI generation pipeline while keeping
+BlockForge v4.4.0-beta.1 adds an optional AI generation pipeline while keeping
 the Local Rule Generator as the default fallback.
 
 AI Generation highlights:
@@ -125,9 +126,9 @@ known Alpha limits.
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-4.3.0-beta.1.jar`
-- `blockforge-connector-fabric-4.3.0-beta.1.jar`
-- `blockforge-connector-forge-4.3.0-beta.1.jar`
+- `blockforge-connector-neoforge-4.4.0-beta.1.jar`
+- `blockforge-connector-fabric-4.4.0-beta.1.jar`
+- `blockforge-connector-forge-4.4.0-beta.1.jar`
 
 Current validation status:
 
@@ -781,9 +782,9 @@ tests when they affect voxel generation or export behavior.
 ## License
 
 MIT
-# BlockForge v4.3.0-beta.1
+# BlockForge v4.4.0-beta.1
 
-BlockForge v4.3.0-beta.1 is a Product Workbench Alpha: release readiness,
+BlockForge v4.4.0-beta.1 is a Product Workbench Alpha: release readiness,
 experimental Litematica import, local Blueprint Gallery, server/admin polish,
 and a unified Web workbench shell.
 

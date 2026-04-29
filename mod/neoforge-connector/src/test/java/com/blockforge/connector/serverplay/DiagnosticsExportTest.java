@@ -18,7 +18,7 @@ class DiagnosticsExportTest {
     @Test
     void exportsDiagnosticsJsonShape(@TempDir Path tempDir) throws Exception {
         DiagnosticsSnapshot snapshot = new DiagnosticsSnapshot(
-                "4.3.0-beta.1",
+                "4.4.0-beta.1",
                 "NeoForge",
                 "1.21.1",
                 Map.of("stationMaxBlocksPerTick", "8"),
@@ -41,7 +41,7 @@ class DiagnosticsExportTest {
 
         assertTrue(result.written());
         String json = Files.readString(result.path());
-        assertTrue(json.contains("\"version\":\"4.3.0-beta.1\""));
+        assertTrue(json.contains("\"version\":\"4.4.0-beta.1\""));
         assertTrue(json.contains("\"activeStations\":2"));
         assertTrue(json.contains("\"warningList\""));
     }
