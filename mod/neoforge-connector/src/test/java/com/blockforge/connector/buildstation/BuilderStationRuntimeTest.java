@@ -50,6 +50,25 @@ class BuilderStationRuntimeTest {
     }
 
     @Test
+    void staleJobTotalDoesNotCompleteBeforePlanCompletes() {
+        BuildPlan plan = plan(5);
+        BuilderStationJob staleJob = BuilderStationJob.queued("job-1", UUID.randomUUID(), plan.planId(), plan.blueprintId(), 2, 1L);
+        BuilderStationRuntimeConfig config = new BuilderStationRuntimeConfig(true, 2, 4, true, false, true, true, false);
+
+        BuilderStationPlacementBatch batch = BuilderStationTickExecutor.tick(
+                staleJob,
+                plan,
+                config,
+                StationTickContext.ready(),
+                2L
+        );
+
+        assertFalse(batch.completed());
+        assertEquals(BuildPlanStatus.RUNNING, batch.plan().status());
+        assertEquals(BuilderStationJobStatus.RUNNING, batch.job().status());
+    }
+
+    @Test
     void unloadedChunkPausesWithoutPlacing() {
         BuildPlan plan = plan(2);
         BuilderStationJob job = BuilderStationJob.queued("job-1", UUID.randomUUID(), plan.planId(), plan.blueprintId(), plan.totalBlocks(), 1L);
@@ -83,6 +102,26 @@ class BuilderStationRuntimeTest {
         assertEquals(0, batch.progress().placedBlocks());
         assertEquals(BuildPlanStatus.FAILED, batch.plan().status());
         assertEquals(BuilderStationJobStatus.FAILED, batch.job().status());
+    }
+
+    @Test
+    void missingMaterialsPauseEvenWhenPartialBuildIsAllowed() {
+        BuildPlan plan = plan(2);
+        BuilderStationJob job = BuilderStationJob.queued("job-1", UUID.randomUUID(), plan.planId(), plan.blueprintId(), plan.totalBlocks(), 1L);
+        BuilderStationRuntimeConfig partialConfig = new BuilderStationRuntimeConfig(true, 2, 4, true, false, true, true, true);
+
+        BuilderStationPlacementBatch batch = BuilderStationTickExecutor.tick(
+                job,
+                plan,
+                partialConfig,
+                new StationTickContext(true, true, false, true, true),
+                2L
+        );
+
+        assertEquals(0, batch.progress().placedBlocks());
+        assertEquals(BuildPlanStatus.PAUSED, batch.plan().status());
+        assertEquals(BuilderStationJobStatus.PAUSED, batch.job().status());
+        assertEquals("materials_missing", batch.issues().getFirst().type());
     }
 
     private static BuildPlan plan(int steps) {

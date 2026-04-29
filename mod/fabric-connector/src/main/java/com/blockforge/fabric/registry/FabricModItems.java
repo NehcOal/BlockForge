@@ -43,8 +43,8 @@ public final class FabricModItems {
                 Identifier.of(BlockForgeFabric.MOD_ID, "builder_wand"),
                 BUILDER_WAND
         );
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> entries.add(BUILDER_WAND));
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries -> {
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
+            entries.add(BUILDER_WAND);
             entries.add(BLUEPRINT_TABLE_ITEM);
             entries.add(MATERIAL_CACHE_ITEM);
             entries.add(BUILDER_ANCHOR_ITEM);

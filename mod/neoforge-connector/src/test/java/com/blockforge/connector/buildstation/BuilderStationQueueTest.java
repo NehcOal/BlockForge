@@ -26,7 +26,10 @@ class BuilderStationQueueTest {
         BuilderStationJob running = queue.update("job-1", current -> current.withStatus(BuilderStationJobStatus.RUNNING, 2L)).orElseThrow();
         assertEquals(BuilderStationJobStatus.RUNNING, running.status());
 
-        BuilderStationJob complete = queue.update("job-1", current -> current.withProgress(10, 3L)).orElseThrow();
+        BuilderStationJob complete = queue.update("job-1", current -> current
+                .withStatus(BuilderStationJobStatus.COMPLETED, 3L)
+                .withProgress(10, 3L)
+        ).orElseThrow();
         assertEquals(BuilderStationJobStatus.COMPLETED, complete.status());
         assertEquals(100.0, complete.percent());
     }

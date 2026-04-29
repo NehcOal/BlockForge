@@ -159,9 +159,9 @@ download file names match the expected jar names above.
   before preview/export.
 # v4.1.0-beta.1 Publishing Notes
 
-`4.1.0-beta.1` is an alpha candidate. Do not mark it stable.
+`4.1.0-beta.1` is a beta prerelease candidate. Do not mark it stable.
 
-- GitHub Release may upload the three connector jars as alpha assets.
+- GitHub Release may upload the three connector jars as beta prerelease assets.
 - Expected assets:
   - `blockforge-connector-neoforge-4.1.0-beta.1.jar`
   - `blockforge-connector-fabric-4.1.0-beta.1.jar`
@@ -170,16 +170,3 @@ download file names match the expected jar names above.
 - Web demo link remains pending unless deployed.
 - Browser visual QA, Minecraft manual regression, External AI live test, and
   dedicated server smoke test must remain pending until manually verified.
-## v4.1.0-beta.1 Publishing Notes
-
-`4.1.0-beta.1` can be prepared as a GitHub beta prerelease candidate after all
-automated checks pass. Do not mark it stable until Minecraft client regression
-and dedicated server smoke tests are actually run and recorded.
-
-Expected jar assets:
-
-- `blockforge-connector-neoforge-4.1.0-beta.1.jar`
-- `blockforge-connector-fabric-4.1.0-beta.1.jar`
-- `blockforge-connector-forge-4.1.0-beta.1.jar`
-
-Modrinth / CurseForge publishing remains pending unless explicitly performed.

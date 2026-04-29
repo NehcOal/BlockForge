@@ -52,6 +52,8 @@ public record BuilderStationStatusView(
         boolean idleOrReady = state.status() == BuilderStationStatus.IDLE || state.status() == BuilderStationStatus.READY || state.status() == BuilderStationStatus.COMPLETED || state.status() == BuilderStationStatus.CANCELLED || state.status() == BuilderStationStatus.FAILED;
         boolean running = state.status() == BuilderStationStatus.RUNNING;
         boolean paused = state.status() == BuilderStationStatus.PAUSED;
+        boolean startReady = hasPlan && state.status() == BuilderStationStatus.READY;
+        boolean stepReady = hasPlan && (state.status() == BuilderStationStatus.READY || paused);
         return new BuilderStationStatusView(
                 state.stationId(),
                 state.boundBlueprintId(),
@@ -66,10 +68,10 @@ public record BuilderStationStatusView(
                 totalLayers,
                 issuesCount,
                 hasBlueprint && hasAnchor && idleOrReady,
-                hasPlan && (state.status() == BuilderStationStatus.READY || paused),
+                startReady,
                 running,
                 paused,
-                hasPlan && !running,
+                stepReady,
                 hasPlan && (running || paused || state.status() == BuilderStationStatus.READY),
                 warningsFor(state, hasBlueprint, hasAnchor)
         );

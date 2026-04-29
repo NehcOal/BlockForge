@@ -42,9 +42,8 @@ public final class MaterialSourcePlanner {
                 continue;
             }
 
-            int available = resolvedConfig.priority() == MaterialSourcePriority.CONTAINER_ONLY
-                    ? 0
-                    : requirement.available();
+            boolean playerAllowed = sourceAllowed(playerSource, resolvedConfig);
+            int available = playerAllowed ? requirement.available() : 0;
             int reserved = Math.min(requirement.required(), available);
             entries.add(new MaterialSourceItemEntry(
                     requirement.itemId(),
@@ -52,7 +51,7 @@ public final class MaterialSourcePlanner {
                     available,
                     reserved,
                     0,
-                    playerSource
+                    playerAllowed ? playerSource : null
             ));
         }
 
@@ -176,9 +175,7 @@ public final class MaterialSourcePlanner {
             case PLAYER_ONLY -> type == MaterialSourceType.PLAYER_INVENTORY;
             case CONTAINER_ONLY -> type == MaterialSourceType.NEARBY_CONTAINER && config.enableNearbyContainers();
             case CACHE_ONLY -> isCacheLike(type);
-            case PLAYER_FIRST, CONTAINER_FIRST -> type == MaterialSourceType.PLAYER_INVENTORY
-                    || (type == MaterialSourceType.NEARBY_CONTAINER && config.enableNearbyContainers());
-            case CACHE_FIRST -> type == MaterialSourceType.PLAYER_INVENTORY
+            case PLAYER_FIRST, CONTAINER_FIRST, CACHE_FIRST -> type == MaterialSourceType.PLAYER_INVENTORY
                     || isCacheLike(type)
                     || (type == MaterialSourceType.NEARBY_CONTAINER && config.enableNearbyContainers());
         };

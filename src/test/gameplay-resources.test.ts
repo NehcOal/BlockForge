@@ -12,6 +12,32 @@ const gameplayBlocks = [
   "material_link",
   "construction_core"
 ] as const;
+const gameplayItems = ["builder_wand", ...gameplayBlocks] as const;
+const sharedLangKeys = [
+  "modmenu.nameTranslation.blockforge_connector",
+  "item.blockforge_connector.builder_wand",
+  "key.categories.blockforge_connector",
+  "key.blockforge_connector.open_blueprint_selector",
+  "screen.blockforge_connector.blueprint_selector",
+  "screen.blockforge_connector.blueprints",
+  "screen.blockforge_connector.details",
+  "screen.blockforge_connector.no_selection",
+  "screen.blockforge_connector.rotation",
+  "screen.blockforge_connector.select",
+  "screen.blockforge_connector.close",
+  "screen.blockforge_connector.loading",
+  "screen.blockforge_connector.materials",
+  "screen.blockforge_connector.materials_hint",
+  "screen.blockforge_connector.enough_materials",
+  "screen.blockforge_connector.material_totals",
+  "screen.blockforge_connector.blocks",
+  "screen.blockforge_connector.size",
+  "screen.blockforge_connector.block_states",
+  "screen.blockforge_connector.hint",
+  "screen.blockforge_connector.empty",
+  "command.blockforge_connector.station",
+  "command.blockforge_connector.audit"
+] as const;
 
 function resourcePath(connector: string, ...segments: string[]) {
   return path.join(repoRoot, "mod", connector, "src", "main", "resources", ...segments);
@@ -33,6 +59,18 @@ describe("gameplay block resources", () => {
         expect(existsSync(resourcePath(connector, "data", "blockforge_connector", "recipes", `${id}.json`)), `${connector} ${id} recipe`).toBe(true);
         expect(en[`block.blockforge_connector.${id}`], `${connector} ${id} en block lang`).toBeTruthy();
         expect(zh[`block.blockforge_connector.${id}`], `${connector} ${id} zh block lang`).toBeTruthy();
+      }
+
+      for (const id of gameplayItems) {
+        expect(existsSync(resourcePath(connector, "assets", "blockforge_connector", "models", "item", `${id}.json`)), `${connector} ${id} item model`).toBe(true);
+        expect(existsSync(resourcePath(connector, "data", "blockforge_connector", "recipes", `${id}.json`)), `${connector} ${id} recipe`).toBe(true);
+        expect(en[`item.blockforge_connector.${id}`], `${connector} ${id} en item lang`).toBeTruthy();
+        expect(zh[`item.blockforge_connector.${id}`], `${connector} ${id} zh item lang`).toBeTruthy();
+      }
+
+      for (const key of sharedLangKeys) {
+        expect(en[key], `${connector} ${key} en lang`).toBeTruthy();
+        expect(zh[key], `${connector} ${key} zh lang`).toBeTruthy();
       }
     }
   });

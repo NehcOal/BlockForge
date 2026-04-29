@@ -63,7 +63,7 @@ class GameplayGuiStateTest {
 
         BuilderStationStatusView view = BuilderStationStatusView.fromState(station, "job-1", 1, 2, 0);
 
-        assertTrue(view.canStart());
+        assertFalse(view.canStart());
         assertTrue(view.canResume());
         assertFalse(view.canPause());
         assertEquals(List.of(), view.warnings());
@@ -97,6 +97,62 @@ class GameplayGuiStateTest {
         assertFalse(BuilderStationActionValidator.validate(view, BuilderStationAction.START, false, true, true).allowed());
         assertFalse(BuilderStationActionValidator.validate(view, BuilderStationAction.START, true, false, true).allowed());
         assertFalse(BuilderStationActionValidator.validate(view, BuilderStationAction.STEP, true, true, false).allowed());
+    }
+
+    @Test
+    void completedStationDoesNotExposeStepAction() {
+        BuilderStationState station = new BuilderStationState(
+                "station-1",
+                "minecraft:overworld",
+                0,
+                64,
+                0,
+                "owner",
+                "tiny_platform",
+                "anchor-1",
+                List.of("cache-1"),
+                "plan-1",
+                BuilderStationStatus.COMPLETED,
+                8,
+                10,
+                10,
+                1L,
+                2L
+        );
+
+        BuilderStationStatusView view = BuilderStationStatusView.fromState(station, "job-1", 1, 1, 0);
+
+        assertFalse(view.canStep());
+        assertFalse(BuilderStationActionValidator.validate(view, BuilderStationAction.STEP, true, true, true).allowed());
+    }
+
+    @Test
+    void pausedStationCannotStartOrClearActiveJob() {
+        BuilderStationState station = new BuilderStationState(
+                "station-1",
+                "minecraft:overworld",
+                0,
+                64,
+                0,
+                "owner",
+                "tiny_platform",
+                "anchor-1",
+                List.of("cache-1"),
+                "plan-1",
+                BuilderStationStatus.PAUSED,
+                8,
+                4,
+                10,
+                1L,
+                2L
+        );
+
+        BuilderStationStatusView view = BuilderStationStatusView.fromState(station, "job-1", 1, 2, 0);
+
+        assertFalse(BuilderStationActionValidator.validate(view, BuilderStationAction.START, true, true, true).allowed());
+        assertFalse(BuilderStationActionValidator.validate(view, BuilderStationAction.CLEAR, true, true, true).allowed());
+        assertTrue(BuilderStationActionValidator.validate(view, BuilderStationAction.RESUME, true, true, true).allowed());
+        assertTrue(BuilderStationActionValidator.validate(view, BuilderStationAction.CANCEL, true, true, true).allowed());
     }
 
     @Test

@@ -45,7 +45,7 @@ public final class BuilderStationTickExecutor {
             issues.add(issue("cooldown", "info", "Station cooldown is still active."));
             return paused(job, plan, issues, gameTime);
         }
-        if (!resolvedContext.materialsAvailable() && !resolvedConfig.allowPartialBuild()) {
+        if (!resolvedContext.materialsAvailable()) {
             issues.add(issue("materials_missing", "error", "Required materials are not available."));
             return paused(job, plan, issues, gameTime);
         }

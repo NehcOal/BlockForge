@@ -35,8 +35,7 @@ public record BuilderStationJob(
     }
 
     public BuilderStationJob withProgress(int nextCompletedBlocks, long gameTime) {
-        BuilderStationJobStatus nextStatus = nextCompletedBlocks >= totalBlocks ? BuilderStationJobStatus.COMPLETED : status;
-        return new BuilderStationJob(jobId, playerId, planId, blueprintId, nextStatus, queuedAtGameTime, startedAtGameTime, gameTime, totalBlocks, nextCompletedBlocks, failureReason);
+        return new BuilderStationJob(jobId, playerId, planId, blueprintId, status, queuedAtGameTime, startedAtGameTime, gameTime, totalBlocks, nextCompletedBlocks, failureReason);
     }
 
     public double percent() {

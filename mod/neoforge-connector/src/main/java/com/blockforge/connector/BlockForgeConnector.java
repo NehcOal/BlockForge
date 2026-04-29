@@ -9,9 +9,12 @@ import com.blockforge.connector.network.BlockForgeNetwork;
 import com.blockforge.connector.player.PlayerSelectionManager;
 import com.blockforge.connector.registry.ModBlocks;
 import com.blockforge.connector.registry.ModItems;
+import com.blockforge.connector.security.NeoForgePermissionService;
 import com.blockforge.connector.security.NeoForgeProtectionService;
 import com.blockforge.connector.undo.UndoManager;
 import com.blockforge.common.gameplay.BuilderWandStateStore;
+import com.blockforge.common.security.permission.BlockForgePermissionAction;
+import com.blockforge.common.security.permission.PermissionCheckResult;
 import com.mojang.logging.LogUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -38,6 +41,7 @@ public class BlockForgeConnector {
     );
     public static final PlayerSelectionManager SELECTIONS = new PlayerSelectionManager();
     public static final UndoManager UNDO = new UndoManager();
+    public static final NeoForgePermissionService PERMISSIONS = new NeoForgePermissionService();
     public static final NeoForgeProtectionService PROTECTION = new NeoForgeProtectionService();
     public static final BuilderWandStateStore WAND_STATES = new BuilderWandStateStore();
     public static final NeoForgeBuildPlanManager BUILD_PLANS = new NeoForgeBuildPlanManager();
@@ -71,6 +75,11 @@ public class BlockForgeConnector {
 
         var state = event.getLevel().getBlockState(event.getPos());
         if (state.is(ModBlocks.BLUEPRINT_TABLE.get())) {
+            if (!checkGameplayPermission(player, BlockForgePermissionAction.GAMEPLAY_BLUEPRINT_TABLE_USE)) {
+                event.setCancellationResult(InteractionResult.FAIL);
+                event.setCanceled(true);
+                return;
+            }
             BlockForgeNetwork.sendBlueprintList(player, true);
             event.setCancellationResult(InteractionResult.SUCCESS);
             event.setCanceled(true);
@@ -78,6 +87,11 @@ public class BlockForgeConnector {
         }
 
         if (state.is(ModBlocks.BUILDER_ANCHOR.get())) {
+            if (!checkGameplayPermission(player, BlockForgePermissionAction.GAMEPLAY_ANCHOR_USE)) {
+                event.setCancellationResult(InteractionResult.FAIL);
+                event.setCanceled(true);
+                return;
+            }
             var wandState = WAND_STATES.update(player.getUUID(), current -> current.withAnchor(anchorId(event.getPos()), event.getLevel().getGameTime()));
             player.sendSystemMessage(Component.literal("BlockForge Builder Wand bound to anchor " + wandState.anchorId() + "."));
             event.setCancellationResult(InteractionResult.SUCCESS);
@@ -86,6 +100,11 @@ public class BlockForgeConnector {
         }
 
         if (state.is(ModBlocks.MATERIAL_CACHE.get())) {
+            if (!checkGameplayPermission(player, BlockForgePermissionAction.GAMEPLAY_CACHE_USE)) {
+                event.setCancellationResult(InteractionResult.FAIL);
+                event.setCanceled(true);
+                return;
+            }
             player.sendSystemMessage(Component.literal("BlockForge Material Cache alpha block registered. Inventory-backed sourcing is planned for a later v3.1 alpha polish commit."));
             event.setCancellationResult(InteractionResult.SUCCESS);
             event.setCanceled(true);
@@ -93,6 +112,11 @@ public class BlockForgeConnector {
         }
 
         if (state.is(ModBlocks.BUILDER_STATION.get())) {
+            if (!checkGameplayPermission(player, BlockForgePermissionAction.GAMEPLAY_STATION_USE)) {
+                event.setCancellationResult(InteractionResult.FAIL);
+                event.setCanceled(true);
+                return;
+            }
             player.sendSystemMessage(Component.literal("BlockForge Builder Station alpha scaffold. Use /blockforge station status or /blockforge station step for command-driven jobs."));
             event.setCancellationResult(InteractionResult.SUCCESS);
             event.setCanceled(true);
@@ -100,6 +124,11 @@ public class BlockForgeConnector {
         }
 
         if (state.is(ModBlocks.MATERIAL_LINK.get())) {
+            if (!checkGameplayPermission(player, BlockForgePermissionAction.GAMEPLAY_MATERIAL_LINK_USE)) {
+                event.setCancellationResult(InteractionResult.FAIL);
+                event.setCanceled(true);
+                return;
+            }
             player.sendSystemMessage(Component.literal("BlockForge Material Link alpha scaffold. Links expose Material Cache sources to Builder Station jobs."));
             event.setCancellationResult(InteractionResult.SUCCESS);
             event.setCanceled(true);
@@ -107,6 +136,11 @@ public class BlockForgeConnector {
         }
 
         if (state.is(ModBlocks.CONSTRUCTION_CORE.get())) {
+            if (!checkGameplayPermission(player, BlockForgePermissionAction.GAMEPLAY_CONSTRUCTION_CORE_USE)) {
+                event.setCancellationResult(InteractionResult.FAIL);
+                event.setCanceled(true);
+                return;
+            }
             player.sendSystemMessage(Component.literal("BlockForge Construction Core alpha scaffold. Multi-station project coordination remains planned."));
             event.setCancellationResult(InteractionResult.SUCCESS);
             event.setCanceled(true);
@@ -115,6 +149,15 @@ public class BlockForgeConnector {
 
     private static String anchorId(net.minecraft.core.BlockPos pos) {
         return pos.getX() + "," + pos.getY() + "," + pos.getZ();
+    }
+
+    private static boolean checkGameplayPermission(ServerPlayer player, BlockForgePermissionAction action) {
+        PermissionCheckResult result = PERMISSIONS.check(player, action);
+        if (!result.allowed()) {
+            player.sendSystemMessage(Component.literal(result.reason()));
+            return false;
+        }
+        return true;
     }
 
     @SubscribeEvent

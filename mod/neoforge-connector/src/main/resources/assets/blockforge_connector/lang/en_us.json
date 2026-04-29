@@ -19,6 +19,7 @@
   "screen.blockforge_connector.block_states": "BlockState support: %s",
   "screen.blockforge_connector.hint": "Select a blueprint, choose rotation, then use Builder Wand to preview and build.",
   "screen.blockforge_connector.empty": "No blueprints loaded. Run /blockforge examples install and /blockforge reload.",
+  "screen.blockforge_connector.loading": "Loading blueprints...",
   "block.blockforge_connector.material_cache": "BlockForge Material Cache",
   "block.blockforge_connector.blueprint_table": "BlockForge Blueprint Table",
   "item.blockforge_connector.material_cache": "BlockForge Material Cache",

@@ -40,8 +40,8 @@ public final class BuilderStationActionValidator {
             case CANCEL -> view.canCancel()
                     ? BuilderStationActionDecision.allow("Station job can be cancelled.")
                     : BuilderStationActionDecision.deny("Station has no cancellable job.");
-            case CLEAR -> view.status().name().equals("RUNNING")
-                    ? BuilderStationActionDecision.deny("Pause or cancel the running job before clearing.")
+            case CLEAR -> view.canCancel()
+                    ? BuilderStationActionDecision.deny("Cancel the active job before clearing station state.")
                     : BuilderStationActionDecision.allow("Station state can be cleared.");
             case REFRESH -> BuilderStationActionDecision.allow("Station state can be refreshed.");
         };
