@@ -1,6 +1,6 @@
 # BlockForge Gameplay Alpha Testing
 
-Version: 3.5.0-alpha.1
+Version: 4.0.0-beta.1
 
 Status: pending manual Minecraft regression and dedicated server smoke testing.
 

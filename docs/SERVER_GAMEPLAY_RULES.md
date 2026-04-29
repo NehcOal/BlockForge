@@ -1,8 +1,11 @@
 # BlockForge Server Gameplay Rules
 
-Version: 3.5.0-alpha.1
+Version: 4.0.0-beta.1
 
 Server Gameplay Rules are the alpha control layer for multiplayer BlockForge builds.
+
+In v4.0, the common Station Runtime consumes these rules as pure gates before a
+station batch can be marked for placement.
 
 ## Included Rules
 
@@ -38,4 +41,3 @@ Recommended alpha defaults:
 - Persistent audit JSONL export is planned.
 - Admin build aggregation is command scaffold only.
 - Minecraft manual regression is pending.
-

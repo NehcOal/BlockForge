@@ -8,24 +8,24 @@ major-version branch instead of creating separate `0.0.1` feature branches.
 
 Recommended current branch:
 
-- `feature/v3.5-gameplay-alpha`
+- `feature/v4.0-gameplay-beta`
 
 ## Active Train
 
 | Version | Theme | Goal | Release Gate |
 |---|---|---|---|
-| v3.5 | Builder Station + Material Network + Server Rules | Add station blocks, material links, audit/quota/cooldown scaffolds, gameplay resources, and alpha readiness docs | Web and three loader builds pass; real station tick placement pending |
+| v4.0 | Gameplay Beta Candidate | Add Station Runtime pure tick execution, server hardening docs, diagnostics fields, and beta QA readiness | Web and three loader builds pass; manual Minecraft/server QA pending |
 
 ## Next Trains
 
-- v3.6: Real Minecraft regression and dedicated server smoke test.
-- v3.7: Material Cache inventory/menu and cache-backed sourcing parity.
-- v3.8: Anchor-fixed ghost preview and mirrored placement transformation.
-- v4.0: Stable release planning after alpha/rc evidence is collected.
+- v4.1: Real Minecraft regression and dedicated server smoke test.
+- v4.2: Material Cache inventory/menu and cache-backed sourcing parity.
+- v4.3: Anchor-fixed ghost preview and mirrored placement transformation.
+- v5.0: Stable release planning after beta/rc evidence is collected.
 
-## Current Alpha Rules
+## Current Beta Rules
 
-- Keep `3.5.0-alpha.1` clearly marked as Alpha, not stable.
+- Keep `4.0.0-beta.1` clearly marked as Beta, not stable.
 - Keep Local Rule Generator as the no-key fallback.
 - Keep OpenAI provider optional and server-side only.
 - Do not expose API keys to browser client code.

@@ -1,8 +1,11 @@
 # BlockForge Audit And Rollback
 
-Version: 3.5.0-alpha.1
+Version: 4.0.0-beta.1
 
 Audit and rollback support is alpha-scaffolded for multiplayer servers.
+
+v4.0 keeps audit persistence partial. The common audit DTO and in-memory lookup
+remain available, while JSONL persistence is still planned.
 
 ## Audit Events
 
@@ -33,4 +36,3 @@ Rollback depends on existing undo snapshots. If no snapshot exists, admin rollba
 - Persistent audit export is planned.
 - Admin rollback command is planned.
 - Dedicated server smoke test is pending.
-

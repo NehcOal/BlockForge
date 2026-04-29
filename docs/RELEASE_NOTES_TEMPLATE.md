@@ -1,4 +1,4 @@
-# BlockForge v3.5.0-alpha.1 - Gameplay Alpha
+# BlockForge v4.0.0-beta.1 - Gameplay Beta Candidate
 
 ## Release Train Rules
 
@@ -16,8 +16,8 @@ major-version feature branch and release train.
 
 ## Release Type
 
-- Version: `3.5.0-alpha.1`
-- Type: Gameplay Alpha candidate
+- Version: `4.0.0-beta.1`
+- Type: Gameplay Beta candidate
 - Stability: Alpha for Fabric and Forge, recommended full experience on NeoForge
 
 ## Supported Minecraft Version
@@ -33,9 +33,9 @@ major-version feature branch and release train.
 
 ## Download Files
 
-- `blockforge-connector-neoforge-3.5.0-alpha.1.jar`
-- `blockforge-connector-fabric-3.5.0-alpha.1.jar`
-- `blockforge-connector-forge-3.5.0-alpha.1.jar`
+- `blockforge-connector-neoforge-4.0.0-beta.1.jar`
+- `blockforge-connector-fabric-4.0.0-beta.1.jar`
+- `blockforge-connector-forge-4.0.0-beta.1.jar`
 
 ## Feature Matrix
 
@@ -72,6 +72,25 @@ major-version feature branch and release train.
 | Construction Core | ✅ Alpha scaffold | ✅ Alpha scaffold | ✅ Alpha scaffold |
 | Server Audit / Quota DTOs | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 | NeoForge Station Commands | ✅ Alpha scaffold | planned | planned |
+| Station Runtime pure tick executor | ✅ Beta | ✅ common | ✅ common |
+| Gameplay Beta QA docs | ✅ Beta | ✅ Beta | ✅ Beta |
+
+## v4.0 Highlights
+
+- Builder Station pure tick runtime applies loaded chunk, protection, material,
+  quota, and cooldown gates before marking BuildPlan batches.
+- Diagnostics now include active station, active job, audit, quota, and material
+  network counts.
+- Gameplay Beta testing and QA reports are documented for client and dedicated
+  server runs.
+
+## v4.0 Known Limitations
+
+- Station world placement integration remains partial.
+- Material Cache GUI and Builder Station GUI are planned / partial.
+- Audit persistence and admin rollback remain planned / partial.
+- Minecraft manual regression is pending.
+- Dedicated server smoke test is pending.
 
 ## v3.5 Highlights
 
@@ -269,7 +288,7 @@ Manual Minecraft status:
 - Supported loaders: NeoForge, Fabric, Forge.
 - Manual Minecraft regression testing pending unless explicitly verified.
 - External permission and claim integrations are planned optional adapters.
-# BlockForge v3.5.0-alpha.1 - Product Workbench Alpha
+# BlockForge v4.0.0-beta.1 - Product Workbench Alpha
 
 ## Summary
 

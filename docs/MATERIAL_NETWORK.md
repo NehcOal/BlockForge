@@ -1,8 +1,12 @@
 # BlockForge Material Network Alpha
 
-Version: 3.5.0-alpha.1
+Version: 4.0.0-beta.1
 
 Material Network is the v3.5 alpha scaffold for connecting Builder Station jobs to explicit material sources.
+
+v4.0 keeps the network server-safe: Material Link and Builder Station source
+types are modeled, but remote chunk loading and cross-dimension links remain
+blocked.
 
 ## Blocks
 
@@ -35,4 +39,3 @@ The common material source model now recognizes:
 - Inventory-backed Material Cache sourcing remains partial.
 - Minecraft manual regression is pending.
 - Dedicated server smoke test is pending.
-

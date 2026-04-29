@@ -1,10 +1,10 @@
-# BlockForge v3.5.0-alpha.1 Gameplay Alpha QA Report
+# BlockForge v4.0.0-beta.1 Gameplay Alpha QA Report
 
 Date: 2026-04-29
 
 ## Summary
 
-BlockForge v3.5.0-alpha.1 is suitable as a GitHub alpha prerelease candidate
+BlockForge v4.0.0-beta.1 is suitable as a GitHub alpha prerelease candidate
 from an automated build and scaffold-validation standpoint.
 
 It is not yet suitable to mark as gameplay-regression passed. Minecraft client

@@ -2,6 +2,26 @@
 
 All notable changes to BlockForge will be documented in this file.
 
+## [4.0.0-beta.1] - Unreleased
+
+### v4.0 Added
+
+- Added pure Builder Station tick runtime with loaded-chunk, protection,
+  material, quota, and cooldown gates.
+- Added Builder Station placement batch and issue aggregation models.
+- Added diagnostics fields for active stations, active jobs, audit entries,
+  quota denials, and material network sources.
+- Added Gameplay Beta testing and QA report docs.
+- Bumped Web and connector versions to `4.0.0-beta.1`.
+
+### v4.0 Notes
+
+- Station world placement integration remains partial; the common runtime is
+  tested, but real in-world tick execution still requires manual loader QA.
+- Material Cache GUI and Builder Station GUI remain planned / partial.
+- Minecraft manual regression and dedicated server smoke testing remain
+  pending until executed in real clients and servers.
+
 ## [3.5.0-alpha.1] - Unreleased
 
 ### v3.5 Added
@@ -52,7 +72,7 @@ All notable changes to BlockForge will be documented in this file.
 ### v3.2 Notes
 
 - BuildPlan `step` is a safe command-alpha simulated batch in
-  `3.5.0-alpha.1`; it does not place world blocks yet.
+  `4.0.0-beta.1`; it does not place world blocks yet.
 - Existing direct build and Builder Wand BUILD remain the real placement path.
 - Fabric/Forge command parity and real loader step execution are planned inside
   the v3.2 train.
@@ -100,7 +120,7 @@ All notable changes to BlockForge will be documented in this file.
   fallback scaffolding.
 - Added v2.5 docs for AI quality, local library, import pipeline, server admin,
   and dedicated server setup.
-- Updated release docs for `3.5.0-alpha.1` packaging and pending QA.
+- Updated release docs for `4.0.0-beta.1` packaging and pending QA.
 
 ### Added
 
@@ -151,7 +171,7 @@ All notable changes to BlockForge will be documented in this file.
   workbench while keeping the existing preview and multi-format export flow.
 - Web import summaries and validation reports are clearer and collapsible, with
   user-readable import errors and expandable developer details.
-- Aligned Web, NeoForge, Fabric, and Forge versions to `3.5.0-alpha.1`.
+- Aligned Web, NeoForge, Fabric, and Forge versions to `4.0.0-beta.1`.
 - Adopted a major-version train process: small polish, docs, tests, and bugfixes
   stay in the active major-version branch instead of opening `0.0.1` feature
   branches.
@@ -897,7 +917,7 @@ All notable changes to BlockForge will be documented in this file.
 
 - Prompt input is local UI state in v0.1.0. Real prompt-to-structure generation is planned for a future release.
 - Full datapack ZIP export, `.schem` export, block texture rendering, and InstancedMesh performance optimization are on the roadmap.
-# 3.5.0-alpha.1
+# 4.0.0-beta.1
 
 ## Added
 

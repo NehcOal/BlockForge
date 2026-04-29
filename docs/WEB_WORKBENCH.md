@@ -1,6 +1,6 @@
 # Web Workbench
 
-BlockForge v3.5.0-alpha.1 polishes the local Web Import / Validation / Local
+BlockForge v4.0.0-beta.1 polishes the local Web Import / Validation / Local
 Generation Workbench. It keeps the app local-first: files are parsed in the
 browser, validation runs locally, and no cloud storage is used. External AI
 Generation Alpha is optional and requires a server-side provider.

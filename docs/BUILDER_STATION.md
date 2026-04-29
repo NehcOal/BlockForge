@@ -1,11 +1,11 @@
 # Builder Station
 
-Status: `3.5.0-alpha.1` scaffold. Minecraft manual regression is pending.
+Status: `4.0.0-beta.1` beta candidate. Minecraft manual regression is pending.
 
-Builder Station is the alpha server-side construction runner for BuildPlan
-jobs. v3.5 registers the in-game block on all three loaders and starts with
-command-driven job scaffolding so loader-specific execution can be hardened
-without changing the data contract again.
+Builder Station is the beta server-side construction runner for BuildPlan
+jobs. v3.5 registered the in-game block on all three loaders; v4.0 adds the
+common tick runtime used to validate station batches before loader world
+placement.
 
 ## Current Scope
 
@@ -20,6 +20,9 @@ without changing the data contract again.
   anchor, material caches, active BuildPlan id, and status.
 - `ServerBuildRules`: server policy knobs for Builder Station jobs.
 - `ServerBuildRuleEvaluator`: pure rule checks before a job is accepted.
+- `BuilderStationTickExecutor`: pure runtime that marks bounded BuildPlan
+  batches and refuses unsafe ticks when chunks, protection, materials, quota, or
+  cooldown gates fail.
 - NeoForge command scaffold:
   - `/blockforge station list`
   - `/blockforge station info`

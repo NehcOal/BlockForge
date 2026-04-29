@@ -10,6 +10,11 @@ export type ServerDiagnosticsInput = {
   nearbyContainersEnabled: boolean;
   permissionMode: string;
   warnings: string[];
+  activeStations?: number;
+  activeJobs?: number;
+  auditEntriesToday?: number;
+  quotaDenialsToday?: number;
+  materialNetworkSources?: number;
 };
 
 export type ServerDiagnosticsReport = ServerDiagnosticsInput & {
@@ -35,6 +40,9 @@ export function formatServerStatus(report: ServerDiagnosticsReport): string[] {
     `Protection: ${report.protectionEnabled ? "enabled" : "disabled"}`,
     `Nearby containers: ${report.nearbyContainersEnabled ? "enabled" : "disabled"}`,
     `Permission mode: ${report.permissionMode}`,
+    `Stations: ${report.activeStations ?? 0} active, ${report.activeJobs ?? 0} jobs`,
+    `Audit: ${report.auditEntriesToday ?? 0} entries today, ${report.quotaDenialsToday ?? 0} quota denials`,
+    `Material network sources: ${report.materialNetworkSources ?? 0}`,
     `Diagnostics warnings: ${report.warnings.length}`
   ];
 }
