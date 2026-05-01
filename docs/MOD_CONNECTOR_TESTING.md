@@ -4,20 +4,20 @@ This checklist prepares the NeoForge Connector for real Minecraft validation.
 Passing `gradlew build` confirms compilation only; it does not replace in-game
 testing.
 
-## v1.8.0 Web Polish + GUI Search Release Gate
+## v1.9.0 Rendering Performance + Screenshot Export Release Gate
 
 Release version:
 
 ```text
-1.8.0-alpha.1
+5.3.0-beta.1
 ```
 
 Expected release jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.8.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.8.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.8.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-5.3.0-beta.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-5.3.0-beta.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-5.3.0-beta.1.jar
 ```
 
 Build validation:
@@ -32,6 +32,93 @@ mod/forge-connector/gradlew.bat build
 ```
 
 Status: Minecraft manual regression pending. Browser visual QA pending.
+
+## v5.3 Release Hardening Checklist
+
+Primary support target: NeoForge.
+
+### NeoForge Client
+
+Status: `pending`
+
+- Start Minecraft `1.21.1` + NeoForge.
+- Confirm Creative Tab contains core BlockForge items and blocks.
+- Place Blueprint Table and open the selector.
+- Install examples, reload, select `tiny_platform`.
+- Verify Ghost Preview with Builder Wand.
+- Build in creative.
+- Undo.
+- Test survival material denial, successful material consume, and refund undo.
+- Test protection denied behavior: no block placement and no material consume.
+- Run diagnostics export.
+
+### Fabric Client
+
+Status: `pending`
+
+- Launch client.
+- Confirm Creative Tab.
+- Place Blueprint Table.
+- Verify GUI or command fallback.
+- Test basic Wand build/undo if available.
+
+### Forge Client
+
+Status: `pending`
+
+- Launch client.
+- Confirm Creative Tab.
+- Place Blueprint Table.
+- Verify GUI or command fallback.
+- Test basic Wand build/undo if available.
+
+## v3.1 Gameplay Utility Blocks Manual Checks
+
+Status: pending until tested in real Minecraft clients and dedicated servers.
+
+Run this matrix separately for NeoForge, Fabric, and Forge:
+
+| Step | Expected | Status |
+|---|---|---|
+| Start client | Mod loads without registry errors | pending |
+| Creative inventory | Blueprint Table, Material Cache, Builder Anchor, Builder Wand are available | pending |
+| Place Blueprint Table | Block places and keeps its model/texture | pending |
+| Right-click Blueprint Table | Blueprint Selector GUI opens | pending |
+| Place Builder Anchor | Block places and keeps its model/texture | pending |
+| Right-click Builder Anchor | Current wand state binds to anchor coordinate | pending |
+| Sneak + right-click Builder Wand | Wand mode cycles | pending |
+| `/blockforge wand mode build` on NeoForge | Mode changes to build | pending |
+| `/blockforge wand offset 1 0 1` on NeoForge | Offset appears in options | pending |
+| Select `tiny_platform` | Selection updates | pending |
+| Build with Builder Wand | Protection preflight runs before placement/material checks | pending |
+| Undo | Blocks and materials follow existing undo behavior | pending |
+| Dry-run/materials mode | No blocks are placed | pending |
+| Material Cache interaction | Alpha status message appears | pending |
+| Dedicated server smoke | Server starts without client-only class crash | pending |
+
+## v3.2 Build Planner Manual Checks
+
+Status: pending until tested in real Minecraft clients and dedicated servers.
+
+Run on NeoForge first, then repeat on Fabric/Forge when command parity lands:
+
+| Step | Expected | Status |
+|---|---|---|
+| `/blockforge examples install` | Examples installed | pending |
+| `/blockforge reload` | Registry reloads | pending |
+| `/blockforge select tiny_platform` | Selection updates | pending |
+| `/blockforge buildplan create tiny_platform` | Per-player plan is created | pending |
+| `/blockforge buildplan preview` | Blocks/layers/issues are reported; no blocks placed | pending |
+| `/blockforge buildplan start` | Status becomes RUNNING | pending |
+| `/blockforge buildplan status` | Progress summary is shown | pending |
+| `/blockforge buildplan pause` | Status becomes PAUSED | pending |
+| `/blockforge buildplan resume` | Status becomes RUNNING | pending |
+| `/blockforge buildplan step` | Command-alpha batch advances without world placement | pending |
+| `/blockforge buildplan cancel` | Status becomes CANCELLED | pending |
+| `/blockforge buildplan clear` | Non-running plan clears | pending |
+| Direct Builder Wand BUILD | Existing real placement still works | pending |
+| `/blockforge undo` | Existing undo still works for real placement | pending |
+| Dedicated server smoke | Server starts without client-only class crash | pending |
 
 GUI search/filter manual checks:
 
@@ -57,15 +144,15 @@ Expected GUI behavior:
 Release version:
 
 ```text
-1.6.0-alpha.1
+5.3.0-beta.1
 ```
 
 Expected release jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.6.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.6.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.6.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-5.3.0-beta.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-5.3.0-beta.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-5.3.0-beta.1.jar
 ```
 
 Automated gate:
@@ -884,6 +971,36 @@ From `mod/fabric-connector`:
 ```bash
 ./gradlew build
 ```
+
+## v3.5 Gameplay Alpha Manual Checklist
+
+Status: pending until tested in real Minecraft clients and dedicated servers.
+
+Run separately on NeoForge, Fabric, and Forge:
+
+1. Start Minecraft Java 1.21.1 with Java 21.
+2. Confirm creative inventory contains Builder Wand, Blueprint Table, Material
+   Cache, Builder Anchor, Builder Station, Material Link, and Construction Core.
+3. Place Blueprint Table and right-click to open the Blueprint Selector.
+4. Place Material Cache, Builder Anchor, Builder Station, Material Link, and
+   Construction Core.
+5. Bind Builder Wand to Builder Anchor.
+6. Run `/blockforge examples install` and `/blockforge reload`.
+7. Select `tiny_platform`.
+8. Run wand BUILD, DRY_RUN, MATERIALS, and UNDO checks.
+9. Run `/blockforge buildplan create tiny_platform`.
+10. Run `/blockforge buildplan preview` and `/blockforge buildplan step`.
+11. Run `/blockforge station status`.
+12. Run `/blockforge station bind blueprint tiny_platform`.
+13. Run `/blockforge station bind anchor nearest`.
+14. Run `/blockforge station bind cache nearest`.
+15. Run `/blockforge station step`.
+16. Run `/blockforge admin audit`.
+17. Run `/blockforge quota get <player>`.
+18. Confirm protection-denied areas do not consume materials.
+19. Confirm dedicated server has no client-only class crash.
+
+Do not mark this checklist passed until it is run in-game.
 
 On Windows:
 
@@ -2086,3 +2203,29 @@ Forge smoke result:
   `allowedPermissions: []` denies OP as well, while
   `allowedPermissions: ["blockforge.build.bypass_protection"]` allows OP
   fallback bypass.
+# v3.0 Manual Regression Checklist
+
+Minecraft manual regression is pending until NeoForge, Fabric, and Forge are
+tested in real clients/servers.
+
+For each loader:
+
+- `/blockforge status` - pending
+- `/blockforge diagnostics` - pending
+- `/blockforge diagnostics export` - pending
+- `/blockforge examples install` - pending
+- `/blockforge reload` - pending
+- `/blockforge gui` - pending
+- GUI search / pagination / filters - pending
+- select loose blueprint - pending
+- select pack blueprint - pending
+- select schem blueprint - pending
+- select litematic blueprint, if connector loading is enabled - pending
+- Builder Wand build - pending
+- Ghost Preview - pending
+- Survival material cost - pending
+- Nearby container sourcing - pending
+- Undo material refund - pending
+- Protection region denied build - pending
+- Permission fallback - pending
+- Dedicated server smoke test - pending

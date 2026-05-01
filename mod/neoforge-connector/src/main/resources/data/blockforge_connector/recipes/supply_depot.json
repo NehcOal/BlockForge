@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "result": {
+    "id": "blockforge_connector:supply_depot",
+    "count": 1
+  },
+  "pattern": [
+    "CCC",
+    "BIB",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:chest"
+    },
+    "B": {
+      "item": "minecraft:barrel"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  }
+}

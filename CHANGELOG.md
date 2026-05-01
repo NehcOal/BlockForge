@@ -2,10 +2,247 @@
 
 All notable changes to BlockForge will be documented in this file.
 
-## [1.8.0-alpha.1] - Unreleased
+## [5.3.0-beta.1] - Unreleased
+
+### v5.3 Changed
+
+- Froze new large gameplay systems for the beta hardening pass.
+- Reworked README and release notes around the credible core path: Web House
+  Designer, Blueprint v2/Pack/`.schem`, NeoForge gameplay flow, Builder Wand,
+  Ghost Preview, Build / Undo, and survival material cost/refund.
+- Split feature status into Core Stable-ish Beta Path, Alpha / Partial, and
+  Experimental / Not Main Selling Point.
+- Tightened Known Issues wording to use explicit `passed`, `partial`,
+  `pending`, `blocked`, `experimental`, and `not implemented` statuses.
+- Added material/undo safety and house compatibility test coverage for release
+  hardening.
+
+### v5.2 Added
+
+- Added common pure Java HousePlan model for style, footprint, dimensions,
+  layout, roof, openings, materials, construction options, modules, and issues.
+- Added rule-based house generator with Starter Cottage, Medieval House,
+  Farmhouse, Workshop, Storage House, Watchtower House, Market House, and
+  Longhouse presets.
+- Added HousePlan module planning, Blueprint v2-compatible compiler, material
+  estimator, and heuristic quality analyzer.
+- Added Web House Designer panel for deterministic house generation, quality
+  score display, material estimate display, and use-as-current-model flow.
+- Added NeoForge `/blockforge house ...` command reference and Fabric/Forge
+  matching alpha command surfaces.
+- Added Java and TypeScript tests for house generation, blueprint compilation,
+  material estimates, and quality scoring.
+
+### v5.2 Notes
+
+- House generation is deterministic/rule-based, not AI.
+- In-game House Planner GUI and house-stage BuildPlan execution remain planned.
+- Minecraft manual regression and dedicated server smoke testing remain pending.
+
+### v5.1 Added
+
+- Added Settlement Event common model, event templates, event generator,
+  scheduler, event outcome, and stability pressure model.
+- Added Settlement Stability model with stability, prosperity, safety,
+  logistics, culture, maintenance debt, and active problem tracking.
+- Added Project Chain common model with project stages, activation checks, and
+  contract-driven stage progression.
+- Added Emergency Repair request/result/verifier common logic.
+- Added Event Board, Project Map, Emergency Beacon, and Supply Depot block
+  registration across NeoForge, Fabric, and Forge.
+- Added Event Notice, Project Charter, Emergency Repair Kit, and Settlement Seal
+  item registration across NeoForge, Fabric, and Forge.
+- Added NeoForge command scaffold for events, projects, and emergency repair
+  workflows; Fabric and Forge expose partial matching command surfaces.
+- Added Java tests for settlement events, stability pressure, project chain
+  progression, emergency repair verification, command surfaces, and resource
+  coverage.
+
+### v5.1 Notes
+
+- Events are server-safe state only: they do not randomly damage the world or
+  remove player items.
+- Event/project/emergency persistence is modeled in common and remains loader
+  partial until real file managers are connected.
+- Minecraft manual regression and dedicated server smoke testing remain pending.
+
+### v5.0 Added
+
+- Added Settlement common model: settlement id, owner, members, level,
+  reputation, active/completed contracts, and status.
+- Added Contract common model: templates, requirements, rewards, statuses,
+  generator, difficulty scaling, and verification result.
+- Added alpha contract verification heuristics for block counts, dimensions,
+  required/banned blocks, door/window/roof/foundation checks, and completion
+  percent.
+- Added Architect progression model, unlock registry, reward service, and
+  architect profile.
+- Added Settlement Core, Contract Board, Reward Crate, and Architect Desk block
+  registration across NeoForge, Fabric, and Forge.
+- Added Architect Ledger, Contract Token, and Architect Seal item registration
+  across NeoForge, Fabric, and Forge.
+- Added placeholder resources, lang keys, recipes, and loot tables for v5.0
+  gameplay blocks/items.
+- Added NeoForge command scaffold for settlement, contract, reward, and
+  architect workflows.
+- Added Java tests for settlements, permissions, contract generation,
+  contract verification, rewards, progression, diagnostics, and command
+  surface models.
+
+### v5.0 Notes
+
+- Contract verification is alpha heuristic, not guaranteed architectural
+  quality recognition.
+- Full Contract Board GUI, persistent settlement/contract stores, world
+  snapshot verification, Fabric/Forge command parity, Minecraft manual
+  regression, and dedicated server smoke testing remain pending.
+
+## [4.0.0-beta.1] - Draft PR
+
+### v4.0 Added
+
+- Added pure Builder Station tick runtime with loaded-chunk, protection,
+  material, quota, and cooldown gates.
+- Added Builder Station placement batch and issue aggregation models.
+- Added diagnostics fields for active stations, active jobs, audit entries,
+  quota denials, and material network sources.
+- Added Gameplay Beta testing and QA report docs.
+- Bumped Web and connector versions to `4.0.0-beta.1`.
+
+### v4.0 Notes
+
+- Station world placement integration remains partial; the common runtime is
+  tested, but real in-world tick execution still requires manual loader QA.
+- Material Cache GUI and Builder Station GUI remain planned / partial.
+- Minecraft manual regression and dedicated server smoke testing remain
+  pending until executed in real clients and servers.
+
+## [3.5.0-alpha.1] - Unreleased
+
+### v3.5 Added
+
+- Added Builder Station common queue scaffolding: job status, job record, and
+  in-memory queue helper.
+- Added Builder Station, Material Link, and Construction Core block/item
+  registration across NeoForge, Fabric, and Forge.
+- Added original placeholder resources, lang keys, recipes, and loot tables for
+  the v3.5 gameplay blocks.
+- Added server rules common model and evaluator for future multiplayer
+  construction policies.
+- Added serverplay DTOs for audit entries, quotas, cooldowns, projects, admin
+  build summaries, and in-memory audit lookup.
+- Added NeoForge command scaffold for `/blockforge station ...`,
+  `/blockforge admin ...`, and `/blockforge quota ...`.
+- Added Java tests for queue progress, queue limits, and anchor-required server
+  rules.
+- Added resource coverage tests for gameplay block models, lang keys, loot
+  tables, recipes, and textures.
+- Added `docs/BUILDER_STATION.md`, `docs/MATERIAL_NETWORK.md`,
+  `docs/SERVER_GAMEPLAY_RULES.md`, `docs/AUDIT_AND_ROLLBACK.md`,
+  `docs/TEAM_BUILDS.md`, and `docs/GAMEPLAY_ALPHA_TESTING.md`.
+
+### v3.5 Notes
+
+- Tick-based world placement, persistent station jobs, full Material Cache
+  inventory sourcing, admin rollback, and multiplayer conflict handling remain
+  partial.
+- Minecraft manual regression and dedicated server smoke testing remain
+  pending.
+
+### v3.2 Added
+
+- Added common Build Planner data model: BuildPlan, BuildLayer, BuildStep,
+  BuildProgress, BuildIssue, options, and status enums.
+- Added deterministic BuildPlanFactory, BuildLayerPlanner, BuildStepPlanner,
+  BuildPlanValidator, RepairPlanFactory, and BuildPlanStepper.
+- Added per-player BuildPlanManager scaffolding for NeoForge, Fabric, and
+  Forge.
+- Added NeoForge command-driven `/blockforge buildplan ...` alpha commands for
+  create, preview, start, pause, resume, cancel, step, status, repair, and
+  clear.
+- Added Java pure logic tests for plan generation, layering, validation,
+  progress, and repair plans.
+- Added `docs/BUILD_PLANNER.md`.
+
+### v3.2 Notes
+
+- BuildPlan `step` is a safe command-alpha simulated batch in
+  `5.3.0-beta.1`; it does not place world blocks yet.
+- Existing direct build and Builder Wand BUILD remain the real placement path.
+- Fabric/Forge command parity and real loader step execution are planned inside
+  the v3.2 train.
+- Minecraft manual regression and dedicated server smoke testing are pending.
+
+### v3.1 Added
+
+- Added Blueprint Table, Material Cache, and Builder Anchor block registration
+  for NeoForge, Fabric, and Forge.
+- Added simple original placeholder textures, blockstates, block models, item
+  models, and lang keys for the new gameplay blocks.
+- Added Blueprint Table right-click GUI entry on all three loaders.
+- Added Builder Anchor right-click binding into shared Builder Wand state.
+- Added shared common gameplay DTOs for Builder Wand modes, wand state, anchors,
+  material caches, and placement options.
+- Added Builder Wand mode handling for preview, build, dry-run, materials, and
+  non-build configuration states.
+- Added sneak + right-click wand mode cycling across NeoForge, Fabric, and
+  Forge.
+- Added initial NeoForge `/blockforge wand ...` command helpers for mode,
+  options, offset, mirror, replace, and anchor clear.
+- Added common tests for Builder Wand state, placement offset, mirror flags,
+  anchor binding, and material cache placement options.
+- Added `docs/GAMEPLAY_BLOCKS.md` and `docs/BUILDER_WAND_ADVANCED.md`.
+
+### v3.1 Notes
+
+- Material Cache inventory-backed material sourcing is registered and modeled,
+  but full container/menu integration remains planned inside the v3.1 train.
+- Anchor-fixed build base replacement and mirrored placement transformation are
+  Alpha follow-up items.
+- Minecraft manual regression and dedicated server smoke testing are pending.
+
+### v2.5 Added
+
+- Added AI prompt presets for twelve common build requests.
+- Added local multi-candidate generation and best-candidate selection.
+- Added heuristic AI quality scoring for validation, buildability, material
+  diversity, structure, and symmetry.
+- Added Structure Plan viewer and candidate comparison UI components.
+- Added local refine prompt helper.
+- Added local generation history, local blueprint library, workspace import /
+  export helpers, and IndexedDB migration scaffolding.
+- Added unified import reports, import job queue, and optional import worker
+  fallback scaffolding.
+- Added v2.5 docs for AI quality, local library, import pipeline, server admin,
+  and dedicated server setup.
+- Updated release docs for `5.3.0-beta.1` packaging and pending QA.
 
 ### Added
 
+- Added AI Generation Alpha with optional OpenAI provider.
+- Added server-side AI status and generation API routes.
+- Added AI Structure Plan v1 TypeScript types and JSON Schema.
+- Added Structure Plan validation, deterministic Structure Plan to VoxelModel
+  conversion, and Blueprint v2 validation before preview/export.
+- Added Local Rule Generator provider fallback under the AI provider
+  architecture.
+- Added AI Generation Panel with Local Generation and External AI Generation
+  sections, provider status, request/error/success states, and privacy/cost
+  notices.
+- Added AI generation tests with mocked provider calls; tests do not call
+  external APIs.
+- Added `docs/AI_GENERATION.md`.
+- Added `docs/AI_LIVE_TESTING.md` for manual external provider smoke testing.
+- Added `docs/RELEASE_PROCESS.md` for major-version train branching, release
+  labels, Draft PR expectations, jar assets, and honest QA status wording.
+- Added Web InstancedMesh rendering for larger voxel previews.
+- Added render mode selection: Auto, Mesh, and Instanced.
+- Added rendering stats for block count, unique block types, resolved render
+  mode, and estimated draw groups.
+- Added Minecraft-inspired procedural material styles without bundling vanilla
+  Minecraft texture files.
+- Added Preview PNG export for README, release note, and gallery screenshots.
+- Added camera, render grouping, material style, and screenshot utility tests.
 - Added Web Blueprint JSON import with local parsing and validation summary.
 - Added field-level Blueprint validation reports for schema, size, origin,
   palette references, duplicate coordinates, and out-of-bounds blocks.
@@ -29,11 +266,15 @@ All notable changes to BlockForge will be documented in this file.
   workbench while keeping the existing preview and multi-format export flow.
 - Web import summaries and validation reports are clearer and collapsible, with
   user-readable import errors and expandable developer details.
-- Aligned Web, NeoForge, Fabric, and Forge versions to `1.8.0-alpha.1`.
+- Aligned Web, NeoForge, Fabric, and Forge versions to `5.3.0-beta.1`.
+- Adopted a major-version train process: small polish, docs, tests, and bugfixes
+  stay in the active major-version branch instead of opening `0.0.1` feature
+  branches.
 
 ### Notes
 
-- External AI API adapter is planned for v2.0.
+- External AI provider requires a server runtime and `OPENAI_API_KEY`.
+- API keys are not exposed to the browser client bundle.
 - Manual Minecraft regression is pending.
 - Browser visual QA is pending.
 
@@ -64,7 +305,7 @@ All notable changes to BlockForge will be documented in this file.
 
 ### Changed
 
-- Aligned Web, NeoForge, Fabric, and Forge versions to `1.6.0-alpha.1`.
+- Aligned Web, NeoForge, Fabric, and Forge versions to `5.3.0-beta.1`.
 - `/blockforge reload` now scans loose blueprints, Blueprint Packs, and
   schematics.
 - Imported schematics use registry ids in the form `schem/<file_name>`.
@@ -771,3 +1012,27 @@ All notable changes to BlockForge will be documented in this file.
 
 - Prompt input is local UI state in v0.1.0. Real prompt-to-structure generation is planned for a future release.
 - Full datapack ZIP export, `.schem` export, block texture rendering, and InstancedMesh performance optimization are on the roadmap.
+# 5.3.0-beta.1
+
+## Added
+
+- Unified Product Workbench shell, sidebar, topbar, status bar, and command action registry.
+- Experimental Litematica `.litematic` import pipeline into Blueprint v2.
+- Local Blueprint Gallery data model, search/filter/sort, and gallery bundle import/export logic.
+- Server diagnostics pure schema helpers and server issue template.
+- v3.0 release readiness, visual QA, Litematica, Gallery, Workbench, and Known Issues docs.
+
+## Changed
+
+- Version train moved to `feature/v3.0-product-workbench`.
+- Import reports now include Litematica and Gallery bundle sources.
+- Web UI is organized under the new workbench shell while preserving existing generation, preview, and export flows.
+
+## Notes
+
+- This is an alpha candidate, not stable.
+- Litematica support is partial and experimental.
+- Browser visual QA is pending.
+- Minecraft manual regression is pending.
+- External AI live test is pending.
+- Dedicated server smoke test is pending.

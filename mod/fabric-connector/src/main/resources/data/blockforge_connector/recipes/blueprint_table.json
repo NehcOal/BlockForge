@@ -1,0 +1,26 @@
+{
+  "result": {
+    "count": 1,
+    "id": "blockforge_connector:blueprint_table"
+  },
+  "pattern": [
+    "PPP",
+    "BGB",
+    "WWW"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "W": {
+      "item": "minecraft:oak_planks"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    },
+    "B": {
+      "item": "minecraft:blue_dye"
+    }
+  },
+  "type": "minecraft:crafting_shaped"
+}

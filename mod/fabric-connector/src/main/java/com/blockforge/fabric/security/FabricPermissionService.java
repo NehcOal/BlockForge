@@ -12,7 +12,7 @@ public class FabricPermissionService {
         if (player == null) {
             return PermissionCheckResult.denied(node.node(), "This action requires a player.", true);
         }
-        if (!FabricSecuritySettings.REQUIRE_PERMISSIONS) {
+        if (!FabricSecuritySettings.requirePermissions()) {
             return PermissionCheckResult.allowed(node.node(), true);
         }
         boolean allowed = hasPermission(player, node.node(), node.fallbackOpLevel());
@@ -26,7 +26,7 @@ public class FabricPermissionService {
         if (player == null) {
             return PermissionCheckResult.denied(node, "This action requires a player.", true);
         }
-        boolean allowed = !FabricSecuritySettings.REQUIRE_PERMISSIONS || hasPermission(player, node, fallbackOpLevel);
+        boolean allowed = !FabricSecuritySettings.requirePermissions() || hasPermission(player, node, fallbackOpLevel);
         return allowed
                 ? PermissionCheckResult.allowed(node, true)
                 : PermissionCheckResult.denied(node, "Missing permission: " + node, true);

@@ -1,0 +1,20 @@
+{
+  "result": {
+    "count": 1,
+    "id": "blockforge_connector:contract_token"
+  },
+  "pattern": [
+    " P ",
+    " E ",
+    " P "
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:paper"
+    },
+    "E": {
+      "item": "minecraft:emerald"
+    }
+  },
+  "type": "minecraft:crafting_shaped"
+}

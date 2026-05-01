@@ -1,0 +1,14 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "name": "blockforge_connector:reward_crate",
+          "type": "minecraft:item"
+        }
+      ]
+    }
+  ],
+  "type": "minecraft:block"
+}

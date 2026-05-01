@@ -1,0 +1,26 @@
+{
+  "result": {
+    "count": 1,
+    "id": "blockforge_connector:architect_desk"
+  },
+  "pattern": [
+    "PPP",
+    "BCB",
+    "S S"
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:paper"
+    },
+    "B": {
+      "item": "minecraft:oak_planks"
+    },
+    "C": {
+      "item": "minecraft:cartography_table"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "type": "minecraft:crafting_shaped"
+}

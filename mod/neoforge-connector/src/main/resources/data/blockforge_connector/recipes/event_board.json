@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "result": {
+    "id": "blockforge_connector:event_board",
+    "count": 1
+  },
+  "pattern": [
+    "PPP",
+    "SBS",
+    "PPP"
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:paper"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "B": {
+      "item": "minecraft:book"
+    }
+  }
+}

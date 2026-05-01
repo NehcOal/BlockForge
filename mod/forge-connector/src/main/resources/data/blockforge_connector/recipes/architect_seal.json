@@ -1,0 +1,23 @@
+{
+  "result": {
+    "count": 1,
+    "id": "blockforge_connector:architect_seal"
+  },
+  "pattern": [
+    " G ",
+    " E ",
+    " I "
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "E": {
+      "item": "minecraft:emerald"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "type": "minecraft:crafting_shaped"
+}

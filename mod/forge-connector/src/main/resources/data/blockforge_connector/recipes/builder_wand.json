@@ -1,0 +1,23 @@
+{
+  "result": {
+    "count": 1,
+    "id": "blockforge_connector:builder_wand"
+  },
+  "pattern": [
+    "  A",
+    " I ",
+    "S  "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "type": "minecraft:crafting_shaped"
+}

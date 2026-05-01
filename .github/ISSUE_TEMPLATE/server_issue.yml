@@ -1,0 +1,36 @@
+name: Server issue
+description: Report a BlockForge dedicated server or multiplayer issue.
+title: "[Server]: "
+labels: ["server", "bug"]
+body:
+  - type: input
+    id: loader
+    attributes:
+      label: Loader
+      description: NeoForge, Fabric, or Forge
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: BlockForge version, Minecraft version, Java version
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: Attach diagnostics JSON from /blockforge diagnostics export when available.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Paste relevant server logs and crash reports.
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: Include commands, blueprint source, and expected behavior.
+    validations:
+      required: true

@@ -1,0 +1,20 @@
+{
+  "result": {
+    "count": 1,
+    "id": "blockforge_connector:reward_crate"
+  },
+  "pattern": [
+    "III",
+    "ICI",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "C": {
+      "item": "minecraft:chest"
+    }
+  },
+  "type": "minecraft:crafting_shaped"
+}

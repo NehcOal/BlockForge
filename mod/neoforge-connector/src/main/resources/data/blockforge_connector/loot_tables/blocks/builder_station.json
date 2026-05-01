@@ -1,0 +1,14 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "name": "blockforge_connector:builder_station",
+          "type": "minecraft:item"
+        }
+      ]
+    }
+  ],
+  "type": "minecraft:block"
+}
