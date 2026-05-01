@@ -1,11 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { materialStyles } from "@/lib/voxel";
-import type { BlockType } from "@/types/blueprint";
-
-const blockTypes: BlockType[] = [
-  "stone_bricks", "cobblestone", "oak_planks", "oak_log", "glass", "torch",
-  "door", "stone", "grass", "water", "gold_block", "wool_red", "wool_blue", "wool_white"
-];
+import { blockTypes, materialStyles } from "@/lib/voxel";
 
 describe("material styles", () => {
   it("covers every block type", () => {

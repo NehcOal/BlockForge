@@ -9,15 +9,15 @@ testing.
 Release version:
 
 ```text
-4.4.0-beta.1
+5.1.0-alpha.1
 ```
 
 Expected release jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-4.4.0-beta.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-4.4.0-beta.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-4.4.0-beta.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-5.1.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-5.1.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-5.1.0-alpha.1.jar
 ```
 
 Build validation:
@@ -105,15 +105,15 @@ Expected GUI behavior:
 Release version:
 
 ```text
-1.6.0-alpha.1
+5.1.0-alpha.1
 ```
 
 Expected release jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.6.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.6.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.6.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-5.1.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-5.1.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-5.1.0-alpha.1.jar
 ```
 
 Automated gate:

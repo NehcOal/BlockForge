@@ -1,8 +1,16 @@
 # BlockForge Audit And Rollback
 
-Version: 4.4.0-beta.1
+Version: 5.1.0-alpha.1
 
 v4.4 adds `LoaderIntegrationPaths`, the shared path helper for loader audit and
+diagnostics output.
+
+## v5.1 Audit Events
+
+The audit surface should record event generated/resolved/expired, project
+activated/stage completed/completed, and emergency repair started/completed.
+The common DTOs are ready; loader JSONL integration for these new event types is
+partial.
 diagnostics files:
 
 - Audit JSONL: `config/blockforge/audit/blockforge-audit-YYYY-MM-DD.jsonl`

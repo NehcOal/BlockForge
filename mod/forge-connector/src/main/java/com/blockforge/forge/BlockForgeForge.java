@@ -68,6 +68,21 @@ public class BlockForgeForge {
             event.accept(ForgeModItems.BUILDER_STATION.get());
             event.accept(ForgeModItems.MATERIAL_LINK.get());
             event.accept(ForgeModItems.CONSTRUCTION_CORE.get());
+            event.accept(ForgeModItems.SETTLEMENT_CORE.get());
+            event.accept(ForgeModItems.CONTRACT_BOARD.get());
+            event.accept(ForgeModItems.REWARD_CRATE.get());
+            event.accept(ForgeModItems.ARCHITECT_DESK.get());
+            event.accept(ForgeModItems.EVENT_BOARD.get());
+            event.accept(ForgeModItems.PROJECT_MAP.get());
+            event.accept(ForgeModItems.EMERGENCY_BEACON.get());
+            event.accept(ForgeModItems.SUPPLY_DEPOT.get());
+            event.accept(ForgeModItems.ARCHITECT_LEDGER.get());
+            event.accept(ForgeModItems.CONTRACT_TOKEN.get());
+            event.accept(ForgeModItems.ARCHITECT_SEAL.get());
+            event.accept(ForgeModItems.EVENT_NOTICE.get());
+            event.accept(ForgeModItems.PROJECT_CHARTER.get());
+            event.accept(ForgeModItems.EMERGENCY_REPAIR_KIT.get());
+            event.accept(ForgeModItems.SETTLEMENT_SEAL.get());
         }
     }
 
@@ -155,6 +170,102 @@ public class BlockForgeForge {
                 return;
             }
             player.sendSystemMessage(Component.literal("BlockForge Construction Core alpha scaffold. Multi-station project coordination remains planned."));
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
+        }
+
+        if (state.is(ForgeModBlocks.SETTLEMENT_CORE.get())) {
+            if (!checkGameplayPermission(player, BlockForgePermissionAction.GAMEPLAY_SETTLEMENT_USE)) {
+                event.setCancellationResult(InteractionResult.FAIL);
+                event.setCanceled(true);
+                return;
+            }
+            player.sendSystemMessage(Component.literal("BlockForge Settlement Core alpha. Use settlement commands to create and inspect a settlement."));
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
+        }
+
+        if (state.is(ForgeModBlocks.CONTRACT_BOARD.get())) {
+            if (!checkGameplayPermission(player, BlockForgePermissionAction.GAMEPLAY_CONTRACT_USE)) {
+                event.setCancellationResult(InteractionResult.FAIL);
+                event.setCanceled(true);
+                return;
+            }
+            player.sendSystemMessage(Component.literal("BlockForge Contract Board alpha. Use contract commands to list, accept, verify, and submit contracts."));
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
+        }
+
+        if (state.is(ForgeModBlocks.REWARD_CRATE.get())) {
+            if (!checkGameplayPermission(player, BlockForgePermissionAction.GAMEPLAY_REWARD_USE)) {
+                event.setCancellationResult(InteractionResult.FAIL);
+                event.setCanceled(true);
+                return;
+            }
+            player.sendSystemMessage(Component.literal("BlockForge Reward Crate alpha. Reward claiming is command-driven in v5.0."));
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
+        }
+
+        if (state.is(ForgeModBlocks.ARCHITECT_DESK.get())) {
+            if (!checkGameplayPermission(player, BlockForgePermissionAction.GAMEPLAY_ARCHITECT_USE)) {
+                event.setCancellationResult(InteractionResult.FAIL);
+                event.setCanceled(true);
+                return;
+            }
+            player.sendSystemMessage(Component.literal("BlockForge Architect Desk alpha. Use architect commands for profile and reputation."));
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
+        }
+
+        if (state.is(ForgeModBlocks.EVENT_BOARD.get())) {
+            if (!checkGameplayPermission(player, BlockForgePermissionAction.GAMEPLAY_EVENTS_USE)) {
+                event.setCancellationResult(InteractionResult.FAIL);
+                event.setCanceled(true);
+                return;
+            }
+            player.sendSystemMessage(Component.literal("BlockForge Event Board alpha. Use event commands to inspect settlement events."));
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
+        }
+
+        if (state.is(ForgeModBlocks.PROJECT_MAP.get())) {
+            if (!checkGameplayPermission(player, BlockForgePermissionAction.GAMEPLAY_PROJECTS_USE)) {
+                event.setCancellationResult(InteractionResult.FAIL);
+                event.setCanceled(true);
+                return;
+            }
+            player.sendSystemMessage(Component.literal("BlockForge Project Map alpha. Use project commands to inspect project chains."));
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
+        }
+
+        if (state.is(ForgeModBlocks.EMERGENCY_BEACON.get())) {
+            if (!checkGameplayPermission(player, BlockForgePermissionAction.GAMEPLAY_EMERGENCY_USE)) {
+                event.setCancellationResult(InteractionResult.FAIL);
+                event.setCanceled(true);
+                return;
+            }
+            player.sendSystemMessage(Component.literal("BlockForge Emergency Beacon alpha. Use emergency commands to inspect repair requests."));
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCanceled(true);
+            return;
+        }
+
+        if (state.is(ForgeModBlocks.SUPPLY_DEPOT.get())) {
+            if (!checkGameplayPermission(player, BlockForgePermissionAction.GAMEPLAY_CACHE_USE)) {
+                event.setCancellationResult(InteractionResult.FAIL);
+                event.setCanceled(true);
+                return;
+            }
+            player.sendSystemMessage(Component.literal("BlockForge Supply Depot alpha. Settlement material aggregation is scaffolded."));
             event.setCancellationResult(InteractionResult.SUCCESS);
             event.setCanceled(true);
         }

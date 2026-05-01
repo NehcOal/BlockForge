@@ -92,6 +92,35 @@ export {
   createSmallCottage,
   createStoneBridge
 } from "@/lib/voxel/presets";
+export {
+  createStructurePresetModel,
+  canGenerateStructurePresetAt,
+  createStructurePresetIndex,
+  defaultStructurePresetCategoryConfig,
+  structurePresets,
+  validateStructurePresetDefinition,
+  validateStructurePresetRegistry,
+  type StructureGenerationRules,
+  type StructurePalette,
+  type StructureAttachmentPoint,
+  type StructureConnectorDirection,
+  type StructurePresetCategoryConfig,
+  type StructurePresetCategory,
+  type StructurePresetDefinition,
+  type StructurePresetFeature,
+  type StructurePresetIndexEntry,
+  type StructurePresetSize,
+  type StructureRuinDecayLevel,
+  type StructureSlopeLimit,
+  type StructureTerrainCheckResult,
+  type StructureTerrainContext
+} from "@/lib/voxel/structurePresets";
+export {
+  generateStructurePresetFromDebugCommand,
+  listStructurePresetDebugCommands,
+  runStructurePresetDebugCommand,
+  type StructurePresetDebugResult
+} from "@/lib/voxel/structurePresetDebug";
 export type {
   RenderMode,
   ResolvedRenderMode,

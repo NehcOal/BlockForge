@@ -8,24 +8,24 @@ major-version branch instead of creating separate `0.0.1` feature branches.
 
 Recommended current branch:
 
-- `feature/v4.4-real-gui-world-runtime`
+- `feature/v5.1-settlement-events`
 
 ## Active Train
 
 | Version | Theme | Goal | Release Gate |
 |---|---|---|---|
-| v4.4 | Real Loader GUI + World Placement + Rollback Integration | Add shared quick-move, screen-registration safety, station mutation accounting, loader file paths, and rollback integration contracts for real loader wiring | Web and three loader builds pass; manual Minecraft/server QA pending |
+| v5.1 | Settlement Events + Project Chains + Emergency Repairs | Add event pressure, stability, project chains, emergency repair DTOs, and command/resource scaffolds | Web and three loader builds pass; manual Minecraft/server QA pending |
 
 ## Next Trains
 
-- v4.5: Loader-specific Material Cache and Builder Station screens.
-- v4.6: Real Minecraft regression and dedicated server smoke test.
-- v4.7: Anchor-fixed ghost preview and mirrored placement transformation.
-- v5.0: Stable release planning after beta/rc evidence is collected.
+- v5.2: Persistent settlement/event/contract stores.
+- v5.3: Contract Board, Event Board, Project Map, and Architect Desk GUI polish.
+- v5.4: World snapshot contract and emergency repair verification.
+- v5.5: Fabric/Forge command parity, multiplayer balancing, Minecraft regression, and dedicated server smoke test campaign.
 
-## Current Beta Rules
+## Current Alpha Rules
 
-- Keep `4.4.0-beta.1` clearly marked as Beta, not stable.
+- Keep `5.1.0-alpha.1` clearly marked as Alpha, not stable.
 - Keep Local Rule Generator as the no-key fallback.
 - Keep OpenAI provider optional and server-side only.
 - Do not expose API keys to browser client code.

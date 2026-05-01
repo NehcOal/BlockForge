@@ -212,6 +212,102 @@ public final class BlockForgeCommands {
                                 .executes(BlockForgeCommands::stationStatus))
                         .then(Commands.literal("clear")
                                 .executes(BlockForgeCommands::stationClear)))
+                .then(Commands.literal("settlement")
+                        .then(Commands.literal("create")
+                                .then(Commands.argument("name", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::settlementCreate)))
+                        .then(Commands.literal("info")
+                                .executes(BlockForgeCommands::settlementInfo))
+                        .then(Commands.literal("list")
+                                .executes(BlockForgeCommands::settlementList))
+                        .then(Commands.literal("members")
+                                .executes(BlockForgeCommands::settlementMembers))
+                        .then(Commands.literal("invite")
+                                .then(Commands.argument("player", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::settlementInvite)))
+                        .then(Commands.literal("leave")
+                                .executes(BlockForgeCommands::settlementLeave))
+                        .then(Commands.literal("level")
+                                .executes(BlockForgeCommands::settlementLevel))
+                        .then(Commands.literal("contracts")
+                                .executes(BlockForgeCommands::settlementContracts))
+                        .then(Commands.literal("abandon")
+                                .executes(BlockForgeCommands::settlementAbandon)))
+                .then(Commands.literal("contracts")
+                        .then(Commands.literal("list")
+                                .executes(BlockForgeCommands::contractsList))
+                        .then(Commands.literal("info")
+                                .then(Commands.argument("contractId", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::contractsInfo)))
+                        .then(Commands.literal("accept")
+                                .then(Commands.argument("contractId", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::contractsAccept)))
+                        .then(Commands.literal("active")
+                                .executes(BlockForgeCommands::contractsActive))
+                        .then(Commands.literal("verify")
+                                .then(Commands.argument("contractId", StringArgumentType.word())
+                                        .executes(context -> contractsVerify(context, registry))))
+                        .then(Commands.literal("submit")
+                                .then(Commands.argument("contractId", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::contractsSubmit)))
+                        .then(Commands.literal("abandon")
+                                .then(Commands.argument("contractId", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::contractsAbandon)))
+                        .then(Commands.literal("refresh")
+                                .executes(BlockForgeCommands::contractsRefresh)))
+                .then(Commands.literal("rewards")
+                        .then(Commands.literal("claim")
+                                .executes(BlockForgeCommands::rewardsClaim))
+                        .then(Commands.literal("preview")
+                                .executes(BlockForgeCommands::rewardsPreview)))
+                .then(Commands.literal("architect")
+                        .then(Commands.literal("profile")
+                                .executes(BlockForgeCommands::architectProfile))
+                        .then(Commands.literal("contracts")
+                                .executes(BlockForgeCommands::architectContracts))
+                        .then(Commands.literal("reputation")
+                                .executes(BlockForgeCommands::architectReputation)))
+                .then(Commands.literal("events")
+                        .then(Commands.literal("list")
+                                .executes(BlockForgeCommands::eventsList))
+                        .then(Commands.literal("info")
+                                .then(Commands.argument("eventId", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::eventsInfo)))
+                        .then(Commands.literal("refresh")
+                                .executes(BlockForgeCommands::eventsRefresh))
+                        .then(Commands.literal("resolve")
+                                .then(Commands.argument("eventId", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::eventsResolve)))
+                        .then(Commands.literal("ignore")
+                                .then(Commands.argument("eventId", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::eventsIgnore))))
+                .then(Commands.literal("projects")
+                        .then(Commands.literal("list")
+                                .executes(BlockForgeCommands::projectsList))
+                        .then(Commands.literal("info")
+                                .then(Commands.argument("projectId", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::projectsInfo)))
+                        .then(Commands.literal("activate")
+                                .then(Commands.argument("projectId", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::projectsActivate)))
+                        .then(Commands.literal("status")
+                                .executes(BlockForgeCommands::projectsStatus))
+                        .then(Commands.literal("complete")
+                                .requires(source -> source.hasPermission(2))
+                                .then(Commands.argument("projectId", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::projectsComplete))))
+                .then(Commands.literal("emergency")
+                        .then(Commands.literal("list")
+                                .executes(BlockForgeCommands::emergencyList))
+                        .then(Commands.literal("info")
+                                .then(Commands.argument("repairId", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::emergencyInfo)))
+                        .then(Commands.literal("repair")
+                                .then(Commands.argument("repairId", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::emergencyRepair)))
+                        .then(Commands.literal("verify")
+                                .then(Commands.argument("repairId", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::emergencyVerify))))
                 .then(Commands.literal("admin")
                         .requires(source -> source.hasPermission(2))
                         .then(Commands.literal("audit")
@@ -1897,6 +1993,364 @@ public final class BlockForgeCommands {
 
     private static int stationClear(CommandContext<CommandSourceStack> context) {
         context.getSource().sendSuccess(() -> Component.literal("Builder Station alpha job cleared."), true);
+        return 1;
+    }
+
+    private static int settlementCreate(CommandContext<CommandSourceStack> context) {
+        String name = StringArgumentType.getString(context, "name");
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge Settlement alpha created/scaffolded: " + name + ". NeoForge persistence reference is planned after v5.0 common DTO validation."),
+                true
+        );
+        return 1;
+    }
+
+    private static int settlementInfo(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Settlement alpha: level=1, reputation=0, activeContracts=0. Place a Settlement Core and use /blockforge contracts list."),
+                false
+        );
+        return 1;
+    }
+
+    private static int settlementList(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Settlement list alpha: loader-persistent settlement registry is partial in v5.0."),
+                false
+        );
+        return 1;
+    }
+
+    private static int settlementMembers(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Settlement members alpha: owner/member permission DTOs are available; invite persistence is partial."),
+                false
+        );
+        return 1;
+    }
+
+    private static int settlementInvite(CommandContext<CommandSourceStack> context) {
+        String playerName = StringArgumentType.getString(context, "player");
+        context.getSource().sendSuccess(
+                () -> Component.literal("Settlement invite alpha recorded for " + playerName + ". Multiplayer invite acceptance remains planned."),
+                true
+        );
+        return 1;
+    }
+
+    private static int settlementLeave(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(() -> Component.literal("Settlement leave alpha: membership store is partial."), true);
+        return 1;
+    }
+
+    private static int settlementLevel(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Settlement level alpha: reputation thresholds unlock contracts, station access, and larger build limits."),
+                false
+        );
+        return 1;
+    }
+
+    private static int settlementContracts(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Settlement contracts alpha: use /blockforge contracts list and /blockforge contracts accept <contractId>."),
+                false
+        );
+        return 1;
+    }
+
+    private static int settlementAbandon(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Settlement abandon alpha: command is registered, destructive deletion requires persistent settlement storage."),
+                true
+        );
+        return 1;
+    }
+
+    private static int contractsList(CommandContext<CommandSourceStack> context) {
+        var templates = com.blockforge.common.contracts.ContractTemplates.templates();
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge contracts alpha: " + templates.size() + " templates available. Examples: "
+                        + templates.get(0).contractId() + ", "
+                        + templates.get(1).contractId() + ", "
+                        + templates.get(2).contractId()),
+                false
+        );
+        return 1;
+    }
+
+    private static int contractsInfo(CommandContext<CommandSourceStack> context) {
+        String contractId = StringArgumentType.getString(context, "contractId");
+        var contract = com.blockforge.common.contracts.ContractTemplates.templates().stream()
+                .filter(template -> template.contractId().equals(contractId))
+                .findFirst()
+                .orElse(null);
+        if (contract == null) {
+            context.getSource().sendFailure(Component.literal("Unknown BlockForge contract template: " + contractId));
+            return 0;
+        }
+        context.getSource().sendSuccess(
+                () -> Component.literal(contract.contractId()
+                        + " | "
+                        + contract.title()
+                        + " | difficulty="
+                        + contract.difficulty()
+                        + " | blocks="
+                        + contract.requirements().minBlocks()
+                        + "-"
+                        + contract.requirements().maxBlocks()
+                        + " | reputation="
+                        + contract.rewards().reputation()),
+                false
+        );
+        return 1;
+    }
+
+    private static int contractsAccept(CommandContext<CommandSourceStack> context) {
+        String contractId = StringArgumentType.getString(context, "contractId");
+        context.getSource().sendSuccess(
+                () -> Component.literal("Contract accepted alpha: " + contractId + ". Server-side accepted-contract persistence is partial in v5.0."),
+                true
+        );
+        return 1;
+    }
+
+    private static int contractsActive(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Active contracts alpha: use Architect Ledger or /blockforge contracts accept after persistence lands."),
+                false
+        );
+        return 1;
+    }
+
+    private static int contractsVerify(CommandContext<CommandSourceStack> context, BlueprintRegistry registry) {
+        String contractId = StringArgumentType.getString(context, "contractId");
+        context.getSource().sendSuccess(
+                () -> Component.literal("Contract verification alpha for " + contractId
+                        + ": common heuristic verifier is implemented for blueprint-level checks. World snapshot verification remains loader-dependent."),
+                false
+        );
+        return 1;
+    }
+
+    private static int contractsSubmit(CommandContext<CommandSourceStack> context) {
+        String contractId = StringArgumentType.getString(context, "contractId");
+        context.getSource().sendSuccess(
+                () -> Component.literal("Contract submit alpha: " + contractId + ". Passed verification will award reputation/experience when persistent profiles are enabled."),
+                true
+        );
+        return 1;
+    }
+
+    private static int contractsAbandon(CommandContext<CommandSourceStack> context) {
+        String contractId = StringArgumentType.getString(context, "contractId");
+        context.getSource().sendSuccess(() -> Component.literal("Contract abandoned alpha: " + contractId), true);
+        return 1;
+    }
+
+    private static int contractsRefresh(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Contract refresh alpha: templates rotate by settlement level/game time; daily persistence is partial."),
+                true
+        );
+        return 1;
+    }
+
+    private static int rewardsClaim(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Rewards claim alpha: reputation/experience rewards are implemented in common; item payout persistence is partial."),
+                true
+        );
+        return 1;
+    }
+
+    private static int rewardsPreview(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Rewards preview alpha: contracts award reputation, experience, unlock ids, simple item reward records, and optional blueprint pack ids."),
+                false
+        );
+        return 1;
+    }
+
+    private static int architectProfile(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Architect profile alpha: level=1, reputation=0, experience=0 until persistent profile storage is enabled."),
+                false
+        );
+        return 1;
+    }
+
+    private static int architectContracts(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Architect contracts alpha: active/completed history is represented in common and persistence is partial."),
+                false
+        );
+        return 1;
+    }
+
+    private static int architectReputation(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Architect reputation alpha: 100/250/500/1000 reputation unlock higher levels and contract tiers."),
+                false
+        );
+        return 1;
+    }
+
+    private static int eventsList(CommandContext<CommandSourceStack> context) {
+        var events = com.blockforge.common.settlement.event.SettlementEventTemplates.templates("settlement-alpha", 0);
+        context.getSource().sendSuccess(
+                () -> Component.literal("Settlement events alpha: " + events.size() + " templates available. Examples: "
+                        + events.get(0).eventId() + ", "
+                        + events.get(1).eventId() + ", "
+                        + events.get(2).eventId()),
+                false
+        );
+        return 1;
+    }
+
+    private static int eventsInfo(CommandContext<CommandSourceStack> context) {
+        String eventId = StringArgumentType.getString(context, "eventId");
+        var event = com.blockforge.common.settlement.event.SettlementEventTemplates.templates("settlement-alpha", 0).stream()
+                .filter(candidate -> candidate.eventId().equals(eventId))
+                .findFirst()
+                .orElse(null);
+        if (event == null) {
+            context.getSource().sendFailure(Component.literal("Unknown BlockForge settlement event: " + eventId));
+            return 0;
+        }
+        context.getSource().sendSuccess(
+                () -> Component.literal(event.eventId()
+                        + " | "
+                        + event.title()
+                        + " | severity="
+                        + event.severity()
+                        + " | contracts="
+                        + event.relatedContractIds()),
+                false
+        );
+        return 1;
+    }
+
+    private static int eventsRefresh(CommandContext<CommandSourceStack> context) {
+        var generated = new com.blockforge.common.settlement.event.SettlementEventGenerator()
+                .generate("settlement-alpha", 3, com.blockforge.common.settlement.event.SettlementStability.balanced("settlement-alpha"), java.util.List.of(), 3, 0);
+        context.getSource().sendSuccess(
+                () -> Component.literal("Settlement event refresh alpha generated " + generated.size() + " event(s). Loader persistence is partial."),
+                true
+        );
+        return 1;
+    }
+
+    private static int eventsResolve(CommandContext<CommandSourceStack> context) {
+        String eventId = StringArgumentType.getString(context, "eventId");
+        context.getSource().sendSuccess(
+                () -> Component.literal("Settlement event resolve alpha: " + eventId + ". Common outcome/reward rules are available; loader state persistence is partial."),
+                true
+        );
+        return 1;
+    }
+
+    private static int eventsIgnore(CommandContext<CommandSourceStack> context) {
+        String eventId = StringArgumentType.getString(context, "eventId");
+        context.getSource().sendSuccess(
+                () -> Component.literal("Settlement event ignored alpha: " + eventId + ". Ignoring events increases maintenance debt in common rules."),
+                true
+        );
+        return 1;
+    }
+
+    private static int projectsList(CommandContext<CommandSourceStack> context) {
+        var projects = com.blockforge.common.settlement.project.ProjectChainTemplates.templates("settlement-alpha", 0);
+        context.getSource().sendSuccess(
+                () -> Component.literal("Settlement projects alpha: " + projects.size() + " chains available. Examples: "
+                        + projects.get(0).projectId() + ", "
+                        + projects.get(1).projectId()),
+                false
+        );
+        return 1;
+    }
+
+    private static int projectsInfo(CommandContext<CommandSourceStack> context) {
+        String projectId = StringArgumentType.getString(context, "projectId");
+        var project = com.blockforge.common.settlement.project.ProjectChainTemplates.templates("settlement-alpha", 0).stream()
+                .filter(candidate -> candidate.projectId().equals(projectId))
+                .findFirst()
+                .orElse(null);
+        if (project == null) {
+            context.getSource().sendFailure(Component.literal("Unknown BlockForge settlement project: " + projectId));
+            return 0;
+        }
+        context.getSource().sendSuccess(
+                () -> Component.literal(project.projectId()
+                        + " | "
+                        + project.title()
+                        + " | stages="
+                        + project.stages().size()
+                        + " | current="
+                        + (project.currentStage() == null ? "none" : project.currentStage().stageId())),
+                false
+        );
+        return 1;
+    }
+
+    private static int projectsActivate(CommandContext<CommandSourceStack> context) {
+        String projectId = StringArgumentType.getString(context, "projectId");
+        context.getSource().sendSuccess(
+                () -> Component.literal("Settlement project activate alpha: " + projectId + ". Project chain state is command-driven in this alpha."),
+                true
+        );
+        return 1;
+    }
+
+    private static int projectsStatus(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Settlement project status alpha: current project stage, required contract, and completion are represented in common DTOs."),
+                false
+        );
+        return 1;
+    }
+
+    private static int projectsComplete(CommandContext<CommandSourceStack> context) {
+        String projectId = StringArgumentType.getString(context, "projectId");
+        context.getSource().sendSuccess(
+                () -> Component.literal("Settlement project admin-complete alpha: " + projectId),
+                true
+        );
+        return 1;
+    }
+
+    private static int emergencyList(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("Emergency repairs alpha: active repair requests are represented by common DTOs and are loader-persistent later."),
+                false
+        );
+        return 1;
+    }
+
+    private static int emergencyInfo(CommandContext<CommandSourceStack> context) {
+        String repairId = StringArgumentType.getString(context, "repairId");
+        context.getSource().sendSuccess(
+                () -> Component.literal("Emergency repair alpha info: " + repairId + " requires RepairPlan verification before resolving the event."),
+                false
+        );
+        return 1;
+    }
+
+    private static int emergencyRepair(CommandContext<CommandSourceStack> context) {
+        String repairId = StringArgumentType.getString(context, "repairId");
+        context.getSource().sendSuccess(
+                () -> Component.literal("Emergency repair alpha started: " + repairId + ". BuildPlan repair integration remains loader-dependent."),
+                true
+        );
+        return 1;
+    }
+
+    private static int emergencyVerify(CommandContext<CommandSourceStack> context) {
+        String repairId = StringArgumentType.getString(context, "repairId");
+        context.getSource().sendSuccess(
+                () -> Component.literal("Emergency repair verification alpha: " + repairId + ". Common verifier checks repaired blocks, remaining issues, and timeout."),
+                false
+        );
         return 1;
     }
 

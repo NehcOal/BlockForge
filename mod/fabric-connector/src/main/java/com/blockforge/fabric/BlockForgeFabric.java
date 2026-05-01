@@ -109,6 +109,70 @@ public class BlockForgeFabric implements ModInitializer {
                 return ActionResult.SUCCESS;
             }
 
+            if (state.isOf(FabricModItems.SETTLEMENT_CORE)) {
+                if (!checkGameplayPermission(serverPlayer, BlockForgePermissionAction.GAMEPLAY_SETTLEMENT_USE)) {
+                    return ActionResult.FAIL;
+                }
+                serverPlayer.sendMessage(Text.literal("BlockForge Settlement Core alpha. Use settlement commands to create and inspect settlements."), false);
+                return ActionResult.SUCCESS;
+            }
+
+            if (state.isOf(FabricModItems.CONTRACT_BOARD)) {
+                if (!checkGameplayPermission(serverPlayer, BlockForgePermissionAction.GAMEPLAY_CONTRACT_USE)) {
+                    return ActionResult.FAIL;
+                }
+                serverPlayer.sendMessage(Text.literal("BlockForge Contract Board alpha. Use contract commands to list, accept, verify, and submit contracts."), false);
+                return ActionResult.SUCCESS;
+            }
+
+            if (state.isOf(FabricModItems.REWARD_CRATE)) {
+                if (!checkGameplayPermission(serverPlayer, BlockForgePermissionAction.GAMEPLAY_REWARD_USE)) {
+                    return ActionResult.FAIL;
+                }
+                serverPlayer.sendMessage(Text.literal("BlockForge Reward Crate alpha. Reward claiming is command-driven in v5.0."), false);
+                return ActionResult.SUCCESS;
+            }
+
+            if (state.isOf(FabricModItems.ARCHITECT_DESK)) {
+                if (!checkGameplayPermission(serverPlayer, BlockForgePermissionAction.GAMEPLAY_ARCHITECT_USE)) {
+                    return ActionResult.FAIL;
+                }
+                serverPlayer.sendMessage(Text.literal("BlockForge Architect Desk alpha. Use architect commands for profile and reputation."), false);
+                return ActionResult.SUCCESS;
+            }
+
+            if (state.isOf(FabricModItems.EVENT_BOARD)) {
+                if (!checkGameplayPermission(serverPlayer, BlockForgePermissionAction.GAMEPLAY_EVENTS_USE)) {
+                    return ActionResult.FAIL;
+                }
+                serverPlayer.sendMessage(Text.literal("BlockForge Event Board alpha. Use event commands to inspect settlement events."), false);
+                return ActionResult.SUCCESS;
+            }
+
+            if (state.isOf(FabricModItems.PROJECT_MAP)) {
+                if (!checkGameplayPermission(serverPlayer, BlockForgePermissionAction.GAMEPLAY_PROJECTS_USE)) {
+                    return ActionResult.FAIL;
+                }
+                serverPlayer.sendMessage(Text.literal("BlockForge Project Map alpha. Use project commands to inspect project chains."), false);
+                return ActionResult.SUCCESS;
+            }
+
+            if (state.isOf(FabricModItems.EMERGENCY_BEACON)) {
+                if (!checkGameplayPermission(serverPlayer, BlockForgePermissionAction.GAMEPLAY_EMERGENCY_USE)) {
+                    return ActionResult.FAIL;
+                }
+                serverPlayer.sendMessage(Text.literal("BlockForge Emergency Beacon alpha. Use emergency commands to inspect repair requests."), false);
+                return ActionResult.SUCCESS;
+            }
+
+            if (state.isOf(FabricModItems.SUPPLY_DEPOT)) {
+                if (!checkGameplayPermission(serverPlayer, BlockForgePermissionAction.GAMEPLAY_CACHE_USE)) {
+                    return ActionResult.FAIL;
+                }
+                serverPlayer.sendMessage(Text.literal("BlockForge Supply Depot alpha. Settlement material aggregation is scaffolded."), false);
+                return ActionResult.SUCCESS;
+            }
+
             return ActionResult.PASS;
         });
     }

@@ -1,0 +1,26 @@
+{
+  "result": {
+    "count": 1,
+    "id": "blockforge_connector:contract_board"
+  },
+  "pattern": [
+    "PPP",
+    "BIB",
+    " S "
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:paper"
+    },
+    "B": {
+      "item": "minecraft:oak_planks"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "type": "minecraft:crafting_shaped"
+}

@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "result": {
+    "id": "blockforge_connector:emergency_beacon",
+    "count": 1
+  },
+  "pattern": [
+    " L ",
+    "RCR",
+    " I "
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:lantern"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "C": {
+      "item": "minecraft:amethyst_block"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  }
+}

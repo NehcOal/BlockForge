@@ -1,6 +1,6 @@
 # BlockForge Gameplay GUI
 
-Version: 4.4.0-beta.1
+Version: 5.1.0-alpha.1
 
 Status: common state/action layer implemented; loader-specific screens remain
 partial. This beta keeps dedicated-server safety ahead of GUI scope.

@@ -5,7 +5,7 @@ Connector jar 的安装方式。
 
 ## 版本
 
-- BlockForge Web：`1.6.0-alpha.1`
+- BlockForge Web：`5.1.0-alpha.1`
 - Minecraft Java Edition：`1.21.1`
 - Java：`21`
 - NeoForge：`21.1.227`
@@ -74,9 +74,9 @@ Windows 用户在对应目录执行 `gradlew.bat build`。
 预期 release jar 名称：
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.6.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.6.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.6.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-5.1.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-5.1.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-5.1.0-alpha.1.jar
 ```
 
 把对应 loader 的 jar 放入 Minecraft 实例的 `mods` 文件夹。
@@ -219,12 +219,12 @@ GUI 材料摘要计划后续补齐。
 
 ## Release Artifacts
 
-BlockForge v1.6.0-alpha.1 release 应包含：
+BlockForge v5.1.0-alpha.1 release 应包含：
 
 - GitHub tag 提供的 Web source release。
-- `blockforge-connector-neoforge-1.6.0-alpha.1.jar`
-- `blockforge-connector-fabric-1.6.0-alpha.1.jar`
-- `blockforge-connector-forge-1.6.0-alpha.1.jar`
+- `blockforge-connector-neoforge-5.1.0-alpha.1.jar`
+- `blockforge-connector-fabric-5.1.0-alpha.1.jar`
+- `blockforge-connector-forge-5.1.0-alpha.1.jar`
 - `examples/blueprints/`
 - `docs/BLUEPRINT_PROTOCOL.md`
 - `docs/MOD_CONNECTOR_TESTING.md`
@@ -241,11 +241,11 @@ config/blockforge/protection-regions.json
 
 该文件会在 connector 首次启动或执行 protection reload 时自动创建。被保护区域拒绝的
 build 会在材料检查和扣除前停止。
-# v4.4.0-beta.1 说明
+# v5.1.0-alpha.1 说明
 
-- 预期 jar 为 `blockforge-connector-neoforge-4.4.0-beta.1.jar`、
-  `blockforge-connector-fabric-4.4.0-beta.1.jar`、
-  `blockforge-connector-forge-4.4.0-beta.1.jar`。
+- 预期 jar 为 `blockforge-connector-neoforge-5.1.0-alpha.1.jar`、
+  `blockforge-connector-fabric-5.1.0-alpha.1.jar`、
+  `blockforge-connector-forge-5.1.0-alpha.1.jar`。
 - `/blockforge gui` 会打开带搜索、分页、来源过滤、warning 过滤、排序、来源标签和
   warning badge 的 Alpha 选择器。
 - 本 Alpha 仍待 Minecraft 实机回归。

@@ -1,10 +1,10 @@
-# BlockForge v4.4.0-beta.1 Gameplay Beta QA Report
+# BlockForge v5.1.0-alpha.1 Gameplay Beta QA Report
 
 Date: 2026-04-29
 
 ## Summary
 
-v4.4.0-beta.1 continues the gameplay beta line by adding common GUI state/action
+v5.1.0-alpha.1 continues the gameplay beta line by adding common GUI state/action
 models, audit JSONL formatting, admin rollback decisions, and cooldown policy
 helpers. Loader-specific screens and real server world integration remain
 partial.
@@ -81,6 +81,6 @@ Fill after final validation:
 
 ## Release Recommendation
 
-v4.4.0-beta.1 is suitable for a GitHub beta prerelease candidate from automated
+v5.1.0-alpha.1 is suitable for a GitHub beta prerelease candidate from automated
 validation. It should not be marked stable until manual Minecraft and dedicated
 server QA are recorded.

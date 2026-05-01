@@ -1,11 +1,19 @@
 # Known Issues
 
-Status for v4.4.0-beta.1:
+Status for v5.1.0-alpha.1:
 
 - Browser visual QA: pending.
 - Minecraft manual regression: pending.
 - External AI live test: pending.
 - Dedicated server smoke test: pending.
+
+## v5.1 Alpha
+
+- Settlement event, project, and emergency repair persistence is partial.
+- Event Board, Project Map, and Emergency Beacon use command/chat feedback
+  instead of full GUIs.
+- Emergency repair verification is common pure logic; real world snapshot
+  verification remains planned.
 - v3.5 Gameplay Alpha manual regression: pending.
 - Builder Station tick-based real placement is partial.
 - Material Cache inventory-backed sourcing is partial.
@@ -36,3 +44,6 @@ Status for v4.4.0-beta.1:
 - v4.4 quick-move, screen-registration, mutation-result, audit-path, and
   rollback-result contracts are covered by tests, but real loader Screen/Menu
   classes and world rollback still need Minecraft manual regression.
+- v5.1 Settlement Contracts are Alpha: common settlement/contract/reward logic
+  is tested, but persistent loader stores, full Contract Board GUI, world
+  snapshot verification, and multiplayer balancing remain partial.

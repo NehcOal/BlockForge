@@ -1,6 +1,6 @@
 # BlockForge Material Network Alpha
 
-Version: 4.4.0-beta.1
+Version: 5.1.0-alpha.1
 
 Material Network is the v3.5 alpha scaffold for connecting Builder Station jobs to explicit material sources.
 

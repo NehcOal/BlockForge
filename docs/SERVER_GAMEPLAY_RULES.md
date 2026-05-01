@@ -1,8 +1,14 @@
 # BlockForge Server Gameplay Rules
 
-Version: 4.4.0-beta.1
+Version: 5.1.0-alpha.1
 
 Server Gameplay Rules are the alpha control layer for multiplayer BlockForge builds.
+
+## v5.1 Event Safety
+
+Settlement events, projects, and emergency repairs do not bypass quota,
+cooldown, protection, material checks, or admin rollback rules. Events do not
+randomly damage the world; damaged-structure events only create repair state.
 
 In v4.0, the common Station Runtime consumes these rules as pure gates before a
 station batch can be marked for placement.

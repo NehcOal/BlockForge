@@ -33,7 +33,7 @@ export type AppCopy = {
   presets: {
     title: string;
     description: string;
-    items: Record<PresetId, PresetCopy>;
+    items: Partial<Record<PresetId, PresetCopy>>;
   };
   preview: {
     eyebrow: string;
@@ -295,5 +295,15 @@ export const appCopy: Record<Locale, AppCopy> = {
 };
 
 export function getPresetCopy(locale: Locale, presetId: PresetId) {
-  return appCopy[locale].presets.items[presetId];
+  return appCopy[locale].presets.items[presetId] ?? fallbackPresetCopy(presetId);
+}
+
+function fallbackPresetCopy(presetId: PresetId): PresetCopy {
+  const name = presetId
+    .replace(/[-_]/g, " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+  return {
+    name,
+    description: `${name} structure preset.`
+  };
 }

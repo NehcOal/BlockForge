@@ -1,0 +1,23 @@
+{
+  "result": {
+    "count": 1,
+    "id": "blockforge_connector:settlement_core"
+  },
+  "pattern": [
+    "SRS",
+    "RER",
+    "SRS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:stone_bricks"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "E": {
+      "item": "minecraft:emerald"
+    }
+  },
+  "type": "minecraft:crafting_shaped"
+}

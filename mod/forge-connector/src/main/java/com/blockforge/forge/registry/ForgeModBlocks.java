@@ -61,6 +61,64 @@ public final class ForgeModBlocks {
                     .sound(SoundType.AMETHYST))
     );
 
+    public static final RegistryObject<Block> SETTLEMENT_CORE = BLOCKS.register(
+            "settlement_core",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .strength(5.0F)
+                    .lightLevel(state -> 6)
+                    .sound(SoundType.AMETHYST))
+    );
+
+    public static final RegistryObject<Block> CONTRACT_BOARD = BLOCKS.register(
+            "contract_board",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .strength(2.5F)
+                    .sound(SoundType.WOOD))
+    );
+
+    public static final RegistryObject<Block> REWARD_CRATE = BLOCKS.register(
+            "reward_crate",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .strength(3.0F)
+                    .sound(SoundType.WOOD))
+    );
+
+    public static final RegistryObject<Block> ARCHITECT_DESK = BLOCKS.register(
+            "architect_desk",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .strength(2.5F)
+                    .sound(SoundType.WOOD))
+    );
+
+    public static final RegistryObject<Block> EVENT_BOARD = BLOCKS.register(
+            "event_board",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .strength(2.5F)
+                    .sound(SoundType.WOOD))
+    );
+
+    public static final RegistryObject<Block> PROJECT_MAP = BLOCKS.register(
+            "project_map",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .strength(2.0F)
+                    .sound(SoundType.WOOD))
+    );
+
+    public static final RegistryObject<Block> EMERGENCY_BEACON = BLOCKS.register(
+            "emergency_beacon",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .strength(4.0F)
+                    .lightLevel(state -> 9)
+                    .sound(SoundType.AMETHYST))
+    );
+
+    public static final RegistryObject<Block> SUPPLY_DEPOT = BLOCKS.register(
+            "supply_depot",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .strength(3.5F)
+                    .sound(SoundType.WOOD))
+    );
+
     private ForgeModBlocks() {
     }
 

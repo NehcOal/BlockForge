@@ -1,4 +1,4 @@
-# BlockForge v4.4.0-beta.1 - Gameplay Beta Candidate
+# BlockForge v5.1.0-alpha.1 - Settlement Events + Project Chains Alpha
 
 ## Release Train Rules
 
@@ -16,9 +16,9 @@ major-version feature branch and release train.
 
 ## Release Type
 
-- Version: `4.4.0-beta.1`
-- Type: Gameplay Beta candidate
-- Stability: Alpha for Fabric and Forge, recommended full experience on NeoForge
+- Version: `5.1.0-alpha.1`
+- Type: Gameplay Alpha candidate
+- Stability: Alpha for all loaders; NeoForge has the richest command scaffold
 
 ## Supported Minecraft Version
 
@@ -33,9 +33,9 @@ major-version feature branch and release train.
 
 ## Download Files
 
-- `blockforge-connector-neoforge-4.4.0-beta.1.jar`
-- `blockforge-connector-fabric-4.4.0-beta.1.jar`
-- `blockforge-connector-forge-4.4.0-beta.1.jar`
+- `blockforge-connector-neoforge-5.1.0-alpha.1.jar`
+- `blockforge-connector-fabric-5.1.0-alpha.1.jar`
+- `blockforge-connector-forge-5.1.0-alpha.1.jar`
 
 ## Feature Matrix
 
@@ -78,6 +78,23 @@ major-version feature branch and release train.
 | Audit JSONL formatter | ✅ common | ✅ common | ✅ common |
 | Admin rollback decision model | ✅ common | ✅ common | ✅ common |
 | Gameplay Beta QA docs | ✅ Beta | ✅ Beta | ✅ Beta |
+| Settlement Core | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Contract Board | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Reward Crate | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Architect Desk | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Architect Ledger / Token / Seal | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Contract generation | ✅ common | ✅ common | ✅ common |
+| Contract verification heuristic | ✅ common | ✅ common | ✅ common |
+| Rewards / reputation | ✅ common | ✅ common | ✅ common |
+| Settlement Events | ✅ Alpha | ✅ partial | ✅ partial |
+| Settlement Stability | ✅ common | ✅ common | ✅ common |
+| Event Board | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Project Chains | ✅ common | ✅ common | ✅ common |
+| Project Map | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Emergency Repairs | ✅ common | ✅ common | ✅ common |
+| Emergency Beacon | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| Settlement persistence | partial | partial | partial |
+| Contract Board GUI | planned | planned | planned |
 
 ## v4.1 Highlights
 
@@ -302,7 +319,7 @@ Manual Minecraft status:
 - Supported loaders: NeoForge, Fabric, Forge.
 - Manual Minecraft regression testing pending unless explicitly verified.
 - External permission and claim integrations are planned optional adapters.
-# BlockForge v4.4.0-beta.1 - Product Workbench Alpha
+# BlockForge v5.1.0-alpha.1 - Product Workbench Alpha
 
 ## Summary
 

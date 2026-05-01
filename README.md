@@ -5,30 +5,38 @@ Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
 
-## v4.4.0 Real GUI + World Runtime Beta
+## v5.1.0 Settlement Events + Project Chains Alpha
 
-BlockForge v4.4.0-beta.1 focuses on making the v3 gameplay systems safer to
-test on real clients and servers. It does not add new Web or AI product scope.
+BlockForge v5.1.0-alpha.1 extends the settlement loop with timed events,
+project chains, emergency repairs, stability pressure, and new in-world alpha
+entry blocks. It does not add Web, AI, marketplace, or cloud-sync scope.
 
-Beta highlights:
+Alpha highlights:
 
-- Material Cache quick-move routing for cache, player inventory, and hotbar
-  transfer behavior.
-- Loader screen registration safety checks so client Screen classes stay out of
-  common/server paths.
-- Station world mutation accounting for placed/skipped/failed blocks, undo
-  snapshot recording, and audit recording.
-- Loader integration paths for audit JSONL and diagnostics JSON files under
-  `config/blockforge/`.
-- Admin rollback integration result tracking for snapshot, world restore,
-  material refund, audit, and station update outcomes.
+- Event Board, Project Map, Emergency Beacon, and Supply Depot blocks.
+- Event Notice, Project Charter, Emergency Repair Kit, and Settlement Seal items.
+- Common pure Java models for settlement events, stability, project stages,
+  emergency repair verification, event rewards, and persistence paths.
+- NeoForge command scaffold for `/blockforge events ...`,
+  `/blockforge projects ...`, and `/blockforge emergency ...`; Fabric and Forge
+  expose matching partial commands.
+- Settlement Core, Contract Board, Reward Crate, and Architect Desk blocks.
+- Architect Ledger, Contract Token, and Architect Seal items.
+- Common pure Java models for settlements, contracts, verification, rewards,
+  reputation, and unlocks.
+- 12 built-in alpha contract templates.
+- NeoForge command scaffold for `/blockforge settlement ...`,
+  `/blockforge contracts ...`, `/blockforge rewards ...`, and
+  `/blockforge architect ...`.
 
-Still partial: loader-specific Material Cache/Builder Station screens,
-loader-integrated station world placement, admin rollback world restore, and
-real dedicated server QA.
+Still partial: event/project persistent loader managers, full Event Board /
+Project Map GUI, world-snapshot repair verification, Minecraft manual
+regression, and dedicated server smoke testing.
 
-See [Gameplay Beta Testing](./docs/GAMEPLAY_BETA_TESTING.md) and
-[Gameplay Beta QA Report](./docs/GAMEPLAY_BETA_QA_REPORT.md).
+See [Settlements](./docs/SETTLEMENTS.md), [Contracts](./docs/CONTRACTS.md),
+[Architect Progression](./docs/ARCHITECT_PROGRESSION.md),
+[Settlement Events](./docs/SETTLEMENT_EVENTS.md), [Project Chains](./docs/PROJECT_CHAINS.md),
+and [Emergency Repairs](./docs/EMERGENCY_REPAIRS.md).
 
 ## v3.5.0 Builder Station + Multiplayer Server Rules Alpha
 
@@ -105,7 +113,7 @@ Current validation status:
 
 ## v2.0.0 AI Generation Alpha
 
-BlockForge v4.4.0-beta.1 adds an optional AI generation pipeline while keeping
+BlockForge v5.1.0-alpha.1 adds an optional AI generation pipeline while keeping
 the Local Rule Generator as the default fallback.
 
 AI Generation highlights:
@@ -126,9 +134,9 @@ known Alpha limits.
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-4.4.0-beta.1.jar`
-- `blockforge-connector-fabric-4.4.0-beta.1.jar`
-- `blockforge-connector-forge-4.4.0-beta.1.jar`
+- `blockforge-connector-neoforge-5.1.0-alpha.1.jar`
+- `blockforge-connector-fabric-5.1.0-alpha.1.jar`
+- `blockforge-connector-forge-5.1.0-alpha.1.jar`
 
 Current validation status:
 
@@ -223,16 +231,16 @@ included.
 
 ## v1.6.0 Schematic Interop Alpha
 
-BlockForge v1.6.0-alpha.1 adds Sponge `.schem` v3 interoperability. The Web
+BlockForge v5.1.0-alpha.1 adds Sponge `.schem` v3 interoperability. The Web
 app can export and import GZip NBT Sponge schematics, while NeoForge, Fabric,
 and Forge can scan `config/blockforge/schematics/` and load `.schem` files into
 the normal blueprint registry as `schem/<file>`.
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-1.6.0-alpha.1.jar`
-- `blockforge-connector-fabric-1.6.0-alpha.1.jar`
-- `blockforge-connector-forge-1.6.0-alpha.1.jar`
+- `blockforge-connector-neoforge-5.1.0-alpha.1.jar`
+- `blockforge-connector-fabric-5.1.0-alpha.1.jar`
+- `blockforge-connector-forge-5.1.0-alpha.1.jar`
 
 Current validation status:
 
@@ -782,9 +790,9 @@ tests when they affect voxel generation or export behavior.
 ## License
 
 MIT
-# BlockForge v4.4.0-beta.1
+# BlockForge v5.1.0-alpha.1
 
-BlockForge v4.4.0-beta.1 is a Product Workbench Alpha: release readiness,
+BlockForge v5.1.0-alpha.1 is a Product Workbench Alpha: release readiness,
 experimental Litematica import, local Blueprint Gallery, server/admin polish,
 and a unified Web workbench shell.
 

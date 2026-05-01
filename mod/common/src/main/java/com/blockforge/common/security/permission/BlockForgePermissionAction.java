@@ -20,7 +20,14 @@ public enum BlockForgePermissionAction {
     GAMEPLAY_CACHE_USE("blockforge.gameplay.cache.use", 0, true, "Use Material Cache blocks."),
     GAMEPLAY_STATION_USE("blockforge.gameplay.station.use", 0, true, "Use Builder Station blocks."),
     GAMEPLAY_MATERIAL_LINK_USE("blockforge.gameplay.material_link.use", 0, true, "Use Material Link blocks."),
-    GAMEPLAY_CONSTRUCTION_CORE_USE("blockforge.gameplay.construction_core.use", 0, true, "Use Construction Core blocks.");
+    GAMEPLAY_CONSTRUCTION_CORE_USE("blockforge.gameplay.construction_core.use", 0, true, "Use Construction Core blocks."),
+    GAMEPLAY_SETTLEMENT_USE("blockforge.gameplay.settlement.use", 0, true, "Use Settlement Core blocks."),
+    GAMEPLAY_CONTRACT_USE("blockforge.gameplay.contract.use", 0, true, "Use Contract Board blocks."),
+    GAMEPLAY_REWARD_USE("blockforge.gameplay.reward.use", 0, true, "Use Reward Crate blocks."),
+    GAMEPLAY_ARCHITECT_USE("blockforge.gameplay.architect.use", 0, true, "Use Architect Desk and Ledger items."),
+    GAMEPLAY_EVENTS_USE("blockforge.gameplay.events.use", 0, true, "Use Settlement Event blocks and items."),
+    GAMEPLAY_PROJECTS_USE("blockforge.gameplay.projects.use", 0, true, "Use Settlement Project blocks and items."),
+    GAMEPLAY_EMERGENCY_USE("blockforge.gameplay.emergency.use", 0, true, "Use Emergency Repair blocks and items.");
 
     private final BlockForgePermissionNode node;
 

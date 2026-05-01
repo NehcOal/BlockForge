@@ -1,6 +1,6 @@
 # Schematic Interop
 
-BlockForge v1.6.0-alpha.1 adds Sponge Schematic v3 `.schem` import/export.
+BlockForge v5.1.0-alpha.1 adds Sponge Schematic v3 `.schem` import/export.
 This is an Alpha bridge for WorldEdit / FAWE / Sponge schematic workflows.
 
 ## Supported Format

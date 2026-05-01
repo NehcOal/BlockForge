@@ -10,9 +10,17 @@ const gameplayBlocks = [
   "builder_anchor",
   "builder_station",
   "material_link",
-  "construction_core"
+  "construction_core",
+  "settlement_core",
+  "contract_board",
+  "reward_crate",
+  "architect_desk",
+  "event_board",
+  "project_map",
+  "emergency_beacon",
+  "supply_depot"
 ] as const;
-const gameplayItems = ["builder_wand", ...gameplayBlocks] as const;
+const gameplayItems = ["builder_wand", ...gameplayBlocks, "architect_ledger", "contract_token", "architect_seal", "event_notice", "project_charter", "emergency_repair_kit", "settlement_seal"] as const;
 const sharedLangKeys = [
   "modmenu.nameTranslation.blockforge_connector",
   "item.blockforge_connector.builder_wand",
@@ -36,7 +44,10 @@ const sharedLangKeys = [
   "screen.blockforge_connector.hint",
   "screen.blockforge_connector.empty",
   "command.blockforge_connector.station",
-  "command.blockforge_connector.audit"
+  "command.blockforge_connector.audit",
+  "blockforge.command.events",
+  "blockforge.command.projects",
+  "blockforge.command.emergency"
 ] as const;
 
 function resourcePath(connector: string, ...segments: string[]) {

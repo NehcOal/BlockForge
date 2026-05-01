@@ -5,7 +5,7 @@ for NeoForge, Fabric, and Forge.
 
 ## Versions
 
-- BlockForge Web: `1.6.0-alpha.1`
+- BlockForge Web: `5.1.0-alpha.1`
 - Minecraft Java Edition: `1.21.1`
 - Java: `21`
 - NeoForge: `21.1.227`
@@ -79,9 +79,9 @@ Windows users can run `gradlew.bat build` in the same directories.
 Expected release jar names:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-1.6.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-1.6.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-1.6.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-5.1.0-alpha.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-5.1.0-alpha.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-5.1.0-alpha.1.jar
 ```
 
 Copy the matching jar into the Minecraft instance `mods` folder.
@@ -253,11 +253,11 @@ config/blockforge/protection-regions.json
 
 The file is created automatically on first connector startup or protection
 reload. Builds denied by a region stop before materials are consumed.
-# v4.4.0-beta.1 Notes
+# v5.1.0-alpha.1 Notes
 
-- Expected jars are `blockforge-connector-neoforge-4.4.0-beta.1.jar`,
-  `blockforge-connector-fabric-4.4.0-beta.1.jar`, and
-  `blockforge-connector-forge-4.4.0-beta.1.jar`.
+- Expected jars are `blockforge-connector-neoforge-5.1.0-alpha.1.jar`,
+  `blockforge-connector-fabric-5.1.0-alpha.1.jar`, and
+  `blockforge-connector-forge-5.1.0-alpha.1.jar`.
 - `/blockforge gui` opens the Alpha selector with search, pagination, source
   filtering, warning filtering, sorting, source tags, and warning badges.
 - Minecraft manual regression is pending for this Alpha.

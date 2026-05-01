@@ -1,6 +1,6 @@
 # Builder Station
 
-Status: `4.4.0-beta.1` beta candidate. Minecraft manual regression is pending.
+Status: `5.1.0-alpha.1` beta candidate. Minecraft manual regression is pending.
 
 Builder Station is the beta server-side construction runner for BuildPlan
 jobs. v3.5 registered the in-game block on all three loaders; v4.0 adds the

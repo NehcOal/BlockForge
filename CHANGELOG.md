@@ -2,39 +2,65 @@
 
 All notable changes to BlockForge will be documented in this file.
 
-## [4.4.0-beta.1] - Unreleased
+## [5.1.0-alpha.1] - Unreleased
 
-### v4.4 Added
+### v5.1 Added
 
-- Added Material Cache quick-move slot routing model for cache, player
-  inventory, and hotbar slot transfer behavior.
-- Added loader screen registration safety model to keep client Screen classes
-  out of common/server registration paths.
-- Added Station world mutation result model for placed/skipped/failed block
-  accounting, undo snapshot recording, and audit recording.
-- Added loader integration path helper for audit JSONL and diagnostics JSON
-  output under `config/blockforge/`.
-- Added Admin rollback integration result model for snapshot, world restore,
-  material refund, audit, and station update outcomes.
-- Added Java tests for quick-move routing, screen registration safety, station
-  mutation results, loader integration paths, and rollback integration status.
+- Added Settlement Event common model, event templates, event generator,
+  scheduler, event outcome, and stability pressure model.
+- Added Settlement Stability model with stability, prosperity, safety,
+  logistics, culture, maintenance debt, and active problem tracking.
+- Added Project Chain common model with project stages, activation checks, and
+  contract-driven stage progression.
+- Added Emergency Repair request/result/verifier common logic.
+- Added Event Board, Project Map, Emergency Beacon, and Supply Depot block
+  registration across NeoForge, Fabric, and Forge.
+- Added Event Notice, Project Charter, Emergency Repair Kit, and Settlement Seal
+  item registration across NeoForge, Fabric, and Forge.
+- Added NeoForge command scaffold for events, projects, and emergency repair
+  workflows; Fabric and Forge expose partial matching command surfaces.
+- Added Java tests for settlement events, stability pressure, project chain
+  progression, emergency repair verification, command surfaces, and resource
+  coverage.
 
-### v4.4 Changed
+### v5.1 Notes
 
-- Updated gameplay GUI, Builder Station, audit/rollback, beta QA, and known
-  issues docs for the v4.4 beta line.
-- Bumped Web and connector versions to `4.4.0-beta.1`.
+- Events are server-safe state only: they do not randomly damage the world or
+  remove player items.
+- Event/project/emergency persistence is modeled in common and remains loader
+  partial until real file managers are connected.
+- Minecraft manual regression and dedicated server smoke testing remain pending.
 
-### v4.4 Notes
+### v5.0 Added
 
-- Real NeoForge/Fabric/Forge inventory screens are still partial; v4.4 adds the
-  shared transfer and registration-safety contracts they must follow.
-- Station world placement now has explicit mutation-result accounting, but real
-  loader world mutation still requires Minecraft regression.
-- Rollback integration tracks snapshot/world/audit/station outcomes, but real
-  world restore remains partial until loader undo snapshots are wired by job id.
-- Minecraft manual regression and dedicated server smoke testing remain
-  pending until executed in real clients and servers.
+- Added Settlement common model: settlement id, owner, members, level,
+  reputation, active/completed contracts, and status.
+- Added Contract common model: templates, requirements, rewards, statuses,
+  generator, difficulty scaling, and verification result.
+- Added alpha contract verification heuristics for block counts, dimensions,
+  required/banned blocks, door/window/roof/foundation checks, and completion
+  percent.
+- Added Architect progression model, unlock registry, reward service, and
+  architect profile.
+- Added Settlement Core, Contract Board, Reward Crate, and Architect Desk block
+  registration across NeoForge, Fabric, and Forge.
+- Added Architect Ledger, Contract Token, and Architect Seal item registration
+  across NeoForge, Fabric, and Forge.
+- Added placeholder resources, lang keys, recipes, and loot tables for v5.0
+  gameplay blocks/items.
+- Added NeoForge command scaffold for settlement, contract, reward, and
+  architect workflows.
+- Added Java tests for settlements, permissions, contract generation,
+  contract verification, rewards, progression, diagnostics, and command
+  surface models.
+
+### v5.0 Notes
+
+- Contract verification is alpha heuristic, not guaranteed architectural
+  quality recognition.
+- Full Contract Board GUI, persistent settlement/contract stores, world
+  snapshot verification, Fabric/Forge command parity, Minecraft manual
+  regression, and dedicated server smoke testing remain pending.
 
 ## [4.0.0-beta.1] - Draft PR
 
@@ -106,7 +132,7 @@ All notable changes to BlockForge will be documented in this file.
 ### v3.2 Notes
 
 - BuildPlan `step` is a safe command-alpha simulated batch in
-  `4.4.0-beta.1`; it does not place world blocks yet.
+  `5.1.0-alpha.1`; it does not place world blocks yet.
 - Existing direct build and Builder Wand BUILD remain the real placement path.
 - Fabric/Forge command parity and real loader step execution are planned inside
   the v3.2 train.
@@ -154,7 +180,7 @@ All notable changes to BlockForge will be documented in this file.
   fallback scaffolding.
 - Added v2.5 docs for AI quality, local library, import pipeline, server admin,
   and dedicated server setup.
-- Updated release docs for `4.4.0-beta.1` packaging and pending QA.
+- Updated release docs for `5.1.0-alpha.1` packaging and pending QA.
 
 ### Added
 
@@ -205,7 +231,7 @@ All notable changes to BlockForge will be documented in this file.
   workbench while keeping the existing preview and multi-format export flow.
 - Web import summaries and validation reports are clearer and collapsible, with
   user-readable import errors and expandable developer details.
-- Aligned Web, NeoForge, Fabric, and Forge versions to `4.4.0-beta.1`.
+- Aligned Web, NeoForge, Fabric, and Forge versions to `5.1.0-alpha.1`.
 - Adopted a major-version train process: small polish, docs, tests, and bugfixes
   stay in the active major-version branch instead of opening `0.0.1` feature
   branches.
@@ -244,7 +270,7 @@ All notable changes to BlockForge will be documented in this file.
 
 ### Changed
 
-- Aligned Web, NeoForge, Fabric, and Forge versions to `1.6.0-alpha.1`.
+- Aligned Web, NeoForge, Fabric, and Forge versions to `5.1.0-alpha.1`.
 - `/blockforge reload` now scans loose blueprints, Blueprint Packs, and
   schematics.
 - Imported schematics use registry ids in the form `schem/<file_name>`.
@@ -951,7 +977,7 @@ All notable changes to BlockForge will be documented in this file.
 
 - Prompt input is local UI state in v0.1.0. Real prompt-to-structure generation is planned for a future release.
 - Full datapack ZIP export, `.schem` export, block texture rendering, and InstancedMesh performance optimization are on the roadmap.
-# 4.4.0-beta.1
+# 5.1.0-alpha.1
 
 ## Added
 

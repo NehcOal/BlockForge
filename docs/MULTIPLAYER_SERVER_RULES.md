@@ -1,6 +1,6 @@
 # Multiplayer Server Rules
 
-Status: `4.4.0-beta.1` scaffold. Dedicated server smoke testing is pending.
+Status: `5.1.0-alpha.1` scaffold. Dedicated server smoke testing is pending.
 
 The v3.5 server rules layer defines common policy decisions for future
 multiplayer construction flows.
