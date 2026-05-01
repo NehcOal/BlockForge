@@ -3,16 +3,18 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useMemo } from "react";
 import { VoxelScene } from "@/components/VoxelScene";
-import { getCameraPosition } from "@/lib/voxel";
+import { getRecommendedCameraPosition, type RenderMode } from "@/lib/voxel";
 import type { VoxelModel } from "@/types/blueprint";
 
 type VoxelPreview3DProps = {
   emptyMessage?: string;
   model: VoxelModel;
+  onCanvasReady?: (canvas: HTMLCanvasElement | null) => void;
+  renderMode: RenderMode;
 };
 
-export function VoxelPreview3D({ emptyMessage, model }: VoxelPreview3DProps) {
-  const cameraPosition = useMemo(() => getCameraPosition(model), [model]);
+export function VoxelPreview3D({ emptyMessage, model, onCanvasReady, renderMode }: VoxelPreview3DProps) {
+  const cameraPosition = useMemo(() => getRecommendedCameraPosition(model), [model]);
 
   if (model.blocks.length === 0) {
     return (
@@ -33,10 +35,11 @@ export function VoxelPreview3D({ emptyMessage, model }: VoxelPreview3DProps) {
         }}
         dpr={[1, 1.5]}
         gl={{ antialias: true, preserveDrawingBuffer: true }}
+        onCreated={({ gl }) => onCanvasReady?.(gl.domElement)}
         shadows
       >
         <Suspense fallback={null}>
-          <VoxelScene model={model} />
+          <VoxelScene model={model} renderMode={renderMode} />
         </Suspense>
       </Canvas>
     </div>

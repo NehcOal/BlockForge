@@ -1,0 +1,23 @@
+{
+  "result": {
+    "count": 1,
+    "id": "blockforge_connector:architect_ledger"
+  },
+  "pattern": [
+    " P ",
+    " B ",
+    " I "
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:paper"
+    },
+    "B": {
+      "item": "minecraft:book"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "type": "minecraft:crafting_shaped"
+}

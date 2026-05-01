@@ -15,7 +15,16 @@ Web integration yet.
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector NeoForge`
-- Mod Version: `1.6.0-alpha.1`
+- Mod Version: `5.1.0-alpha.1`
+
+## v5.0 Settlement Contracts Alpha
+
+- Adds Settlement Core, Contract Board, Reward Crate, and Architect Desk block registration.
+- Adds Architect Ledger, Contract Token, and Architect Seal item registration.
+- Adds common settlement, contract, verification, reward, and architect progression logic.
+- NeoForge includes command scaffold for `/blockforge settlement ...`, `/blockforge contracts ...`, `/blockforge rewards ...`, and `/blockforge architect ...`.
+
+Persistence, full Contract Board GUI, world-snapshot verification, Minecraft manual regression, and dedicated server smoke testing remain pending.
 
 ## Multi-loader Architecture Status
 
@@ -72,7 +81,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge-connector-neoforge-1.6.0-alpha.1.jar
+build/libs/blockforge-connector-neoforge-5.1.0-alpha.1.jar
 ```
 
 ## Blueprint Folder
@@ -471,7 +480,7 @@ BlockForge permission/protection preflight before build commands, Builder Wand
 placement, material consumption, and nearby-container material use. External
 claim/permission integrations are planned; current behavior falls back to
 vanilla permission levels when permission enforcement is enabled.
-# v1.8.0-alpha.1 GUI Search Notes
+# v5.1.0-alpha.1 GUI Search Notes
 
 - `/blockforge gui` opens the Alpha selector with search, pagination, source
   filtering, warning filtering, sorting, source tags, warning badges, material
@@ -480,3 +489,35 @@ vanilla permission levels when permission enforcement is enabled.
 - Selection remains server-validated and continues to update Builder Wand and
   Ghost Preview state.
 - Minecraft manual regression is pending.
+
+## v5.1.0-alpha.1 Web Rendering Note
+
+Connector logic is unchanged in this release. Version is synchronized with the
+Web Rendering Performance + Screenshot Export Alpha.
+
+## v5.1.0-alpha.1 Notes
+
+- Version aligned to 5.1.0-alpha.1.
+- Server diagnostics and dedicated server documentation are Alpha documentation items for this train.
+- Core connector gameplay logic is unchanged in the Web productization pass.
+- Minecraft manual regression and dedicated server smoke testing remain pending.
+
+
+
+## v5.1.0-alpha.1 Gameplay Tools Notes
+
+- Adds Blueprint Table, Material Cache, and Builder Anchor block/item registration.
+- Blueprint Table opens the existing Blueprint Selector GUI from in-world right-click.
+- Builder Anchor binds the player's Builder Wand state to the anchor coordinate.
+- Builder Wand supports shared advanced mode state; sneak + right-click cycles modes.
+- Material Cache inventory-backed sourcing is registered as Alpha follow-up work.
+- Minecraft manual regression and dedicated server smoke testing remain pending.
+
+
+## v5.1.0-alpha.1 Build Planner Notes
+
+- Adds shared BuildPlan manager scaffolding for this loader.
+- BuildPlan pure logic covers deterministic layer planning, validation, progress, and repair plan generation.
+- NeoForge currently has the reference `/blockforge buildplan ...` command set.
+- Real per-step world placement and Fabric/Forge command parity are planned v3.2 train polish.
+- Minecraft manual regression and dedicated server smoke testing remain pending.

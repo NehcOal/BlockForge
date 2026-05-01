@@ -1,4 +1,5 @@
 import { blocksFromStore, setBlock } from "@/lib/voxel/utils";
+import { createStructurePresetModel, structurePresets } from "@/lib/voxel/structurePresets";
 import type { PresetId, VoxelBlock, VoxelModel, VoxelSize } from "@/types/blueprint";
 
 type PresetModel = VoxelModel & { id: PresetId };
@@ -299,10 +300,22 @@ export function createPixelStatue(): PresetModel {
   );
 }
 
-export const presetFactories: Record<PresetId, PresetFactory> = {
+const legacyPresetFactories = {
   "medieval-tower": createMedievalTower,
   "small-cottage": createSmallCottage,
   "dungeon-entrance": createDungeonEntrance,
   "stone-bridge": createStoneBridge,
   "pixel-statue": createPixelStatue
+};
+
+const structurePresetFactories = Object.fromEntries(
+  structurePresets.map((presetDefinition) => [
+    presetDefinition.id,
+    () => createStructurePresetModel(presetDefinition)
+  ])
+) as Record<(typeof structurePresets)[number]["id"], PresetFactory>;
+
+export const presetFactories: Record<PresetId, PresetFactory> = {
+  ...legacyPresetFactories,
+  ...structurePresetFactories
 };

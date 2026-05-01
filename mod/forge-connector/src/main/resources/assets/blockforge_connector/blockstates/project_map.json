@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "blockforge_connector:block/project_map"
+    }
+  }
+}

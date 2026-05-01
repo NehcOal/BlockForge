@@ -12,7 +12,7 @@ public class ForgePermissionService {
         if (player == null) {
             return PermissionCheckResult.denied(node.node(), "This action requires a player.", true);
         }
-        if (!ForgeSecuritySettings.REQUIRE_PERMISSIONS) {
+        if (!ForgeSecuritySettings.requirePermissions()) {
             return PermissionCheckResult.allowed(node.node(), true);
         }
         boolean allowed = hasPermission(player, node.node(), node.fallbackOpLevel());
@@ -26,7 +26,7 @@ public class ForgePermissionService {
         if (player == null) {
             return PermissionCheckResult.denied(node, "This action requires a player.", true);
         }
-        boolean allowed = !ForgeSecuritySettings.REQUIRE_PERMISSIONS || hasPermission(player, node, fallbackOpLevel);
+        boolean allowed = !ForgeSecuritySettings.requirePermissions() || hasPermission(player, node, fallbackOpLevel);
         return allowed
                 ? PermissionCheckResult.allowed(node, true)
                 : PermissionCheckResult.denied(node, "Missing permission: " + node, true);
