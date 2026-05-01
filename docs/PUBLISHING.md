@@ -5,7 +5,31 @@
 This guide prepares the current multi-loader Beta candidate. It does not
 publish automatically to GitHub, Modrinth, or CurseForge.
 
-For `5.1.0-alpha.1`, confirm gameplay GUI/runtime work remains Beta, not stable.
+## v5.3 Artifact Cleanup
+
+Before preparing a GitHub beta prerelease, clean old jars and rebuild:
+
+```powershell
+cd mod/neoforge-connector
+gradlew.bat clean build
+
+cd ../fabric-connector
+gradlew.bat clean build
+
+cd ../forge-connector
+gradlew.bat clean build
+```
+
+Upload only:
+
+- `blockforge-connector-neoforge-5.3.0-beta.1.jar`
+- `blockforge-connector-fabric-5.3.0-beta.1.jar`
+- `blockforge-connector-forge-5.3.0-beta.1.jar`
+
+Do not upload older jars. Do not publish Modrinth / CurseForge builds unless
+that upload was explicitly requested and completed.
+
+For `5.3.0-beta.1`, confirm gameplay GUI/runtime work remains Beta, not stable.
 Material Cache and Builder Station have common state/action models, but
 loader-specific screens and real server smoke testing remain pending unless
 manually verified.
@@ -40,17 +64,17 @@ cd ..\forge-connector
 gradlew.bat build
 ```
 
-Expected jars for `5.1.0-alpha.1`:
+Expected jars for `5.3.0-beta.1`:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-5.1.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-5.1.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-5.1.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-5.3.0-beta.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-5.3.0-beta.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-5.3.0-beta.1.jar
 ```
 
 ## GitHub Beta Release Candidate
 
-1. Create a GitHub prerelease for `v5.1.0-alpha.1`.
+1. Create a GitHub prerelease for `v5.3.0-beta.1`.
 2. Use `docs/RELEASE_NOTES_TEMPLATE.md` as the release body starting point.
 3. Upload the three loader jars.
 4. Confirm every jar file name includes the loader name.
@@ -143,11 +167,11 @@ download file names match the expected jar names above.
   Claims integrations are planned, not bundled.
 - Manual Minecraft regression testing must remain pending until explicitly
   tested.
-# v5.1.0-alpha.1 Release Checklist
+# v5.3.0-beta.1 Release Checklist
 
 - Confirm Web `pnpm lint`, `pnpm test`, and `pnpm build`.
 - Confirm NeoForge, Fabric, and Forge Gradle builds produce
-  `5.1.0-alpha.1` jars.
+  `5.3.0-beta.1` jars.
 - Keep release notes clear that Minecraft manual regression and Browser visual
   QA are pending until manually checked.
 - Include `docs/WEB_VISUAL_QA.md` and `docs/GUI_SEARCH_AND_FILTERS.md` in the
@@ -157,15 +181,15 @@ download file names match the expected jar names above.
 - Include AI Generation notes: Local Rule Generator fallback, optional
   server-side OpenAI provider, no client-side API key exposure, and validation
   before preview/export.
-# v5.1.0-alpha.1 Publishing Notes
+# v5.3.0-beta.1 Publishing Notes
 
-`5.1.0-alpha.1` is a beta prerelease candidate. Do not mark it stable.
+`5.3.0-beta.1` is a beta prerelease candidate. Do not mark it stable.
 
 - GitHub Release may upload the three connector jars as beta prerelease assets.
 - Expected assets:
-  - `blockforge-connector-neoforge-5.1.0-alpha.1.jar`
-  - `blockforge-connector-fabric-5.1.0-alpha.1.jar`
-  - `blockforge-connector-forge-5.1.0-alpha.1.jar`
+  - `blockforge-connector-neoforge-5.3.0-beta.1.jar`
+  - `blockforge-connector-fabric-5.3.0-beta.1.jar`
+  - `blockforge-connector-forge-5.3.0-beta.1.jar`
 - Modrinth / CurseForge publishing remains pending unless actually published.
 - Web demo link remains pending unless deployed.
 - Browser visual QA, Minecraft manual regression, External AI live test, and

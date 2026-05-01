@@ -1,9 +1,45 @@
 # BlockForge
 
-BlockForge is a local-first Minecraft-style voxel blueprint generator.  
-Choose a preset, preview it in 3D, then export the model as JSON or Minecraft `.mcfunction` commands.
+BlockForge is a Minecraft 1.21.1 multiloader blueprint building toolkit. It lets
+you design or generate house blueprints in the Web Workbench, preview them
+in-game, place them with the Builder Wand, calculate survival materials, and
+undo builds safely.
 
 [中文文档](./README.zh-CN.md) | [中文使用手册](./docs/USER_MANUAL.zh-CN.md)
+
+## v5.3.0 Gameplay Release Hardening Beta
+
+BlockForge v5.3.0-beta.1 freezes new large gameplay systems and focuses on the
+credible release path: house blueprints, in-game preview/build, material safety,
+undo, documentation cleanup, and loader build stability.
+
+Core Stable-ish Beta Path:
+
+- Web Workbench and deterministic House Designer.
+- Blueprint JSON v1/v2, Blueprint Pack, and Sponge `.schem` export.
+- GUI Selector, Blueprint Table, Builder Wand, Ghost Preview, Build / Undo.
+- Survival material cost and material refund undo.
+- NeoForge recommended gameplay flow.
+
+Alpha / Partial:
+
+- Material Cache GUI, Builder Station, Material Link, Construction Core.
+- Station runtime, audit / quota / admin rollback.
+- Litematica import and external AI generation.
+- Fabric / Forge advanced command parity.
+
+Experimental / Not Main Selling Point:
+
+- Settlement / Contract / Progression / Events.
+- NPC / economy / story.
+- Marketplace / cloud sync are not implemented.
+
+Minecraft manual regression and dedicated server smoke testing remain pending
+until explicitly recorded in QA docs.
+
+See [House Construction](./docs/HOUSE_CONSTRUCTION.md),
+[House Designer](./docs/HOUSE_DESIGNER.md), and
+[House Quality](./docs/HOUSE_QUALITY.md).
 
 ## v5.1.0 Settlement Events + Project Chains Alpha
 
@@ -113,7 +149,7 @@ Current validation status:
 
 ## v2.0.0 AI Generation Alpha
 
-BlockForge v5.1.0-alpha.1 adds an optional AI generation pipeline while keeping
+BlockForge v5.3.0-beta.1 adds an optional AI generation pipeline while keeping
 the Local Rule Generator as the default fallback.
 
 AI Generation highlights:
@@ -134,9 +170,9 @@ known Alpha limits.
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-5.1.0-alpha.1.jar`
-- `blockforge-connector-fabric-5.1.0-alpha.1.jar`
-- `blockforge-connector-forge-5.1.0-alpha.1.jar`
+- `blockforge-connector-neoforge-5.3.0-beta.1.jar`
+- `blockforge-connector-fabric-5.3.0-beta.1.jar`
+- `blockforge-connector-forge-5.3.0-beta.1.jar`
 
 Current validation status:
 
@@ -231,16 +267,16 @@ included.
 
 ## v1.6.0 Schematic Interop Alpha
 
-BlockForge v5.1.0-alpha.1 adds Sponge `.schem` v3 interoperability. The Web
+BlockForge v5.3.0-beta.1 adds Sponge `.schem` v3 interoperability. The Web
 app can export and import GZip NBT Sponge schematics, while NeoForge, Fabric,
 and Forge can scan `config/blockforge/schematics/` and load `.schem` files into
 the normal blueprint registry as `schem/<file>`.
 
 Expected release jars:
 
-- `blockforge-connector-neoforge-5.1.0-alpha.1.jar`
-- `blockforge-connector-fabric-5.1.0-alpha.1.jar`
-- `blockforge-connector-forge-5.1.0-alpha.1.jar`
+- `blockforge-connector-neoforge-5.3.0-beta.1.jar`
+- `blockforge-connector-fabric-5.3.0-beta.1.jar`
+- `blockforge-connector-forge-5.3.0-beta.1.jar`
 
 Current validation status:
 
@@ -790,9 +826,9 @@ tests when they affect voxel generation or export behavior.
 ## License
 
 MIT
-# BlockForge v5.1.0-alpha.1
+# BlockForge v5.3.0-beta.1
 
-BlockForge v5.1.0-alpha.1 is a Product Workbench Alpha: release readiness,
+BlockForge v5.3.0-beta.1 is a Product Workbench Alpha: release readiness,
 experimental Litematica import, local Blueprint Gallery, server/admin polish,
 and a unified Web workbench shell.
 

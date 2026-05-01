@@ -9,15 +9,15 @@ testing.
 Release version:
 
 ```text
-5.1.0-alpha.1
+5.3.0-beta.1
 ```
 
 Expected release jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-5.1.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-5.1.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-5.1.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-5.3.0-beta.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-5.3.0-beta.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-5.3.0-beta.1.jar
 ```
 
 Build validation:
@@ -32,6 +32,45 @@ mod/forge-connector/gradlew.bat build
 ```
 
 Status: Minecraft manual regression pending. Browser visual QA pending.
+
+## v5.3 Release Hardening Checklist
+
+Primary support target: NeoForge.
+
+### NeoForge Client
+
+Status: `pending`
+
+- Start Minecraft `1.21.1` + NeoForge.
+- Confirm Creative Tab contains core BlockForge items and blocks.
+- Place Blueprint Table and open the selector.
+- Install examples, reload, select `tiny_platform`.
+- Verify Ghost Preview with Builder Wand.
+- Build in creative.
+- Undo.
+- Test survival material denial, successful material consume, and refund undo.
+- Test protection denied behavior: no block placement and no material consume.
+- Run diagnostics export.
+
+### Fabric Client
+
+Status: `pending`
+
+- Launch client.
+- Confirm Creative Tab.
+- Place Blueprint Table.
+- Verify GUI or command fallback.
+- Test basic Wand build/undo if available.
+
+### Forge Client
+
+Status: `pending`
+
+- Launch client.
+- Confirm Creative Tab.
+- Place Blueprint Table.
+- Verify GUI or command fallback.
+- Test basic Wand build/undo if available.
 
 ## v3.1 Gameplay Utility Blocks Manual Checks
 
@@ -105,15 +144,15 @@ Expected GUI behavior:
 Release version:
 
 ```text
-5.1.0-alpha.1
+5.3.0-beta.1
 ```
 
 Expected release jars:
 
 ```text
-mod/neoforge-connector/build/libs/blockforge-connector-neoforge-5.1.0-alpha.1.jar
-mod/fabric-connector/build/libs/blockforge-connector-fabric-5.1.0-alpha.1.jar
-mod/forge-connector/build/libs/blockforge-connector-forge-5.1.0-alpha.1.jar
+mod/neoforge-connector/build/libs/blockforge-connector-neoforge-5.3.0-beta.1.jar
+mod/fabric-connector/build/libs/blockforge-connector-fabric-5.3.0-beta.1.jar
+mod/forge-connector/build/libs/blockforge-connector-forge-5.3.0-beta.1.jar
 ```
 
 Automated gate:

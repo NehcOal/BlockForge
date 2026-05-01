@@ -17,7 +17,7 @@ v1.6.0 adds Sponge `.schem` v3 import Alpha from
 - Java: `21`
 - Mod ID: `blockforge_connector`
 - Mod Name: `BlockForge Connector Fabric`
-- Mod Version: `5.1.0-alpha.1`
+- Mod Version: `5.3.0-beta.1`
 
 ## v5.0 Settlement Contracts Alpha
 
@@ -43,7 +43,7 @@ gradlew.bat build
 The built jar is written to:
 
 ```text
-build/libs/blockforge-connector-fabric-5.1.0-alpha.1.jar
+build/libs/blockforge-connector-fabric-5.3.0-beta.1.jar
 ```
 
 ## Blueprint Folder
@@ -242,7 +242,7 @@ BlockForge permission/protection preflight before build commands, Builder Wand
 placement, material consumption, and nearby-container material use. Fabric
 Permissions API / LuckPerms integration is planned; the Alpha falls back to
 vanilla permission levels.
-# v5.1.0-alpha.1 GUI Search Notes
+# v5.3.0-beta.1 GUI Search Notes
 
 - `/blockforge gui` and the default `B` key open the Alpha selector with
   search, pagination, source filtering, warning filtering, sorting, source tags,
@@ -252,21 +252,21 @@ vanilla permission levels.
   Ghost Preview state.
 - Minecraft manual regression is pending.
 
-## v5.1.0-alpha.1 Web Rendering Note
+## v5.3.0-beta.1 Web Rendering Note
 
 Connector logic is unchanged in this release. Version is synchronized with the
 Web Rendering Performance + Screenshot Export Alpha.
 
-## v5.1.0-alpha.1 Notes
+## v5.3.0-beta.1 Notes
 
-- Version aligned to 5.1.0-alpha.1.
+- Version aligned to 5.3.0-beta.1.
 - Server diagnostics and dedicated server documentation are Alpha documentation items for this train.
 - Core connector gameplay logic is unchanged in the Web productization pass.
 - Minecraft manual regression and dedicated server smoke testing remain pending.
 
 
 
-## v5.1.0-alpha.1 Gameplay Tools Notes
+## v5.3.0-beta.1 Gameplay Tools Notes
 
 - Adds Blueprint Table, Material Cache, and Builder Anchor block/item registration.
 - Blueprint Table opens the existing Blueprint Selector GUI from in-world right-click.
@@ -276,7 +276,7 @@ Web Rendering Performance + Screenshot Export Alpha.
 - Minecraft manual regression and dedicated server smoke testing remain pending.
 
 
-## v5.1.0-alpha.1 Build Planner Notes
+## v5.3.0-beta.1 Build Planner Notes
 
 - Adds shared BuildPlan manager scaffolding for this loader.
 - BuildPlan pure logic covers deterministic layer planning, validation, progress, and repair plan generation.

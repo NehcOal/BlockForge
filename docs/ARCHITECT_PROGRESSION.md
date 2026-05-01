@@ -1,6 +1,6 @@
 # Architect Progression
 
-BlockForge v5.1.0-alpha.1 adds common progression models for architects.
+BlockForge v5.3.0-beta.1 adds common progression models for architects.
 
 ## v5.1 Event Rewards
 

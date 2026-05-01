@@ -12,6 +12,7 @@ public enum BuilderWandMode {
     MIRROR,
     OFFSET,
     ANCHOR,
+    HOUSE,
     CLEAR_PREVIEW;
 
     public BuilderWandMode next() {

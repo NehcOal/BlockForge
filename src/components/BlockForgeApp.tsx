@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ExportPanel } from "@/components/ExportPanel";
 import { Hero } from "@/components/Hero";
+import { HouseDesignerPanel } from "@/components/HouseDesignerPanel";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { PresetSelector } from "@/components/PresetSelector";
 import { PreviewPanel } from "@/components/PreviewPanel";
@@ -91,6 +92,7 @@ export function BlockForgeApp() {
                 selectedPresetId={selectedPresetId}
                 onSelect={handlePresetSelect}
               />
+              <HouseDesignerPanel onGenerated={handleExternalGenerated} />
               <ExportPanel copy={copy.export} model={selectedModel} />
             </aside>
 

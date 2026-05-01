@@ -1,6 +1,6 @@
 # BlockForge Contracts
 
-BlockForge v5.1.0-alpha.1 introduces alpha building contracts.
+BlockForge v5.3.0-beta.1 introduces alpha building contracts.
 
 ## v5.1 Event And Project Sources
 

@@ -1,4 +1,4 @@
-# BlockForge v5.1.0-alpha.1 - Settlement Events + Project Chains Alpha
+# BlockForge v5.3.0-beta.1 - Gameplay Release Hardening
 
 ## Release Train Rules
 
@@ -16,7 +16,7 @@ major-version feature branch and release train.
 
 ## Release Type
 
-- Version: `5.1.0-alpha.1`
+- Version: `5.3.0-beta.1`
 - Type: Gameplay Alpha candidate
 - Stability: Alpha for all loaders; NeoForge has the richest command scaffold
 
@@ -33,9 +33,9 @@ major-version feature branch and release train.
 
 ## Download Files
 
-- `blockforge-connector-neoforge-5.1.0-alpha.1.jar`
-- `blockforge-connector-fabric-5.1.0-alpha.1.jar`
-- `blockforge-connector-forge-5.1.0-alpha.1.jar`
+- `blockforge-connector-neoforge-5.3.0-beta.1.jar`
+- `blockforge-connector-fabric-5.3.0-beta.1.jar`
+- `blockforge-connector-forge-5.3.0-beta.1.jar`
 
 ## Feature Matrix
 
@@ -93,8 +93,56 @@ major-version feature branch and release train.
 | Project Map | ✅ Alpha | ✅ Alpha | ✅ Alpha |
 | Emergency Repairs | ✅ common | ✅ common | ✅ common |
 | Emergency Beacon | ✅ Alpha | ✅ Alpha | ✅ Alpha |
+| House Plan | ✅ Alpha | ✅ common | ✅ common |
+| Rule-based House Generator | ✅ Alpha | ✅ common | ✅ common |
+| House Presets | ✅ Alpha | ✅ common | ✅ common |
+| Roof Generator | ✅ Alpha | ✅ common | ✅ common |
+| Door / Window Placement | ✅ Alpha | ✅ common | ✅ common |
+| House Quality Check | ✅ Alpha | ✅ common | ✅ common |
+| House Material Estimate | ✅ Alpha | ✅ common | ✅ common |
+| House -> Blueprint v2 | ✅ Alpha | ✅ common | ✅ common |
+| Web House Designer | ✅ Alpha | n/a | n/a |
+| In-game House Commands | ✅ Alpha | ✅ partial | ✅ partial |
 | Settlement persistence | partial | partial | partial |
 | Contract Board GUI | planned | planned | planned |
+
+## What Works
+
+- Web House Designer.
+- Blueprint JSON v1/v2 export.
+- Blueprint Pack export.
+- Sponge `.schem` export.
+- NeoForge recommended gameplay flow.
+- Builder Wand.
+- Ghost Preview.
+- Build / Undo.
+- Survival material cost / refund.
+
+## Partial / Experimental
+
+- Material Cache GUI: partial.
+- Builder Station: partial.
+- Station runtime: partial.
+- Admin rollback: partial.
+- Litematica: experimental.
+- External AI: pending live test.
+- Fabric / Forge advanced parity: partial.
+- Settlement / Contract / Progression / Events: experimental.
+
+## Validation
+
+- Automated checks are required before every beta candidate.
+- Minecraft manual regression remains pending unless explicitly recorded.
+- Dedicated server smoke test remains pending unless explicitly recorded.
+
+## v5.2 Highlights
+
+- Adds HousePlan pure data model and deterministic house generation.
+- Adds eight alpha house presets focused on practical Minecraft-style builds.
+- Adds Web House Designer for preview/export-ready house models.
+- Adds HousePlan material estimates and heuristic quality scoring.
+- Adds NeoForge `/blockforge house ...` command reference and matching
+  Fabric/Forge alpha command surfaces.
 
 ## v4.1 Highlights
 
@@ -319,7 +367,7 @@ Manual Minecraft status:
 - Supported loaders: NeoForge, Fabric, Forge.
 - Manual Minecraft regression testing pending unless explicitly verified.
 - External permission and claim integrations are planned optional adapters.
-# BlockForge v5.1.0-alpha.1 - Product Workbench Alpha
+# BlockForge v5.3.0-beta.1 - Product Workbench Alpha
 
 ## Summary
 

@@ -2,7 +2,42 @@
 
 All notable changes to BlockForge will be documented in this file.
 
-## [5.1.0-alpha.1] - Unreleased
+## [5.3.0-beta.1] - Unreleased
+
+### v5.3 Changed
+
+- Froze new large gameplay systems for the beta hardening pass.
+- Reworked README and release notes around the credible core path: Web House
+  Designer, Blueprint v2/Pack/`.schem`, NeoForge gameplay flow, Builder Wand,
+  Ghost Preview, Build / Undo, and survival material cost/refund.
+- Split feature status into Core Stable-ish Beta Path, Alpha / Partial, and
+  Experimental / Not Main Selling Point.
+- Tightened Known Issues wording to use explicit `passed`, `partial`,
+  `pending`, `blocked`, `experimental`, and `not implemented` statuses.
+- Added material/undo safety and house compatibility test coverage for release
+  hardening.
+
+### v5.2 Added
+
+- Added common pure Java HousePlan model for style, footprint, dimensions,
+  layout, roof, openings, materials, construction options, modules, and issues.
+- Added rule-based house generator with Starter Cottage, Medieval House,
+  Farmhouse, Workshop, Storage House, Watchtower House, Market House, and
+  Longhouse presets.
+- Added HousePlan module planning, Blueprint v2-compatible compiler, material
+  estimator, and heuristic quality analyzer.
+- Added Web House Designer panel for deterministic house generation, quality
+  score display, material estimate display, and use-as-current-model flow.
+- Added NeoForge `/blockforge house ...` command reference and Fabric/Forge
+  matching alpha command surfaces.
+- Added Java and TypeScript tests for house generation, blueprint compilation,
+  material estimates, and quality scoring.
+
+### v5.2 Notes
+
+- House generation is deterministic/rule-based, not AI.
+- In-game House Planner GUI and house-stage BuildPlan execution remain planned.
+- Minecraft manual regression and dedicated server smoke testing remain pending.
 
 ### v5.1 Added
 
@@ -132,7 +167,7 @@ All notable changes to BlockForge will be documented in this file.
 ### v3.2 Notes
 
 - BuildPlan `step` is a safe command-alpha simulated batch in
-  `5.1.0-alpha.1`; it does not place world blocks yet.
+  `5.3.0-beta.1`; it does not place world blocks yet.
 - Existing direct build and Builder Wand BUILD remain the real placement path.
 - Fabric/Forge command parity and real loader step execution are planned inside
   the v3.2 train.
@@ -180,7 +215,7 @@ All notable changes to BlockForge will be documented in this file.
   fallback scaffolding.
 - Added v2.5 docs for AI quality, local library, import pipeline, server admin,
   and dedicated server setup.
-- Updated release docs for `5.1.0-alpha.1` packaging and pending QA.
+- Updated release docs for `5.3.0-beta.1` packaging and pending QA.
 
 ### Added
 
@@ -231,7 +266,7 @@ All notable changes to BlockForge will be documented in this file.
   workbench while keeping the existing preview and multi-format export flow.
 - Web import summaries and validation reports are clearer and collapsible, with
   user-readable import errors and expandable developer details.
-- Aligned Web, NeoForge, Fabric, and Forge versions to `5.1.0-alpha.1`.
+- Aligned Web, NeoForge, Fabric, and Forge versions to `5.3.0-beta.1`.
 - Adopted a major-version train process: small polish, docs, tests, and bugfixes
   stay in the active major-version branch instead of opening `0.0.1` feature
   branches.
@@ -270,7 +305,7 @@ All notable changes to BlockForge will be documented in this file.
 
 ### Changed
 
-- Aligned Web, NeoForge, Fabric, and Forge versions to `5.1.0-alpha.1`.
+- Aligned Web, NeoForge, Fabric, and Forge versions to `5.3.0-beta.1`.
 - `/blockforge reload` now scans loose blueprints, Blueprint Packs, and
   schematics.
 - Imported schematics use registry ids in the form `schem/<file_name>`.
@@ -977,7 +1012,7 @@ All notable changes to BlockForge will be documented in this file.
 
 - Prompt input is local UI state in v0.1.0. Real prompt-to-structure generation is planned for a future release.
 - Full datapack ZIP export, `.schem` export, block texture rendering, and InstancedMesh performance optimization are on the roadmap.
-# 5.1.0-alpha.1
+# 5.3.0-beta.1
 
 ## Added
 

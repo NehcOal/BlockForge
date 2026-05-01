@@ -1,6 +1,6 @@
 # Settlement Events
 
-BlockForge v5.1.0-alpha.1 adds an alpha settlement event loop. Events are pure gameplay state: they do not randomly break blocks, remove items, or bypass protection.
+BlockForge v5.3.0-beta.1 adds an alpha settlement event loop. Events are pure gameplay state: they do not randomly break blocks, remove items, or bypass protection.
 
 ## Flow
 

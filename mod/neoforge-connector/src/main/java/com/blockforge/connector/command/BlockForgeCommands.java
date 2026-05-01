@@ -33,6 +33,12 @@ import com.blockforge.common.material.source.MaterialSourceItemEntry;
 import com.blockforge.common.material.source.MaterialSourceReport;
 import com.blockforge.common.material.source.MaterialSourceScanResult;
 import com.blockforge.common.material.source.MaterialSourceType;
+import com.blockforge.common.house.HouseBlueprintCompiler;
+import com.blockforge.common.house.HouseGenerationRequest;
+import com.blockforge.common.house.HouseMaterialEstimator;
+import com.blockforge.common.house.HousePlan;
+import com.blockforge.common.house.HousePlanGenerator;
+import com.blockforge.common.house.HouseQualityAnalyzer;
 import com.blockforge.common.pack.BlueprintPackRegistryEntry;
 import com.blockforge.common.pack.LoadedBlueprintPack;
 import com.blockforge.common.security.permission.BlockForgePermissionAction;
@@ -61,6 +67,7 @@ public final class BlockForgeCommands {
     private static final BuildService BUILDS = new BuildService(BlockForgeConnector.UNDO);
     private static final NeoForgeMaterialSourceScanner SOURCE_SCANNER = new NeoForgeMaterialSourceScanner();
     private static final NeoForgeMaterialSourceAdapter SOURCE_ADAPTER = new NeoForgeMaterialSourceAdapter();
+    private static final HousePlanGenerator HOUSES = new HousePlanGenerator();
 
     private BlockForgeCommands() {
     }
@@ -179,6 +186,45 @@ public final class BlockForgeCommands {
                                 .executes(BlockForgeCommands::buildPlanRepair))
                         .then(Commands.literal("clear")
                                 .executes(BlockForgeCommands::buildPlanClear)))
+                .then(Commands.literal("house")
+                        .then(Commands.literal("presets")
+                                .executes(BlockForgeCommands::housePresets))
+                        .then(Commands.literal("create")
+                                .then(Commands.argument("preset", StringArgumentType.word())
+                                        .suggests((context, builder) -> SharedSuggestionProvider.suggest(
+                                                HOUSES.supportedPresets().stream().map(style -> style.name().toLowerCase(java.util.Locale.ROOT)),
+                                                builder
+                                        ))
+                                        .executes(BlockForgeCommands::houseCreate)
+                                        .then(Commands.literal("size")
+                                                .then(Commands.argument("width", IntegerArgumentType.integer(5, 32))
+                                                        .then(Commands.argument("depth", IntegerArgumentType.integer(5, 32))
+                                                                .then(Commands.literal("floors")
+                                                                        .then(Commands.argument("floors", IntegerArgumentType.integer(1, 4))
+                                                                                .executes(BlockForgeCommands::houseCreateSized))))))))
+                        .then(Commands.literal("roof")
+                                .then(Commands.argument("type", StringArgumentType.word())
+                                        .suggests((context, builder) -> SharedSuggestionProvider.suggest(List.of("flat", "gable", "hip", "pyramid", "tower", "shed", "none"), builder))
+                                        .executes(BlockForgeCommands::houseRoof)))
+                        .then(Commands.literal("materials")
+                                .then(Commands.argument("wall", StringArgumentType.word())
+                                        .then(Commands.argument("roof", StringArgumentType.word())
+                                                .then(Commands.argument("floor", StringArgumentType.word())
+                                                        .executes(BlockForgeCommands::houseMaterials)))))
+                        .then(Commands.literal("preview")
+                                .executes(BlockForgeCommands::housePreview))
+                        .then(Commands.literal("buildplan")
+                                .executes(BlockForgeCommands::houseBuildPlan))
+                        .then(Commands.literal("build")
+                                .executes(BlockForgeCommands::houseBuild))
+                        .then(Commands.literal("quality")
+                                .executes(BlockForgeCommands::houseQuality))
+                        .then(Commands.literal("export")
+                                .then(Commands.literal("blueprint")
+                                        .executes(BlockForgeCommands::houseExportBlueprint)))
+                        .then(Commands.literal("save")
+                                .then(Commands.argument("name", StringArgumentType.word())
+                                        .executes(BlockForgeCommands::houseSave))))
                 .then(Commands.literal("station")
                         .then(Commands.literal("list")
                                 .executes(BlockForgeCommands::stationList))
@@ -2394,6 +2440,197 @@ public final class BlockForgeCommands {
                 true
         );
         return 1;
+    }
+
+    private static int housePresets(CommandContext<CommandSourceStack> context) {
+        String presets = String.join(", ", HOUSES.supportedPresets()
+                .stream()
+                .map(style -> style.name().toLowerCase(java.util.Locale.ROOT))
+                .toList());
+        context.getSource().sendSuccess(
+                () -> Component.literal("BlockForge house presets: " + presets),
+                false
+        );
+        return HOUSES.supportedPresets().size();
+    }
+
+    private static int houseCreate(CommandContext<CommandSourceStack> context) {
+        HousePlan plan = HOUSES.generate(HouseGenerationRequest.preset(parseHouseStyle(StringArgumentType.getString(context, "preset"))));
+        sendHouseSummary(context, plan, "Created HousePlan alpha");
+        return 1;
+    }
+
+    private static int houseCreateSized(CommandContext<CommandSourceStack> context) {
+        HousePlan plan = HOUSES.generate(new HouseGenerationRequest(
+                parseHouseStyle(StringArgumentType.getString(context, "preset")),
+                IntegerArgumentType.getInteger(context, "width"),
+                IntegerArgumentType.getInteger(context, "depth"),
+                IntegerArgumentType.getInteger(context, "floors"),
+                null,
+                null,
+                null
+        ));
+        sendHouseSummary(context, plan, "Created sized HousePlan alpha");
+        return 1;
+    }
+
+    private static int houseRoof(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("House roof alpha set request: " + StringArgumentType.getString(context, "type") + ". Persistent per-player HousePlan state is planned; use /blockforge house create for current summary."),
+                false
+        );
+        return 1;
+    }
+
+    private static int houseMaterials(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("House materials alpha request: wall="
+                        + StringArgumentType.getString(context, "wall")
+                        + ", roof="
+                        + StringArgumentType.getString(context, "roof")
+                        + ", floor="
+                        + StringArgumentType.getString(context, "floor")
+                        + ". Blueprint registration is command-alpha."),
+                false
+        );
+        return 1;
+    }
+
+    private static int housePreview(CommandContext<CommandSourceStack> context) {
+        HousePlan plan = HOUSES.generatePreset(HousePlan.HouseStyle.STARTER_COTTAGE);
+        var blueprint = new HouseBlueprintCompiler().compile(plan);
+        context.getSource().sendSuccess(
+                () -> Component.literal("House preview alpha compiled "
+                        + blueprint.getId()
+                        + " to Blueprint v"
+                        + blueprint.getSchemaVersion()
+                        + " | size="
+                        + blueprint.getSize().format()
+                        + " | blocks="
+                        + blueprint.getBlockCount()
+                        + ". Ghost preview registration is planned."),
+                false
+        );
+        return blueprint.getBlockCount();
+    }
+
+    private static int houseBuildPlan(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player;
+        try {
+            player = context.getSource().getPlayerOrException();
+        } catch (Exception exception) {
+            context.getSource().sendFailure(Component.literal("House BuildPlan requires a player."));
+            return 0;
+        }
+        HousePlan house = HOUSES.generatePreset(HousePlan.HouseStyle.STARTER_COTTAGE);
+        var blueprint = new HouseBlueprintCompiler().compile(house);
+        BlockPos pos = player.blockPosition();
+        BuildPlan plan = BuildPlanFactory.create(
+                blueprint,
+                player.getUUID(),
+                player.level().dimension().location().toString(),
+                pos.getX(),
+                pos.getY(),
+                pos.getZ(),
+                0,
+                false,
+                false,
+                0,
+                0,
+                0,
+                BuildPlanOptions.defaults(),
+                player.level().getGameTime()
+        );
+        BlockForgeConnector.BUILD_PLANS.delegate().save(player.getUUID(), plan);
+        context.getSource().sendSuccess(
+                () -> Component.literal("Created House BuildPlan alpha: "
+                        + plan.planId()
+                        + " | stages are represented by modules; loader BuildPlan still executes by layer."),
+                true
+        );
+        return plan.totalBlocks();
+    }
+
+    private static int houseBuild(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendSuccess(
+                () -> Component.literal("House build alpha: compile with /blockforge house buildplan, then use existing BuildPlan or Builder Wand build flow. Direct house placement is intentionally not separate."),
+                false
+        );
+        return 1;
+    }
+
+    private static int houseQuality(CommandContext<CommandSourceStack> context) {
+        HousePlan plan = HOUSES.generatePreset(HousePlan.HouseStyle.STARTER_COTTAGE);
+        var report = new HouseQualityAnalyzer().analyze(plan);
+        context.getSource().sendSuccess(
+                () -> Component.literal("House quality alpha: total="
+                        + report.total()
+                        + " roof="
+                        + report.roof()
+                        + " entrance="
+                        + report.entrance()
+                        + " windows="
+                        + report.windows()
+                        + " warnings="
+                        + report.warnings().size()),
+                false
+        );
+        return report.total();
+    }
+
+    private static int houseExportBlueprint(CommandContext<CommandSourceStack> context) {
+        HousePlan plan = HOUSES.generatePreset(HousePlan.HouseStyle.STARTER_COTTAGE);
+        var blueprint = new HouseBlueprintCompiler().compile(plan);
+        context.getSource().sendSuccess(
+                () -> Component.literal("House export alpha compiled Blueprint v2 id="
+                        + blueprint.getId()
+                        + " | blocks="
+                        + blueprint.getBlockCount()
+                        + ". File export is available in the Web House Designer; loader save is planned."),
+                false
+        );
+        return blueprint.getBlockCount();
+    }
+
+    private static int houseSave(CommandContext<CommandSourceStack> context) {
+        String name = StringArgumentType.getString(context, "name");
+        context.getSource().sendSuccess(
+                () -> Component.literal("House save alpha requested for '" + name + "'. Persistent in-game house library is planned; Web export is available now."),
+                true
+        );
+        return 1;
+    }
+
+    private static void sendHouseSummary(CommandContext<CommandSourceStack> context, HousePlan plan, String prefix) {
+        var estimate = new HouseMaterialEstimator().estimate(plan);
+        var quality = new HouseQualityAnalyzer().analyze(plan);
+        context.getSource().sendSuccess(
+                () -> Component.literal(prefix
+                        + ": "
+                        + plan.name()
+                        + " | size="
+                        + plan.footprint().width()
+                        + "x"
+                        + plan.footprint().depth()
+                        + " floors="
+                        + plan.dimensions().floors()
+                        + " roof="
+                        + plan.roof().type().name().toLowerCase(java.util.Locale.ROOT)
+                        + " modules="
+                        + plan.modules().size()
+                        + " materials="
+                        + estimate.size()
+                        + " quality="
+                        + quality.total()),
+                false
+        );
+    }
+
+    private static HousePlan.HouseStyle parseHouseStyle(String value) {
+        if (value == null || value.isBlank()) {
+            return HousePlan.HouseStyle.STARTER_COTTAGE;
+        }
+        return HousePlan.HouseStyle.valueOf(value.trim().toUpperCase(java.util.Locale.ROOT));
     }
 
     private static void sendMaterialSourceReport(CommandSourceStack source, MaterialSourceReport report) {

@@ -8,24 +8,22 @@ major-version branch instead of creating separate `0.0.1` feature branches.
 
 Recommended current branch:
 
-- `feature/v5.1-settlement-events`
+- `feature/v5.3-gameplay-release-hardening`
 
 ## Active Train
 
 | Version | Theme | Goal | Release Gate |
 |---|---|---|---|
-| v5.1 | Settlement Events + Project Chains + Emergency Repairs | Add event pressure, stability, project chains, emergency repair DTOs, and command/resource scaffolds | Web and three loader builds pass; manual Minecraft/server QA pending |
+| v5.3 | Gameplay Release Hardening | Freeze large gameplay additions, harden core house/build/undo/material flow, simplify docs, and prepare beta candidate artifacts | Web and three loader clean builds pass; manual Minecraft/server QA pending |
 
 ## Next Trains
 
-- v5.2: Persistent settlement/event/contract stores.
-- v5.3: Contract Board, Event Board, Project Map, and Architect Desk GUI polish.
-- v5.4: World snapshot contract and emergency repair verification.
-- v5.5: Fabric/Forge command parity, multiplayer balancing, Minecraft regression, and dedicated server smoke test campaign.
+- v5.4: Minecraft manual regression, dedicated server smoke test campaign, and release blocker fixes.
+- v5.5: Optional polish only after the beta path is proven in-game.
 
 ## Current Alpha Rules
 
-- Keep `5.1.0-alpha.1` clearly marked as Alpha, not stable.
+- Keep `5.3.0-beta.1` clearly marked as Alpha, not stable.
 - Keep Local Rule Generator as the no-key fallback.
 - Keep OpenAI provider optional and server-side only.
 - Do not expose API keys to browser client code.

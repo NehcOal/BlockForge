@@ -1,9 +1,65 @@
-# BlockForge v5.1.0-alpha.1 Gameplay Beta Testing
+# BlockForge v5.3.0-beta.1 Gameplay Beta Testing
 
 Status: beta candidate checklist. Manual Minecraft regression is pending until
 run in real clients and dedicated servers.
 
 Run the checklist separately for NeoForge, Fabric, and Forge.
+
+## v5.3 Main Flow Test Matrix
+
+Status values must be one of `passed`, `failed`, `partial`, `pending`, or
+`blocked`. Do not mark Minecraft or dedicated server tests as passed unless
+they were actually run.
+
+### NeoForge Client Required Test
+
+Current status: `pending`
+
+1. Start Minecraft `1.21.1` with NeoForge.
+2. Enter a creative-mode world.
+3. Open the Creative Tab.
+4. Confirm Builder Wand / Blueprint Table / Material Cache / Builder Anchor are visible.
+5. Place Blueprint Table.
+6. Right-click Blueprint Table and open GUI Selector.
+7. Run `/blockforge examples install`.
+8. Run `/blockforge reload`.
+9. Select `tiny_platform`.
+10. Use Builder Wand preview.
+11. Creative build.
+12. Undo.
+13. Switch to survival mode.
+14. Clear inventory.
+15. Confirm `materials selected` reports missing materials.
+16. Give required materials.
+17. Build succeeds and consumes materials.
+18. Undo restores blocks and refunds materials.
+19. Attempt build in a protection-denied region.
+20. Confirm no materials are consumed and no blocks are placed.
+21. Run diagnostics export.
+
+### NeoForge Dedicated Server Required Test
+
+Current status: `pending`
+
+1. Start dedicated server.
+2. Confirm no client-only class crash.
+3. Join server.
+4. Run `/blockforge status`.
+5. Run `/blockforge diagnostics`.
+6. Run `/blockforge diagnostics export`.
+7. Test blueprint reload/list/info.
+8. If possible, test wand build/undo.
+
+### Fabric / Forge Smoke Test
+
+Current status: `pending`
+
+1. Client launch.
+2. Creative Tab check.
+3. Place Blueprint Table.
+4. Open GUI or command flow.
+5. Basic Wand build/undo.
+6. Dedicated server smoke test if available; otherwise keep `pending`.
 
 ## Client Flow
 
@@ -51,4 +107,3 @@ Run the checklist separately for NeoForge, Fabric, and Forge.
 - Use `blocked` when the environment cannot launch the client/server.
 - Keep `partial` for features that compile and have pure tests but do not yet
   perform full in-world behavior.
-

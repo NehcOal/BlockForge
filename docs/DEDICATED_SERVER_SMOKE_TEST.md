@@ -1,8 +1,43 @@
 # BlockForge Dedicated Server Smoke Test
 
-Status: `5.1.0-alpha.1` checklist. Do not mark passed until the server is actually started and the commands below are run.
+Status: `5.3.0-beta.1` checklist. Do not mark passed until the server is actually started and the commands below are run.
 
 Run this separately for NeoForge, Fabric, and Forge on Minecraft `1.21.1` with Java `21`.
+
+## v5.3 Required Server Smoke Test
+
+Current status: `pending`
+
+Use clean builds before copying jars:
+
+```powershell
+cd mod/neoforge-connector
+gradlew.bat clean build
+
+cd ../fabric-connector
+gradlew.bat clean build
+
+cd ../forge-connector
+gradlew.bat clean build
+```
+
+Expected release jars:
+
+- `blockforge-connector-neoforge-5.3.0-beta.1.jar`
+- `blockforge-connector-fabric-5.3.0-beta.1.jar`
+- `blockforge-connector-forge-5.3.0-beta.1.jar`
+
+Checklist:
+
+1. Start NeoForge dedicated server.
+2. Confirm no client-only class crash.
+3. Join server.
+4. Run `/blockforge status`.
+5. Run `/blockforge diagnostics`.
+6. Run `/blockforge diagnostics export`.
+7. Run blueprint reload/list/info commands.
+8. If possible, test wand build/undo.
+9. Repeat Fabric / Forge server launch smoke tests, or leave explicitly `pending`.
 
 ## Startup Checks
 

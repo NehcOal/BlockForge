@@ -1,13 +1,45 @@
 # Known Issues
 
-Status for v5.1.0-alpha.1:
+Status for v5.3.0-beta.1:
 
 - Browser visual QA: pending.
 - Minecraft manual regression: pending.
-- External AI live test: pending.
+- NeoForge client gameplay regression: pending.
+- Fabric client smoke test: pending.
+- Forge client smoke test: pending.
 - Dedicated server smoke test: pending.
+- Material Cache GUI: partial.
+- Builder Station GUI: partial.
+- Station world placement: partial.
+- Admin rollback world integration: partial.
+- Fabric / Forge advanced parity: partial.
+- Litematica import: experimental.
+- External AI live test: pending.
+- Modrinth / CurseForge publishing: pending.
+- Marketplace / cloud sync: not implemented.
+
+## v5.3 Beta Hardening
+
+- Large new gameplay systems are frozen.
+- Core selling path is Web House Designer -> Blueprint export -> NeoForge
+  preview/build/undo/material refund.
+- Settlement / Contract / Progression / Events are experimental and not main
+  selling points.
+- Builder Station automation remains partial unless real Minecraft regression
+  proves world placement, undo, material transactions, and audit together.
 
 ## v5.1 Alpha
+
+## v5.2 Alpha
+
+- House generation is deterministic and produces functional alpha shapes, not
+  polished architecture.
+- House-stage construction is represented by modules; the existing BuildPlan
+  still executes by y-layer.
+- In-game House Planner GUI is planned; v5.2 uses Web Designer and commands.
+- Fabric / Forge house command surfaces are registered as alpha partial
+  command flows.
+- Minecraft manual regression and dedicated server smoke test remain pending.
 
 - Settlement event, project, and emergency repair persistence is partial.
 - Event Board, Project Map, and Emergency Beacon use command/chat feedback

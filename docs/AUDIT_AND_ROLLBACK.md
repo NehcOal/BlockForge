@@ -1,6 +1,6 @@
 # BlockForge Audit And Rollback
 
-Version: 5.1.0-alpha.1
+Version: 5.3.0-beta.1
 
 v4.4 adds `LoaderIntegrationPaths`, the shared path helper for loader audit and
 diagnostics output.
